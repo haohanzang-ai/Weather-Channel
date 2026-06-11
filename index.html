@@ -1,282 +1,486 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TexasClimate — Real-Time Weather & Environmental Intelligence Platform</title>
+  <meta name="description" content="Live weather, air quality, water resources, agriculture, and energy intelligence across 10 major Texas cities. Data refreshes every 10 minutes.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://texasclimate.example.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="TexasClimate — Real-Time Weather & Environmental Intelligence">
+  <meta property="og:description" content="Live weather, air quality, agriculture, and energy data across 10 Texas cities.">
+  <meta property="og:site_name" content="TexasClimate">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="TexasClimate — Real-Time Intelligence Platform">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'none'; frame-ancestors 'none';">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"TexasClimate Intelligence Platform","description":"Real-time climate, weather, environmental, and agricultural intelligence across Texas.","applicationCategory":"WeatherApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"></noscript>
 <style>
+:root{
+  --blue:#4A90E2;--blue-dim:rgba(74,144,226,0.15);--blue-mid:rgba(74,144,226,0.35);
+  --orange:#F5A623;--red:#D64545;--green:#2ECC8B;
+  --bg0:#070E1A;--bg1:#0B1623;--bg2:#0F1E30;--bg3:#152540;
+  --surface:rgba(255,255,255,0.04);--surface2:rgba(255,255,255,0.07);
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  /* Fixed contrast: text1 ≥7:1, text2 ≥4.5:1, text3 large/decorative only */
+  --text0:#fff;--text1:rgba(255,255,255,0.87);--text2:rgba(255,255,255,0.64);--text3:rgba(255,255,255,0.45);
+  --font:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+  --r6:6px;--r8:8px;--r12:12px;--r16:16px;
+  --glow:0 0 30px rgba(74,144,226,0.14);
+  --shadow:0 4px 24px rgba(0,0,0,0.4);
+  --sidebar-w:230px;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',var(--font-sans);background:var(--color-background-tertiary);color:var(--color-text-primary)}
-.app{display:flex;height:100vh;min-height:600px;overflow:hidden;background:#0B1F3A}
-.sidebar{width:220px;min-width:220px;background:#0B1F3A;border-right:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;padding:0;overflow-y:auto}
-.sidebar-logo{padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,0.08)}
-.sidebar-logo .title{font-size:11px;font-weight:600;color:#4A90E2;letter-spacing:0.08em;text-transform:uppercase}
-.sidebar-logo .sub{font-size:10px;color:rgba(255,255,255,0.4);margin-top:3px}
-.nav-section{padding:12px 0}
-.nav-label{font-size:9px;font-weight:600;color:rgba(255,255,255,0.3);letter-spacing:0.1em;text-transform:uppercase;padding:4px 16px 6px}
-.nav-item{display:flex;align-items:center;gap:8px;padding:8px 16px;cursor:pointer;font-size:12px;color:rgba(255,255,255,0.6);transition:all 0.15s;border-left:2px solid transparent}
-.nav-item:hover{background:rgba(74,144,226,0.1);color:#fff;border-left-color:rgba(74,144,226,0.4)}
-.nav-item.active{background:rgba(74,144,226,0.15);color:#4A90E2;border-left-color:#4A90E2;font-weight:500}
-.nav-item .icon{font-size:14px;width:16px;text-align:center}
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#0F1B2D}
-.header{background:#0B1F3A;border-bottom:1px solid rgba(255,255,255,0.08);padding:10px 20px;display:flex;align-items:center;gap:12px;min-height:52px}
-.header-title{font-size:13px;font-weight:600;color:#fff;flex:1}
-.header-meta{font-size:11px;color:rgba(255,255,255,0.4)}
-.clock{font-size:12px;color:#4A90E2;font-family:var(--font-mono,'monospace');font-weight:500}
-.btn-sm{background:rgba(74,144,226,0.15);border:1px solid rgba(74,144,226,0.3);color:#4A90E2;padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;transition:all 0.15s}
-.btn-sm:hover{background:rgba(74,144,226,0.25)}
-.content{flex:1;overflow-y:auto;padding:16px 20px}
-.section-title{font-size:10px;font-weight:600;color:rgba(255,255,255,0.4);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px}
-.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
-.grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
-.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}
-.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
-.card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px}
-.card-blue{border-color:rgba(74,144,226,0.2);background:rgba(74,144,226,0.06)}
-.card-orange{border-color:rgba(191,87,0,0.25);background:rgba(191,87,0,0.06)}
-.card-danger{border-color:rgba(214,69,69,0.25);background:rgba(214,69,69,0.06)}
-.card-success{border-color:rgba(46,139,87,0.25);background:rgba(46,139,87,0.06)}
-.stat-label{font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em}
-.stat-value{font-size:22px;font-weight:700;color:#fff;font-family:var(--font-mono,'monospace')}
-.stat-unit{font-size:12px;color:rgba(255,255,255,0.5);margin-left:2px}
-.stat-sub{font-size:10px;color:rgba(255,255,255,0.4);margin-top:3px}
-.badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;text-transform:uppercase;letter-spacing:0.04em}
-.badge-blue{background:rgba(74,144,226,0.2);color:#4A90E2}
-.badge-green{background:rgba(46,139,87,0.2);color:#2E8B57}
-.badge-orange{background:rgba(245,166,35,0.2);color:#F5A623}
-.badge-red{background:rgba(214,69,69,0.2);color:#D64545}
-.badge-gray{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5)}
-.weather-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:12px;cursor:pointer;transition:all 0.15s}
-.weather-card:hover{background:rgba(74,144,226,0.1);border-color:rgba(74,144,226,0.3);transform:translateY(-1px)}
-.weather-card.selected{background:rgba(74,144,226,0.12);border-color:#4A90E2}
-.city-name{font-size:12px;font-weight:600;color:#fff;margin-bottom:6px}
-.temp-big{font-size:28px;font-weight:700;color:#fff;font-family:var(--font-mono,'monospace');line-height:1}
-.temp-feels{font-size:10px;color:rgba(255,255,255,0.4);margin-top:3px}
-.weather-detail{font-size:10px;color:rgba(255,255,255,0.5);margin-top:6px;display:flex;gap:8px;flex-wrap:wrap}
-.weather-icon{font-size:24px;text-align:center;margin-bottom:4px}
-.progress-bar{height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden}
-.progress-fill{height:100%;border-radius:2px;transition:width 0.5s}
-.map-container{position:relative;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;margin-bottom:16px}
-.map-svg{width:100%;height:320px}
-.city-dot{cursor:pointer;transition:all 0.15s}
-.city-dot:hover circle{r:8;stroke-width:2}
-.tooltip{position:absolute;background:#1a2d4a;border:1px solid rgba(74,144,226,0.4);border-radius:8px;padding:10px 12px;font-size:11px;color:#fff;pointer-events:none;z-index:100;min-width:130px}
-.forecast-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
-.forecast-day{width:70px;font-size:11px;color:rgba(255,255,255,0.5)}
-.forecast-icon{width:24px;text-align:center;font-size:16px}
-.forecast-bar-wrap{flex:1;position:relative;height:6px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden}
-.forecast-bar{height:100%;border-radius:3px}
-.forecast-temps{display:flex;gap:8px;font-size:11px;width:70px;justify-content:flex-end}
-.forecast-hi{color:#F5A623;font-weight:600}
-.forecast-lo{color:rgba(255,255,255,0.4)}
-.alert-banner{background:rgba(214,69,69,0.1);border:1px solid rgba(214,69,69,0.3);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:12px;color:#D64545}
-.info-banner{background:rgba(245,166,35,0.08);border:1px solid rgba(245,166,35,0.25);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:12px;color:#F5A623}
-.ag-status{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
-.ag-label{font-size:11px;color:rgba(255,255,255,0.6)}
-.tabs{display:flex;gap:4px;margin-bottom:14px;background:rgba(255,255,255,0.04);border-radius:8px;padding:3px}
-.tab{flex:1;padding:6px;font-size:11px;text-align:center;cursor:pointer;border-radius:6px;color:rgba(255,255,255,0.5);transition:all 0.15s}
-.tab.active{background:#4A90E2;color:#fff;font-weight:500}
-.search-box{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:7px 12px;font-size:12px;color:#fff;width:200px;outline:none}
-.search-box:focus{border-color:rgba(74,144,226,0.5);background:rgba(74,144,226,0.08)}
-.search-box::placeholder{color:rgba(255,255,255,0.3)}
-.insight-card{background:linear-gradient(135deg,rgba(74,144,226,0.1),rgba(74,144,226,0.04));border:1px solid rgba(74,144,226,0.2);border-radius:10px;padding:14px;margin-bottom:10px}
-.insight-text{font-size:12px;color:rgba(255,255,255,0.75);line-height:1.6}
-.insight-tag{font-size:9px;font-weight:600;color:#4A90E2;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
-.divider{height:1px;background:rgba(255,255,255,0.06);margin:14px 0}
-.page{display:none}.page.active{display:block}
-.hero-band{background:linear-gradient(135deg,rgba(74,144,226,0.12),rgba(11,31,58,0));border:1px solid rgba(74,144,226,0.15);border-radius:12px;padding:20px;margin-bottom:16px}
-.hero-title{font-size:18px;font-weight:700;color:#fff;margin-bottom:6px}
-.hero-sub{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5}
-.loading-shimmer{background:rgba(255,255,255,0.06);border-radius:8px;animation:shimmer 1.5s infinite}
-@keyframes shimmer{0%,100%{opacity:0.6}50%{opacity:1}}
+html{height:100%;background:var(--bg0)}
+body{font-family:var(--font);color:var(--text0);height:100%;overflow:hidden}
+
+/* ── Skip link ──────────────────────────────── */
+.skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+.skip-link:focus{position:fixed;top:0;left:0;width:auto;height:auto;background:var(--blue);color:#fff;padding:12px 20px;font-size:14px;font-weight:600;z-index:9999;border-radius:0 0 8px 0;outline:none}
+
+/* ── Screen-reader only ─────────────────────── */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* ── Focus styles ───────────────────────────── */
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px}
+button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offset:2px;box-shadow:0 0 0 4px rgba(74,144,226,0.2)}
+
+/* ── App shell ──────────────────────────────── */
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* ── Sidebar ────────────────────────────────── */
+.sidebar{
+  width:var(--sidebar-w);min-width:var(--sidebar-w);
+  background:linear-gradient(180deg,var(--bg1) 0%,var(--bg0) 100%);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  overflow-y:auto;overflow-x:hidden;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.1) transparent;
+  transition:transform 0.28s ease;
+  z-index:100;
+}
+.sidebar-logo{padding:22px 18px 18px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(74,144,226,0.08),transparent)}
+.logo-icon{font-size:26px;margin-bottom:8px;display:block;filter:drop-shadow(0 0 8px rgba(74,144,226,0.5))}
+.logo-title{font-size:13px;font-weight:700;color:var(--blue);letter-spacing:0.12em;text-transform:uppercase}
+.logo-sub{font-size:11px;color:var(--text2);margin-top:3px;letter-spacing:0.03em;display:flex;align-items:center;gap:5px}
+.live-dot{display:inline-block;width:7px;height:7px;background:var(--green);border-radius:50%;flex-shrink:0;animation:livePulse 2s ease-in-out infinite}
+@keyframes livePulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(46,204,139,0.4)}50%{opacity:0.8;box-shadow:0 0 0 5px rgba(46,204,139,0)}}
+
+.nav-section{padding:10px 0 4px}
+.nav-label{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:0.12em;text-transform:uppercase;padding:6px 18px 5px;pointer-events:none}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  width:100%;padding:10px 18px;cursor:pointer;
+  font-size:12px;font-weight:500;color:var(--text1);
+  background:none;border:none;border-left:2px solid transparent;
+  text-align:left;font-family:var(--font);
+  transition:background 0.18s ease,color 0.18s ease,border-left-color 0.18s ease;
+  position:relative;
+}
+.nav-item:hover{background:var(--blue-dim);color:var(--text0);border-left-color:var(--blue-mid)}
+.nav-item.active{background:linear-gradient(90deg,var(--blue-dim),transparent);color:var(--blue);border-left-color:var(--blue);font-weight:600}
+.nav-item.active::after{content:'';position:absolute;right:0;top:20%;bottom:20%;width:1px;background:var(--blue);opacity:0.5;border-radius:2px}
+.nav-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0;line-height:1}
+.sidebar-footer{margin-top:auto;padding:14px 18px;border-top:1px solid var(--border)}
+.sidebar-footer-text{font-size:10px;color:var(--text3);line-height:1.6}
+
+/* ── Hamburger (mobile) ─────────────────────── */
+.hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px;color:var(--text1);font-size:20px;line-height:1}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99;backdrop-filter:blur(2px)}
+
+/* ── Main ───────────────────────────────────── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg2);min-width:0}
+
+.header{
+  background:linear-gradient(90deg,var(--bg1),var(--bg2));
+  border-bottom:1px solid var(--border);
+  padding:0 20px;display:flex;align-items:center;gap:12px;
+  height:56px;min-height:56px;flex-shrink:0;
+}
+.header-title{font-size:13px;font-weight:600;color:var(--text0);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.header-meta{font-size:11px;color:var(--text2);white-space:nowrap}
+.clock{font-size:12px;color:var(--blue);font-family:var(--mono);font-weight:500;letter-spacing:0.05em;white-space:nowrap}
+.btn-sm{
+  background:var(--blue-dim);border:1px solid var(--blue-mid);
+  color:var(--blue);padding:6px 12px;border-radius:var(--r8);
+  font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font);
+  transition:background 0.18s,border-color 0.18s,box-shadow 0.18s,transform 0.1s;
+  white-space:nowrap;
+}
+.btn-sm:hover{background:rgba(74,144,226,0.25);border-color:var(--blue);box-shadow:0 0 12px rgba(74,144,226,0.2)}
+.btn-sm:active{transform:scale(0.97)}
+.search-wrap{position:relative}
+.search-box{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:var(--r8);padding:7px 12px;
+  font-size:12px;color:var(--text0);width:200px;
+  font-family:var(--font);transition:all 0.18s ease;
+}
+.search-box:focus{border-color:var(--blue-mid);background:var(--blue-dim);box-shadow:0 0 0 2px rgba(74,144,226,0.12);outline:none}
+.search-box::placeholder{color:var(--text3)}
+.search-feedback{
+  position:absolute;top:calc(100% + 6px);right:0;
+  background:#1a2d4a;border:1px solid rgba(74,144,226,0.4);
+  border-radius:var(--r8);padding:8px 14px;
+  font-size:11px;color:var(--text1);z-index:200;
+  white-space:nowrap;box-shadow:var(--shadow);
+  display:none;
+}
+.search-feedback.visible{display:block}
+
+/* ── Content area ───────────────────────────── */
+.content{flex:1;overflow-y:auto;padding:20px 24px;scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.08) transparent}
+
+/* ── Section titles (now semantic h2) ───────── */
+.section-title{
+  font-size:11px;font-weight:700;color:var(--text2);
+  letter-spacing:0.12em;text-transform:uppercase;
+  margin-bottom:12px;display:flex;align-items:center;gap:8px;
+}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── Cards ──────────────────────────────────── */
+.card{
+  background:linear-gradient(135deg,var(--surface2),var(--surface));
+  border:1px solid var(--border);border-radius:var(--r12);
+  padding:16px;transition:border-color 0.18s ease;
+}
+.card:hover{border-color:var(--border2)}
+.card-blue{border-color:rgba(74,144,226,0.22);background:linear-gradient(135deg,rgba(74,144,226,0.09),var(--surface))}
+.card-orange{border-color:rgba(245,166,35,0.22);background:linear-gradient(135deg,rgba(245,166,35,0.08),var(--surface))}
+.card-danger{border-color:rgba(214,69,69,0.26);background:linear-gradient(135deg,rgba(214,69,69,0.08),var(--surface))}
+.card-success{border-color:rgba(46,204,139,0.22);background:linear-gradient(135deg,rgba(46,204,139,0.08),var(--surface))}
+
+/* ── Grids ──────────────────────────────────── */
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:18px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+
+/* ── Stat cells ─────────────────────────────── */
+.stat-label{font-size:10px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
+.stat-value{font-size:24px;font-weight:700;color:var(--text0);font-family:var(--mono);line-height:1}
+.stat-unit{font-size:12px;color:var(--text2);margin-left:2px;font-weight:400}
+.stat-sub{font-size:11px;color:var(--text2);margin-top:5px}
+
+/* ── Badges ─────────────────────────────────── */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;text-transform:uppercase;letter-spacing:0.05em}
+.badge-blue{background:rgba(74,144,226,0.18);color:#7DB9F2}
+.badge-green{background:rgba(46,204,139,0.15);color:#5DDBA8}
+.badge-orange{background:rgba(245,166,35,0.18);color:#F8C06A}
+.badge-red{background:rgba(214,69,69,0.18);color:#E87A7A}
+.badge-gray{background:var(--surface2);color:var(--text1)}
+
+/* ── Hero band ──────────────────────────────── */
+.hero-band{
+  background:linear-gradient(135deg,rgba(74,144,226,0.13) 0%,rgba(74,144,226,0.04) 60%,transparent 100%);
+  border:1px solid rgba(74,144,226,0.2);
+  border-radius:var(--r16);padding:24px;margin-bottom:20px;
+  position:relative;overflow:hidden;
+}
+.hero-band::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(74,144,226,0.12),transparent 70%);pointer-events:none}
+.hero-title{font-size:19px;font-weight:800;color:var(--text0);margin-bottom:7px;line-height:1.25}
+.hero-sub{font-size:12px;color:var(--text1);line-height:1.65;max-width:600px}
+.hero-badges{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+
+/* ── Weather cards ──────────────────────────── */
+.weather-card{
+  background:linear-gradient(145deg,var(--surface2),var(--surface));
+  border:1px solid var(--border);border-radius:var(--r12);
+  padding:14px;cursor:pointer;text-align:left;width:100%;
+  font-family:var(--font);
+  transition:background 0.22s,border-color 0.22s,transform 0.22s,box-shadow 0.22s;
+}
+.weather-card:hover{background:linear-gradient(145deg,rgba(74,144,226,0.12),rgba(74,144,226,0.05));border-color:rgba(74,144,226,0.35);transform:translateY(-3px);box-shadow:var(--glow)}
+.weather-card.selected{background:linear-gradient(145deg,rgba(74,144,226,0.18),rgba(74,144,226,0.06));border-color:var(--blue);box-shadow:0 0 0 1px rgba(74,144,226,0.2),var(--glow)}
+.city-name{font-size:11px;font-weight:700;color:var(--text0);margin-bottom:6px}
+.temp-big{font-size:32px;font-weight:800;color:var(--text0);font-family:var(--mono);line-height:1}
+.temp-feels{font-size:11px;color:var(--text2);margin-top:4px}
+.weather-detail{font-size:11px;color:var(--text2);margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
+.weather-icon{font-size:28px;text-align:center;margin-bottom:4px}
+
+/* ── Progress bars ──────────────────────────── */
+.progress-bar{height:5px;background:rgba(255,255,255,0.09);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;transition:width 0.6s cubic-bezier(0.4,0,0.2,1)}
+
+/* ── Map ────────────────────────────────────── */
+.map-container{position:relative;background:linear-gradient(135deg,rgba(74,144,226,0.04),rgba(15,30,50,0.8));border:1px solid var(--border);border-radius:var(--r16);padding:18px;margin-bottom:18px}
+.map-svg{width:100%;height:330px}
+.city-dot{cursor:pointer;transition:all 0.18s ease}
+.city-dot:hover circle{stroke-width:2.5}
+.tooltip{position:absolute;background:linear-gradient(135deg,rgba(15,30,55,0.98),rgba(11,22,45,0.98));border:1px solid rgba(74,144,226,0.45);border-radius:10px;padding:11px 14px;font-size:11px;color:var(--text0);pointer-events:none;z-index:100;min-width:140px;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
+
+/* ── Alerts ─────────────────────────────────── */
+.alert-banner{background:linear-gradient(90deg,rgba(214,69,69,0.1),rgba(214,69,69,0.04));border:1px solid rgba(214,69,69,0.28);border-left:3px solid var(--red);border-radius:var(--r8);padding:11px 14px;display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:12px;color:#E87A7A}
+.info-banner{background:linear-gradient(90deg,rgba(245,166,35,0.08),rgba(245,166,35,0.03));border:1px solid rgba(245,166,35,0.22);border-left:3px solid var(--orange);border-radius:var(--r8);padding:11px 14px;display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:12px;color:#F8C06A}
+
+/* ── Forecast rows ──────────────────────────── */
+.forecast-row{display:flex;align-items:center;gap:10px;padding:9px 6px;border-bottom:1px solid var(--border);border-radius:4px;transition:background 0.15s}
+.forecast-row:hover{background:var(--surface)}
+.forecast-day{width:72px;font-size:11px;color:var(--text1)}
+.forecast-icon{width:26px;text-align:center;font-size:17px}
+.forecast-temps{display:flex;gap:10px;font-size:11px;width:72px;justify-content:flex-end}
+.forecast-hi{color:var(--orange);font-weight:700}
+.forecast-lo{color:var(--text2)}
+
+/* ── Ag status ──────────────────────────────── */
+.ag-status{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)}
+.ag-label{font-size:11px;color:var(--text1)}
+
+/* ── Insight cards ──────────────────────────── */
+.insight-card{background:linear-gradient(135deg,rgba(74,144,226,0.09),rgba(74,144,226,0.03));border:1px solid rgba(74,144,226,0.18);border-radius:10px;padding:16px;margin-bottom:12px}
+.insight-text{font-size:12px;color:var(--text1);line-height:1.65}
+.insight-tag{font-size:10px;font-weight:700;color:#7DB9F2;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
+
+/* ── Divider ────────────────────────────────── */
+.divider{height:1px;background:var(--border);margin:16px 0}
+
+/* ── Pages ──────────────────────────────────── */
+.page{display:none}
+.page.active{display:block;animation:fadeIn 0.22s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Chart wrap ─────────────────────────────── */
 .chart-wrap{position:relative;height:180px;width:100%;margin-top:10px}
-.aqi-gauge{display:flex;flex-direction:column;align-items:center;padding:16px 0}
-.aqi-num{font-size:48px;font-weight:700;font-family:var(--font-mono,'monospace')}
-.water-level{display:flex;align-items:flex-end;gap:4px;height:60px;margin-top:8px}
-.water-bar{flex:1;border-radius:4px 4px 0 0;min-height:4px;background:rgba(74,144,226,0.5);transition:height 0.5s}
-.comparison-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-.comp-city-header{text-align:center;padding:10px;background:rgba(255,255,255,0.04);border-radius:8px;margin-bottom:10px}
+
+/* ── Reduced motion ─────────────────────────── */
+@media(prefers-reduced-motion:reduce){
+  .live-dot{animation:none}
+  .page.active{animation:none}
+  .weather-card:hover{transform:none}
+  .progress-fill{transition:none}
+  *{transition-duration:0.01ms !important;animation-duration:0.01ms !important}
+}
+
+/* ── Responsive: Tablet (≤900px) ───────────── */
+@media(max-width:900px){
+  :root{--sidebar-w:220px}
+  .grid-5{grid-template-columns:repeat(3,1fr)}
+  #weatherGrid{grid-template-columns:repeat(3,1fr) !important}
+  .grid-4{grid-template-columns:repeat(2,1fr)}
+  .header-meta,.clock{display:none}
+  .search-box{width:160px}
+}
+
+/* ── Responsive: Mobile (≤640px) ───────────── */
+@media(max-width:640px){
+  body{overflow:auto}
+  .app{flex-direction:column;height:auto;min-height:100vh;overflow:visible}
+  .sidebar{
+    position:fixed;top:0;left:0;height:100%;
+    transform:translateX(-100%);
+    width:260px;min-width:260px;
+  }
+  .sidebar.open{transform:translateX(0);box-shadow:4px 0 20px rgba(0,0,0,0.5)}
+  .sidebar-overlay.open{display:block}
+  .hamburger{display:flex;align-items:center;justify-content:center}
+  .main{height:auto;overflow:visible}
+  .content{overflow:visible;height:auto;padding:14px 14px 40px}
+  .header{padding:0 14px;gap:8px}
+  .search-box{width:130px;font-size:11px}
+  .grid-2{grid-template-columns:1fr}
+  .grid-3{grid-template-columns:1fr}
+  .grid-4{grid-template-columns:repeat(2,1fr)}
+  #weatherGrid{grid-template-columns:repeat(2,1fr) !important}
+  .grid-5{grid-template-columns:repeat(2,1fr)}
+  .hero-title{font-size:15px}
+  .hero-sub{font-size:11px}
+  .comparison-grid{grid-template-columns:1fr !important}
+  .map-svg{height:220px}
+}
+@media(max-width:380px){
+  #weatherGrid{grid-template-columns:1fr !important}
+  .grid-4{grid-template-columns:1fr}
+}
 </style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<div id="sr-announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <div class="app" id="app">
-  <div class="sidebar">
+
+  <!-- Sidebar overlay (mobile) -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()" aria-hidden="true"></div>
+
+  <!-- ─── Sidebar / Primary nav ─────────────── -->
+  <nav class="sidebar" id="sidebar" aria-label="Primary navigation">
     <div class="sidebar-logo">
-      <div style="font-size:20px;margin-bottom:6px">🌤</div>
-      <div class="title">TexasClimate</div>
-      <div class="sub">Intelligence Platform</div>
+      <span class="logo-icon" aria-hidden="true">🌤</span>
+      <div class="logo-title">TexasClimate</div>
+      <div class="logo-sub"><span class="live-dot" aria-hidden="true"></span>Intelligence Platform</div>
     </div>
-    <div class="nav-section">
-      <div class="nav-label">Main</div>
-      <div class="nav-item active" onclick="showPage('dashboard')"><span class="icon">⊞</span> Dashboard</div>
-      <div class="nav-item" onclick="showPage('map')"><span class="icon">◉</span> Texas Map</div>
-      <div class="nav-item" onclick="showPage('forecasts')"><span class="icon">☁</span> Forecasts</div>
-      <div class="nav-item" onclick="showPage('agriculture')"><span class="icon">🌾</span> Agriculture</div>
-      <div class="nav-item" onclick="showPage('trends')"><span class="icon">📈</span> Climate Trends</div>
-    </div>
-    <div class="nav-section">
-      <div class="nav-label">Environment</div>
-      <div class="nav-item" onclick="showPage('airquality')"><span class="icon">💨</span> Air Quality</div>
-      <div class="nav-item" onclick="showPage('water')"><span class="icon">💧</span> Water Resources</div>
-      <div class="nav-item" onclick="showPage('energy')"><span class="icon">⚡</span> Energy</div>
-      <div class="nav-item" onclick="showPage('severe')"><span class="icon">⚠</span> Severe Weather</div>
-    </div>
-    <div class="nav-section">
-      <div class="nav-label">Analysis</div>
-      <div class="nav-item" onclick="showPage('compare')"><span class="icon">⇌</span> City Comparison</div>
-      <div class="nav-item" onclick="showPage('reports')"><span class="icon">📋</span> AI Reports</div>
-    </div>
-    <div style="margin-top:auto;padding:12px 16px;border-top:1px solid rgba(255,255,255,0.08)">
-      <div style="font-size:10px;color:rgba(255,255,255,0.2)">v2.4.1 · Data refreshes every 10m</div>
-    </div>
-  </div>
 
+    <div class="nav-section" role="menu" aria-label="Main">
+      <div class="nav-label" aria-hidden="true">Main</div>
+      <button class="nav-item active" role="menuitem" data-page="dashboard" aria-current="page" onclick="showPage('dashboard')"><span class="nav-icon" aria-hidden="true">⊞</span>Dashboard</button>
+      <button class="nav-item" role="menuitem" data-page="map" onclick="showPage('map')"><span class="nav-icon" aria-hidden="true">◉</span>Texas Map</button>
+      <button class="nav-item" role="menuitem" data-page="forecasts" onclick="showPage('forecasts')"><span class="nav-icon" aria-hidden="true">☁</span>Forecasts</button>
+      <button class="nav-item" role="menuitem" data-page="agriculture" onclick="showPage('agriculture')"><span class="nav-icon" aria-hidden="true">🌾</span>Agriculture</button>
+      <button class="nav-item" role="menuitem" data-page="trends" onclick="showPage('trends')"><span class="nav-icon" aria-hidden="true">📈</span>Climate Trends</button>
+    </div>
+
+    <div class="nav-section" role="menu" aria-label="Environment">
+      <div class="nav-label" aria-hidden="true">Environment</div>
+      <button class="nav-item" role="menuitem" data-page="airquality" onclick="showPage('airquality')"><span class="nav-icon" aria-hidden="true">💨</span>Air Quality</button>
+      <button class="nav-item" role="menuitem" data-page="water" onclick="showPage('water')"><span class="nav-icon" aria-hidden="true">💧</span>Water Resources</button>
+      <button class="nav-item" role="menuitem" data-page="energy" onclick="showPage('energy')"><span class="nav-icon" aria-hidden="true">⚡</span>Energy</button>
+      <button class="nav-item" role="menuitem" data-page="severe" onclick="showPage('severe')"><span class="nav-icon" aria-hidden="true">⚠</span>Severe Weather</button>
+    </div>
+
+    <div class="nav-section" role="menu" aria-label="Analysis">
+      <div class="nav-label" aria-hidden="true">Analysis</div>
+      <button class="nav-item" role="menuitem" data-page="compare" onclick="showPage('compare')"><span class="nav-icon" aria-hidden="true">⇌</span>City Comparison</button>
+      <button class="nav-item" role="menuitem" data-page="reports" onclick="showPage('reports')"><span class="nav-icon" aria-hidden="true">📋</span>AI Reports</button>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-text">v2.4.1 · Data refreshes every 10 min</div>
+    </div>
+  </nav>
+
+  <!-- ─── Main ──────────────────────────────── -->
   <div class="main">
-    <div class="header">
-      <div class="header-title" id="pageTitle">Dashboard Overview</div>
-      <input class="search-box" placeholder="🔍 Search cities, metrics..." id="searchBox" oninput="handleSearch(this.value)">
-      <div class="header-meta" style="margin-right:8px">Last sync: <span id="lastSync">just now</span></div>
-      <div class="clock" id="clock">00:00:00</div>
-      <button class="btn-sm" onclick="refreshData()">↻ Refresh</button>
-    </div>
+    <header class="header" role="banner">
+      <button class="hamburger" id="hamburgerBtn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="sidebar" onclick="openSidebar()">☰</button>
+      <div class="header-title" id="pageTitle" aria-live="polite">Dashboard Overview</div>
+      <div class="search-wrap">
+        <label for="searchBox" class="sr-only">Search Texas cities</label>
+        <input class="search-box" placeholder="🔍  Search cities…" id="searchBox"
+               type="search" autocomplete="off"
+               aria-label="Search Texas cities"
+               oninput="debouncedSearch(this.value)">
+        <div class="search-feedback" id="searchFeedback" role="status" aria-live="polite"></div>
+      </div>
+      <div class="header-meta">Synced: <span id="lastSync">just now</span></div>
+      <time class="clock" id="clock" aria-label="Current time">00:00:00</time>
+      <button class="btn-sm" id="refreshBtn" onclick="refreshData(event)" aria-label="Refresh dashboard data">↻ Refresh</button>
+    </header>
 
-    <div class="content" id="mainContent">
-      <!-- Dashboard Page -->
-      <div class="page active" id="page-dashboard">
-        <div class="hero-band">
-          <div class="hero-title">Texas Climate, Agriculture & Infrastructure Intelligence Platform</div>
-          <div class="hero-sub">Real-time climate, weather, environmental, and agricultural intelligence across Texas. Data auto-refreshes every 10 minutes.</div>
-          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-            <span class="badge badge-blue">● Live Data</span>
-            <span class="badge badge-green">● 10 Cities Monitored</span>
-            <span class="badge badge-orange">● 2 Active Advisories</span>
+    <main id="main-content" class="content" tabindex="-1">
+
+      <!-- Dashboard -->
+      <div class="page active" id="page-dashboard" role="region" aria-label="Dashboard Overview">
+        <section class="hero-band" aria-label="Platform summary">
+          <h1 class="hero-title">Texas Climate, Agriculture &amp; Infrastructure Intelligence</h1>
+          <p class="hero-sub">Real-time environmental intelligence across 10 Texas cities — covering weather, air quality, water resources, agriculture, and energy demand. Auto-refreshes every 10 minutes.</p>
+          <div class="hero-badges" aria-label="Status indicators">
+            <span class="badge badge-blue"><span class="live-dot" aria-hidden="true"></span>Live Data</span>
+            <span class="badge badge-green">10 Cities Monitored</span>
+            <span class="badge badge-orange">2 Active Advisories</span>
           </div>
-        </div>
-        <div class="section-title">Statewide Overview</div>
-        <div class="grid-4" id="stateStats"></div>
-        <div class="section-title">Current Weather — Major Texas Cities</div>
-        <div id="weatherGrid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px"></div>
+        </section>
+        <h2 class="section-title">Statewide Overview</h2>
+        <div class="grid-4" id="stateStats" role="list" aria-label="Statewide statistics"></div>
+        <h2 class="section-title">Current Conditions — Major Texas Cities</h2>
+        <div id="weatherGrid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px" role="list" aria-label="City weather cards"></div>
         <div class="grid-2">
-          <div>
-            <div class="section-title">Active Alerts</div>
+          <section aria-label="Active weather alerts">
+            <h2 class="section-title">Active Alerts</h2>
             <div id="alertsPanel"></div>
-          </div>
-          <div>
-            <div class="section-title">AI Intelligence Summary</div>
+          </section>
+          <section aria-label="AI intelligence summaries">
+            <h2 class="section-title">AI Intelligence Summary</h2>
             <div id="insightPanel"></div>
-          </div>
+          </section>
         </div>
       </div>
 
-      <!-- Map Page -->
-      <div class="page" id="page-map">
-        <div class="section-title">Interactive Texas Climate Map</div>
+      <!-- Map -->
+      <div class="page" id="page-map" role="region" aria-label="Interactive Texas Climate Map">
+        <h2 class="section-title">Interactive Texas Climate Map</h2>
         <div class="map-container">
-          <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
-            <span style="font-size:11px;color:rgba(255,255,255,0.5)">Temp Color Scale:</span>
-            <span class="badge" style="background:rgba(66,139,202,0.2);color:#4A90E2">● &lt;50°F Cool</span>
-            <span class="badge badge-green">● 50–75°F Mild</span>
-            <span class="badge badge-orange">● 75–90°F Warm</span>
-            <span class="badge badge-red">● &gt;90°F Hot</span>
+          <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center" role="note" aria-label="Temperature color scale legend">
+            <span style="font-size:10px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:0.06em">Temp Scale</span>
+            <span class="badge badge-blue">&#60;50°F Cool</span>
+            <span class="badge badge-green">50–75°F Mild</span>
+            <span class="badge badge-orange">75–90°F Warm</span>
+            <span class="badge badge-red">&#62;90°F Hot</span>
           </div>
-          <svg class="map-svg" viewBox="0 0 500 420" id="texasSVG">
-            <!-- Texas outline (simplified) -->
-            <path d="M85,20 L420,20 L420,120 L460,155 L460,200 L440,220 L450,260 L430,280 L390,310 L370,380 L330,410 L300,400 L270,380 L240,385 L200,375 L170,360 L140,330 L100,320 L70,290 L60,250 L55,200 L65,150 L70,100 Z" fill="rgba(74,144,226,0.04)" stroke="rgba(74,144,226,0.25)" stroke-width="1.5"/>
-            <!-- Region labels -->
-            <text x="150" y="80" fill="rgba(255,255,255,0.1)" font-size="9" text-anchor="middle">PANHANDLE</text>
-            <text x="350" y="200" fill="rgba(255,255,255,0.1)" font-size="9">W. TEXAS</text>
-            <text x="200" y="200" fill="rgba(255,255,255,0.1)" font-size="9">CENTRAL</text>
-            <text x="340" y="320" fill="rgba(255,255,255,0.1)" font-size="9" text-anchor="middle">S. TEXAS</text>
-            <!-- Grid lines -->
-            <line x1="85" y1="160" x2="460" y2="160" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-            <line x1="85" y1="260" x2="460" y2="260" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-            <line x1="200" y1="20" x2="200" y2="410" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-            <line x1="320" y1="20" x2="320" y2="410" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-            <!-- City markers injected by JS -->
+          <svg class="map-svg" viewBox="0 0 500 420" id="texasSVG"
+               role="img" aria-labelledby="mapSvgTitle mapSvgDesc">
+            <title id="mapSvgTitle">Interactive Texas Climate Map</title>
+            <desc id="mapSvgDesc">Temperature-coded city markers for 10 Texas cities. Click any marker to view detailed weather conditions.</desc>
+            <path d="M85,20 L420,20 L420,120 L460,155 L460,200 L440,220 L450,260 L430,280 L390,310 L370,380 L330,410 L300,400 L270,380 L240,385 L200,375 L170,360 L140,330 L100,320 L70,290 L60,250 L55,200 L65,150 L70,100 Z" fill="rgba(74,144,226,0.05)" stroke="rgba(74,144,226,0.3)" stroke-width="1.5"/>
+            <text x="150" y="80" fill="rgba(255,255,255,0.12)" font-size="9" text-anchor="middle" font-family="Inter,sans-serif" aria-hidden="true">PANHANDLE</text>
+            <text x="355" y="200" fill="rgba(255,255,255,0.12)" font-size="9" font-family="Inter,sans-serif" aria-hidden="true">W. TEXAS</text>
+            <text x="200" y="200" fill="rgba(255,255,255,0.12)" font-size="9" font-family="Inter,sans-serif" aria-hidden="true">CENTRAL</text>
+            <text x="340" y="320" fill="rgba(255,255,255,0.12)" font-size="9" text-anchor="middle" font-family="Inter,sans-serif" aria-hidden="true">S. TEXAS</text>
+            <line x1="85" y1="160" x2="460" y2="160" stroke="rgba(255,255,255,0.035)" stroke-width="1" aria-hidden="true"/>
+            <line x1="85" y1="260" x2="460" y2="260" stroke="rgba(255,255,255,0.035)" stroke-width="1" aria-hidden="true"/>
+            <line x1="200" y1="20" x2="200" y2="410" stroke="rgba(255,255,255,0.035)" stroke-width="1" aria-hidden="true"/>
+            <line x1="320" y1="20" x2="320" y2="410" stroke="rgba(255,255,255,0.035)" stroke-width="1" aria-hidden="true"/>
             <g id="cityMarkers"></g>
           </svg>
-          <div class="tooltip" id="mapTooltip" style="display:none"></div>
+          <div class="tooltip" id="mapTooltip" role="tooltip" style="display:none" aria-hidden="true"></div>
         </div>
-        <div id="cityDetail" style="display:none">
-          <div class="section-title">Selected City Details</div>
+        <div id="cityDetail" style="display:none" aria-live="polite">
+          <h2 class="section-title">Selected City Details</h2>
           <div id="cityDetailContent"></div>
         </div>
       </div>
 
-      <!-- Forecasts Page -->
-      <div class="page" id="page-forecasts">
-        <div class="section-title">7-Day City Forecasts</div>
-        <div style="margin-bottom:14px">
-          <select id="forecastCity" onchange="renderForecastPage()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:7px 12px;font-size:12px;color:#fff;outline:none">
-            <option value="Austin">Austin</option>
-            <option value="Houston">Houston</option>
-            <option value="Dallas">Dallas</option>
-            <option value="San Antonio">San Antonio</option>
-            <option value="El Paso">El Paso</option>
-            <option value="Lubbock">Lubbock</option>
+      <!-- Forecasts -->
+      <div class="page" id="page-forecasts" role="region" aria-label="City Forecasts">
+        <h2 class="section-title">7-Day City Forecasts</h2>
+        <div style="margin-bottom:16px">
+          <label for="forecastCity" class="sr-only">Select city for forecast</label>
+          <select id="forecastCity" aria-label="Select city for forecast"
+                  onchange="renderForecastPage()"
+                  style="background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r8);padding:8px 14px;font-size:12px;color:var(--text0);outline:none;font-family:var(--font);cursor:pointer">
           </select>
         </div>
         <div id="forecastContent"></div>
       </div>
 
-      <!-- Agriculture Page -->
-      <div class="page" id="page-agriculture">
-        <div class="section-title">Agriculture Intelligence Center</div>
-        <div id="agContent"></div>
-      </div>
+      <!-- Agriculture -->
+      <div class="page" id="page-agriculture" role="region" aria-label="Agriculture Intelligence"><h2 class="section-title">Agriculture Intelligence Center</h2><div id="agContent"></div></div>
 
-      <!-- Climate Trends Page -->
-      <div class="page" id="page-trends">
-        <div class="section-title">Climate Trends & Historical Analysis</div>
-        <div id="trendsContent"></div>
-      </div>
+      <!-- Climate Trends -->
+      <div class="page" id="page-trends" role="region" aria-label="Climate Trends"><h2 class="section-title">Climate Trends &amp; Historical Analysis</h2><div id="trendsContent"></div></div>
 
-      <!-- Air Quality Page -->
-      <div class="page" id="page-airquality">
-        <div class="section-title">Air Quality Index — Texas Cities</div>
-        <div id="aqContent"></div>
-      </div>
+      <!-- Air Quality -->
+      <div class="page" id="page-airquality" role="region" aria-label="Air Quality"><h2 class="section-title">Air Quality Index — Texas Cities</h2><div id="aqContent"></div></div>
 
-      <!-- Water Page -->
-      <div class="page" id="page-water">
-        <div class="section-title">Water Resource Center</div>
-        <div id="waterContent"></div>
-      </div>
+      <!-- Water -->
+      <div class="page" id="page-water" role="region" aria-label="Water Resources"><h2 class="section-title">Water Resource Center</h2><div id="waterContent"></div></div>
 
-      <!-- Energy Page -->
-      <div class="page" id="page-energy">
-        <div class="section-title">ERCOT Energy Demand Intelligence</div>
-        <div id="energyContent"></div>
-      </div>
+      <!-- Energy -->
+      <div class="page" id="page-energy" role="region" aria-label="Energy"><h2 class="section-title">ERCOT Energy Demand Intelligence</h2><div id="energyContent"></div></div>
 
-      <!-- Severe Weather Page -->
-      <div class="page" id="page-severe">
-        <div class="section-title">Severe Weather Monitoring</div>
-        <div id="severeContent"></div>
-      </div>
+      <!-- Severe Weather -->
+      <div class="page" id="page-severe" role="region" aria-label="Severe Weather"><h2 class="section-title">Severe Weather Monitoring</h2><div id="severeContent"></div></div>
 
-      <!-- Compare Page -->
-      <div class="page" id="page-compare">
-        <div class="section-title">City Comparison Lab</div>
-        <div id="compareContent"></div>
-      </div>
+      <!-- Compare -->
+      <div class="page" id="page-compare" role="region" aria-label="City Comparison"><h2 class="section-title">City Comparison Lab</h2><div id="compareContent"></div></div>
 
-      <!-- Reports Page -->
-      <div class="page" id="page-reports">
-        <div class="section-title">AI Intelligence Reports</div>
-        <div id="reportsContent"></div>
-      </div>
-    </div>
+      <!-- Reports -->
+      <div class="page" id="page-reports" role="region" aria-label="AI Reports"><h2 class="section-title">AI Intelligence Reports</h2><div id="reportsContent"></div></div>
+
+    </main>
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
+'use strict';
+
+// ── Data ─────────────────────────────────────────────────────────────────────
 const CITIES = [
-  {name:'Austin',x:240,y:285,lat:30.27,lon:-97.74},
-  {name:'Houston',x:320,y:310,lat:29.76,lon:-95.37},
-  {name:'Dallas',x:280,y:175,lat:32.78,lon:-96.80},
-  {name:'San Antonio',x:220,y:320,lat:29.42,lon:-98.49},
-  {name:'Fort Worth',x:255,y:175,lat:32.75,lon:-97.33},
-  {name:'El Paso',x:88,y:240,lat:31.76,lon:-106.49},
-  {name:'Arlington',x:265,y:185,lat:32.74,lon:-97.11},
-  {name:'Corpus Christi',x:265,y:370,lat:27.80,lon:-97.40},
-  {name:'Plano',x:290,y:165,lat:33.02,lon:-96.70},
-  {name:'Lubbock',x:140,y:175,lat:33.58,lon:-101.86}
+  {name:'Austin',x:240,y:285},{name:'Houston',x:320,y:310},
+  {name:'Dallas',x:280,y:175},{name:'San Antonio',x:220,y:320},
+  {name:'Fort Worth',x:255,y:175},{name:'El Paso',x:88,y:240},
+  {name:'Arlington',x:265,y:185},{name:'Corpus Christi',x:265,y:370},
+  {name:'Plano',x:290,y:165},{name:'Lubbock',x:140,y:175}
 ];
 
 const WEATHER_DATA = {
@@ -302,142 +506,265 @@ const FORECAST_DATA = {
 const AG_DATA = [
   {label:'Heat Stress Risk',value:'Moderate–High',pct:65,color:'#F5A623'},
   {label:'Drought Concern Level',value:'Concerning',pct:72,color:'#D64545'},
-  {label:'Irrigation Need',value:'High — Recommend',pct:80,color:'#4A90E2'},
-  {label:'Crop Growth Suitability',value:'Moderate',pct:55,color:'#2E8B57'},
+  {label:'Irrigation Need',value:'High',pct:80,color:'#4A90E2'},
+  {label:'Crop Growth Suitability',value:'Moderate',pct:55,color:'#2ECC8B'},
   {label:'Agricultural Risk Index',value:'Elevated',pct:68,color:'#F5A623'},
-  {label:'Weather Hazard Assessment',value:'Moderate',pct:60,color:'#F5A623'}
+  {label:'Weather Hazard',value:'Moderate',pct:60,color:'#F5A623'}
 ];
 
+const PAGE_TITLES = {
+  dashboard:'Dashboard Overview',map:'Interactive Texas Map',forecasts:'City Forecasts',
+  agriculture:'Agriculture Intelligence',trends:'Climate Trends',airquality:'Air Quality Center',
+  water:'Water Resources',energy:'Energy Intelligence',severe:'Severe Weather',
+  compare:'City Comparison Lab',reports:'AI Intelligence Reports'
+};
+
+// ── State ─────────────────────────────────────────────────────────────────────
 let selectedCity = null;
-let charts = {};
-let currentPage = 'dashboard';
+const charts = new Map();
+let mapRendered = false;
+let searchTimer = null;
+
+// ── Utils ─────────────────────────────────────────────────────────────────────
+function escapeHtml(s){
+  if(s == null) return '';
+  const d = document.createElement('div');
+  d.appendChild(document.createTextNode(String(s)));
+  return d.innerHTML;
+}
 
 function getTempColor(t){
-  if(t<50)return '#4A90E2';
-  if(t<75)return '#2E8B57';
-  if(t<90)return '#F5A623';
+  if(t < 50) return '#4A90E2';
+  if(t < 75) return '#2ECC8B';
+  if(t < 90) return '#F5A623';
   return '#D64545';
 }
 
 function getAQILabel(aqi){
-  if(aqi<=50)return{label:'Good',color:'#2E8B57'};
-  if(aqi<=100)return{label:'Moderate',color:'#F5A623'};
-  if(aqi<=150)return{label:'Unhealthy for Sensitive',color:'#F5A623'};
-  return{label:'Unhealthy',color:'#D64545'};
+  if(aqi <= 50)  return {label:'Good',        color:'#5DDBA8'};
+  if(aqi <= 100) return {label:'Moderate',     color:'#F8C06A'};
+  if(aqi <= 150) return {label:'Sensitive Grp',color:'#F8C06A'};
+  return              {label:'Unhealthy',    color:'#E87A7A'};
 }
 
+function announce(msg){
+  const el = document.getElementById('sr-announcer');
+  if(el){ el.textContent = ''; requestAnimationFrame(()=>{ el.textContent = msg; }); }
+}
+
+function chartOpts(yCallback){
+  return {
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:'rgba(255,255,255,0.55)',font:{size:10}}}},
+    scales:{
+      x:{ticks:{color:'rgba(255,255,255,0.45)',font:{size:9},maxRotation:45},grid:{color:'rgba(255,255,255,0.04)'}},
+      y:{ticks:{color:'rgba(255,255,255,0.45)',callback:yCallback},grid:{color:'rgba(255,255,255,0.04)'}}
+    }
+  };
+}
+
+function destroyChart(key){ charts.get(key)?.destroy(); charts.delete(key); }
+
+function whenReady(canvasId, buildFn){
+  const attempt = ()=>{
+    const el = document.getElementById(canvasId);
+    if(el && el.offsetWidth > 0){ buildFn(el); }
+    else { requestAnimationFrame(attempt); }
+  };
+  requestAnimationFrame(attempt);
+}
+
+// ── Mobile nav ────────────────────────────────────────────────────────────────
+function openSidebar(){
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebarOverlay').classList.add('open');
+  document.getElementById('hamburgerBtn').setAttribute('aria-expanded','true');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+  document.getElementById('hamburgerBtn').setAttribute('aria-expanded','false');
+}
+
+// ── Navigation ────────────────────────────────────────────────────────────────
 function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n=>{
-    if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+id+"'"))n.classList.add('active');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => {
+    const isActive = n.dataset.page === id;
+    n.classList.toggle('active', isActive);
+    n.setAttribute('aria-current', isActive ? 'page' : 'false');
   });
-  const titles={dashboard:'Dashboard Overview',map:'Interactive Texas Map',forecasts:'City Forecasts',
-    agriculture:'Agriculture Intelligence',trends:'Climate Trends',airquality:'Air Quality Center',
-    water:'Water Resources',energy:'Energy Intelligence',severe:'Severe Weather',
-    compare:'City Comparison Lab',reports:'AI Intelligence Reports'};
-  document.getElementById('pageTitle').textContent=titles[id]||'Dashboard';
-  currentPage=id;
-  if(id==='map')renderMap();
-  if(id==='forecasts')renderForecastPage();
-  if(id==='agriculture')renderAg();
-  if(id==='trends')renderTrends();
-  if(id==='airquality')renderAQ();
-  if(id==='water')renderWater();
-  if(id==='energy')renderEnergy();
-  if(id==='severe')renderSevere();
-  if(id==='compare')renderCompare();
-  if(id==='reports')renderReports();
+  const page = document.getElementById('page-'+id);
+  if(page) page.classList.add('active');
+  const title = PAGE_TITLES[id] || 'Dashboard';
+  document.getElementById('pageTitle').textContent = title;
+  announce(`Navigated to ${title}`);
+  closeSidebar();
+
+  if(id === 'map')        renderMap();
+  if(id === 'forecasts')  renderForecastPage();
+  if(id === 'agriculture')renderAg();
+  if(id === 'trends')     renderTrends();
+  if(id === 'airquality') renderAQ();
+  if(id === 'water')      renderWater();
+  if(id === 'energy')     renderEnergy();
+  if(id === 'severe')     renderSevere();
+  if(id === 'compare')    renderCompare();
+  if(id === 'reports')    renderReports();
 }
 
+// ── Search ────────────────────────────────────────────────────────────────────
+function debouncedSearch(val){
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(()=> handleSearch(val), 250);
+}
+
+function handleSearch(val){
+  const trimmed = val.trim();
+  const fb = document.getElementById('searchFeedback');
+  if(!trimmed){ fb.textContent=''; fb.classList.remove('visible'); return; }
+  const match = CITIES.find(c => c.name.toLowerCase().includes(trimmed.toLowerCase()));
+  if(match){
+    fb.textContent = '';
+    fb.classList.remove('visible');
+    selectCity(match.name);
+  } else {
+    fb.textContent = `No city matching "${escapeHtml(trimmed)}"`;
+    fb.classList.add('visible');
+    setTimeout(()=>{ fb.classList.remove('visible'); }, 3000);
+  }
+}
+
+// ── Clock ─────────────────────────────────────────────────────────────────────
+function updateClock(){
+  const el = document.getElementById('clock');
+  el.textContent = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+
+// ── Refresh ───────────────────────────────────────────────────────────────────
+function refreshData(e){
+  const btn = e.currentTarget;
+  btn.textContent = '↻ Syncing…';
+  btn.disabled = true;
+  setTimeout(()=>{
+    btn.textContent = '↻ Refresh';
+    btn.disabled = false;
+    document.getElementById('lastSync').textContent = 'just now';
+    renderDashboard();
+    announce('Dashboard data refreshed');
+  }, 1200);
+}
+
+// ── Dashboard ─────────────────────────────────────────────────────────────────
 function renderDashboard(){
-  const vals=Object.values(WEATHER_DATA);
-  const avgTemp=Math.round(vals.reduce((a,c)=>a+c.temp,0)/vals.length);
-  const hottest=Object.entries(WEATHER_DATA).sort((a,b)=>b[1].temp-a[1].temp)[0];
-  const coolest=Object.entries(WEATHER_DATA).sort((a,b)=>a[1].temp-b[1].temp)[0];
-  const highHumid=Object.entries(WEATHER_DATA).sort((a,b)=>b[1].humidity-a[1].humidity)[0];
+  const vals = Object.values(WEATHER_DATA);
+  const avgTemp = Math.round(vals.reduce((a,c)=>a+c.temp,0)/vals.length);
+  const hottest = Object.entries(WEATHER_DATA).sort((a,b)=>b[1].temp-a[1].temp)[0];
+  const coolest = Object.entries(WEATHER_DATA).sort((a,b)=>a[1].temp-b[1].temp)[0];
+  const highHumid = Object.entries(WEATHER_DATA).sort((a,b)=>b[1].humidity-a[1].humidity)[0];
+
   document.getElementById('stateStats').innerHTML=`
-    <div class="card card-blue"><div class="stat-label">Avg State Temp</div><div class="stat-value">${avgTemp}<span class="stat-unit">°F</span></div><div class="stat-sub">Statewide average</div></div>
-    <div class="card card-orange"><div class="stat-label">Hottest City</div><div class="stat-value" style="font-size:16px;color:#D64545">${hottest[0]}</div><div class="stat-sub">${hottest[1].temp}°F · ${hottest[1].condition}</div></div>
-    <div class="card"><div class="stat-label">Coolest City</div><div class="stat-value" style="font-size:16px;color:#4A90E2">${coolest[0]}</div><div class="stat-sub">${coolest[1].temp}°F · ${coolest[1].condition}</div></div>
-    <div class="card"><div class="stat-label">Highest Humidity</div><div class="stat-value">${highHumid[1].humidity}<span class="stat-unit">%</span></div><div class="stat-sub">${highHumid[0]}</div></div>
+    <div class="card card-blue" role="listitem"><div class="stat-label">Avg State Temp</div><div class="stat-value">${avgTemp}<span class="stat-unit">°F</span></div><div class="stat-sub">Statewide average</div></div>
+    <div class="card card-orange" role="listitem"><div class="stat-label">Hottest City</div><div class="stat-value" style="font-size:18px;color:#E87A7A">${escapeHtml(hottest[0])}</div><div class="stat-sub">${hottest[1].temp}°F · ${escapeHtml(hottest[1].condition)}</div></div>
+    <div class="card" role="listitem"><div class="stat-label">Coolest City</div><div class="stat-value" style="font-size:18px;color:#7DB9F2">${escapeHtml(coolest[0])}</div><div class="stat-sub">${coolest[1].temp}°F · ${escapeHtml(coolest[1].condition)}</div></div>
+    <div class="card" role="listitem"><div class="stat-label">Highest Humidity</div><div class="stat-value">${highHumid[1].humidity}<span class="stat-unit">%</span></div><div class="stat-sub">${escapeHtml(highHumid[0])}</div></div>
   `;
-  const wg=document.getElementById('weatherGrid');
-  wg.innerHTML=Object.entries(WEATHER_DATA).map(([city,d])=>`
-    <div class="weather-card ${selectedCity===city?'selected':''}" onclick="selectCity('${city}')">
-      <div class="city-name">${city}</div>
-      <div class="weather-icon">${d.icon}</div>
-      <div class="temp-big">${d.temp}°</div>
+
+  const wg = document.getElementById('weatherGrid');
+  wg.innerHTML = '';
+  Object.entries(WEATHER_DATA).forEach(([city, d])=>{
+    const btn = document.createElement('button');
+    btn.className = 'weather-card' + (selectedCity===city?' selected':'');
+    btn.setAttribute('role','listitem');
+    btn.setAttribute('aria-label', `${city}: ${d.temp}°F, feels like ${d.feels}°F, ${d.condition}, humidity ${d.humidity}%`);
+    btn.setAttribute('aria-pressed', String(selectedCity===city));
+    btn.addEventListener('click', ()=> selectCity(city));
+    btn.innerHTML = `
+      <div class="city-name">${escapeHtml(city)}</div>
+      <div class="weather-icon" aria-hidden="true">${d.icon}</div>
+      <div class="temp-big" aria-hidden="true">${d.temp}°</div>
       <div class="temp-feels">Feels ${d.feels}°F</div>
-      <div class="weather-detail">
-        <span>💧${d.humidity}%</span>
-        <span>💨${d.wind}mph</span>
+      <div class="weather-detail" aria-hidden="true">
+        <span>💧 ${d.humidity}%</span>
+        <span>💨 ${d.wind} mph</span>
       </div>
-      <div style="margin-top:8px"><div class="badge" style="background:${getTempColor(d.temp)}22;color:${getTempColor(d.temp)}">${d.condition}</div></div>
-    </div>
-  `).join('');
+      <div style="margin-top:10px">
+        <span class="badge" style="background:${getTempColor(d.temp)}22;color:${getTempColor(d.temp)}">${escapeHtml(d.condition)}</span>
+      </div>
+    `;
+    wg.appendChild(btn);
+  });
+
   document.getElementById('alertsPanel').innerHTML=`
-    <div class="alert-banner">⚠ <strong>Heat Advisory</strong> — West Texas through Friday. Temps 100–108°F.</div>
-    <div class="info-banner">⚡ <strong>Thunderstorm Watch</strong> — Houston metro, expires 10 PM CDT.</div>
-    <div class="info-banner">💨 <strong>Wind Advisory</strong> — Lubbock & Panhandle. Gusts to 45mph.</div>
+    <div class="alert-banner" role="alert"><span aria-hidden="true">⚠</span> <strong>Heat Advisory</strong> — West Texas through Friday. Temps 100–108°F.</div>
+    <div class="info-banner" role="note"><span aria-hidden="true">⚡</span> <strong>Thunderstorm Watch</strong> — Houston metro, expires 10 PM CDT.</div>
+    <div class="info-banner" role="note"><span aria-hidden="true">💨</span> <strong>Wind Advisory</strong> — Lubbock &amp; Panhandle. Gusts to 45 mph.</div>
   `;
+
   document.getElementById('insightPanel').innerHTML=`
-    <div class="insight-card">
-      <div class="insight-tag">Daily Intelligence Digest</div>
-      <div class="insight-text">West Texas continues to experience extreme heat with El Paso reaching 101°F — well above seasonal averages. Central Texas faces elevated drought stress risk with soil moisture deficits widening.</div>
-    </div>
-    <div class="insight-card">
-      <div class="insight-tag">Agriculture Alert</div>
-      <div class="insight-text">Irrigation demand is high across South and Central Texas. Heat stress risk for corn and sorghum crops is elevated in the Rio Grande Valley. Producers should monitor overnight lows closely.</div>
-    </div>
-    <div class="insight-card">
-      <div class="insight-tag">Energy Outlook</div>
-      <div class="insight-text">ERCOT grid demand expected to peak at 78.4 GW this afternoon. Conservation encouraged 4–9 PM. Renewable generation covering approximately 42% of current load.</div>
-    </div>
+    <div class="insight-card"><div class="insight-tag">Daily Intelligence Digest</div><div class="insight-text">West Texas continues extreme heat with El Paso reaching 101°F — well above seasonal averages. Central Texas faces elevated drought stress risk with soil moisture deficits widening.</div></div>
+    <div class="insight-card"><div class="insight-tag">Agriculture Alert</div><div class="insight-text">Irrigation demand is high across South and Central Texas. Heat stress risk for corn and sorghum crops is elevated in the Rio Grande Valley. Producers should monitor overnight lows closely.</div></div>
+    <div class="insight-card"><div class="insight-tag">Energy Outlook</div><div class="insight-text">ERCOT grid demand expected to peak at 78.4 GW this afternoon. Conservation encouraged 4–9 PM. Renewable generation covering approximately 42% of current load.</div></div>
   `;
 }
 
+// ── City selection ────────────────────────────────────────────────────────────
 function selectCity(city){
-  selectedCity=city;
+  selectedCity = city;
   showPage('map');
 }
 
+// ── Map ───────────────────────────────────────────────────────────────────────
 function renderMap(){
-  const markers=document.getElementById('cityMarkers');
-  markers.innerHTML='';
+  const markers = document.getElementById('cityMarkers');
+  markers.innerHTML = '';
   CITIES.forEach(c=>{
-    const d=WEATHER_DATA[c.name];
-    const col=getTempColor(d.temp);
-    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    const d = WEATHER_DATA[c.name];
+    if(!d) return;
+    const col = getTempColor(d.temp);
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
     g.setAttribute('class','city-dot');
-    g.innerHTML=`
-      <circle cx="${c.x}" cy="${c.y}" r="7" fill="${col}" opacity="0.85" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
-      <text x="${c.x}" y="${c.y-11}" fill="rgba(255,255,255,0.85)" font-size="8" text-anchor="middle">${c.name}</text>
-      <text x="${c.x}" y="${c.y+4}" fill="#fff" font-size="7" text-anchor="middle" font-weight="600">${d.temp}°</text>
+    g.setAttribute('tabindex','0');
+    g.setAttribute('role','button');
+    g.setAttribute('aria-label',`${c.name}: ${d.temp}°F, ${d.condition}`);
+    g.innerHTML = `
+      <circle cx="${c.x}" cy="${c.y}" r="8" fill="${col}" opacity="0.9" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+      <text x="${c.x}" y="${c.y-13}" fill="rgba(255,255,255,0.92)" font-size="8" text-anchor="middle" font-family="Inter,sans-serif" font-weight="600" aria-hidden="true">${escapeHtml(c.name)}</text>
+      <text x="${c.x}" y="${c.y+4}" fill="#fff" font-size="7" text-anchor="middle" font-weight="700" font-family="Inter,sans-serif" aria-hidden="true">${d.temp}°</text>
     `;
-    g.addEventListener('mouseenter',e=>{showTooltip(e,c,d)});
-    g.addEventListener('mouseleave',()=>{document.getElementById('mapTooltip').style.display='none'});
-    g.addEventListener('click',()=>{showCityDetail(c.name)});
+    g.addEventListener('mouseenter', e => showTooltip(e, c, d));
+    g.addEventListener('mouseleave', hideTooltip);
+    g.addEventListener('click', ()=> showCityDetail(c.name));
+    g.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); showCityDetail(c.name); }});
     markers.appendChild(g);
   });
-  if(selectedCity)showCityDetail(selectedCity);
+  mapRendered = true;
+  if(selectedCity) showCityDetail(selectedCity);
 }
 
-function showTooltip(e,c,d){
-  const tt=document.getElementById('mapTooltip');
-  const rect=document.getElementById('texasSVG').getBoundingClientRect();
-  tt.style.display='block';
-  tt.style.left=(e.clientX-rect.left+12)+'px';
-  tt.style.top=(e.clientY-rect.top-20)+'px';
-  tt.innerHTML=`<strong>${c.name}</strong><br>${d.icon} ${d.temp}°F · ${d.condition}<br>💧 ${d.humidity}% · 💨 ${d.wind}mph`;
+function showTooltip(e, c, d){
+  const tt = document.getElementById('mapTooltip');
+  const rect = document.getElementById('texasSVG').getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  tt.style.display = 'block';
+  tt.removeAttribute('aria-hidden');
+  tt.style.left = (x + 14) + 'px';
+  tt.style.top  = (y - 24) + 'px';
+  tt.innerHTML = `<strong style="font-size:12px">${escapeHtml(c.name)}</strong><br><span style="font-size:13px" aria-hidden="true">${d.icon}</span> ${d.temp}°F · ${escapeHtml(d.condition)}<br><span style="color:var(--text2)">💧 ${d.humidity}% &nbsp;💨 ${d.wind} mph</span>`;
+}
+function hideTooltip(){
+  const tt = document.getElementById('mapTooltip');
+  tt.style.display = 'none';
+  tt.setAttribute('aria-hidden','true');
 }
 
 function showCityDetail(cityName){
-  const d=WEATHER_DATA[cityName];
-  document.getElementById('cityDetail').style.display='block';
+  const d = WEATHER_DATA[cityName];
+  if(!d) return;
+  document.getElementById('cityDetail').style.display = 'block';
   document.getElementById('cityDetailContent').innerHTML=`
-    <div class="grid-4" style="margin-bottom:12px">
+    <div class="grid-4" style="margin-bottom:14px">
       <div class="card card-orange"><div class="stat-label">Temperature</div><div class="stat-value">${d.temp}<span class="stat-unit">°F</span></div></div>
       <div class="card"><div class="stat-label">Feels Like</div><div class="stat-value">${d.feels}<span class="stat-unit">°F</span></div></div>
       <div class="card"><div class="stat-label">Humidity</div><div class="stat-value">${d.humidity}<span class="stat-unit">%</span></div></div>
@@ -446,401 +773,393 @@ function showCityDetail(cityName){
     <div class="grid-4">
       <div class="card"><div class="stat-label">Pressure</div><div class="stat-value" style="font-size:18px">${d.pressure}<span class="stat-unit">hPa</span></div></div>
       <div class="card"><div class="stat-label">Visibility</div><div class="stat-value" style="font-size:18px">${d.visibility}<span class="stat-unit">mi</span></div></div>
-      <div class="card"><div class="stat-label">UV Index</div><div class="stat-value" style="font-size:18px;color:${d.uv>=8?'#D64545':'#F5A623'}">${d.uv}</div></div>
+      <div class="card"><div class="stat-label">UV Index</div><div class="stat-value" style="font-size:18px;color:${d.uv>=8?'#E87A7A':'#F8C06A'}">${d.uv}</div></div>
       <div class="card"><div class="stat-label">AQI</div><div class="stat-value" style="font-size:18px;color:${getAQILabel(d.aqi).color}">${d.aqi}</div></div>
     </div>
-    <div style="margin-top:12px"><div class="section-title">7-Day Forecast — ${cityName}</div>
-    ${Object.entries(FORECAST_DATA).map(([day,f])=>`
-      <div class="forecast-row">
-        <div class="forecast-day">${day}</div>
-        <div class="forecast-icon">${f.icon}</div>
-        <div style="flex:1;padding:0 10px">
-          <div class="progress-bar"><div class="progress-fill" style="width:${f.rain}%;background:#4A90E2"></div></div>
-          <div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:2px">Rain: ${f.rain}%</div>
+    <div style="margin-top:14px">
+      <h3 class="section-title">7-Day Forecast — ${escapeHtml(cityName)}</h3>
+      ${Object.entries(FORECAST_DATA).map(([day,f])=>`
+        <div class="forecast-row">
+          <div class="forecast-day">${escapeHtml(day)}</div>
+          <div class="forecast-icon" aria-hidden="true">${f.icon}</div>
+          <div style="flex:1;padding:0 12px">
+            <div class="progress-bar" role="meter" aria-valuenow="${f.rain}" aria-valuemin="0" aria-valuemax="100" aria-label="${f.rain}% precipitation chance">
+              <div class="progress-fill" style="width:${f.rain}%;background:#4A90E2"></div>
+            </div>
+            <div style="font-size:9px;color:var(--text3);margin-top:3px">Rain: ${f.rain}%</div>
+          </div>
+          <div class="forecast-temps"><span class="forecast-hi">${f.hi}°</span><span class="forecast-lo">${f.lo}°</span></div>
         </div>
-        <div class="forecast-temps"><span class="forecast-hi">${f.hi}°</span><span class="forecast-lo">${f.lo}°</span></div>
-      </div>
-    `).join('')}</div>
+      `).join('')}
+    </div>
   `;
 }
 
+// ── Forecasts page ────────────────────────────────────────────────────────────
+function populateForecastSelect(){
+  const sel = document.getElementById('forecastCity');
+  sel.innerHTML = Object.keys(WEATHER_DATA)
+    .map(city => `<option value="${escapeHtml(city)}">${escapeHtml(city)}</option>`).join('');
+}
+
 function renderForecastPage(){
-  const city=document.getElementById('forecastCity').value;
-  const d=WEATHER_DATA[city];
+  const city = document.getElementById('forecastCity').value;
+  const d = WEATHER_DATA[city];
+  if(!d) return;
   document.getElementById('forecastContent').innerHTML=`
     <div class="grid-4" style="margin-bottom:16px">
-      <div class="card card-blue"><div class="stat-label">Current Temp</div><div class="stat-value">${d.temp}<span class="stat-unit">°F</span></div><div class="stat-sub">${d.condition}</div></div>
+      <div class="card card-blue"><div class="stat-label">Current Temp</div><div class="stat-value">${d.temp}<span class="stat-unit">°F</span></div><div class="stat-sub">${escapeHtml(d.condition)}</div></div>
       <div class="card"><div class="stat-label">Humidity</div><div class="stat-value">${d.humidity}<span class="stat-unit">%</span></div></div>
       <div class="card"><div class="stat-label">Wind</div><div class="stat-value">${d.wind}<span class="stat-unit">mph</span></div></div>
       <div class="card"><div class="stat-label">Feels Like</div><div class="stat-value">${d.feels}<span class="stat-unit">°F</span></div></div>
     </div>
     <div class="card" style="margin-bottom:14px">
-      <div class="section-title">7-Day Forecast</div>
+      <h3 class="section-title">7-Day Forecast</h3>
       ${Object.entries(FORECAST_DATA).map(([day,f])=>`
         <div class="forecast-row">
-          <div class="forecast-day">${day}</div>
-          <div class="forecast-icon">${f.icon}</div>
-          <div style="flex:1;padding:0 12px">
-            <div class="progress-bar"><div class="progress-fill" style="width:${f.rain}%;background:rgba(74,144,226,0.7)"></div></div>
-            <div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:2px">${f.rain}% precipitation</div>
+          <div class="forecast-day">${escapeHtml(day)}</div>
+          <div class="forecast-icon" aria-hidden="true">${f.icon}</div>
+          <div style="flex:1;padding:0 14px">
+            <div class="progress-bar" role="meter" aria-valuenow="${f.rain}" aria-valuemin="0" aria-valuemax="100" aria-label="${f.rain}% precipitation chance">
+              <div class="progress-fill" style="width:${f.rain}%;background:rgba(74,144,226,0.75)"></div>
+            </div>
+            <div style="font-size:9px;color:var(--text3);margin-top:3px">${f.rain}% precipitation</div>
           </div>
           <div class="forecast-temps"><span class="forecast-hi">${f.hi}°</span><span class="forecast-lo">${f.lo}°</span></div>
         </div>
       `).join('')}
     </div>
     <div class="card">
-      <div class="section-title">Temperature Chart (7-Day)</div>
-      <div class="chart-wrap"><canvas id="forecastChart" role="img" aria-label="7-day temperature forecast for ${city}">High and low temperatures over 7 days.</canvas></div>
+      <h3 class="section-title">Temperature Chart (7-Day)</h3>
+      <div class="chart-wrap"><canvas id="forecastChart" role="img" aria-label="7-day high and low temperature forecast for ${escapeHtml(city)}"></canvas></div>
     </div>
   `;
-  setTimeout(()=>{
-    if(charts.forecast)charts.forecast.destroy();
-    const ctx=document.getElementById('forecastChart');
-    if(!ctx)return;
-    const labels=Object.keys(FORECAST_DATA);
-    const highs=Object.values(FORECAST_DATA).map(f=>f.hi);
-    const lows=Object.values(FORECAST_DATA).map(f=>f.lo);
-    charts.forecast=new Chart(ctx,{type:'line',data:{labels,datasets:[
-      {label:'High',data:highs,borderColor:'#F5A623',backgroundColor:'rgba(245,166,35,0.1)',tension:0.4,fill:false},
-      {label:'Low',data:lows,borderColor:'#4A90E2',backgroundColor:'rgba(74,144,226,0.1)',tension:0.4,fill:false}
-    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'rgba(255,255,255,0.6)',font:{size:11}}}},scales:{x:{ticks:{color:'rgba(255,255,255,0.5)'},grid:{color:'rgba(255,255,255,0.05)'}},y:{ticks:{color:'rgba(255,255,255,0.5)',callback:v=>v+'°F'},grid:{color:'rgba(255,255,255,0.05)'}}}}});
-  },100);
+  destroyChart('forecast');
+  whenReady('forecastChart', ctx =>{
+    charts.set('forecast', new Chart(ctx,{
+      type:'line',
+      data:{labels:Object.keys(FORECAST_DATA),datasets:[
+        {label:'High °F',data:Object.values(FORECAST_DATA).map(f=>f.hi),borderColor:'#F5A623',backgroundColor:'rgba(245,166,35,0.08)',tension:0.4,fill:false,pointBackgroundColor:'#F5A623',pointRadius:4},
+        {label:'Low °F', data:Object.values(FORECAST_DATA).map(f=>f.lo),borderColor:'#4A90E2',backgroundColor:'rgba(74,144,226,0.08)',tension:0.4,fill:false,pointBackgroundColor:'#4A90E2',pointRadius:4}
+      ]},
+      options:chartOpts(v=>v+'°F')
+    }));
+  });
 }
 
+// ── Agriculture ───────────────────────────────────────────────────────────────
 function renderAg(){
   document.getElementById('agContent').innerHTML=`
     <div class="grid-2" style="margin-bottom:16px">
       <div class="card">
-        <div class="section-title">Regional Crop Conditions</div>
+        <h3 class="section-title">Regional Crop Conditions</h3>
         ${AG_DATA.map(a=>`
           <div class="ag-status">
-            <div class="ag-label">${a.label}</div>
+            <div class="ag-label">${escapeHtml(a.label)}</div>
             <div style="display:flex;align-items:center;gap:10px">
-              <div style="width:80px"><div class="progress-bar"><div class="progress-fill" style="width:${a.pct}%;background:${a.color}"></div></div></div>
-              <span class="badge" style="background:${a.color}22;color:${a.color}">${a.value}</span>
+              <div style="width:80px"><div class="progress-bar" role="meter" aria-valuenow="${a.pct}" aria-valuemin="0" aria-valuemax="100" aria-label="${escapeHtml(a.label)}: ${a.pct}%"><div class="progress-fill" style="width:${a.pct}%;background:${a.color}"></div></div></div>
+              <span class="badge" style="background:${a.color}22;color:${a.color}">${escapeHtml(a.value)}</span>
             </div>
           </div>
         `).join('')}
       </div>
       <div>
-        <div class="card card-danger" style="margin-bottom:10px">
+        <div class="card card-danger" style="margin-bottom:12px">
           <div class="stat-label">Drought Coverage</div>
-          <div class="stat-value" style="color:#D64545">63<span class="stat-unit">%</span></div>
+          <div class="stat-value" style="color:#E87A7A">63<span class="stat-unit">%</span></div>
           <div class="stat-sub">of Texas in drought conditions</div>
-          <div style="margin-top:8px"><div class="progress-bar"><div class="progress-fill" style="width:63%;background:#D64545"></div></div></div>
+          <div style="margin-top:10px"><div class="progress-bar" role="meter" aria-valuenow="63" aria-valuemin="0" aria-valuemax="100" aria-label="63% drought coverage"><div class="progress-fill" style="width:63%;background:#D64545"></div></div></div>
         </div>
-        <div class="card card-orange" style="margin-bottom:10px">
+        <div class="card card-orange" style="margin-bottom:12px">
           <div class="stat-label">Irrigation Demand Index</div>
-          <div class="stat-value" style="color:#F5A623">8.2<span class="stat-unit">/10</span></div>
-          <div class="stat-sub">High demand — South & Central TX</div>
+          <div class="stat-value" style="color:#F8C06A">8.2<span class="stat-unit">/10</span></div>
+          <div class="stat-sub">High demand — South &amp; Central TX</div>
         </div>
         <div class="card card-success">
           <div class="stat-label">Best Growing Region</div>
-          <div class="stat-value" style="font-size:16px;color:#2E8B57">East Texas</div>
+          <div class="stat-value" style="font-size:18px;color:#5DDBA8">East Texas</div>
           <div class="stat-sub">Adequate moisture, mild temps</div>
         </div>
       </div>
     </div>
     <div class="card">
-      <div class="section-title">Crop-by-Crop Outlook</div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:8px">
+      <h3 class="section-title">Crop-by-Crop Outlook</h3>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px">
         ${[
           {crop:'🌾 Cotton',status:'Moderate',color:'#F5A623'},
           {crop:'🌽 Corn',status:'Concerning',color:'#D64545'},
-          {crop:'🌿 Sorghum',status:'Good',color:'#2E8B57'},
+          {crop:'🌿 Sorghum',status:'Good',color:'#2ECC8B'},
           {crop:'🥜 Peanuts',status:'Moderate',color:'#F5A623'},
-          {crop:'🌻 Sunflower',status:'Good',color:'#2E8B57'},
-          {crop:'🍅 Vegetables',status:'Excellent',color:'#2E8B57'},
+          {crop:'🌻 Sunflower',status:'Good',color:'#2ECC8B'},
+          {crop:'🍅 Vegetables',status:'Excellent',color:'#2ECC8B'},
           {crop:'🐄 Pasture',status:'Severe',color:'#D64545'},
           {crop:'🌵 Rangelands',status:'Concerning',color:'#D64545'}
-        ].map(c=>`<div class="card" style="text-align:center;padding:10px">
-          <div style="font-size:20px;margin-bottom:6px">${c.crop.split(' ')[0]}</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.6)">${c.crop.split(' ')[1]}</div>
-          <div class="badge" style="background:${c.color}22;color:${c.color};margin-top:6px">${c.status}</div>
-        </div>`).join('')}
+        ].map(c=>{const [emoji,...name]=c.crop.split(' ');return`<div class="card" style="text-align:center;padding:12px">
+          <div style="font-size:22px;margin-bottom:6px" aria-hidden="true">${emoji}</div>
+          <div style="font-size:11px;color:var(--text1);margin-bottom:6px">${name.join(' ')}</div>
+          <span class="badge" style="background:${c.color}22;color:${c.color}">${c.status}</span>
+        </div>`}).join('')}
       </div>
     </div>
   `;
 }
 
+// ── Trends ────────────────────────────────────────────────────────────────────
 function renderTrends(){
   document.getElementById('trendsContent').innerHTML=`
     <div class="card" style="margin-bottom:14px">
-      <div class="section-title">30-Day Temperature Trend — Statewide Average</div>
-      <div class="chart-wrap" style="height:200px"><canvas id="tempTrend" role="img" aria-label="30-day temperature trend chart">Temperature trend over the past 30 days.</canvas></div>
+      <h3 class="section-title">30-Day Temperature Trend — Statewide Average</h3>
+      <div class="chart-wrap" style="height:200px"><canvas id="tempTrend" role="img" aria-label="30-day statewide average temperature trend"></canvas></div>
     </div>
     <div class="grid-2">
-      <div class="card">
-        <div class="section-title">Humidity Trend</div>
-        <div class="chart-wrap"><canvas id="humTrend" role="img" aria-label="Humidity trend">Humidity over 30 days.</canvas></div>
-      </div>
-      <div class="card">
-        <div class="section-title">Monthly Rainfall</div>
-        <div class="chart-wrap"><canvas id="rainChart" role="img" aria-label="Monthly rainfall">Monthly rainfall totals.</canvas></div>
-      </div>
+      <div class="card"><h3 class="section-title">Humidity Trend</h3><div class="chart-wrap"><canvas id="humTrend" role="img" aria-label="30-day humidity trend"></canvas></div></div>
+      <div class="card"><h3 class="section-title">Monthly Rainfall</h3><div class="chart-wrap"><canvas id="rainChart" role="img" aria-label="Monthly rainfall totals in inches"></canvas></div></div>
     </div>
   `;
-  const days=Array.from({length:30},(_, i)=>{const d=new Date();d.setDate(d.getDate()-29+i);return d.toLocaleDateString('en',{month:'short',day:'numeric'})});
-  setTimeout(()=>{
-    const tempData=days.map((_,i)=>Math.round(82+12*Math.sin(i/5)+Math.random()*4));
-    const humData=days.map((_,i)=>Math.round(55+15*Math.sin(i/7)+Math.random()*8));
-    if(charts.tempTrend)charts.tempTrend.destroy();
-    charts.tempTrend=new Chart(document.getElementById('tempTrend'),{type:'line',data:{labels:days.filter((_,i)=>i%3===0),datasets:[{label:'Avg Temp °F',data:tempData.filter((_,i)=>i%3===0),borderColor:'#F5A623',backgroundColor:'rgba(245,166,35,0.08)',tension:0.4,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'rgba(255,255,255,0.5)',font:{size:10}}}},scales:{x:{ticks:{color:'rgba(255,255,255,0.4)',font:{size:9},maxRotation:45},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'rgba(255,255,255,0.4)',callback:v=>v+'°'},grid:{color:'rgba(255,255,255,0.04)'}}}}});
-    if(charts.humTrend)charts.humTrend.destroy();
-    charts.humTrend=new Chart(document.getElementById('humTrend'),{type:'line',data:{labels:days.filter((_,i)=>i%3===0),datasets:[{label:'Humidity %',data:humData.filter((_,i)=>i%3===0),borderColor:'#4A90E2',tension:0.4,fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'rgba(255,255,255,0.5)',font:{size:10}}}},scales:{x:{ticks:{color:'rgba(255,255,255,0.4)',font:{size:9},maxRotation:45},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'rgba(255,255,255,0.4)',callback:v=>v+'%'},grid:{color:'rgba(255,255,255,0.04)'}}}}});
-    if(charts.rainChart)charts.rainChart.destroy();
-    const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    charts.rainChart=new Chart(document.getElementById('rainChart'),{type:'bar',data:{labels:months,datasets:[{label:'Rainfall (in)',data:[2.1,1.8,2.9,3.2,4.1,3.8,1.9,1.4,2.8,3.5,2.2,1.7],backgroundColor:'rgba(74,144,226,0.6)',borderColor:'#4A90E2',borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'rgba(255,255,255,0.5)',font:{size:10}}}},scales:{x:{ticks:{color:'rgba(255,255,255,0.4)',font:{size:9}},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'rgba(255,255,255,0.4)',callback:v=>v+'"'},grid:{color:'rgba(255,255,255,0.04)'}}}}});
-  },100);
+  const days = Array.from({length:30},(_,i)=>{const d=new Date();d.setDate(d.getDate()-29+i);return d.toLocaleDateString('en',{month:'short',day:'numeric'})});
+  const sparse = (_,i)=>i%3===0;
+  const tempData = days.map((_,i)=>Math.round(82+12*Math.sin(i/5)+Math.random()*4));
+  const humData  = days.map((_,i)=>Math.round(55+15*Math.sin(i/7)+Math.random()*8));
+
+  destroyChart('tempTrend'); destroyChart('humTrend'); destroyChart('rainChart');
+  whenReady('tempTrend', ctx => {
+    charts.set('tempTrend', new Chart(ctx,{type:'line',data:{labels:days.filter(sparse),datasets:[{label:'Avg Temp',data:tempData.filter(sparse),borderColor:'#F5A623',backgroundColor:'rgba(245,166,35,0.1)',tension:0.4,fill:true,pointRadius:2}]},options:chartOpts(v=>v+'°F')}));
+  });
+  whenReady('humTrend', ctx => {
+    charts.set('humTrend', new Chart(ctx,{type:'line',data:{labels:days.filter(sparse),datasets:[{label:'Humidity',data:humData.filter(sparse),borderColor:'#4A90E2',tension:0.4,fill:false,pointRadius:2}]},options:chartOpts(v=>v+'%')}));
+  });
+  whenReady('rainChart', ctx => {
+    charts.set('rainChart', new Chart(ctx,{type:'bar',data:{labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],datasets:[{label:'Rainfall (in)',data:[2.1,1.8,2.9,3.2,4.1,3.8,1.9,1.4,2.8,3.5,2.2,1.7],backgroundColor:'rgba(74,144,226,0.6)',borderColor:'#4A90E2',borderWidth:1,borderRadius:3}]},options:chartOpts(v=>v+'"')}));
+  });
 }
 
+// ── Air Quality ───────────────────────────────────────────────────────────────
 function renderAQ(){
-  const aqiEntries=Object.entries(WEATHER_DATA).sort((a,b)=>b[1].aqi-a[1].aqi);
+  const aqiEntries = Object.entries(WEATHER_DATA).sort((a,b)=>b[1].aqi-a[1].aqi);
+  const aqiVals = Object.values(WEATHER_DATA).map(d=>d.aqi);
   document.getElementById('aqContent').innerHTML=`
     <div class="grid-4" style="margin-bottom:16px">
-      <div class="card"><div class="stat-label">Best AQI</div><div class="stat-value" style="color:#2E8B57">${Math.min(...Object.values(WEATHER_DATA).map(d=>d.aqi))}</div><div class="stat-sub">Corpus Christi</div></div>
-      <div class="card"><div class="stat-label">Worst AQI</div><div class="stat-value" style="color:#F5A623">${Math.max(...Object.values(WEATHER_DATA).map(d=>d.aqi))}</div><div class="stat-sub">Houston</div></div>
-      <div class="card"><div class="stat-label">State Avg AQI</div><div class="stat-value">${Math.round(Object.values(WEATHER_DATA).reduce((a,c)=>a+c.aqi,0)/10)}</div><div class="stat-sub">Moderate</div></div>
-      <div class="card card-success"><div class="stat-label">Cities Good AQI</div><div class="stat-value" style="color:#2E8B57">7</div><div class="stat-sub">AQI ≤ 50</div></div>
+      <div class="card"><div class="stat-label">Best AQI</div><div class="stat-value" style="color:#5DDBA8">${Math.min(...aqiVals)}</div><div class="stat-sub">Corpus Christi</div></div>
+      <div class="card"><div class="stat-label">Worst AQI</div><div class="stat-value" style="color:#F8C06A">${Math.max(...aqiVals)}</div><div class="stat-sub">Houston</div></div>
+      <div class="card"><div class="stat-label">State Avg AQI</div><div class="stat-value">${Math.round(aqiVals.reduce((a,b)=>a+b,0)/aqiVals.length)}</div><div class="stat-sub">Moderate</div></div>
+      <div class="card card-success"><div class="stat-label">Cities Good AQI</div><div class="stat-value" style="color:#5DDBA8">7</div><div class="stat-sub">AQI ≤ 50</div></div>
     </div>
     <div class="card" style="margin-bottom:14px">
-      <div class="section-title">AQI by City</div>
+      <h3 class="section-title">AQI by City</h3>
       ${aqiEntries.map(([city,d])=>{const q=getAQILabel(d.aqi);return`
-        <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
-          <div style="width:100px;font-size:11px;color:rgba(255,255,255,0.7)">${city}</div>
-          <div style="flex:1"><div class="progress-bar"><div class="progress-fill" style="width:${d.aqi}%;background:${q.color}"></div></div></div>
-          <div style="width:50px;font-size:12px;font-weight:600;color:${q.color};font-family:monospace;text-align:right">${d.aqi}</div>
-          <span class="badge" style="background:${q.color}22;color:${q.color};width:90px;justify-content:center">${q.label}</span>
+        <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border)">
+          <div style="width:100px;font-size:11px;color:var(--text1)">${escapeHtml(city)}</div>
+          <div style="flex:1"><div class="progress-bar" role="meter" aria-valuenow="${d.aqi}" aria-valuemin="0" aria-valuemax="200" aria-label="${escapeHtml(city)} AQI: ${d.aqi}"><div class="progress-fill" style="width:${d.aqi/2}%;background:${q.color}"></div></div></div>
+          <div style="width:46px;font-size:12px;font-weight:700;color:${q.color};font-family:var(--mono);text-align:right">${d.aqi}</div>
+          <span class="badge" style="background:${q.color}22;color:${q.color};width:100px;justify-content:center">${q.label}</span>
         </div>
       `}).join('')}
     </div>
-    <div class="card card-blue">
-      <div class="insight-tag">Health Guidance</div>
-      <div class="insight-text">Air quality across most Texas cities is currently in the <strong style="color:#2E8B57">Good to Moderate</strong> range. Houston reports the highest AQI at 68 — sensitive groups (asthma, heart conditions) should limit prolonged outdoor exertion. All other cities are safe for normal outdoor activities.</div>
-    </div>
+    <div class="card card-blue"><div class="insight-tag">Health Guidance</div><div class="insight-text">Air quality across most Texas cities is in the <strong style="color:#5DDBA8">Good to Moderate</strong> range. Houston reports the highest AQI at 68 — sensitive groups (asthma, heart conditions) should limit prolonged outdoor exertion.</div></div>
   `;
 }
 
+// ── Water ─────────────────────────────────────────────────────────────────────
 function renderWater(){
   const reservoirs=[
-    {name:'Lake Travis',pct:38,status:'Low'},
-    {name:'Lake Buchanan',pct:42,status:'Low'},
-    {name:'Falcon Reservoir',pct:22,status:'Critical'},
-    {name:'Sam Rayburn',pct:78,status:'Normal'},
-    {name:'Toledo Bend',pct:82,status:'Normal'},
-    {name:'Amistad',pct:31,status:'Low'},
-    {name:'Lake Texoma',pct:65,status:'Normal'},
-    {name:'Richland Chambers',pct:71,status:'Normal'}
+    {name:'Lake Travis',pct:38,status:'Low'},{name:'Lake Buchanan',pct:42,status:'Low'},
+    {name:'Falcon Reservoir',pct:22,status:'Critical'},{name:'Sam Rayburn',pct:78,status:'Normal'},
+    {name:'Toledo Bend',pct:82,status:'Normal'},{name:'Amistad',pct:31,status:'Low'},
+    {name:'Lake Texoma',pct:65,status:'Normal'},{name:'Richland Chambers',pct:71,status:'Normal'}
   ];
   document.getElementById('waterContent').innerHTML=`
-    <div class="alert-banner" style="margin-bottom:14px">💧 <strong>Drought Alert:</strong> 63% of Texas in drought — Stage 2 water restrictions in effect for Hill Country & South Texas.</div>
+    <div class="alert-banner" role="alert" style="margin-bottom:16px"><span aria-hidden="true">💧</span> <strong>Drought Alert:</strong> 63% of Texas in drought — Stage 2 restrictions in effect for Hill Country &amp; South Texas.</div>
     <div class="grid-2" style="margin-bottom:14px">
       <div class="card">
-        <div class="section-title">Major Reservoir Storage Levels</div>
-        ${reservoirs.map(r=>{const col=r.pct<30?'#D64545':r.pct<50?'#F5A623':'#2E8B57';return`
-          <div style="margin-bottom:10px">
-            <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px">
-              <span style="color:rgba(255,255,255,0.7)">${r.name}</span>
-              <span style="color:${col};font-weight:600">${r.pct}% · ${r.status}</span>
+        <h3 class="section-title">Reservoir Storage Levels</h3>
+        ${reservoirs.map(r=>{const col=r.pct<30?'#D64545':r.pct<50?'#F5A623':'#2ECC8B';return`
+          <div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px">
+              <span style="color:var(--text1)">${escapeHtml(r.name)}</span>
+              <span style="color:${col};font-weight:700">${r.pct}% · ${escapeHtml(r.status)}</span>
             </div>
-            <div class="progress-bar"><div class="progress-fill" style="width:${r.pct}%;background:${col}"></div></div>
+            <div class="progress-bar" role="meter" aria-valuenow="${r.pct}" aria-valuemin="0" aria-valuemax="100" aria-label="${escapeHtml(r.name)}: ${r.pct}% capacity"><div class="progress-fill" style="width:${r.pct}%;background:${col}"></div></div>
           </div>
         `}).join('')}
       </div>
       <div>
-        <div class="card card-orange" style="margin-bottom:10px">
-          <div class="stat-label">Drought Severity</div>
-          <div class="stat-value" style="color:#F5A623">D2–D3</div>
-          <div class="stat-sub">Severe to Extreme — S. Texas</div>
-        </div>
-        <div class="card" style="margin-bottom:10px">
-          <div class="stat-label">Statewide Avg Reservoir</div>
-          <div class="stat-value">54<span class="stat-unit">%</span></div>
-          <div class="stat-sub">Below 10yr average of 71%</div>
-        </div>
-        <div class="card card-blue">
-          <div class="stat-label">Groundwater Recharge</div>
-          <div class="stat-value">Low</div>
-          <div class="stat-sub">Ogallala Aquifer declining</div>
-        </div>
+        <div class="card card-orange" style="margin-bottom:12px"><div class="stat-label">Drought Severity</div><div class="stat-value" style="color:#F8C06A">D2–D3</div><div class="stat-sub">Severe to Extreme — S. Texas</div></div>
+        <div class="card" style="margin-bottom:12px"><div class="stat-label">Statewide Avg Reservoir</div><div class="stat-value">54<span class="stat-unit">%</span></div><div class="stat-sub">Below 10yr average of 71%</div></div>
+        <div class="card card-blue"><div class="stat-label">Groundwater Recharge</div><div class="stat-value" style="font-size:18px">Low</div><div class="stat-sub">Ogallala Aquifer declining</div></div>
       </div>
     </div>
     <div class="card">
-      <div class="section-title">Conservation Recommendations</div>
-      <div class="grid-3" style="margin-top:8px">
+      <h3 class="section-title">Conservation Recommendations</h3>
+      <div class="grid-3" style="margin-top:10px">
         ${[
-          {region:'Hill Country',stage:'Stage 2',tip:'Outdoor watering 2x/week max'},
-          {region:'South Texas',stage:'Stage 3',tip:'No landscape irrigation. Indoor use only.'},
-          {region:'West Texas',stage:'Stage 2',tip:'Odd/even watering restrictions'},
-          {region:'Panhandle',stage:'Stage 1',tip:'Voluntary 10% reduction requested'},
-          {region:'East Texas',stage:'Normal',tip:'No restrictions in effect'},
-          {region:'Gulf Coast',stage:'Stage 1',tip:'Voluntary conservation encouraged'}
-        ].map(r=>`<div class="card"><div style="font-size:11px;font-weight:600;color:#fff">${r.region}</div><div class="badge ${r.stage==='Normal'?'badge-green':r.stage.includes('1')?'badge-blue':r.stage.includes('2')?'badge-orange':'badge-red'}" style="margin:6px 0">${r.stage}</div><div style="font-size:10px;color:rgba(255,255,255,0.5)">${r.tip}</div></div>`).join('')}
+          {region:'Hill Country',stage:'Stage 2',cls:'badge-orange',tip:'Outdoor watering 2×/week max'},
+          {region:'South Texas',stage:'Stage 3',cls:'badge-red',tip:'No landscape irrigation. Indoor use only.'},
+          {region:'West Texas',stage:'Stage 2',cls:'badge-orange',tip:'Odd/even watering restrictions'},
+          {region:'Panhandle',stage:'Stage 1',cls:'badge-blue',tip:'Voluntary 10% reduction requested'},
+          {region:'East Texas',stage:'Normal',cls:'badge-green',tip:'No restrictions in effect'},
+          {region:'Gulf Coast',stage:'Stage 1',cls:'badge-blue',tip:'Voluntary conservation encouraged'}
+        ].map(r=>`<div class="card"><div style="font-size:11px;font-weight:700;color:var(--text0);margin-bottom:6px">${escapeHtml(r.region)}</div><span class="badge ${r.cls}" style="margin-bottom:8px">${escapeHtml(r.stage)}</span><div style="font-size:10px;color:var(--text2)">${escapeHtml(r.tip)}</div></div>`).join('')}
       </div>
     </div>
   `;
 }
 
+// ── Energy ────────────────────────────────────────────────────────────────────
 function renderEnergy(){
   document.getElementById('energyContent').innerHTML=`
     <div class="grid-4" style="margin-bottom:16px">
       <div class="card card-orange"><div class="stat-label">Peak Demand Today</div><div class="stat-value">78.4<span class="stat-unit">GW</span></div><div class="stat-sub">Expected 4–7 PM CDT</div></div>
       <div class="card card-blue"><div class="stat-label">Current Load</div><div class="stat-value">71.2<span class="stat-unit">GW</span></div><div class="stat-sub">Grid operating normally</div></div>
-      <div class="card card-success"><div class="stat-label">Renewable Mix</div><div class="stat-value" style="color:#2E8B57">42<span class="stat-unit">%</span></div><div class="stat-sub">Wind + Solar</div></div>
+      <div class="card card-success"><div class="stat-label">Renewable Mix</div><div class="stat-value" style="color:#5DDBA8">42<span class="stat-unit">%</span></div><div class="stat-sub">Wind + Solar</div></div>
       <div class="card"><div class="stat-label">Reserve Margin</div><div class="stat-value">8.3<span class="stat-unit">%</span></div><div class="stat-sub">Adequate</div></div>
     </div>
     <div class="card" style="margin-bottom:14px">
-      <div class="section-title">Cooling Demand Index by City</div>
+      <h3 class="section-title">Cooling Demand Index by City</h3>
       ${Object.entries(WEATHER_DATA).map(([city,d])=>{
         const cdi=Math.max(0,Math.round((d.temp-65)*0.8));
         const col=cdi>25?'#D64545':cdi>15?'#F5A623':'#4A90E2';
-        return`<div style="display:flex;align-items:center;gap:12px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
-          <div style="width:110px;font-size:11px;color:rgba(255,255,255,0.7)">${city}</div>
-          <div style="flex:1"><div class="progress-bar"><div class="progress-fill" style="width:${Math.min(100,cdi*3)}%;background:${col}"></div></div></div>
-          <span style="font-size:11px;color:${col};font-weight:600;width:60px;text-align:right">CDI: ${cdi}</span>
+        return`<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)">
+          <div style="width:110px;font-size:11px;color:var(--text1)">${escapeHtml(city)}</div>
+          <div style="flex:1"><div class="progress-bar" role="meter" aria-valuenow="${cdi}" aria-valuemin="0" aria-valuemax="50" aria-label="${escapeHtml(city)} cooling demand index: ${cdi}"><div class="progress-fill" style="width:${Math.min(100,cdi*3)}%;background:${col}"></div></div></div>
+          <span style="font-size:11px;color:${col};font-weight:700;width:60px;text-align:right;font-family:var(--mono)">CDI: ${cdi}</span>
         </div>`}).join('')}
     </div>
     <div class="grid-2">
-      <div class="card card-danger">
-        <div class="insight-tag">⚡ Peak Demand Alert</div>
-        <div class="insight-text">ERCOT anticipates near-record demand 4–9 PM today. Reduce thermostat settings, defer laundry and dishwasher use until after 9 PM. Commercial facilities: raise AC setpoints to 76–78°F.</div>
-      </div>
+      <div class="card card-danger"><div class="insight-tag">⚡ Peak Demand Alert</div><div class="insight-text">ERCOT anticipates near-record demand 4–9 PM today. Reduce thermostat settings, defer laundry until after 9 PM. Commercial facilities: raise AC setpoints to 76–78°F.</div></div>
       <div class="card">
-        <div class="section-title">Energy Source Mix</div>
-        <div class="chart-wrap" style="height:150px"><canvas id="energyMix" role="img" aria-label="ERCOT energy source breakdown">Energy mix: Natural Gas 40%, Wind 28%, Solar 14%, Nuclear 10%, Coal 8%.</canvas></div>
+        <h3 class="section-title">Energy Source Mix</h3>
+        <div class="chart-wrap" style="height:155px"><canvas id="energyMix" role="img" aria-label="ERCOT energy source breakdown: Natural Gas 40%, Wind 28%, Solar 14%, Nuclear 10%, Coal 8%"></canvas></div>
       </div>
     </div>
   `;
-  setTimeout(()=>{
-    if(charts.energyMix)charts.energyMix.destroy();
-    charts.energyMix=new Chart(document.getElementById('energyMix'),{type:'doughnut',data:{labels:['Natural Gas','Wind','Solar','Nuclear','Coal'],datasets:[{data:[40,28,14,10,8],backgroundColor:['#F5A623','#4A90E2','#F5D623','#2E8B57','#888']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{color:'rgba(255,255,255,0.6)',font:{size:10},boxWidth:10}}}}});
-  },100);
+  destroyChart('energyMix');
+  whenReady('energyMix', ctx =>{
+    charts.set('energyMix', new Chart(ctx,{
+      type:'doughnut',
+      data:{labels:['Natural Gas','Wind','Solar','Nuclear','Coal'],datasets:[{data:[40,28,14,10,8],backgroundColor:['#F5A623','#4A90E2','#F5D623','#2ECC8B','#888'],borderWidth:0,hoverOffset:6}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'right',labels:{color:'rgba(255,255,255,0.65)',font:{size:10},boxWidth:10,padding:8}}}}
+    }));
+  });
 }
 
+// ── Severe weather ────────────────────────────────────────────────────────────
 function renderSevere(){
   document.getElementById('severeContent').innerHTML=`
-    <div style="margin-bottom:14px">
-      <div class="alert-banner">🌪 <strong>Tornado Watch</strong> — N. Texas & Red River Valley through 10 PM CDT. SPC outlines 15% tornado probability.</div>
-      <div class="alert-banner">🌊 <strong>Flash Flood Warning</strong> — Houston Metro. River gauges rising. Move to higher ground.</div>
-      <div class="info-banner">☀️ <strong>Excessive Heat Warning</strong> — West Texas & Trans-Pecos. Highs 105–110°F. Night lows remaining above 80°F.</div>
-      <div class="info-banner">💨 <strong>Wind Advisory</strong> — Panhandle & South Plains. Sustained 30–35mph, gusts to 50mph.</div>
+    <div style="margin-bottom:16px" role="region" aria-label="Active weather alerts">
+      <div class="alert-banner" role="alert"><span aria-hidden="true">🌪</span> <strong>Tornado Watch</strong> — N. Texas &amp; Red River Valley through 10 PM CDT. 15% tornado probability.</div>
+      <div class="alert-banner" role="alert"><span aria-hidden="true">🌊</span> <strong>Flash Flood Warning</strong> — Houston Metro. River gauges rising. Move to higher ground.</div>
+      <div class="info-banner" role="note"><span aria-hidden="true">☀️</span> <strong>Excessive Heat Warning</strong> — West Texas &amp; Trans-Pecos. Highs 105–110°F.</div>
+      <div class="info-banner" role="note"><span aria-hidden="true">💨</span> <strong>Wind Advisory</strong> — Panhandle &amp; South Plains. Gusts to 50 mph.</div>
     </div>
     <div class="grid-2" style="margin-bottom:14px">
       <div class="card">
-        <div class="section-title">Active Watches & Warnings</div>
+        <h3 class="section-title">Active Watches &amp; Warnings</h3>
         ${[
-          {type:'Tornado Watch',area:'N. Texas',expires:'10 PM CDT',level:'danger'},
-          {type:'Flash Flood Warning',area:'Houston Metro',expires:'3 AM CDT',level:'danger'},
-          {type:'Heat Warning',area:'West Texas',expires:'8 PM Sat',level:'orange'},
-          {type:'Wind Advisory',area:'Panhandle',expires:'6 PM CDT',level:'orange'},
-          {type:'Rip Current Statement',area:'Gulf Coast',expires:'Tonight',level:'blue'}
-        ].map(w=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06)">
-          <span class="badge badge-${w.level==='danger'?'red':w.level==='orange'?'orange':'blue'}" style="width:130px;justify-content:center">${w.type}</span>
-          <div style="flex:1"><div style="font-size:11px;color:#fff">${w.area}</div><div style="font-size:10px;color:rgba(255,255,255,0.4)">Expires: ${w.expires}</div></div>
+          {type:'Tornado Watch',area:'N. Texas',expires:'10 PM CDT',cls:'badge-red'},
+          {type:'Flash Flood Warning',area:'Houston Metro',expires:'3 AM CDT',cls:'badge-red'},
+          {type:'Heat Warning',area:'West Texas',expires:'8 PM Sat',cls:'badge-orange'},
+          {type:'Wind Advisory',area:'Panhandle',expires:'6 PM CDT',cls:'badge-orange'},
+          {type:'Rip Current Statement',area:'Gulf Coast',expires:'Tonight',cls:'badge-blue'}
+        ].map(w=>`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)">
+          <span class="badge ${w.cls}" style="width:136px;justify-content:center">${escapeHtml(w.type)}</span>
+          <div style="flex:1"><div style="font-size:11px;color:var(--text0)">${escapeHtml(w.area)}</div><div style="font-size:10px;color:var(--text2)">Expires: ${escapeHtml(w.expires)}</div></div>
         </div>`).join('')}
       </div>
       <div class="card">
-        <div class="section-title">Storm Probability Map (Next 24h)</div>
-        <div style="padding:20px 0;text-align:center">
-          ${['Panhandle','N. Texas','Central TX','Houston','S. Texas','W. Texas'].map((r,i)=>{const probs=[35,65,25,85,15,10];const col=probs[i]>60?'#D64545':probs[i]>30?'#F5A623':'#2E8B57';return`
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-              <div style="width:90px;font-size:10px;text-align:right;color:rgba(255,255,255,0.6)">${r}</div>
-              <div style="flex:1"><div class="progress-bar"><div class="progress-fill" style="width:${probs[i]}%;background:${col}"></div></div></div>
-              <div style="width:40px;font-size:11px;color:${col};text-align:right">${probs[i]}%</div>
+        <h3 class="section-title">Storm Probability (Next 24h)</h3>
+        <div style="padding:14px 0">
+          ${['Panhandle','N. Texas','Central TX','Houston','S. Texas','W. Texas'].map((r,i)=>{const probs=[35,65,25,85,15,10];const col=probs[i]>60?'#D64545':probs[i]>30?'#F5A623':'#2ECC8B';return`
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+              <div style="width:90px;font-size:10px;text-align:right;color:var(--text1)">${escapeHtml(r)}</div>
+              <div style="flex:1"><div class="progress-bar" role="meter" aria-valuenow="${probs[i]}" aria-valuemin="0" aria-valuemax="100" aria-label="${escapeHtml(r)}: ${probs[i]}% storm probability"><div class="progress-fill" style="width:${probs[i]}%;background:${col}"></div></div></div>
+              <div style="width:38px;font-size:11px;font-weight:700;color:${col};font-family:var(--mono)">${probs[i]}%</div>
             </div>`}).join('')}
         </div>
       </div>
     </div>
-    <div class="card card-danger">
-      <div class="insight-tag">Severe Weather Intelligence Briefing</div>
-      <div class="insight-text">A significant severe weather outbreak is expected across North Texas this evening. A strong dryline interaction with a surface low will produce supercell thunderstorms capable of large hail, damaging winds, and isolated tornadoes. Houston should monitor for additional flooding as slow-moving training thunderstorms continue. NOAA SPC Day 1 Convective Outlook rates North Texas at Moderate (SLGT-ENH) risk.</div>
-    </div>
+    <div class="card card-danger"><div class="insight-tag">Severe Weather Intelligence Briefing</div><div class="insight-text">A significant severe weather outbreak is expected across North Texas this evening. A strong dryline interaction with a surface low will produce supercell thunderstorms capable of large hail, damaging winds, and isolated tornadoes. Houston should monitor for additional flooding. NOAA SPC Day 1 Convective Outlook rates North Texas at Moderate (SLGT–ENH) risk.</div></div>
   `;
 }
 
+// ── Compare ───────────────────────────────────────────────────────────────────
 function renderCompare(){
-  const cities=['Austin','Houston','Dallas','San Antonio','El Paso'];
-  const sel=['Austin','Houston','Dallas'];
+  const sel = ['Austin','Houston','Dallas'];
   document.getElementById('compareContent').innerHTML=`
-    <div style="margin-bottom:14px;font-size:12px;color:rgba(255,255,255,0.5)">Comparing top 3 cities by temperature. Select from available cities below.</div>
-    <div class="comparison-grid" style="margin-bottom:16px">
+    <p style="margin-bottom:14px;font-size:12px;color:var(--text2)">Side-by-side comparison of key weather metrics across three cities.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px" class="comparison-grid">
       ${sel.map(city=>{const d=WEATHER_DATA[city];return`
         <div class="card" style="text-align:center">
-          <div style="font-size:14px;font-weight:600;color:#4A90E2;margin-bottom:10px">${city}</div>
-          <div class="stat-value" style="font-size:32px;color:${getTempColor(d.temp)}">${d.temp}°</div>
-          <div class="stat-sub" style="margin-bottom:10px">${d.condition}</div>
+          <div style="font-size:14px;font-weight:700;color:var(--blue);margin-bottom:12px">${escapeHtml(city)}</div>
+          <div class="weather-icon" style="font-size:32px" aria-hidden="true">${d.icon}</div>
+          <div class="stat-value" style="font-size:36px;color:${getTempColor(d.temp)};margin:6px 0" aria-label="${d.temp} degrees Fahrenheit">${d.temp}°</div>
+          <div style="font-size:11px;color:var(--text2);margin-bottom:12px">${escapeHtml(d.condition)}</div>
           <div class="divider"></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;text-align:left">
-            <div><div class="stat-label">Humidity</div><div style="font-size:14px;color:#fff">${d.humidity}%</div></div>
-            <div><div class="stat-label">Wind</div><div style="font-size:14px;color:#fff">${d.wind}mph</div></div>
-            <div><div class="stat-label">Feels Like</div><div style="font-size:14px;color:#fff">${d.feels}°F</div></div>
-            <div><div class="stat-label">AQI</div><div style="font-size:14px;color:${getAQILabel(d.aqi).color}">${d.aqi}</div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;text-align:left">
+            <div><div class="stat-label">Humidity</div><div style="font-size:14px;color:var(--text0);font-family:var(--mono)">${d.humidity}%</div></div>
+            <div><div class="stat-label">Wind</div><div style="font-size:14px;color:var(--text0);font-family:var(--mono)">${d.wind} mph</div></div>
+            <div><div class="stat-label">Feels Like</div><div style="font-size:14px;color:var(--text0);font-family:var(--mono)">${d.feels}°F</div></div>
+            <div><div class="stat-label">AQI</div><div style="font-size:14px;color:${getAQILabel(d.aqi).color};font-family:var(--mono)">${d.aqi}</div></div>
           </div>
         </div>
       `}).join('')}
     </div>
     <div class="card">
-      <div class="section-title">Comparative Temperature & Humidity Chart</div>
-      <div class="chart-wrap" style="height:220px"><canvas id="compareChart" role="img" aria-label="Comparative weather chart for Austin, Houston, and Dallas">Temperature and humidity comparison.</canvas></div>
+      <h3 class="section-title">Comparative Chart</h3>
+      <div class="chart-wrap" style="height:220px"><canvas id="compareChart" role="img" aria-label="Bar chart comparing temperature, humidity, and wind speed for Austin, Houston, and Dallas"></canvas></div>
     </div>
   `;
-  setTimeout(()=>{
-    if(charts.compare)charts.compare.destroy();
-    const labels=sel;
-    charts.compare=new Chart(document.getElementById('compareChart'),{type:'bar',data:{labels,datasets:[
-      {label:'Temp °F',data:sel.map(c=>WEATHER_DATA[c].temp),backgroundColor:'rgba(245,166,35,0.7)',yAxisID:'y'},
-      {label:'Humidity %',data:sel.map(c=>WEATHER_DATA[c].humidity),backgroundColor:'rgba(74,144,226,0.6)',yAxisID:'y1'},
-      {label:'Wind mph',data:sel.map(c=>WEATHER_DATA[c].wind),backgroundColor:'rgba(46,139,87,0.6)',yAxisID:'y1'}
-    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'rgba(255,255,255,0.6)',font:{size:10}}}},scales:{x:{ticks:{color:'rgba(255,255,255,0.5)'},grid:{color:'rgba(255,255,255,0.04)'}},y:{position:'left',ticks:{color:'rgba(255,255,255,0.4)',callback:v=>v+'°F'},grid:{color:'rgba(255,255,255,0.04)'}},y1:{position:'right',ticks:{color:'rgba(255,255,255,0.4)'},grid:{display:false}}}}});
-  },100);
+  destroyChart('compare');
+  whenReady('compareChart', ctx =>{
+    charts.set('compare', new Chart(ctx,{
+      type:'bar',
+      data:{labels:sel,datasets:[
+        {label:'Temp °F',data:sel.map(c=>WEATHER_DATA[c].temp),backgroundColor:'rgba(245,166,35,0.75)',borderRadius:4,yAxisID:'y'},
+        {label:'Humidity %',data:sel.map(c=>WEATHER_DATA[c].humidity),backgroundColor:'rgba(74,144,226,0.65)',borderRadius:4,yAxisID:'y1'},
+        {label:'Wind mph',data:sel.map(c=>WEATHER_DATA[c].wind),backgroundColor:'rgba(46,204,139,0.65)',borderRadius:4,yAxisID:'y1'}
+      ]},
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:'rgba(255,255,255,0.6)',font:{size:10}}}},
+        scales:{
+          x:{ticks:{color:'rgba(255,255,255,0.5)'},grid:{color:'rgba(255,255,255,0.04)'}},
+          y:{position:'left',ticks:{color:'rgba(255,255,255,0.45)',callback:v=>v+'°F'},grid:{color:'rgba(255,255,255,0.04)'}},
+          y1:{position:'right',ticks:{color:'rgba(255,255,255,0.45)'},grid:{display:false}}
+        }
+      }
+    }));
+  });
 }
 
+// ── Reports ───────────────────────────────────────────────────────────────────
 function renderReports(){
   document.getElementById('reportsContent').innerHTML=`
     <div class="insight-card" style="margin-bottom:12px">
       <div class="insight-tag">📊 Daily Weather Report — ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</div>
-      <div class="insight-text" style="margin-bottom:8px">Texas is experiencing a broad heat dome pattern today, with above-normal temperatures across 90% of the state. El Paso leads with 101°F while East Texas sees more moderate conditions. A cold front is expected to bring relief to North Texas by Thursday, dropping temperatures 10–15°F.</div>
-      <div class="insight-text">Houston Metro is the primary storm focus, with active severe thunderstorm watches and flood warnings in effect. The remaining areas of the state are dry, with blowing dust advisories active in the Panhandle and South Plains.</div>
+      <p class="insight-text" style="margin-bottom:8px">Texas is experiencing a broad heat dome pattern today, with above-normal temperatures across 90% of the state. El Paso leads with 101°F while East Texas sees more moderate conditions. A cold front is expected to bring relief to North Texas by Thursday.</p>
+      <p class="insight-text">Houston Metro is the primary storm focus, with active severe thunderstorm watches and flood warnings in effect. Blowing dust advisories are active in the Panhandle and South Plains.</p>
     </div>
     <div class="insight-card" style="margin-bottom:12px">
       <div class="insight-tag">🌾 Agriculture Intelligence Report</div>
-      <div class="insight-text">Drought conditions continue to worsen across South and Central Texas, now categorized at D2–D3 (Severe to Extreme) in Uvalde, Webb, and Zapata counties. Soil moisture at 4-inch depth is at 18% field capacity — critically low for most summer crops. Cotton producers in the South Plains face moderate heat stress; irrigation scheduling should target early morning hours to maximize efficiency. East Texas row crops remain in good condition with adequate rainfall over the past 14 days.</div>
+      <p class="insight-text">Drought conditions continue to worsen across South and Central Texas, now D2–D3 (Severe to Extreme) in Uvalde, Webb, and Zapata counties. Soil moisture at 4-inch depth is at 18% field capacity — critically low for summer crops. East Texas row crops remain in good condition with adequate rainfall over the past 14 days.</p>
     </div>
     <div class="insight-card" style="margin-bottom:12px">
       <div class="insight-tag">⚡ Weekly Climate Summary</div>
-      <div class="insight-text">The past 7 days recorded a statewide average temperature of 94.2°F — 6.8°F above the 1991–2020 climatological normal. Dallas set a daily high record of 108°F on Monday. Statewide precipitation was 65% below normal, extending the ongoing drought. NOAA's 8–14 day outlook shows above-normal temperatures continuing through late June with a slight moderation in the final week of the month. La Niña conditions have fully dissipated; ENSO-neutral is expected through fall 2026.</div>
+      <p class="insight-text">The past 7 days recorded a statewide average of 94.2°F — 6.8°F above the 1991–2020 climatological normal. Dallas set a daily high record of 108°F on Monday. Statewide precipitation was 65% below normal. NOAA's 8–14 day outlook shows above-normal temperatures continuing through late June. ENSO-neutral conditions expected through fall 2026.</p>
     </div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
-      <button class="btn-sm" onclick="alert('CSV export initiated — data package ready')">📥 Export CSV</button>
-      <button class="btn-sm" onclick="alert('PDF report generated')">📄 Download PDF</button>
-      <button class="btn-sm" onclick="alert('Dashboard link copied to clipboard')">🔗 Share Link</button>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+      <button class="btn-sm" onclick="alert('CSV export initiated — data package ready')" aria-label="Export data as CSV">📥 Export CSV</button>
+      <button class="btn-sm" onclick="alert('PDF report generated')" aria-label="Download PDF report">📄 Download PDF</button>
+      <button class="btn-sm" onclick="alert('Dashboard link copied to clipboard')" aria-label="Copy shareable link">🔗 Share Link</button>
     </div>
   `;
 }
 
-function refreshData(){
-  const btn=event.target;
-  btn.textContent='↻ Syncing...';
-  setTimeout(()=>{
-    btn.textContent='↻ Refresh';
-    document.getElementById('lastSync').textContent='just now';
-    renderDashboard();
-  },1200);
-}
-
-function handleSearch(val){
-  if(!val)return;
-  const cityMatch=CITIES.find(c=>c.name.toLowerCase().includes(val.toLowerCase()));
-  if(cityMatch){selectCity(cityMatch.name);}
-}
-
-function updateClock(){
-  const now=new Date();
-  document.getElementById('clock').textContent=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-}
-
-setInterval(updateClock,1000);
-updateClock();
+// ── Init ──────────────────────────────────────────────────────────────────────
+if(window.Chart) Chart.defaults.font.family = "'JetBrains Mono', monospace";
+populateForecastSelect();
 renderDashboard();
-renderMap();
+updateClock();
+setInterval(updateClock, 1000);
 </script>
+</body>
+</html>
