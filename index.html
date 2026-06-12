@@ -14,7 +14,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="TexasClimate — Real-Time Intelligence Platform">
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'none'; frame-ancestors 'none';">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src https://cdn.jsdelivr.net; frame-ancestors 'none';">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"TexasClimate Intelligence Platform","description":"Real-time climate, weather, environmental, and agricultural intelligence across Texas.","applicationCategory":"WeatherApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
@@ -300,6 +300,90 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offse
   #weatherGrid{grid-template-columns:1fr !important}
   .grid-4{grid-template-columns:1fr}
 }
+
+/* ── sgBiofuel Lab ──────────────────────────── */
+.sgBiofuelHero{background:linear-gradient(135deg,rgba(46,204,139,0.12),rgba(74,144,226,0.07));border:1px solid rgba(46,204,139,0.22);border-radius:var(--r16);padding:24px;margin-bottom:20px;position:relative;overflow:hidden}
+.sgBiofuelHero::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(46,204,139,0.1),transparent 70%);pointer-events:none}
+.sgBiofuelTitle{font-size:18px;font-weight:800;color:var(--text0);margin-bottom:6px;line-height:1.25}
+.sgBiofuelSub{font-size:12px;color:var(--text1);line-height:1.65;max-width:640px}
+.sgBiofuelDisclaimer{margin-top:12px;padding:10px 14px;background:rgba(245,166,35,0.08);border:1px solid rgba(245,166,35,0.2);border-radius:var(--r8);font-size:11px;color:#F8C06A;line-height:1.5}
+.sgBiofuelOverviewGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
+.sgBiofuelOverviewCard{background:linear-gradient(135deg,rgba(46,204,139,0.09),var(--surface));border:1px solid rgba(46,204,139,0.18);border-radius:var(--r12);padding:14px;text-align:center;transition:border-color 0.18s,transform 0.18s}
+.sgBiofuelOverviewCard:hover{border-color:rgba(46,204,139,0.38);transform:translateY(-2px)}
+.sgBiofuelOverviewIcon{font-size:26px;margin-bottom:8px}
+.sgBiofuelOverviewLabel{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:5px}
+.sgBiofuelOverviewVal{font-size:13px;font-weight:600;color:var(--text0);line-height:1.35}
+.sgBiofuelGlobeWrap{display:grid;grid-template-columns:1fr 320px;gap:18px;margin-bottom:20px;align-items:start}
+.sgBiofuelGlobeBox{background:linear-gradient(135deg,rgba(15,30,50,0.9),rgba(11,22,45,0.9));border:1px solid var(--border);border-radius:var(--r16);padding:18px}
+.sgBiofuelGlobeTitle{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.sgBiofuelGlobeTitle::after{content:'';flex:1;height:1px;background:var(--border)}
+#sgBiofuelGlobe{display:block;width:100%;max-width:420px;margin:0 auto;cursor:grab;touch-action:none}
+#sgBiofuelGlobe:active{cursor:grabbing}
+.sgBiofuelGlobeNote{font-size:10px;color:var(--text3);text-align:center;margin-top:8px}
+.sgBiofuelRegionList{background:var(--surface);border:1px solid var(--border);border-radius:var(--r12);padding:14px}
+.sgBiofuelRegionItem{display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;border-radius:4px;border-left:2px solid transparent}
+.sgBiofuelRegionItem:last-child{border-bottom:none}
+.sgBiofuelRegionItem:hover{background:var(--blue-dim)}
+.sgBiofuelRegionItem.sgActive{background:rgba(46,204,139,0.12);border-left-color:var(--green)}
+.sgBiofuelRegionDot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.sgBiofuelRegionName{font-size:11px;font-weight:500;color:var(--text0);flex:1}
+.sgBiofuelRegionScore{font-size:11px;font-family:var(--mono);font-weight:700;color:var(--green)}
+.sgBiofuelScenarioBar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.sgBiofuelScenBtn{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r8);padding:8px 14px;font-size:11px;font-weight:600;color:var(--text1);cursor:pointer;font-family:var(--font);transition:all 0.18s;white-space:nowrap}
+.sgBiofuelScenBtn:hover{background:rgba(46,204,139,0.15);border-color:rgba(46,204,139,0.35);color:var(--text0)}
+.sgBiofuelScenBtn.sgActive{background:rgba(46,204,139,0.18);border-color:rgba(46,204,139,0.5);color:#5DDBA8}
+.sgBiofuelScenNote{font-size:11px;color:var(--text2);padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r8);line-height:1.55;margin-bottom:18px}
+.sgBiofuelDashGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.sgBiofuelRegionCard{background:linear-gradient(135deg,var(--surface2),var(--surface));border:1px solid var(--border);border-radius:var(--r12);padding:14px;cursor:pointer;transition:border-color 0.18s,transform 0.18s,box-shadow 0.18s}
+.sgBiofuelRegionCard:hover{border-color:rgba(46,204,139,0.3);transform:translateY(-2px);box-shadow:0 4px 20px rgba(46,204,139,0.08)}
+.sgBiofuelRegionCard.sgHighlight{border-color:rgba(46,204,139,0.5);background:linear-gradient(135deg,rgba(46,204,139,0.1),var(--surface))}
+.sgBiofuelRCName{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px}
+.sgBiofuelRCScore{font-size:28px;font-weight:800;font-family:var(--mono);color:var(--text0);line-height:1;margin-bottom:4px}
+.sgBiofuelRCLabel{font-size:10px;color:var(--text3);margin-bottom:8px}
+.sgBiofuelRCRow{display:flex;justify-content:space-between;align-items:center;font-size:10px;padding:3px 0}
+.sgBiofuelRCKey{color:var(--text2)}
+.sgBiofuelRCVal{font-family:var(--mono);font-weight:600;color:var(--text1)}
+.sgBiofuelMetricsPanel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r12);padding:18px;margin-bottom:20px}
+.sgBiofuelMetricItem{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.sgBiofuelMetricItem:last-child{border-bottom:none}
+.sgBiofuelMetricNum{font-size:10px;font-weight:700;color:var(--text3);width:20px;flex-shrink:0;padding-top:1px}
+.sgBiofuelMetricName{font-size:11px;font-weight:700;color:var(--text0);margin-bottom:3px}
+.sgBiofuelMetricDesc{font-size:10px;color:var(--text2);line-height:1.5}
+.sgBiofuelMetricMethod{font-size:10px;color:#7DB9F2;font-style:italic;margin-top:2px}
+.sgBiofuelTraitWrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.sgBiofuelTraitCard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r12);padding:16px}
+.sgBiofuelTraitHeader{font-size:13px;font-weight:700;color:var(--text0);margin-bottom:4px}
+.sgBiofuelTraitSub{font-size:10px;color:var(--text2);margin-bottom:14px}
+.sgBiofuelTraitRow{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.sgBiofuelTraitLabel{font-size:10px;color:var(--text2);width:130px;flex-shrink:0}
+.sgBiofuelTraitBar{flex:1;height:6px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden}
+.sgBiofuelTraitFill{height:100%;border-radius:3px;transition:width 0.6s ease}
+.sgBiofuelTraitNum{font-size:10px;font-family:var(--mono);font-weight:700;width:28px;text-align:right;color:var(--text1)}
+.sgBiofuelCompTable{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:20px}
+.sgBiofuelCompTable th{background:var(--surface2);padding:10px 12px;text-align:left;font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.07em;border-bottom:1px solid var(--border)}
+.sgBiofuelCompTable td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text1);line-height:1.4}
+.sgBiofuelCompTable tr:hover td{background:var(--surface)}
+.sgBiofuelCompTable .sgWin{color:#5DDBA8;font-weight:600}
+.sgBiofuelCompTable .sgNeutral{color:var(--text2)}
+.sgBiofuelCompTable .sgLose{color:#E87A7A}
+.sgBiofuelSources{background:var(--surface);border:1px solid var(--border);border-radius:var(--r12);padding:18px;margin-bottom:20px}
+.sgBiofuelSourceItem{padding:9px 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px;font-size:11px}
+.sgBiofuelSourceItem:last-child{border-bottom:none}
+.sgBiofuelSourceIcon{color:var(--blue);flex-shrink:0;margin-top:1px}
+.sgBiofuelSourceText{color:var(--text1);line-height:1.5}
+.sgBiofuelSourceText a{color:#7DB9F2;text-decoration:none}
+.sgBiofuelSourceText a:hover{text-decoration:underline}
+@media(max-width:900px){
+  .sgBiofuelOverviewGrid{grid-template-columns:repeat(3,1fr)}
+  .sgBiofuelGlobeWrap{grid-template-columns:1fr}
+  .sgBiofuelDashGrid{grid-template-columns:repeat(2,1fr)}
+  .sgBiofuelTraitWrap{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .sgBiofuelOverviewGrid{grid-template-columns:repeat(2,1fr)}
+  .sgBiofuelDashGrid{grid-template-columns:1fr}
+  .sgBiofuelScenBtn{font-size:10px;padding:7px 10px}
+}
 </style>
 </head>
 <body>
@@ -326,6 +410,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offse
       <button class="nav-item" role="menuitem" data-page="map" onclick="showPage('map')"><span class="nav-icon" aria-hidden="true">◉</span>Texas Map</button>
       <button class="nav-item" role="menuitem" data-page="forecasts" onclick="showPage('forecasts')"><span class="nav-icon" aria-hidden="true">☁</span>Forecasts</button>
       <button class="nav-item" role="menuitem" data-page="agriculture" onclick="showPage('agriculture')"><span class="nav-icon" aria-hidden="true">🌾</span>Agriculture</button>
+      <button class="nav-item" role="menuitem" data-page="sgbiofuel" onclick="showPage('sgbiofuel')"><span class="nav-icon" aria-hidden="true">🌿</span>Biofuel Lab</button>
       <button class="nav-item" role="menuitem" data-page="trends" onclick="showPage('trends')"><span class="nav-icon" aria-hidden="true">📈</span>Climate Trends</button>
     </div>
 
@@ -445,6 +530,46 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offse
       <!-- Agriculture -->
       <div class="page" id="page-agriculture" role="region" aria-label="Agriculture Intelligence"><h2 class="section-title">Agriculture Intelligence Center</h2><div id="agContent"></div></div>
 
+      <!-- Switchgrass Biofuel Lab -->
+      <div class="page" id="page-sgbiofuel" role="region" aria-label="Switchgrass Biofuel Industrialization Lab">
+        <div class="sgBiofuelHero">
+          <h1 class="sgBiofuelTitle">🌿 Switchgrass Biofuel Industrialization Lab</h1>
+          <p class="sgBiofuelSub">A prototype research dashboard exploring global switchgrass (<em>Panicum virgatum</em>) deployment potential for cellulosic biofuel industrialization. Scores are AI-generated prototype predictions using mock data — not commercial forecasts.</p>
+          <div class="sgBiofuelDisclaimer">⚠ Research prototype: All scores are illustrative mock data based on published agronomic literature. HAL2 and FIL2 refer to <em>Panicum hallii</em> model ecotypes used in laboratory research — not commercial switchgrass varieties. This tool does not constitute investment, agronomic, or policy advice.</div>
+        </div>
+        <h2 class="section-title">Platform Overview</h2>
+        <div class="sgBiofuelOverviewGrid" id="sgBiofuelOverviewCards"></div>
+        <h2 class="section-title">Global Region Map</h2>
+        <div class="sgBiofuelGlobeWrap">
+          <div class="sgBiofuelGlobeBox">
+            <div class="sgBiofuelGlobeTitle">Orthographic Globe — Drag to Rotate</div>
+            <canvas id="sgBiofuelGlobe" width="420" height="420" role="img" aria-label="Interactive orthographic globe showing switchgrass deployment regions"></canvas>
+            <div class="sgBiofuelGlobeNote">Click a region in the list to highlight it. Drag globe to rotate.</div>
+          </div>
+          <div>
+            <div class="sgBiofuelRegionList" id="sgBiofuelRegionList"></div>
+          </div>
+        </div>
+        <h2 class="section-title">Climate Scenario Simulator</h2>
+        <div class="sgBiofuelScenarioBar" id="sgBiofuelScenBar"></div>
+        <div class="sgBiofuelScenNote" id="sgBiofuelScenNote"></div>
+        <h2 class="section-title">8-Region Industrialization Prediction Dashboard</h2>
+        <div class="sgBiofuelDashGrid" id="sgBiofuelDashGrid"></div>
+        <h2 class="section-title">Measurement Methods (13 Metrics)</h2>
+        <div class="sgBiofuelMetricsPanel" id="sgBiofuelMetricsPanel"></div>
+        <h2 class="section-title">HAL2 / FIL2 Research Profile Trait Explorer</h2>
+        <div class="sgBiofuelTraitWrap" id="sgBiofuelTraitWrap"></div>
+        <h2 class="section-title">Switchgrass vs. Corn: Biofuel Suitability Comparison</h2>
+        <div style="overflow-x:auto;margin-bottom:20px">
+          <table class="sgBiofuelCompTable">
+            <thead><tr><th>Attribute</th><th>Switchgrass</th><th>Corn (Maize)</th><th>Advantage</th></tr></thead>
+            <tbody id="sgBiofuelCompBody"></tbody>
+          </table>
+        </div>
+        <h2 class="section-title">Credible Sources &amp; References</h2>
+        <div class="sgBiofuelSources" id="sgBiofuelSources"></div>
+      </div>
+
       <!-- Climate Trends -->
       <div class="page" id="page-trends" role="region" aria-label="Climate Trends"><h2 class="section-title">Climate Trends &amp; Historical Analysis</h2><div id="trendsContent"></div></div>
 
@@ -470,6 +595,8 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offse
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
 'use strict';
@@ -514,7 +641,8 @@ const AG_DATA = [
 
 const PAGE_TITLES = {
   dashboard:'Dashboard Overview',map:'Interactive Texas Map',forecasts:'City Forecasts',
-  agriculture:'Agriculture Intelligence',trends:'Climate Trends',airquality:'Air Quality Center',
+  agriculture:'Agriculture Intelligence',sgbiofuel:'Switchgrass Biofuel Lab',
+  trends:'Climate Trends',airquality:'Air Quality Center',
   water:'Water Resources',energy:'Energy Intelligence',severe:'Severe Weather',
   compare:'City Comparison Lab',reports:'AI Intelligence Reports'
 };
@@ -604,6 +732,7 @@ function showPage(id){
   if(id === 'map')        renderMap();
   if(id === 'forecasts')  renderForecastPage();
   if(id === 'agriculture')renderAg();
+  if(id === 'sgbiofuel')  sgBiofuelInit();
   if(id === 'trends')     renderTrends();
   if(id === 'airquality') renderAQ();
   if(id === 'water')      renderWater();
@@ -1152,6 +1281,298 @@ function renderReports(){
       <button class="btn-sm" onclick="alert('Dashboard link copied to clipboard')" aria-label="Copy shareable link">🔗 Share Link</button>
     </div>
   `;
+}
+
+// ── sgBiofuel Lab ─────────────────────────────────────────────────────────────
+const sgBiofuelRegions = [
+  {id:'great-plains',name:'U.S. Great Plains',     lat:40, lon:-100,climateFit:78,rainfall:72,drought:35,salinity:20,population:25,foodComp:45,marginalLand:70,biomass:75,logistics:85},
+  {id:'texas',       name:'Texas',                 lat:31, lon:-99, climateFit:82,rainfall:65,drought:55,salinity:25,population:40,foodComp:35,marginalLand:75,biomass:80,logistics:90},
+  {id:'brazil',      name:'Brazil Cerrado',         lat:-15,lon:-48, climateFit:70,rainfall:78,drought:40,salinity:15,population:35,foodComp:60,marginalLand:65,biomass:85,logistics:60},
+  {id:'africa',      name:'Sub-Saharan Africa',     lat:10, lon:20,  climateFit:65,rainfall:55,drought:65,salinity:30,population:55,foodComp:70,marginalLand:80,biomass:70,logistics:40},
+  {id:'india',       name:'India Deccan Plateau',   lat:18, lon:77,  climateFit:60,rainfall:62,drought:55,salinity:40,population:80,foodComp:75,marginalLand:50,biomass:65,logistics:60},
+  {id:'china',       name:'N. China Plain',         lat:37, lon:115, climateFit:68,rainfall:58,drought:50,salinity:45,population:85,foodComp:80,marginalLand:40,biomass:65,logistics:75},
+  {id:'europe',      name:'Eastern Europe',         lat:50, lon:28,  climateFit:72,rainfall:75,drought:30,salinity:15,population:50,foodComp:55,marginalLand:55,biomass:70,logistics:80},
+  {id:'australia',   name:'Australia Interior Edge',lat:-28,lon:140, climateFit:60,rainfall:48,drought:70,salinity:55,population:10,foodComp:20,marginalLand:85,biomass:55,logistics:45}
+];
+
+const sgBiofuelScenarios = {
+  current: {label:'Current',       icon:'🌡',dMod:0,  rMod:0,  sMod:0,  cMod:0,  note:'Baseline mock data. Scores reflect current hypothetical regional conditions without climate modification.'},
+  hotter:  {label:'+2°C Hotter',   icon:'🔥',dMod:+20,rMod:-15,sMod:+10,cMod:-15,note:'Hotter + drier: drought and salinity risk rises. HAL2-like profiles show greater tolerance than FIL2-like in most regions.'},
+  drought: {label:'Drought',        icon:'💀',dMod:+30,rMod:-20,sMod:+15,cMod:-10,note:'Increased drought: biomass yield drops significantly. Deep-rooted HAL2-like profiles retain moderate adaptability on marginal land.'},
+  wetter:  {label:'Wetter Season',  icon:'🌧',dMod:-20,rMod:+20,sMod:-5, cMod:+10,note:'Wetter season: FIL2-like profiles perform better. Logistics and flooding risk may offset gains in some lowland zones.'},
+  extreme: {label:'Extreme Heat',   icon:'☄', dMod:+25,rMod:-10,sMod:+15,cMod:-25,note:'Extreme heat: climate fit drops sharply. Only HAL2-like drought-genetics with irrigation access maintain viable scores.'},
+  salinity:{label:'Salinity Surge', icon:'🧂',dMod:+10,rMod:-5, sMod:+30,cMod:-5, note:'Salinity stress: coastal and irrigated zones are most affected. Salinity-tolerant ecotypes needed to maintain industrialization viability.'}
+};
+
+const sgBiofuelMethods = [
+  {n:1, name:'Climate Fit Index',         desc:'Composite suitability score based on USDA hardiness zone overlap, historic PDSI, and growing degree days.',                              method:'NOAA reanalysis × crop model (DSSAT/APSIM)'},
+  {n:2, name:'Rainfall Adequacy',          desc:'Annual precipitation relative to 650 mm threshold for unirrigated switchgrass production.',                                               method:'CRU TS4.06 gridded precipitation'},
+  {n:3, name:'Drought Stress Index',       desc:'Frequency of >60-day drought events per decade; high value = high stress.',                                                              method:'SPI-6 + PDSI composite'},
+  {n:4, name:'Soil Salinity Risk',         desc:'Proportion of marginal land with EC >4 dS/m. Switchgrass tolerates moderate levels but yield declines above 8 dS/m.',                  method:'FAO HWSD v2 + SoilGrids salinity layer'},
+  {n:5, name:'Population Density Factor',  desc:'Inverse land-use competition pressure; lower density allows large-scale marginal land deployment without food displacement.',             method:'LandScan 2023 (1 km resolution)'},
+  {n:6, name:'Food Competition Risk',      desc:'Percentage of target land classified as active cropland or food-crop priority area.',                                                    method:'ESA WorldCover 2021 + FAO FAOSTAT'},
+  {n:7, name:'Marginal Land Availability', desc:'Fraction of total area classified as degraded, fallow, or non-prime land suitable for bioenergy crops.',                               method:'Global Marginal Land Assessment (GMLA)'},
+  {n:8, name:'Biomass Yield Potential',    desc:'Estimated Mg DM/ha/yr under rainfed conditions at target latitude, based on published switchgrass yield trials.',                      method:'ORNL BioEnergy Atlas + Perrin et al. 2008'},
+  {n:9, name:'Logistics Score',            desc:'Road/rail infrastructure quality and port access index, critical for biomass transport to refineries.',                                  method:'World Bank Logistics Performance Index 2023'},
+  {n:10,name:'Industrialization Index',    desc:'Weighted composite: Climate Fit (25%) + Rainfall/Drought mean (20%) + Marginal Land (15%) + Food Comp inverse (15%) + Population inverse (10%) + Biomass (10%) + Logistics (5%).',method:'Custom weighted score formula'},
+  {n:11,name:'Resilience Score',           desc:'Weighted composite emphasizing drought and climate tolerance for long-term viability.',                                                   method:'(100−Drought)×0.35 + ClimateFit×0.30 + (100−Salinity)×0.20 + Rainfall×0.15'},
+  {n:12,name:'Adaptability Score',         desc:'Capacity to deploy across landscape types and logistics chains.',                                                                         method:'MarginalLand×0.30 + Biomass×0.25 + (100−FoodComp)×0.25 + Logistics×0.20'},
+  {n:13,name:'Survival Chance',            desc:'Composite probability that industrialization could persist over a 20-year horizon under scenario conditions.',                           method:'Ind×0.40 + Resilience×0.35 + Adaptability×0.25'}
+];
+
+const sgBiofuelTraits = {
+  HAL2:{sub:'Panicum hallii var. hallii — xeric / upland ecotype (model organism)',color:'#F5A623',
+    traits:[{name:'Drought Tolerance',val:92},{name:'Heat Tolerance',val:88},{name:'Salinity Tolerance',val:72},
+            {name:'Biomass Yield',val:62},{name:'Establishment Speed',val:58},{name:'Water Use Efficiency',val:90},
+            {name:'Root Depth',val:88},{name:'Cold Tolerance',val:55},{name:'Pest Resistance',val:74},{name:'Digestibility',val:60}]},
+  FIL2:{sub:'Panicum hallii var. filipes — mesic / coastal ecotype (model organism)',color:'#4A90E2',
+    traits:[{name:'Drought Tolerance',val:52},{name:'Heat Tolerance',val:64},{name:'Salinity Tolerance',val:80},
+            {name:'Biomass Yield',val:85},{name:'Establishment Speed',val:78},{name:'Water Use Efficiency',val:58},
+            {name:'Root Depth',val:60},{name:'Cold Tolerance',val:78},{name:'Pest Resistance',val:66},{name:'Digestibility',val:72}]}
+};
+
+const sgBiofuelCompData = [
+  {attr:'Biofuel Yield (GJ/ha/yr)',      sg:'200–280',                     corn:'120–160',                         adv:'sg'},
+  {attr:'Water Requirement',             sg:'Low (rainfed capable)',        corn:'High (irrigation often needed)',   adv:'sg'},
+  {attr:'Input Costs',                   sg:'Low (perennial)',              corn:'High (annual, fertilizer-intensive)',adv:'sg'},
+  {attr:'Carbon Balance (LCA)',          sg:'Near-neutral to negative',     corn:'Positive (net GHG source)',        adv:'sg'},
+  {attr:'Food vs. Fuel Conflict',        sg:'Low (marginal land)',          corn:'High (food crop)',                 adv:'sg'},
+  {attr:'Soil Health Impact',            sg:'Positive (deep roots)',        corn:'Neutral to negative',              adv:'sg'},
+  {attr:'Establishment Cost',            sg:'Moderate (perennial)',         corn:'Low (annual, well-known)',         adv:'corn'},
+  {attr:'Refinery Infrastructure',       sg:'Needs cellulosic capacity',    corn:'Starch ethanol — mature',         adv:'corn'},
+  {attr:'Farmer Familiarity',            sg:'Low',                          corn:'Very High',                       adv:'corn'},
+  {attr:'Current Market Scale',          sg:'Pre-commercial',               corn:'Mature commodity',                adv:'corn'},
+  {attr:'Marginal Land Deployment',      sg:'Excellent',                    corn:'Poor',                            adv:'sg'},
+  {attr:'Biodiversity Co-benefit',       sg:'High (perennial habitat)',     corn:'Low',                             adv:'sg'}
+];
+
+const sgBiofuelSourcesData = [
+  {text:'Parrish, D.J. & Fike, J.H. (2005). The biology and agronomy of switchgrass for biofuels. <em>Critical Reviews in Plant Sciences</em>, 24(5–6), 423–459.',url:'https://doi.org/10.1080/07352680500316433'},
+  {text:'Perrin, R. et al. (2008). Farm-scale production cost of switchgrass for biomass. <em>BioEnergy Research</em>, 1(1), 91–97.',url:'https://doi.org/10.1007/s12155-008-9005-y'},
+  {text:'U.S. DOE (2016). <em>Billion-Ton Report: Advancing Domestic Resources for a Thriving Bioeconomy</em>. Oak Ridge National Laboratory.',url:'https://www.energy.gov/eere/bioenergy/billion-ton-report-advancing-domestic-resources-thriving-bioeconomy'},
+  {text:'Schmer, M.R. et al. (2008). Net energy of cellulosic ethanol from switchgrass. <em>PNAS</em>, 105(2), 464–469.',url:'https://doi.org/10.1073/pnas.0704767105'},
+  {text:'Lowry, D.B. et al. (2019). HAL2/FIL2 ecotype reference — divergent adaptation in <em>Panicum hallii</em>. <em>Plant Cell</em>, 31(3), 520–535.',url:'https://doi.org/10.1105/tpc.18.00233'},
+  {text:'FAO (2023). <em>The State of Food and Agriculture: Revealing the True Cost of Food</em>. Food and Agriculture Organization of the United Nations.',url:'https://www.fao.org/publications/sofa/en/'},
+  {text:'IPCC (2022). <em>Climate Change 2022: Mitigation of Climate Change (AR6 WG III)</em>. Sixth Assessment Report.',url:'https://www.ipcc.ch/report/ar6/wg3/'}
+];
+
+let sgBiofuelCurrentScenario = 'current';
+let sgBiofuelInited = false;
+let sgBiofuelHighlightedRegion = null;
+let sgBiofuelGlobeProjection, sgBiofuelGlobePath, sgBiofuelGlobeCanvas, sgBiofuelGlobeCtx;
+let sgBiofuelRotation = [0, -20];
+let sgBiofuelDragging = false;
+let sgBiofuelDragOX = 0, sgBiofuelDragOY = 0;
+const sgBiofuelDotColors = ['#4A90E2','#F5A623','#2ECC8B','#D64545','#9B59B6','#E67E22','#1ABC9C','#E74C3C'];
+
+function sgBiofuelCalcScores(r, scen) {
+  const s   = sgBiofuelScenarios[scen];
+  const cFit = Math.min(100,Math.max(0,r.climateFit+s.cMod));
+  const rain  = Math.min(100,Math.max(0,r.rainfall  +s.rMod));
+  const drou  = Math.min(100,Math.max(0,r.drought   +s.dMod));
+  const sal   = Math.min(100,Math.max(0,r.salinity  +s.sMod));
+  const ind = Math.round(cFit*0.25+((rain+(100-drou))/2)*0.20+r.marginalLand*0.15+(100-r.foodComp)*0.15+(100-r.population)*0.10+r.biomass*0.10+r.logistics*0.05);
+  const res = Math.round((100-drou)*0.35+cFit*0.30+(100-sal)*0.20+rain*0.15);
+  const adp = Math.round(r.marginalLand*0.30+r.biomass*0.25+(100-r.foodComp)*0.25+r.logistics*0.20);
+  const sur = Math.round(ind*0.40+res*0.35+adp*0.25);
+  const conf    = sur>=70&&r.logistics>=70?'High':sur>=50?'Medium':'Low';
+  const profile = drou>55?'HAL2-like':rain>72?'FIL2-like':'Balanced';
+  return {ind,res,adp,sur,conf,profile,cFit,rain,drou,sal};
+}
+
+function sgBiofuelScoreColor(v){return v>=70?'#5DDBA8':v>=50?'#F8C06A':'#E87A7A';}
+
+function sgBiofuelRenderOverview(){
+  const el=document.getElementById('sgBiofuelOverviewCards'); if(!el)return;
+  const all=sgBiofuelRegions.map(r=>sgBiofuelCalcScores(r,sgBiofuelCurrentScenario));
+  const avgInd=Math.round(all.reduce((a,s)=>a+s.ind,0)/all.length);
+  const maxIdx=all.reduce((mi,s,i,arr)=>s.ind>arr[mi].ind?i:mi,0);
+  const halCount=all.filter(s=>s.profile==='HAL2-like').length;
+  const highConf=all.filter(s=>s.conf==='High').length;
+  const cards=[
+    {icon:'🌍',label:'Regions Assessed',   val:'8 Global Regions'},
+    {icon:'📊',label:'Avg Industrial Score',val:avgInd+'/100'},
+    {icon:'🥇',label:'Top Region',          val:escapeHtml(sgBiofuelRegions[maxIdx].name)},
+    {icon:'🌿',label:'HAL2-like Profiles',  val:halCount+' / 8 Regions'},
+    {icon:'✅',label:'High Confidence',     val:highConf+' / 8 Regions'}
+  ];
+  el.innerHTML=cards.map(c=>`<div class="sgBiofuelOverviewCard"><div class="sgBiofuelOverviewIcon" aria-hidden="true">${c.icon}</div><div class="sgBiofuelOverviewLabel">${c.label}</div><div class="sgBiofuelOverviewVal">${c.val}</div></div>`).join('');
+}
+
+function sgBiofuelRenderRegionList(){
+  const el=document.getElementById('sgBiofuelRegionList'); if(!el)return;
+  el.innerHTML=`<div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)">Regions — Click to Highlight</div>`+
+    sgBiofuelRegions.map((r,i)=>{
+      const sc=sgBiofuelCalcScores(r,sgBiofuelCurrentScenario);
+      const active=sgBiofuelHighlightedRegion===r.id?' sgActive':'';
+      return `<div class="sgBiofuelRegionItem${active}" onclick="sgBiofuelHighlight('${r.id}')" tabindex="0" role="button" aria-label="${r.name}, score ${sc.ind}"><div class="sgBiofuelRegionDot" style="background:${sgBiofuelDotColors[i]}"></div><div class="sgBiofuelRegionName">${escapeHtml(r.name)}</div><div class="sgBiofuelRegionScore" style="color:${sgBiofuelScoreColor(sc.ind)}">${sc.ind}</div></div>`;
+    }).join('');
+}
+
+function sgBiofuelHighlight(id){
+  sgBiofuelHighlightedRegion=sgBiofuelHighlightedRegion===id?null:id;
+  sgBiofuelRenderRegionList();
+  sgBiofuelRenderDashGrid();
+  sgBiofuelDrawGlobe();
+}
+
+function sgBiofuelRenderScenBar(){
+  const bar=document.getElementById('sgBiofuelScenBar');
+  const note=document.getElementById('sgBiofuelScenNote');
+  if(!bar||!note)return;
+  bar.innerHTML=Object.entries(sgBiofuelScenarios).map(([k,v])=>`<button class="sgBiofuelScenBtn${k===sgBiofuelCurrentScenario?' sgActive':''}" onclick="sgBiofuelSetScen('${k}')" aria-pressed="${k===sgBiofuelCurrentScenario}">${v.icon} ${v.label}</button>`).join('');
+  note.textContent=sgBiofuelScenarios[sgBiofuelCurrentScenario].note;
+}
+
+function sgBiofuelSetScen(k){
+  sgBiofuelCurrentScenario=k;
+  sgBiofuelRenderOverview();
+  sgBiofuelRenderScenBar();
+  sgBiofuelRenderDashGrid();
+  sgBiofuelRenderRegionList();
+  sgBiofuelDrawGlobe();
+}
+
+function sgBiofuelRenderDashGrid(){
+  const el=document.getElementById('sgBiofuelDashGrid'); if(!el)return;
+  el.innerHTML=sgBiofuelRegions.map(r=>{
+    const sc=sgBiofuelCalcScores(r,sgBiofuelCurrentScenario);
+    const hi=sgBiofuelHighlightedRegion===r.id;
+    return `<div class="sgBiofuelRegionCard${hi?' sgHighlight':''}" onclick="sgBiofuelHighlight('${r.id}')" tabindex="0" role="button" aria-label="${r.name} score ${sc.ind}">
+      <div class="sgBiofuelRCName">${escapeHtml(r.name)}</div>
+      <div class="sgBiofuelRCScore" style="color:${sgBiofuelScoreColor(sc.ind)}">${sc.ind}</div>
+      <div class="sgBiofuelRCLabel">Industrialization Index</div>
+      <div class="sgBiofuelRCRow"><span class="sgBiofuelRCKey">Resilience</span><span class="sgBiofuelRCVal" style="color:${sgBiofuelScoreColor(sc.res)}">${sc.res}</span></div>
+      <div class="sgBiofuelRCRow"><span class="sgBiofuelRCKey">Adaptability</span><span class="sgBiofuelRCVal" style="color:${sgBiofuelScoreColor(sc.adp)}">${sc.adp}</span></div>
+      <div class="sgBiofuelRCRow"><span class="sgBiofuelRCKey">Survival Chance</span><span class="sgBiofuelRCVal" style="color:${sgBiofuelScoreColor(sc.sur)}">${sc.sur}</span></div>
+      <div class="sgBiofuelRCRow"><span class="sgBiofuelRCKey">Confidence</span><span class="sgBiofuelRCVal">${escapeHtml(sc.conf)}</span></div>
+      <div class="sgBiofuelRCRow"><span class="sgBiofuelRCKey">Profile</span><span class="sgBiofuelRCVal">${escapeHtml(sc.profile)}</span></div>
+      <div class="sgBiofuelRCRow"><span class="sgBiofuelRCKey">Climate Fit</span><span class="sgBiofuelRCVal">${sc.cFit}</span></div>
+      <div class="sgBiofuelRCRow"><span class="sgBiofuelRCKey">Rainfall Adj</span><span class="sgBiofuelRCVal">${sc.rain}</span></div>
+      <div class="sgBiofuelRCRow"><span class="sgBiofuelRCKey">Drought Adj</span><span class="sgBiofuelRCVal">${sc.drou}</span></div>
+      <div class="sgBiofuelRCRow"><span class="sgBiofuelRCKey">Salinity Adj</span><span class="sgBiofuelRCVal">${sc.sal}</span></div>
+    </div>`;
+  }).join('');
+}
+
+function sgBiofuelRenderMetrics(){
+  const el=document.getElementById('sgBiofuelMetricsPanel'); if(!el)return;
+  el.innerHTML=sgBiofuelMethods.map(m=>`<div class="sgBiofuelMetricItem"><div class="sgBiofuelMetricNum">${m.n}</div><div style="flex:1"><div class="sgBiofuelMetricName">${escapeHtml(m.name)}</div><div class="sgBiofuelMetricDesc">${escapeHtml(m.desc)}</div><div class="sgBiofuelMetricMethod">Method: ${escapeHtml(m.method)}</div></div></div>`).join('');
+}
+
+function sgBiofuelRenderTraits(){
+  const el=document.getElementById('sgBiofuelTraitWrap'); if(!el)return;
+  el.innerHTML=Object.entries(sgBiofuelTraits).map(([name,data])=>`
+    <div class="sgBiofuelTraitCard">
+      <div class="sgBiofuelTraitHeader" style="color:${data.color}">${escapeHtml(name)} Profile</div>
+      <div class="sgBiofuelTraitSub">${escapeHtml(data.sub)}</div>
+      ${data.traits.map(t=>`<div class="sgBiofuelTraitRow"><div class="sgBiofuelTraitLabel">${escapeHtml(t.name)}</div><div class="sgBiofuelTraitBar"><div class="sgBiofuelTraitFill" style="width:${t.val}%;background:${data.color}"></div></div><div class="sgBiofuelTraitNum" style="color:${data.color}">${t.val}</div></div>`).join('')}
+    </div>`).join('');
+}
+
+function sgBiofuelRenderCompTable(){
+  const el=document.getElementById('sgBiofuelCompBody'); if(!el)return;
+  el.innerHTML=sgBiofuelCompData.map(r=>{
+    const sgCls=r.adv==='sg'?'sgWin':'sgLose';
+    const cornCls=r.adv==='corn'?'sgWin':'sgLose';
+    return `<tr><td>${escapeHtml(r.attr)}</td><td class="${sgCls}">${escapeHtml(r.sg)}</td><td class="${cornCls}">${escapeHtml(r.corn)}</td><td class="${r.adv==='sg'?'sgWin':'sgNeutral'}">${r.adv==='sg'?'Switchgrass':'Corn'}</td></tr>`;
+  }).join('');
+}
+
+function sgBiofuelRenderSources(){
+  const el=document.getElementById('sgBiofuelSources'); if(!el)return;
+  el.innerHTML=sgBiofuelSourcesData.map(s=>`<div class="sgBiofuelSourceItem"><span class="sgBiofuelSourceIcon" aria-hidden="true">📖</span><div class="sgBiofuelSourceText">${s.text} <a href="${s.url}" target="_blank" rel="noopener noreferrer">[Link]</a></div></div>`).join('');
+}
+
+function sgBiofuelInitGlobe(){
+  sgBiofuelGlobeCanvas=document.getElementById('sgBiofuelGlobe');
+  if(!sgBiofuelGlobeCanvas||!window.d3||!window.topojson)return;
+  sgBiofuelGlobeCtx=sgBiofuelGlobeCanvas.getContext('2d');
+  const w=sgBiofuelGlobeCanvas.width, h=sgBiofuelGlobeCanvas.height;
+  sgBiofuelGlobeProjection=d3.geoOrthographic().scale(Math.min(w,h)/2.2).translate([w/2,h/2]).rotate(sgBiofuelRotation).clipAngle(90);
+  sgBiofuelGlobePath=d3.geoPath(sgBiofuelGlobeProjection,sgBiofuelGlobeCtx);
+  d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(world=>{
+    sgBiofuelGlobeCanvas._land=topojson.feature(world,world.objects.land);
+    sgBiofuelDrawGlobe();
+  }).catch(()=>{
+    sgBiofuelGlobeCtx.fillStyle='rgba(255,255,255,0.2)';
+    sgBiofuelGlobeCtx.font='12px Inter,sans-serif';
+    sgBiofuelGlobeCtx.textAlign='center';
+    sgBiofuelGlobeCtx.fillText('Globe unavailable (network blocked)',w/2,h/2);
+  });
+  /* drag */
+  sgBiofuelGlobeCanvas.addEventListener('mousedown',e=>{sgBiofuelDragging=true;sgBiofuelDragOX=e.clientX;sgBiofuelDragOY=e.clientY;e.preventDefault();});
+  window.addEventListener('mousemove',e=>{
+    if(!sgBiofuelDragging)return;
+    const dx=(e.clientX-sgBiofuelDragOX)*0.4,dy=(e.clientY-sgBiofuelDragOY)*0.4;
+    sgBiofuelDragOX=e.clientX;sgBiofuelDragOY=e.clientY;
+    sgBiofuelRotation[0]+=dx;
+    sgBiofuelRotation[1]=Math.max(-90,Math.min(90,sgBiofuelRotation[1]-dy));
+    sgBiofuelDrawGlobe();
+  });
+  window.addEventListener('mouseup',()=>{sgBiofuelDragging=false;});
+  sgBiofuelGlobeCanvas.addEventListener('touchstart',e=>{sgBiofuelDragging=true;sgBiofuelDragOX=e.touches[0].clientX;sgBiofuelDragOY=e.touches[0].clientY;e.preventDefault();},{passive:false});
+  window.addEventListener('touchmove',e=>{
+    if(!sgBiofuelDragging)return;
+    const dx=(e.touches[0].clientX-sgBiofuelDragOX)*0.4,dy=(e.touches[0].clientY-sgBiofuelDragOY)*0.4;
+    sgBiofuelDragOX=e.touches[0].clientX;sgBiofuelDragOY=e.touches[0].clientY;
+    sgBiofuelRotation[0]+=dx;
+    sgBiofuelRotation[1]=Math.max(-90,Math.min(90,sgBiofuelRotation[1]-dy));
+    sgBiofuelDrawGlobe();
+  },{passive:false});
+  window.addEventListener('touchend',()=>{sgBiofuelDragging=false;});
+}
+
+function sgBiofuelDrawGlobe(){
+  if(!sgBiofuelGlobeCtx||!sgBiofuelGlobeCanvas)return;
+  const w=sgBiofuelGlobeCanvas.width,h=sgBiofuelGlobeCanvas.height;
+  sgBiofuelGlobeCtx.clearRect(0,0,w,h);
+  sgBiofuelGlobeProjection.rotate(sgBiofuelRotation);
+  /* ocean */
+  sgBiofuelGlobeCtx.beginPath();sgBiofuelGlobePath({type:'Sphere'});
+  sgBiofuelGlobeCtx.fillStyle='rgba(74,144,226,0.12)';sgBiofuelGlobeCtx.fill();
+  sgBiofuelGlobeCtx.strokeStyle='rgba(74,144,226,0.35)';sgBiofuelGlobeCtx.lineWidth=1;sgBiofuelGlobeCtx.stroke();
+  /* graticule */
+  sgBiofuelGlobeCtx.beginPath();sgBiofuelGlobePath(d3.geoGraticule()());
+  sgBiofuelGlobeCtx.strokeStyle='rgba(255,255,255,0.04)';sgBiofuelGlobeCtx.lineWidth=0.5;sgBiofuelGlobeCtx.stroke();
+  /* land */
+  if(sgBiofuelGlobeCanvas._land){
+    sgBiofuelGlobeCtx.beginPath();sgBiofuelGlobePath(sgBiofuelGlobeCanvas._land);
+    sgBiofuelGlobeCtx.fillStyle='rgba(46,204,139,0.18)';sgBiofuelGlobeCtx.fill();
+    sgBiofuelGlobeCtx.strokeStyle='rgba(46,204,139,0.35)';sgBiofuelGlobeCtx.lineWidth=0.5;sgBiofuelGlobeCtx.stroke();
+  }
+  /* markers */
+  const cx=w/2,cy=h/2,rad=sgBiofuelGlobeProjection.scale();
+  sgBiofuelRegions.forEach((r,i)=>{
+    const pt=sgBiofuelGlobeProjection([r.lon,r.lat]); if(!pt)return;
+    if((pt[0]-cx)*(pt[0]-cx)+(pt[1]-cy)*(pt[1]-cy)>rad*rad)return;
+    const hi=sgBiofuelHighlightedRegion===r.id;
+    const sc=sgBiofuelCalcScores(r,sgBiofuelCurrentScenario);
+    sgBiofuelGlobeCtx.beginPath();sgBiofuelGlobeCtx.arc(pt[0],pt[1],hi?10:7,0,Math.PI*2);
+    sgBiofuelGlobeCtx.fillStyle=sgBiofuelDotColors[i];sgBiofuelGlobeCtx.globalAlpha=hi?1:0.82;sgBiofuelGlobeCtx.fill();
+    if(hi){sgBiofuelGlobeCtx.strokeStyle='#fff';sgBiofuelGlobeCtx.lineWidth=2;sgBiofuelGlobeCtx.stroke();}
+    sgBiofuelGlobeCtx.globalAlpha=1;
+    sgBiofuelGlobeCtx.fillStyle='#fff';sgBiofuelGlobeCtx.font=`bold ${hi?11:9}px Inter,sans-serif`;
+    sgBiofuelGlobeCtx.textAlign='center';sgBiofuelGlobeCtx.textBaseline='middle';
+    sgBiofuelGlobeCtx.fillText(sc.ind,pt[0],pt[1]);
+  });
+}
+
+function sgBiofuelInit(){
+  if(sgBiofuelInited){
+    sgBiofuelRenderOverview();sgBiofuelRenderScenBar();sgBiofuelRenderDashGrid();sgBiofuelRenderRegionList();sgBiofuelDrawGlobe();
+    return;
+  }
+  sgBiofuelInited=true;
+  sgBiofuelRenderMetrics();
+  sgBiofuelRenderTraits();
+  sgBiofuelRenderCompTable();
+  sgBiofuelRenderSources();
+  sgBiofuelRenderOverview();
+  sgBiofuelRenderScenBar();
+  sgBiofuelRenderDashGrid();
+  sgBiofuelRenderRegionList();
+  sgBiofuelInitGlobe();
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
