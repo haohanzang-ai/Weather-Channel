@@ -33,6 +33,40 @@
 <a href="#main-content" class="skip-link">Skip to main content</a>
 <div id="sr-announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
 
+<!-- ── Loading Screen ─────────────────────────────────────────────────────── -->
+<style>
+#loadingScreen{position:fixed;inset:0;z-index:9999;background:#0b0f18;display:flex;align-items:center;justify-content:center;transition:opacity .55s ease}
+#loadingScreen.ls-out{opacity:0;pointer-events:none}
+.ls-inner{text-align:center;max-width:360px;width:90%;padding:0 16px}
+.ls-icon{font-size:56px;margin-bottom:14px;display:block;animation:ls-float 3s ease-in-out infinite}
+@keyframes ls-float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-8px) scale(1.06)}}
+.ls-title{font-family:'Inter',sans-serif;font-size:30px;font-weight:800;color:#fff;letter-spacing:-.5px;margin-bottom:4px}
+.ls-sub{font-family:'Inter',sans-serif;font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.14em;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:6px}
+.ls-dot{width:6px;height:6px;border-radius:50%;background:#5DDBA8;display:inline-block;animation:ls-blink 1.2s ease-in-out infinite}
+@keyframes ls-blink{0%,100%{opacity:1}50%{opacity:.25}}
+.ls-status{font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,.45);margin:14px 0 10px;min-height:16px}
+.ls-bar-wrap{height:3px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;margin-bottom:18px}
+.ls-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,#4A90E2,#5DDBA8);border-radius:2px;transition:width .35s ease}
+.ls-cities{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
+.ls-chip{font-size:9px;font-family:'Inter',sans-serif;padding:3px 9px;border-radius:12px;background:rgba(74,144,226,.1);color:rgba(255,255,255,.3);border:1px solid rgba(74,144,226,.18);transition:background .3s,color .3s,border-color .3s}
+.ls-chip.done{background:rgba(93,219,168,.18);color:#5DDBA8;border-color:rgba(93,219,168,.35)}
+.ls-hint{font-size:10px;color:rgba(255,255,255,.18);margin-top:20px;font-family:'Inter',sans-serif}
+</style>
+
+<div id="loadingScreen" role="status" aria-label="Loading weather data for 10 Texas cities">
+  <div class="ls-inner">
+    <span class="ls-icon" aria-hidden="true">🌤</span>
+    <div class="ls-title">TexasClimate</div>
+    <div class="ls-sub"><span class="ls-dot" aria-hidden="true"></span>Intelligence Platform</div>
+    <div class="ls-status" id="lsStatus">Connecting to weather APIs…</div>
+    <div class="ls-bar-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0" id="lsBar">
+      <div class="ls-bar-fill" id="lsFill"></div>
+    </div>
+    <div class="ls-cities" id="lsCities"></div>
+    <div class="ls-hint">Fetching live data from Open-Meteo &amp; NWS</div>
+  </div>
+</div>
+
 <div class="app" id="app">
 
   <!-- Sidebar overlay (mobile) -->
@@ -69,6 +103,11 @@
       <div class="nav-label" aria-hidden="true">Analysis</div>
       <button class="nav-item" role="menuitem" data-page="compare" onclick="showPage('compare')"><span class="nav-icon" aria-hidden="true">⇌</span>City Comparison</button>
       <button class="nav-item" role="menuitem" data-page="reports" onclick="showPage('reports')"><span class="nav-icon" aria-hidden="true">📋</span>AI Reports</button>
+    </div>
+
+    <div class="nav-section" role="menu" aria-label="Preferences">
+      <div class="nav-label" aria-hidden="true">Preferences</div>
+      <button class="nav-item" role="menuitem" data-page="settings" onclick="showPage('settings')"><span class="nav-icon" aria-hidden="true">⚙</span>Settings</button>
     </div>
 
     <div class="sidebar-footer">
@@ -252,6 +291,9 @@
       <!-- Reports -->
       <div class="page" id="page-reports" role="region" aria-label="AI Reports"><h2 class="section-title">AI Intelligence Reports</h2><div id="reportsContent"></div></div>
 
+      <!-- Settings -->
+      <div class="page" id="page-settings" role="region" aria-label="Platform Settings"></div>
+
     </main>
   </div>
 </div>
@@ -278,6 +320,7 @@
 <script src="js/reports.js"></script>
 <script src="js/biofuel.js"></script>
 <script src="js/fuel.js"></script>
+<script src="js/settings.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

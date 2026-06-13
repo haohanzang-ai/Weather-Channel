@@ -39,9 +39,9 @@ function renderTrends(){
   document.getElementById('trendsContent').innerHTML=`
     <div class="grid-4" style="margin-bottom:14px">
       <div class="card"><div class="stat-label">Today Avg Temp</div><div class="stat-value">${todayAvgT}<span class="stat-unit">°F</span></div><div class="stat-sub">Statewide — live</div></div>
-      <div class="card"><div class="stat-label">7-Day Avg High</div><div class="stat-value">${avgHi.length?Math.round(avgHi.reduce((a,b)=>a+b,0)/avgHi.length):—}<span class="stat-unit">°F</span></div><div class="stat-sub">Statewide forecast</div></div>
+      <div class="card"><div class="stat-label">7-Day Avg High</div><div class="stat-value">${avgHi.length?Math.round(avgHi.reduce((a,b)=>a+b,0)/avgHi.length):'—'}<span class="stat-unit">°F</span></div><div class="stat-sub">Statewide forecast</div></div>
       <div class="card"><div class="stat-label">Today Avg Humidity</div><div class="stat-value">${todayAvgH}<span class="stat-unit">%</span></div><div class="stat-sub">Statewide — live</div></div>
-      <div class="card"><div class="stat-label">Avg Rain Chance</div><div class="stat-value">${avgRain.length?Math.round(avgRain.reduce((a,b)=>a+b,0)/avgRain.length):—}<span class="stat-unit">%</span></div><div class="stat-sub">7-day statewide avg</div></div>
+      <div class="card"><div class="stat-label">Avg Rain Chance</div><div class="stat-value">${avgRain.length?Math.round(avgRain.reduce((a,b)=>a+b,0)/avgRain.length):'—'}<span class="stat-unit">%</span></div><div class="stat-sub">7-day statewide avg</div></div>
     </div>
     <div class="card" style="margin-bottom:14px">
       <h3 class="section-title">7-Day Statewide Avg Temperature — High &amp; Low</h3>

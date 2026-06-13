@@ -39,6 +39,7 @@ function showPage(id){
   if(id === 'severe')     renderSevere();
   if(id === 'compare')    renderCompare();
   if(id === 'reports')    renderReports();
+  if(id === 'settings')   renderSettings();
 }
 
 // ── Search ────────────────────────────────────────────────────────────────────

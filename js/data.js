@@ -35,6 +35,7 @@ const PAGE_TITLES = {
   agriculture: 'Agriculture Intelligence',
   sgbiofuel:   'Switchgrass Biofuel Lab',
   fueleff:     'Fuel Efficiency Center',
+  settings:    'Settings',
   trends:      'Climate Trends',
   airquality:  'Air Quality Center',
   water:       'Water Resources',
@@ -60,6 +61,46 @@ function getConditionFromCode(code){
   return {condition:'Variable', icon:'🌡'};
 }
 
+// ── Loading Screen helpers ────────────────────────────────────────────────────
+let _lsDone = 0;
+const _lsTotal = CITIES.length;
+
+function lsInit(){
+  _lsDone = 0;
+  const chips = document.getElementById('lsCities');
+  const fill  = document.getElementById('lsFill');
+  const bar   = document.getElementById('lsBar');
+  const stat  = document.getElementById('lsStatus');
+  if(chips) chips.innerHTML = CITIES.map(c=>`<span class="ls-chip" id="lsc-${c.name.replace(/\s+/g,'_')}">${c.name}</span>`).join('');
+  if(fill)  fill.style.width = '0%';
+  if(bar)   bar.setAttribute('aria-valuenow','0');
+  if(stat)  stat.textContent = `Fetching ${_lsTotal} cities…`;
+}
+
+function lsCityDone(name){
+  _lsDone++;
+  const chip = document.getElementById('lsc-'+name.replace(/\s+/g,'_'));
+  if(chip) chip.classList.add('done');
+  const pct = Math.round(_lsDone / _lsTotal * 90); // reserve last 10% for render
+  const fill = document.getElementById('lsFill');
+  const bar  = document.getElementById('lsBar');
+  const stat = document.getElementById('lsStatus');
+  if(fill) fill.style.width = pct+'%';
+  if(bar)  bar.setAttribute('aria-valuenow', String(_lsDone));
+  if(stat) stat.textContent = `Loaded ${_lsDone} of ${_lsTotal} cities…`;
+}
+
+function lsDismiss(){
+  const fill  = document.getElementById('lsFill');
+  const stat  = document.getElementById('lsStatus');
+  const ls    = document.getElementById('loadingScreen');
+  if(fill) fill.style.width = '100%';
+  if(stat) stat.textContent = 'All data loaded ✓';
+  setTimeout(()=>{
+    if(ls){ ls.classList.add('ls-out'); setTimeout(()=>{ ls.style.display='none'; },600); }
+  }, 420);
+}
+
 // ── Loading placeholders ──────────────────────────────────────────────────────
 function showLoadingState(){
   const wg = document.getElementById('weatherGrid');
@@ -76,12 +117,15 @@ function showLoadingState(){
 // ── Fetch one city from Open-Meteo ────────────────────────────────────────────
 async function fetchWeatherForCity(city){
   const {name, lat, lon} = city;
+  const _metric    = typeof getSetting==='function' && getSetting('units')==='metric';
+  const _tempUnit  = _metric ? 'celsius'    : 'fahrenheit';
+  const _windUnit  = _metric ? 'kmh'        : 'mph';
   const weatherUrl = [
     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}`,
     `current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,surface_pressure,visibility,uv_index`,
     `daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,et0_fao_evapotranspiration,precipitation_sum`,
-    `temperature_unit=fahrenheit`,
-    `wind_speed_unit=mph`,
+    `temperature_unit=${_tempUnit}`,
+    `wind_speed_unit=${_windUnit}`,
     `timezone=America%2FChicago`,
     `forecast_days=7`
   ].join('&');
@@ -132,10 +176,12 @@ async function fetchWeatherForCity(city){
       et0:   Math.round((et0Arr[i]    || 0) * 10) / 10
     };
   });
+  lsCityDone(name);
 }
 
 // ── Fetch all 10 cities in parallel ──────────────────────────────────────────
 async function fetchAllWeatherData(){
+  lsInit();
   showLoadingState();
   try {
     await Promise.all(CITIES.map(c => fetchWeatherForCity(c)));
@@ -143,6 +189,7 @@ async function fetchAllWeatherData(){
     const lastSync = document.getElementById('lastSync');
     if(lastSync) lastSync.textContent = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
     renderDashboard();
+    lsDismiss();
     // Re-render whichever tab is currently open so it shows fresh data immediately
     const activePage = document.querySelector('.nav-item[aria-current="page"]');
     if(activePage){

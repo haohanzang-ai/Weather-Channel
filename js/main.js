@@ -2,10 +2,13 @@
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 if(window.Chart) Chart.defaults.font.family = "'JetBrains Mono', monospace";
+
+// Load persisted settings before first fetch (so units/theme are applied immediately)
+loadSettings();
+
 populateForecastSelect();
 updateClock();
 setInterval(updateClock, 1000);
 
-// Fetch live weather on load, then auto-refresh every 10 minutes
+// Initial data fetch — auto-refresh interval is managed by settings module
 fetchAllWeatherData();
-setInterval(fetchAllWeatherData, 10 * 60 * 1000);
