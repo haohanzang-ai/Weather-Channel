@@ -108,8 +108,119 @@ const STRINGS = {
     main:'Hauptmenü',environment:'Umwelt',analysis:'Analyse',
     syncedAt:'Synchronisiert',searchPlaceholder:'Städte suchen…',
     liveDot:'Intelligenzplattform'
+  },
+  zh:{
+    dashboard:'仪表板',map:'德克萨斯地图',forecasts:'天气预报',agriculture:'农业',
+    sgbiofuel:'生物燃料实验室',fueleff:'燃油效率',trends:'气候趋势',
+    airquality:'空气质量',water:'水资源',energy:'能源',
+    severe:'恶劣天气',compare:'城市对比',reports:'智能报告',settings:'设置',
+    main:'主菜单',environment:'环境',analysis:'分析',
+    syncedAt:'同步于',searchPlaceholder:'搜索城市…',liveDot:'智能平台'
+  },
+  ko:{
+    dashboard:'대시보드',map:'텍사스 지도',forecasts:'날씨 예보',agriculture:'농업',
+    sgbiofuel:'바이오연료 랩',fueleff:'연료 효율',trends:'기후 트렌드',
+    airquality:'대기질',water:'수자원',energy:'에너지',
+    severe:'악천후',compare:'도시 비교',reports:'AI 리포트',settings:'설정',
+    main:'메인',environment:'환경',analysis:'분석',
+    syncedAt:'동기화',searchPlaceholder:'도시 검색…',liveDot:'인텔리전스 플랫폼'
+  },
+  vi:{
+    dashboard:'Bảng điều khiển',map:'Bản đồ Texas',forecasts:'Dự báo',agriculture:'Nông nghiệp',
+    sgbiofuel:'Lab Nhiên liệu sinh học',fueleff:'Hiệu quả nhiên liệu',trends:'Xu hướng khí hậu',
+    airquality:'Chất lượng không khí',water:'Tài nguyên nước',energy:'Năng lượng',
+    severe:'Thời tiết khắc nghiệt',compare:'So sánh thành phố',reports:'Báo cáo AI',settings:'Cài đặt',
+    main:'Chính',environment:'Môi trường',analysis:'Phân tích',
+    syncedAt:'Đồng bộ',searchPlaceholder:'Tìm kiếm thành phố…',liveDot:'Nền tảng thông minh'
+  },
+  hi:{
+    dashboard:'डैशबोर्ड',map:'टेक्सास मानचित्र',forecasts:'पूर्वानुमान',agriculture:'कृषि',
+    sgbiofuel:'जैव ईंधन लैब',fueleff:'ईंधन दक्षता',trends:'जलवायु प्रवृत्तियाँ',
+    airquality:'वायु गुणवत्ता',water:'जल संसाधन',energy:'ऊर्जा',
+    severe:'गंभीर मौसम',compare:'शहर तुलना',reports:'AI रिपोर्ट',settings:'सेटिंग्स',
+    main:'मुख्य',environment:'पर्यावरण',analysis:'विश्लेषण',
+    syncedAt:'सिंक किया',searchPlaceholder:'शहर खोजें…',liveDot:'इंटेलिजेंस प्लेटफ़ॉर्म'
+  },
+  ar:{
+    dashboard:'لوحة التحكم',map:'خريطة تكساس',forecasts:'التوقعات',agriculture:'الزراعة',
+    sgbiofuel:'مختبر الوقود الحيوي',fueleff:'كفاءة الوقود',trends:'اتجاهات المناخ',
+    airquality:'جودة الهواء',water:'الموارد المائية',energy:'الطاقة',
+    severe:'الطقس القاسي',compare:'مقارنة المدن',reports:'تقارير الذكاء الاصطناعي',settings:'الإعدادات',
+    main:'الرئيسية',environment:'البيئة',analysis:'التحليل',
+    syncedAt:'تمت المزامنة',searchPlaceholder:'ابحث عن مدينة…',liveDot:'منصة الذكاء'
+  },
+  ru:{
+    dashboard:'Панель',map:'Карта Техаса',forecasts:'Прогнозы',agriculture:'С/х',
+    sgbiofuel:'Лаб. биотоплива',fueleff:'Топливная эффективность',trends:'Климатические тренды',
+    airquality:'Качество воздуха',water:'Водные ресурсы',energy:'Энергетика',
+    severe:'Опасная погода',compare:'Сравнение городов',reports:'ИИ Отчёты',settings:'Настройки',
+    main:'Главное',environment:'Окружающая среда',analysis:'Анализ',
+    syncedAt:'Синхронизировано',searchPlaceholder:'Поиск города…',liveDot:'Платформа аналитики'
+  },
+  ja:{
+    dashboard:'ダッシュボード',map:'テキサス地図',forecasts:'天気予報',agriculture:'農業',
+    sgbiofuel:'バイオ燃料ラボ',fueleff:'燃料効率',trends:'気候トレンド',
+    airquality:'大気質',water:'水資源',energy:'エネルギー',
+    severe:'悪天候',compare:'都市比較',reports:'AIレポート',settings:'設定',
+    main:'メイン',environment:'環境',analysis:'分析',
+    syncedAt:'同期',searchPlaceholder:'都市を検索…',liveDot:'インテリジェンスプラットフォーム'
+  },
+  bn:{
+    dashboard:'ড্যাশবোর্ড',map:'টেক্সাস মানচিত্র',forecasts:'পূর্বাভাস',agriculture:'কৃষি',
+    sgbiofuel:'জৈব জ্বালানি ল্যাব',fueleff:'জ্বালানি দক্ষতা',trends:'জলবায়ু প্রবণতা',
+    airquality:'বায়ু মান',water:'জল সম্পদ',energy:'শক্তি',
+    severe:'ভয়াবহ আবহাওয়া',compare:'শহর তুলনা',reports:'AI রিপোর্ট',settings:'সেটিংস',
+    main:'প্রধান',environment:'পরিবেশ',analysis:'বিশ্লেষণ',
+    syncedAt:'সিঙ্ক',searchPlaceholder:'শহর খুঁজুন…',liveDot:'ইন্টেলিজেন্স প্ল্যাটফর্ম'
+  },
+  tr:{
+    dashboard:'Gösterge Paneli',map:'Teksas Haritası',forecasts:'Tahminler',agriculture:'Tarım',
+    sgbiofuel:'Biyoyakıt Lab.',fueleff:'Yakıt Verimliliği',trends:'İklim Trendleri',
+    airquality:'Hava Kalitesi',water:'Su Kaynakları',energy:'Enerji',
+    severe:'Şiddetli Hava',compare:'Şehir Karşılaştırma',reports:'YZ Raporları',settings:'Ayarlar',
+    main:'Ana Menü',environment:'Çevre',analysis:'Analiz',
+    syncedAt:'Senkronize edildi',searchPlaceholder:'Şehir ara…',liveDot:'Zeka Platformu'
+  },
+  it:{
+    dashboard:'Dashboard',map:'Mappa del Texas',forecasts:'Previsioni',agriculture:'Agricoltura',
+    sgbiofuel:'Lab Biocarburante',fueleff:'Efficienza Carburante',trends:'Tendenze Climatiche',
+    airquality:"Qualità dell'Aria",water:'Risorse Idriche',energy:'Energia',
+    severe:'Meteo Estremo',compare:'Confronto Città',reports:'Rapporti IA',settings:'Impostazioni',
+    main:'Principale',environment:'Ambiente',analysis:'Analisi',
+    syncedAt:'Sincronizzato',searchPlaceholder:'Cerca città…',liveDot:'Piattaforma Intelligence'
+  },
+  id:{
+    dashboard:'Dasbor',map:'Peta Texas',forecasts:'Prakiraan',agriculture:'Pertanian',
+    sgbiofuel:'Lab Biofuel',fueleff:'Efisiensi Bahan Bakar',trends:'Tren Iklim',
+    airquality:'Kualitas Udara',water:'Sumber Daya Air',energy:'Energi',
+    severe:'Cuaca Ekstrem',compare:'Perbandingan Kota',reports:'Laporan AI',settings:'Pengaturan',
+    main:'Utama',environment:'Lingkungan',analysis:'Analisis',
+    syncedAt:'Disinkronkan',searchPlaceholder:'Cari kota…',liveDot:'Platform Kecerdasan'
   }
 };
+
+// ── All supported languages ───────────────────────────────────────────────────
+
+const ALL_LANGS = [
+  {id:'en',flag:'🇺🇸',label:'English'},
+  {id:'es',flag:'🇪🇸',label:'Español'},
+  {id:'fr',flag:'🇫🇷',label:'Français'},
+  {id:'pt',flag:'🇧🇷',label:'Português'},
+  {id:'de',flag:'🇩🇪',label:'Deutsch'},
+  {id:'zh',flag:'🇨🇳',label:'中文'},
+  {id:'ko',flag:'🇰🇷',label:'한국어'},
+  {id:'vi',flag:'🇻🇳',label:'Tiếng Việt'},
+  {id:'hi',flag:'🇮🇳',label:'हिन्दी'},
+  {id:'ar',flag:'🇸🇦',label:'العربية'},
+  {id:'ru',flag:'🇷🇺',label:'Русский'},
+  {id:'ja',flag:'🇯🇵',label:'日本語'},
+  {id:'bn',flag:'🇧🇩',label:'বাংলা'},
+  {id:'tr',flag:'🇹🇷',label:'Türkçe'},
+  {id:'it',flag:'🇮🇹',label:'Italiano'},
+  {id:'id',flag:'🇮🇩',label:'Bahasa Indonesia'}
+];
+
+const RTL_LANGS = new Set(['ar']);
 
 // ── Apply settings → DOM + CSS vars ──────────────────────────────────────────
 
@@ -161,6 +272,9 @@ function applySettings(){
       document.head.appendChild(s);
     }
   } else { const ex=document.getElementById('_tcNoMotion'); if(ex) ex.remove(); }
+
+  // RTL support for Arabic
+  document.documentElement.dir = RTL_LANGS.has(_cfg.lang) ? 'rtl' : 'ltr';
 
   applyLanguage();
   applyRefreshInterval();
@@ -343,20 +457,15 @@ function renderSettings(){
     </div>
 
     <div class="set-section">
-      <div class="set-section-title">🌐 Language</div>
+      <div class="set-section-title">🌐 Language <span style="font-size:9px;background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue-mid);border-radius:8px;padding:2px 8px;margin-left:8px;vertical-align:middle;font-weight:700;letter-spacing:.06em">${ALL_LANGS.length} LANGUAGES</span></div>
       <div class="set-group" style="margin-bottom:0">
         <div class="set-label">Interface Language</div>
-        <div class="set-desc">Translates navigation labels, page titles, and key UI strings. Live weather data is always sourced in English.</div>
-        <div class="set-langs">
-          ${[
-            {id:'en',flag:'🇺🇸',label:'English'},
-            {id:'es',flag:'🇪🇸',label:'Español'},
-            {id:'fr',flag:'🇫🇷',label:'Français'},
-            {id:'pt',flag:'🇧🇷',label:'Português'},
-            {id:'de',flag:'🇩🇪',label:'Deutsch'}
-          ].map(l=>`<button class="set-lang-btn${_cfg.lang===l.id?' active':''}"
-            onclick="save('lang','${l.id}');renderSettings()">
-            <span>${l.flag}</span><span>${l.label}</span>
+        <div class="set-desc">Translates the full navigation, page titles, and UI strings. Live weather data is always sourced in English from the APIs.</div>
+        <div class="set-langs-grid">
+          ${ALL_LANGS.map(l=>`<button class="set-lang-btn${_cfg.lang===l.id?' active':''}"
+            onclick="save('lang','${l.id}');renderSettings()" lang="${l.id}" aria-pressed="${_cfg.lang===l.id}">
+            <span class="set-lang-flag">${l.flag}</span>
+            <span class="set-lang-label">${l.label}</span>
           </button>`).join('')}
         </div>
       </div>
@@ -417,10 +526,13 @@ function injectSettingsCSS(){
 .set-preview{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:12px}
 .set-preview-label{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px}
 .set-preview-text{font-size:11px;color:var(--text1);line-height:1.65}
-.set-langs{display:flex;gap:8px;flex-wrap:wrap}
-.set-lang-btn{display:flex;align-items:center;gap:8px;padding:9px 16px;border-radius:10px;background:rgba(255,255,255,0.04);border:1.5px solid var(--border);cursor:pointer;font-size:12px;color:var(--text1);font-family:var(--font);transition:all .16s}
+.set-langs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:7px}
+.set-lang-btn{display:flex;align-items:center;gap:8px;padding:9px 13px;border-radius:10px;background:rgba(255,255,255,0.04);border:1.5px solid var(--border);cursor:pointer;font-family:var(--font);transition:all .16s;text-align:left;width:100%}
 .set-lang-btn:hover{background:rgba(255,255,255,0.08);border-color:var(--blue-mid)}
-.set-lang-btn.active{background:var(--blue-dim);border-color:var(--blue);color:var(--blue);font-weight:700}
+.set-lang-btn.active{background:var(--blue-dim);border-color:var(--blue)}
+.set-lang-flag{font-size:18px;line-height:1;flex-shrink:0}
+.set-lang-label{font-size:11px;color:var(--text1);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.set-lang-btn.active .set-lang-label{color:var(--blue);font-weight:700}
 .set-toggle-row{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid var(--border)}
 .set-toggle-row:last-child{border-bottom:none;padding-bottom:0}
 .set-toggle-row:first-child{padding-top:0}
@@ -432,7 +544,7 @@ function injectSettingsCSS(){
 .set-about-item{display:flex;flex-direction:column;gap:4px;padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border)}
 .set-about-key{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;font-weight:700}
 .set-about-item>span:last-child{font-size:11px;color:var(--text1)}
-@media(max-width:600px){.set-complexity{grid-template-columns:1fr}.set-about-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.set-complexity{grid-template-columns:1fr}.set-about-grid{grid-template-columns:1fr}.set-langs-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}}
   `;
   document.head.appendChild(s);
 }
