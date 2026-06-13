@@ -64,9 +64,9 @@ function showCityDetail(cityName){
     </div>
     <div style="margin-top:14px">
       <h3 class="section-title">7-Day Forecast — ${escapeHtml(cityName)}</h3>
-      ${Object.entries(FORECAST_DATA).map(([day,f])=>`
+      ${(FORECAST_DATA[cityName] || []).map(f=>`
         <div class="forecast-row">
-          <div class="forecast-day">${escapeHtml(day)}</div>
+          <div class="forecast-day">${escapeHtml(f.day)}</div>
           <div class="forecast-icon" aria-hidden="true">${f.icon}</div>
           <div style="flex:1;padding:0 12px">
             <div class="progress-bar" role="meter" aria-valuenow="${f.rain}" aria-valuemin="0" aria-valuemax="100" aria-label="${f.rain}% precipitation chance">
