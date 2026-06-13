@@ -1,0 +1,63 @@
+/* ── Fuel Efficiency ────────────────────────── */
+.fuelHero{background:linear-gradient(135deg,rgba(245,166,35,0.12),rgba(214,69,69,0.06));border:1px solid rgba(245,166,35,0.22);border-radius:var(--r16);padding:24px;margin-bottom:20px;position:relative;overflow:hidden}
+.fuelHero::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:radial-gradient(circle,rgba(245,166,35,0.1),transparent 70%);pointer-events:none}
+.fuelHeroTitle{font-size:18px;font-weight:800;color:var(--text0);margin-bottom:6px}
+.fuelHeroSub{font-size:12px;color:var(--text1);line-height:1.65;max-width:640px}
+
+.fuelTypesGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.fuelTypeCard{background:linear-gradient(135deg,var(--surface2),var(--surface));border:1px solid var(--border);border-radius:var(--r12);padding:16px;transition:border-color 0.18s}
+.fuelTypeCard:hover{border-color:rgba(245,166,35,0.3)}
+.fuelTypeHeader{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.fuelTypeIcon{font-size:28px;line-height:1}
+.fuelTypeName{font-size:13px;font-weight:700;color:var(--text0);line-height:1.2}
+.fuelTypeTag{font-size:10px;color:var(--text2);margin-top:2px}
+.fuelStat{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);font-size:10px}
+.fuelStat:last-of-type{border-bottom:none}
+.fuelStatKey{color:var(--text2)}
+.fuelStatVal{font-family:var(--mono);font-weight:700;color:var(--text1)}
+.fuelIngBox{margin-top:10px}
+.fuelIngTitle{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
+.fuelIngItem{font-size:10px;color:var(--text2);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04);display:flex;gap:6px;align-items:flex-start;line-height:1.4}
+.fuelIngItem::before{content:'▸';color:var(--orange);flex-shrink:0;margin-top:1px}
+.fuelProcessBox{margin-top:10px}
+.fuelProcessTitle{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
+.fuelProcessStep{font-size:10px;color:var(--text2);padding:4px 0;display:flex;gap:8px;align-items:flex-start;line-height:1.4;border-bottom:1px solid rgba(255,255,255,0.04)}
+.fuelProcessNum{font-size:9px;font-weight:700;color:var(--orange);width:14px;flex-shrink:0;margin-top:1px}
+
+.fuelImpactGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.fuelImpactCard{background:linear-gradient(135deg,rgba(214,69,69,0.08),var(--surface));border:1px solid rgba(214,69,69,0.18);border-radius:var(--r12);padding:16px;text-align:center}
+.fuelImpactIcon{font-size:28px;margin-bottom:8px}
+.fuelImpactVal{font-size:20px;font-weight:800;font-family:var(--mono);color:#E87A7A;margin-bottom:4px}
+.fuelImpactLabel{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px}
+.fuelImpactSub{font-size:10px;color:var(--text3);line-height:1.45}
+
+.fuelCalcPanel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r12);padding:20px;margin-bottom:20px}
+.fuelCalcRow{display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.fuelCalcLabel{font-size:11px;color:var(--text1);font-weight:600;width:160px;flex-shrink:0}
+.fuelCalcSlider{flex:1;min-width:120px;accent-color:var(--orange)}
+.fuelCalcVal{font-size:12px;font-family:var(--mono);font-weight:700;color:var(--orange);width:80px;text-align:right}
+.fuelCalcResults{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
+.fuelCalcResult{text-align:center}
+.fuelCalcResultVal{font-size:17px;font-weight:800;font-family:var(--mono);color:var(--text0);margin-bottom:4px}
+.fuelCalcResultLabel{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;line-height:1.4}
+
+.fuelCornWrap{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+.fuelCornCard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r12);padding:18px}
+.fuelCornHeader{font-size:14px;font-weight:800;color:var(--text0);margin-bottom:4px}
+.fuelCornSub{font-size:10px;color:var(--text2);margin-bottom:14px}
+.fuelCornRow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.fuelCornMetric{font-size:10px;color:var(--text2);width:140px;flex-shrink:0}
+.fuelCornBar{flex:1;height:7px;background:rgba(255,255,255,0.07);border-radius:4px;overflow:hidden}
+.fuelCornFill{height:100%;border-radius:4px;transition:width 0.7s ease}
+.fuelCornNum{font-size:10px;font-family:var(--mono);font-weight:700;width:36px;text-align:right}
+
+@media(max-width:900px){
+  .fuelTypesGrid{grid-template-columns:repeat(2,1fr)}
+  .fuelImpactGrid{grid-template-columns:repeat(2,1fr)}
+  .fuelCalcResults{grid-template-columns:repeat(2,1fr)}
+  .fuelCornWrap{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .fuelTypesGrid{grid-template-columns:1fr}
+  .fuelImpactGrid{grid-template-columns:1fr}
+}
