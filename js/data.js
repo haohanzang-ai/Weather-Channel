@@ -79,7 +79,7 @@ async function fetchWeatherForCity(city){
   const weatherUrl = [
     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}`,
     `current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,surface_pressure,visibility,uv_index`,
-    `daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max`,
+    `daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,et0_fao_evapotranspiration,precipitation_sum`,
     `temperature_unit=fahrenheit`,
     `wind_speed_unit=mph`,
     `timezone=America%2FChicago`,
@@ -111,15 +111,25 @@ async function fetchWeatherForCity(city){
 
   const daily    = weather.daily;
   const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  // ET0 and precipitation — real agronomic data for agriculture tab
+  const et0Arr    = daily.et0_fao_evapotranspiration || [];
+  const precipArr = daily.precipitation_sum || [];
+  WEATHER_DATA[name].et0Avg    = et0Arr.length   ? Math.round(et0Arr.reduce((a,b)=>a+b,0)   / et0Arr.length   * 10) / 10 : null;
+  WEATHER_DATA[name].precipAvg = precipArr.length ? Math.round(precipArr.reduce((a,b)=>a+b,0)/ precipArr.length * 10) / 10 : null;
+
   FORECAST_DATA[name] = (daily.time || []).map((dateStr, i) => {
     const date = new Date(dateStr + 'T12:00:00');
     const fc   = getConditionFromCode(daily.weather_code[i]);
     return {
-      day:  dayNames[date.getDay()],
-      icon: fc.icon,
-      hi:   Math.round(daily.temperature_2m_max[i]),
-      lo:   Math.round(daily.temperature_2m_min[i]),
-      rain: daily.precipitation_probability_max[i] || 0
+      day:   dayNames[date.getDay()],
+      date:  dateStr,
+      icon:  fc.icon,
+      hi:    Math.round(daily.temperature_2m_max[i]),
+      lo:    Math.round(daily.temperature_2m_min[i]),
+      rain:  daily.precipitation_probability_max[i] || 0,
+      precip:Math.round((precipArr[i] || 0) * 10) / 10,
+      et0:   Math.round((et0Arr[i]    || 0) * 10) / 10
     };
   });
 }
@@ -133,6 +143,19 @@ async function fetchAllWeatherData(){
     const lastSync = document.getElementById('lastSync');
     if(lastSync) lastSync.textContent = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
     renderDashboard();
+    // Re-render whichever tab is currently open so it shows fresh data immediately
+    const activePage = document.querySelector('.nav-item[aria-current="page"]');
+    if(activePage){
+      const pid = activePage.dataset.page;
+      if(pid==='agriculture') renderAg();
+      else if(pid==='airquality') renderAQ();
+      else if(pid==='energy')    renderEnergy();
+      else if(pid==='water')     renderWater();
+      else if(pid==='reports')   renderReports();
+      else if(pid==='trends')    renderTrends();
+      else if(pid==='severe')    renderSevere();
+      else if(pid==='compare')   renderCompare();
+    }
   } catch(err){
     console.error('Weather fetch error:', err);
     setTimeout(fetchAllWeatherData, 60000);

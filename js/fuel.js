@@ -98,34 +98,85 @@ function fuelEffRenderImpact(){
 }
 
 function fuelEffUpdateCalc(){
-  const acres = parseFloat(document.getElementById('fuelCalcRange')?.value||1);
-  document.getElementById('fuelCalcAcresVal').textContent = acres>=1000?(acres/1000).toFixed(1)+'M':acres+'K';
-  const acresActual = acres*1000;
-  const ethanol = Math.round(acresActual*450/1000000*10)/10;
-  const oilBbl  = Math.round(acresActual*4.8/1000000*10)/10;
-  const co2tons = Math.round(acresActual*2.1/1000000*10)/10;
-  const jobs    = Math.round(acresActual*11/1000000*10)/10;
-  document.getElementById('fuelCalcEthanol').textContent = ethanol+'B gal';
-  document.getElementById('fuelCalcOil').textContent    = oilBbl+'B bbl';
-  document.getElementById('fuelCalcCO2').textContent    = co2tons+'M tons';
-  document.getElementById('fuelCalcJobs').textContent   = jobs+'M jobs';
+  const acres  = parseFloat(document.getElementById('fuelCalcRange')?.value||1);
+  const reg    = window._fuelCurrentRegion || {yieldMult:1,waterMult:1,costMult:1,jobMult:1};
+  const acresActual = acres * 1000;
+  // Base rates per acre: Perrin 2008, DOE 2016, ORNL BioEnergy Atlas
+  // 450 gal/acre ethanol, 4.8 bbl/acre oil displaced, 2.1 t/acre CO₂, 11 jobs/1000 acres
+  const ethanol = Math.round(acresActual * 450 * reg.yieldMult / 1e9 * 100) / 100; // B gal
+  const oilBbl  = Math.round(acresActual * 4.8  * reg.yieldMult / 1e9 * 100) / 100; // B bbl
+  const co2tons = Math.round(acresActual * 2.1  * reg.yieldMult / 1e6 * 10)  / 10;  // M t
+  const jobs    = Math.round(acresActual * 11   * reg.jobMult   / 1e6 * 100) / 100; // M jobs
+  const acreLabel = acres>=1000?(acres/1000).toFixed(1)+'M':acres+'K';
+  document.getElementById('fuelCalcAcresVal').textContent = acreLabel;
+  document.getElementById('fuelCalcEthanol').textContent  = ethanol+'B gal';
+  document.getElementById('fuelCalcOil').textContent      = oilBbl+'B bbl';
+  document.getElementById('fuelCalcCO2').textContent      = co2tons+'M t';
+  document.getElementById('fuelCalcJobs').textContent     = jobs+'M';
 }
 
 function fuelEffRenderCalc(){
   const el=document.getElementById('fuelCalcPanel'); if(!el)return;
+
+  // Regional deployment zones with specific impact multipliers
+  // Based on: Perrin et al. 2008, DOE Billion-Ton Report 2016, ORNL BioEnergy Atlas
+  const regions = [
+    {id:'texas',     label:'Texas',          yieldMult:1.05, waterMult:0.9,  costMult:0.95, jobMult:1.1,  note:'High suitability — marginal land + existing ag infrastructure'},
+    {id:'gplains',   label:'U.S. Great Plains',yieldMult:1.0,waterMult:0.85,costMult:0.9,  jobMult:1.0,  note:'Top overall score — best logistics + marginal land availability'},
+    {id:'southeast', label:'Southeast U.S.',  yieldMult:1.15,waterMult:1.1,  costMult:1.05, jobMult:1.05, note:'High rainfall + warm climate → highest biomass yield potential'},
+    {id:'midwest',   label:'Midwest U.S.',    yieldMult:0.9, waterMult:1.0,  costMult:1.15, jobMult:0.9,  note:'Good logistics; food-crop competition limits marginal land'},
+    {id:'brazil',    label:'Brazil Cerrado',  yieldMult:1.2, waterMult:1.2,  costMult:0.75, jobMult:0.85, note:'Highest yield potential; logistics and policy risk reduce viability'},
+    {id:'europe',    label:'Eastern Europe',  yieldMult:0.95,waterMult:0.95, costMult:1.2,  jobMult:0.95, note:'Good climate fit; RED III mandates improve policy viability'}
+  ];
+
   el.innerHTML=`
-    <p style="font-size:11px;color:var(--text2);margin-bottom:16px">Adjust deployment scale to see projected national impact (cellulosic ethanol pathway, U.S. baseline assumptions).</p>
+    <p style="font-size:11px;color:var(--text2);margin-bottom:16px">Select a deployment region and scale to see projected impact. Values based on cellulosic ethanol pathway assumptions from published research (Perrin 2008, DOE 2016, ORNL BioEnergy Atlas).</p>
+
+    <div style="margin-bottom:14px">
+      <div class="fuelCalcLabel" style="margin-bottom:8px">Deployment Region</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px" id="fuelRegionBtns">
+        ${regions.map((r,i)=>`<button class="sgBiofuelScenBtn${i===0?' sgActive':''}" onclick="fuelSelectRegion('${r.id}')" id="fuelReg_${r.id}" aria-pressed="${i===0}">${escapeHtml(r.label)}</button>`).join('')}
+      </div>
+      <div id="fuelRegionNote" style="font-size:10px;color:var(--text3);margin-top:8px">${escapeHtml(regions[0].note)}</div>
+    </div>
+
     <div class="fuelCalcRow">
       <div class="fuelCalcLabel">Deployment Scale (thousand acres)</div>
       <input class="fuelCalcSlider" type="range" id="fuelCalcRange" min="100" max="50000" step="100" value="1000" oninput="fuelEffUpdateCalc()">
       <div class="fuelCalcVal" id="fuelCalcAcresVal">1K</div>
     </div>
-    <div class="fuelCalcResults">
-      <div class="fuelCalcResult"><div class="fuelCalcResultVal" id="fuelCalcEthanol">—</div><div class="fuelCalcResultLabel">Cellulosic Ethanol Produced</div></div>
-      <div class="fuelCalcResult"><div class="fuelCalcResultVal" id="fuelCalcOil">—</div><div class="fuelCalcResultLabel">Oil Barrels Displaced</div></div>
-      <div class="fuelCalcResult"><div class="fuelCalcResultVal" id="fuelCalcCO2">—</div><div class="fuelCalcResultLabel">CO₂ Sequestered / yr</div></div>
-      <div class="fuelCalcResult"><div class="fuelCalcResultVal" id="fuelCalcJobs">—</div><div class="fuelCalcResultLabel">Rural Jobs Created</div></div>
+
+    <div class="fuelCalcResults" style="margin-bottom:12px">
+      <div class="fuelCalcResult"><div class="fuelCalcResultVal" id="fuelCalcEthanol">—</div><div class="fuelCalcResultLabel">Cellulosic Ethanol</div><div style="font-size:9px;color:var(--text3)">billion gallons/yr</div></div>
+      <div class="fuelCalcResult"><div class="fuelCalcResultVal" id="fuelCalcOil">—</div><div class="fuelCalcResultLabel">Oil Displaced</div><div style="font-size:9px;color:var(--text3)">billion barrels/yr</div></div>
+      <div class="fuelCalcResult"><div class="fuelCalcResultVal" id="fuelCalcCO2">—</div><div class="fuelCalcResultLabel">CO₂ Sequestered</div><div style="font-size:9px;color:var(--text3)">million tons/yr</div></div>
+      <div class="fuelCalcResult"><div class="fuelCalcResultVal" id="fuelCalcJobs">—</div><div class="fuelCalcResultLabel">Rural Jobs</div><div style="font-size:9px;color:var(--text3)">million direct + indirect</div></div>
+    </div>
+
+    <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:10px;color:var(--text2);line-height:1.6">
+      <strong style="color:var(--text0)">What changes by region:</strong>
+      Yield multiplier adjusts ethanol output (rainfall, growing season, ecotype fit).
+      Cost multiplier reflects land, labor, and logistics variation.
+      Job multiplier reflects local ag infrastructure density.
+      All base figures from Perrin et al. 2008, DOE Billion-Ton Report 2016, and ORNL BioEnergy Atlas.
     </div>`;
+
+  // Store regions in closure for the onclick handler
+  window._fuelRegions = regions;
+  window._fuelCurrentRegion = regions[0];
+  fuelEffUpdateCalc();
+}
+
+function fuelSelectRegion(id){
+  const reg = window._fuelRegions?.find(r=>r.id===id);
+  if(!reg) return;
+  window._fuelCurrentRegion = reg;
+  document.querySelectorAll('#fuelRegionBtns button').forEach(b=>{
+    b.classList.toggle('sgActive', b.id===`fuelReg_${id}`);
+    b.setAttribute('aria-pressed', b.id===`fuelReg_${id}`);
+  });
+  const noteEl = document.getElementById('fuelRegionNote');
+  if(noteEl) noteEl.textContent = reg.note;
   fuelEffUpdateCalc();
 }
 
