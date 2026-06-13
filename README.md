@@ -1,2 +1,2 @@
 # Weather-Channel
-TexasClimate Intelligence Platform is a real-time environmental dashboard covering 10 major Texas cities. Track live weather conditions, 7-day forecasts, air quality indexes, reservoir storage levels, ERCOT energy demand, agricultural crop stress, and active severe weather alerts — all in one place. Data refreshes every 10 minutes, with AI-generated daily digests that translate raw numbers into plain-language insights for weather, agriculture, and energy planning.
+Free browser-based dashboard for daily weather & natural-disaster monitoring, climate-change insights, and a switchgrass-vs-corn biofuel efficiency lab. No install — just open it.
