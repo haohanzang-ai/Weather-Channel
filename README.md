@@ -1,151 +1,344 @@
-# 🌤 TexasClimate — Weather, Climate & Biofuel Intelligence Platform
+# 🌤 # TexasClimate: Weather, Energy, and Switchgrass Biofuel Intelligence Platform
 
-> A free, AI-powered environmental intelligence dashboard — tracking weather and natural-disaster conditions, surfacing climate-change insights, and modeling the real-world case for **switchgrass biofuel** over corn. Built using **Agentic AI techniques**, it autonomously reasons over data to generate predictions, summaries, and actionable intelligence for everyday people, students, farmers, and researchers.
+**TexasClimate** is a browser-based environmental intelligence dashboard that connects Texas weather, climate stress, agriculture, energy demand, fuel-use patterns, and switchgrass biofuel research.
 
-**🔗 Live demo:** https://haohanzang-ai.github.io/Weather-Channel/
-
-![Status](https://img.shields.io/badge/status-active%20prototype-4A90E2)
-![Built with](https://img.shields.io/badge/built%20with-HTML%20%7C%20CSS%20%7C%20JS-F5A623)
-![Charts](https://img.shields.io/badge/charts-Chart.js-2ECC8B)
-![License](https://img.shields.io/badge/license-MIT-lightgrey)
-![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
+Live site: https://haohanzang-ai.github.io/Weather-Channel/
+Repository: https://github.com/haohanzang-ai/Weather-Channel
+Status: Educational prototype
+Platform: GitHub Pages
+Technologies: HTML, CSS, JavaScript, Chart.js
 
 ---
 
-## 🌍 What is this?
+## Project Overview
 
-**TexasClimate** is a free, browser-based dashboard that brings four things people care about into one place — powered by an agentic AI core that doesn't just display data, but interprets it, detects patterns, and generates predictive intelligence:
+TexasClimate was developed as an interdisciplinary public education project at the intersection of climate science, agriculture, renewable energy, and data visualization.
 
-1. **Live-style weather & natural-disaster monitoring** — 7-day forecasts, severe-weather watches and warnings (tornado, flash flood, heat, wind), and storm-probability outlooks.
-2. **Climate-change insights** — multi-week temperature, humidity, and rainfall trend predictions compared against climatological normals, so patterns (not just today's number) become visible.
-3. **Climate impact on the environment** — air quality by city, reservoir and drought tracking, water-conservation guidance, and energy demand predictions under heat stress.
-4. **A Switchgrass Biofuel Efficiency Lab** — an AI-modeled research explorer making the case for *Panicum virgatum* (switchgrass) as a cleaner, more efficient biofuel feedstock than corn, with 8-region deployment scoring and scenario simulation.
+The project begins with everyday environmental information, including weather, drought, air quality, water resources, and energy demand. It then uses those topics to introduce a broader scientific question:
 
-It runs entirely in the browser as a single HTML file — no build step, no server, no install. Open it and it works.
+> How can Texas weather, agriculture, energy use, and fuel demand help the public understand the potential and limitations of switchgrass as a future cellulosic biofuel source?
 
----
+Switchgrass (*Panicum virgatum*) is a native North American perennial grass that has been studied as a possible bioenergy feedstock. Its long-term promise comes from its potential use as non-food biomass, its relevance to marginal land, and its connection to cellulosic biofuel research. However, large-scale production remains technically challenging because switchgrass biomass contains lignocellulosic cell walls made of cellulose, hemicellulose, and lignin.
 
-## 🤖 AI Predictions
-
-The agentic AI layer reasons over environmental data autonomously and generates predictions across every module — from 7-day weather forecasts and 24-hour storm probability outlooks, to crop heat-stress risk, reservoir storage trajectories, grid demand under heat stress, and switchgrass industrialization scores across 8 global regions. The **AI Reports** section surfaces these as auto-generated daily, agricultural, and weekly climate summaries.
-
-> ⚠️ **Prototype note:** All predictions are currently illustrative values based on published research and climatological literature — not live operational feeds. See the Data & Accuracy Disclaimer below.
+This project does not present switchgrass as a complete or immediate solution to fuel prices or fossil-fuel dependence. Instead, it uses switchgrass as a case study to help students and the public understand the scientific, environmental, and economic complexity of future biofuel systems.
 
 ---
 
-## ✨ Features
+## Mission
 
-| Area | What it does |
-|------|--------------|
-| **Dashboard** | Statewide overview, current conditions for 10 major cities, active alerts, and an AI-generated daily digest |
-| **Interactive Map** | Temperature-coded city markers — click any city for full details |
-| **Forecasts** | 7-day per-city outlook with temperature charts and precipitation probabilities |
-| **Agriculture** | Crop-by-crop conditions, drought coverage, irrigation demand, heat-stress risk |
-| **🌿 Biofuel Lab** | Switchgrass deployment modeling, 8-region scoring, climate scenario simulator, and switchgrass-vs-corn comparison |
-| **Fuel Efficiency** | Energy-return and efficiency framing for biofuel feedstocks |
-| **Climate Trends** | 30-day temperature & humidity trends, monthly rainfall history |
-| **Air Quality** | AQI rankings by city with health guidance |
-| **Water Resources** | Reservoir storage levels, drought severity, conservation stages by region |
-| **Energy** | Grid demand, renewable mix, and cooling-demand index by city |
-| **Severe Weather** | Active watches/warnings and 24-hour storm probabilities |
-| **City Comparison** | Side-by-side metrics across cities |
-| **AI Reports** | Auto-generated daily, agricultural, and weekly climate summaries |
+The mission of TexasClimate is to make environmental and energy systems easier to understand through an accessible, student-built web platform.
 
-Plus: fully responsive (desktop → mobile), keyboard-navigable, screen-reader friendly, and a reduced-motion mode for accessibility.
+The project focuses on five core questions:
+
+1. How does Texas weather affect daily life, agriculture, water use, and energy demand?
+2. How are climate stress, drought, fuel use, and agricultural resilience connected?
+3. What is switchgrass, and why has it been studied as a bioenergy crop?
+4. Why is converting switchgrass into fuel difficult at industrial scale?
+5. How can public-facing data tools improve climate and energy literacy?
+
+The long-term goal is to create a credible educational resource that connects local environmental data with larger questions about renewable energy, biofuel research, and sustainability.
 
 ---
 
-## 🌿 The Switchgrass Biofuel Efficiency Lab
+## Key Features
 
-The heart of this project's "why it matters" story. The lab explores why **switchgrass is a strong candidate to outperform corn** as a biofuel feedstock — a case grounded in published agronomic research:
-
-- **Higher net energy return.** As a cellulosic feedstock, switchgrass yields far more usable energy per unit of energy invested than corn-grain ethanol, whose net energy balance is close to break-even. Field research (e.g., Schmer et al., *PNAS*, 2008) reported switchgrass producing several times more renewable energy than was consumed to grow and process it.
-- **Doesn't compete with food.** Corn ethanol diverts a food crop into fuel; switchgrass is a non-food perennial grass, sidestepping the "food vs. fuel" tradeoff.
-- **Grows on marginal land.** Switchgrass thrives on land poorly suited to row crops, reducing pressure to convert productive farmland.
-- **Lower inputs.** Less fertilizer, pesticide, and irrigation than corn, lowering both cost and environmental footprint.
-- **Soil & climate benefits.** Deep perennial roots build soil carbon, curb erosion, and support large lifecycle greenhouse-gas reductions versus gasoline.
-- **Plant once, harvest for years.** A perennial stand can be harvested for roughly a decade, versus annual replanting for corn.
-
-> ⚠️ **Prototype disclaimer:** The Biofuel Lab's regional scores and predictions are **AI-generated, illustrative mock values** based on published agronomic literature — not commercial forecasts. "HAL2" and "FIL2" refer to *Panicum hallii* model ecotypes used in laboratory research, not commercial switchgrass varieties. Nothing here is investment, agronomic, or policy advice.
-
----
-
-## 🛠 Tech stack
-
-- **Plain HTML, CSS, and JavaScript** — a single self-contained `index.html`, no framework or bundler
-- **Agentic AI prediction layer** — JavaScript-based engine that autonomously generates forecasts, scores, summaries, and reports from environmental data
-- **[Chart.js](https://www.chartjs.org/)** for data visualizations (loaded via CDN)
-- **Google Fonts** (Inter + JetBrains Mono) via CDN
-- Accessibility-first markup: ARIA roles, live regions, skip links, keyboard support, and `prefers-reduced-motion`
+| Section                 | Purpose                                                              |
+| ----------------------- | -------------------------------------------------------------------- |
+| Dashboard               | Provides a statewide overview of Texas environmental conditions      |
+| Weather                 | Displays forecast-style city weather information                     |
+| Interactive Map         | Shows Texas city conditions through visual map markers               |
+| Agriculture             | Explores crop stress, irrigation demand, drought, and heat risk      |
+| Energy                  | Connects temperature and heat stress to electricity demand           |
+| Water Resources         | Summarizes reservoir, drought, and conservation-related information  |
+| Air Quality             | Presents AQI-style rankings and public health context                |
+| Climate Trends          | Visualizes temperature, humidity, and rainfall patterns              |
+| Fuel Efficiency         | Provides educational fuel-use and energy-comparison framing          |
+| Switchgrass Biofuel Lab | Explores switchgrass as a cellulosic biofuel case study              |
+| AI-Assisted Reports     | Generates plain-language environmental summaries for educational use |
 
 ---
 
-## 🚀 Getting started
+## Switchgrass Biofuel Focus
 
-No installation required.
+The switchgrass section is the central research and education component of this project.
 
-**Just view it:**
+Switchgrass is relevant because it connects multiple fields:
+
+* plant biology
+* renewable energy
+* climate resilience
+* agriculture
+* soil conservation
+* fuel diversification
+* public science education
+
+Unlike corn ethanol, switchgrass is a non-food perennial biomass crop. It has been studied for its potential role in cellulosic biofuel systems, where plant material is converted into sugars and then into fuels or bioproducts.
+
+However, the project emphasizes an important limitation:
+
+> Switchgrass biofuel is promising, but it is not easy to commercialize at large scale because lignocellulosic biomass is difficult and costly to process.
+
+This distinction is important. The site is designed to educate users about both the promise and the barriers of cellulosic biofuels.
+
+---
+
+## The Scientific Challenge: Lignin and Cellulose
+
+The basic switchgrass-to-biofuel pathway can be summarized as:
+
+```text
+Sunlight → Switchgrass biomass → Pretreatment → Cell wall breakdown → Sugars → Fermentation or conversion → Biofuel
 ```
-Download index.html → double-click it → it opens in your browser.
+
+The most difficult step is breaking down the plant cell wall.
+
+Switchgrass biomass contains:
+
+* **Cellulose** — a carbohydrate polymer that can be broken down into sugars
+* **Hemicellulose** — another sugar-containing component of the cell wall
+* **Lignin** — a complex structural polymer that strengthens the plant and protects cellulose
+
+Lignin is one of the major barriers to economical cellulosic biofuel production because it limits access to cellulose and hemicellulose. Pretreatment, enzymes, heat, chemicals, or engineered microbes may be needed to convert biomass into usable sugars. These steps increase cost, complexity, and infrastructure requirements.
+
+This is why switchgrass is scientifically important but not yet a simple mass-production fuel solution.
+
+---
+
+## Gas Prices and Fuel Relevance
+
+The fuel-related sections of this project are intended for education, not prediction.
+
+The site may include scenario tools that allow users to explore questions such as:
+
+* How much gasoline does a household use each week?
+* How do fuel prices affect everyday costs?
+* What does “fuel diversification” mean?
+* How could alternative fuels fit into long-term energy planning?
+
+These tools do not claim that switchgrass will directly lower gasoline prices. Instead, they help users understand why researchers study alternative fuel pathways and why energy systems often require multiple solutions.
+
+Any fuel calculator or replacement scenario on this site should be interpreted as an educational estimate, not a market forecast.
+
+---
+
+## Data and Accuracy Statement
+
+TexasClimate is currently an educational prototype.
+
+Some data displayed on the site may be sample data, built-in demonstration values, or illustrative estimates. These values are used to demonstrate how a public-facing environmental intelligence dashboard could work.
+
+This website should not be used for:
+
+* emergency weather decisions
+* farming or irrigation decisions
+* investment decisions
+* fuel market predictions
+* public policy decisions
+* operational grid planning
+* disaster response
+
+For official real-time information, users should consult agencies such as the National Weather Service, NOAA, EPA/AirNow, ERCOT, the U.S. Drought Monitor, Texas Water Development Board, and local emergency management offices.
+
+---
+
+## AI-Assisted Interpretation
+
+This project includes AI-assisted and rule-based interpretation modules that generate summaries, comparisons, and educational explanations.
+
+These features are intended to make environmental data easier to understand. They should not be interpreted as verified scientific predictions, emergency alerts, or professional recommendations.
+
+The AI-assisted sections are best understood as:
+
+```text
+educational explanation + prototype modeling
 ```
 
-**Run a local live-reload server (optional, for editing):**
+not as:
+
+```text
+official forecast + scientific guarantee + operational decision system
+```
+
+---
+
+## Sources and Evidence
+
+This project draws on public scientific, government, and educational sources. Key sources include:
+
+1. **U.S. Department of Energy — Bioenergy Basics**
+   Overview of biomass, bioenergy, and renewable fuel pathways.
+   https://www.energy.gov/eere/bioenergy/bioenergy-basics
+
+2. **U.S. Department of Energy — Cellulosic Sugars and Lignin**
+   Background on cellulosic sugars and lignin as components of biofuel and bioproduct pathways.
+   https://www.energy.gov/cmei/fuels/cellulosic-sugar-and-lignin-production-capabilities-rfi-responses
+
+3. **USDA Economic Research Service — Switchgrass and Energy Crops**
+   Discussion of switchgrass as a perennial grass and its relationship to energy crop development.
+   https://www.ers.usda.gov/data-products/charts-of-note/chart-detail?chartId=83265
+
+4. **Schmer et al., PNAS 2008 — Net Energy of Cellulosic Ethanol from Switchgrass**
+   Peer-reviewed field research on switchgrass ethanol energy balance.
+   https://www.pnas.org/doi/10.1073/pnas.0704767105
+
+5. **National Renewable Energy Laboratory — Lignocellulosic Biomass to Ethanol Process Design**
+   Technical process design and economic modeling for biomass-to-ethanol conversion.
+   https://docs.nrel.gov/docs/fy02osti/32438.pdf
+
+6. **Alternative Fuels Data Center — Ethanol Fuel Basics**
+   Public-facing information about ethanol and alternative transportation fuels.
+   https://afdc.energy.gov/fuels/ethanol-fuel-basics
+
+7. **ERCOT Grid and Market Conditions**
+   Texas electricity grid and demand context.
+   https://www.ercot.com/gridmktinfo/dashboards
+
+8. **U.S. Drought Monitor**
+   Drought data relevant to agriculture, water use, and climate stress.
+   https://droughtmonitor.unl.edu/
+
+9. **Water Data for Texas**
+   Texas water, reservoir, drought, and rainfall information.
+   https://www.waterdatafortexas.org/
+
+Future versions of the project will continue expanding and improving the citation base, especially with peer-reviewed research on lignocellulosic biomass, switchgrass agronomy, pretreatment technologies, and lifecycle analysis.
+
+---
+
+## Technical Implementation
+
+TexasClimate is currently implemented as a static web project.
+
+Current stack:
+
+* HTML
+* CSS
+* JavaScript
+* Chart.js
+* GitHub Pages
+* Google Fonts
+* Responsive layout
+* Accessibility-focused markup
+
+The project does not currently require a backend server, database, framework, or build system.
+
+---
+
+## Running the Project Locally
+
+Clone the repository:
+
 ```bash
-# Option A — VS Code: install the "Live Server" extension,
-# then right-click index.html → "Open with Live Server"
-
-# Option B — Python (built in on most systems):
-python -m http.server 8000
-# then visit http://localhost:8000
+git clone git@github.com:haohanzang-ai/Weather-Channel.git
+cd Weather-Channel
 ```
 
-> An internet connection is needed for charts and fonts, which load from a CDN.
+Start a local server:
+
+```bash
+python -m http.server 8000
+```
+
+Open in a browser:
+
+```text
+http://localhost:8000
+```
+
+The live version is available at:
+
+```text
+https://haohanzang-ai.github.io/Weather-Channel/
+```
 
 ---
 
-## 🗺 Roadmap — great first contributions
+## Roadmap
 
-This is a prototype: the data is currently built-in sample data designed to demonstrate the interface. The biggest opportunity is wiring the AI engine to **real, live sources**. Help wanted:
+Planned improvements include:
 
-- [ ] Live weather + alerts from the **National Weather Service / NOAA API**
-- [ ] Real air quality from **OpenAQ** or **AirNow**
-- [ ] Live grid demand from the **ERCOT** public dashboard
-- [ ] Drought data from the **U.S. Drought Monitor**
-- [ ] Reservoir levels from **Water Data for Texas**
-- [ ] Expand the Biofuel Lab with citation-linked, peer-reviewed datasets
-- [ ] Add unit selection (°F/°C) and additional states/regions
-- [ ] Persistent user preferences and saved cities
-
----
-
-## 🤝 Contributing
-
-Contributions of every size are welcome — code, data sources, AI improvements, accessibility fixes, documentation, or design ideas.
-
-1. Fork the repository
-2. Create a branch: `git checkout -b feature/your-idea`
-3. Commit your changes: `git commit -m "Add your idea"`
-4. Push: `git push origin feature/your-idea`
-5. Open a Pull Request describing what you changed and why
-
-Found a bug or have a feature request? [Open an issue](../../issues) — even a rough one helps.
+* connecting weather data to official National Weather Service or NOAA sources
+* adding real air-quality data from AirNow or OpenAQ
+* integrating drought data from the U.S. Drought Monitor
+* adding Texas reservoir data from Water Data for Texas
+* incorporating ERCOT energy-demand context
+* improving the switchgrass and lignocellulosic biofuel citation base
+* adding a student-friendly lignin and cellulose diagram
+* adding a feedback survey for educational impact measurement
+* adding Google Analytics for usage tracking
+* creating an impact dashboard
+* improving mobile layout and accessibility
+* adding more Texas cities and regions
+* adding unit selection for Fahrenheit and Celsius
 
 ---
 
-## 📊 Data & accuracy disclaimer
+## Impact Goals
 
-This dashboard is an **educational prototype**. Current values are illustrative sample data, not a live operational feed. Do **not** use it for emergency decision-making — always rely on official sources such as the National Weather Service, local emergency management, and the EPA for real-time safety information.
+TexasClimate is being developed as both a technical project and a public education resource.
+
+Future impact will be measured through:
+
+* total website users
+* page views
+* average engagement time
+* source-link clicks
+* fuel calculator interactions
+* feedback survey responses
+* GitHub stars, forks, and issues
+* teacher or researcher feedback
+* classroom, club, or community presentations
+
+The goal is to document not only website traffic, but also educational value.
 
 ---
 
-## 📄 License
+## Contributing
 
-Released under the **MIT License** — free to use, modify, and share. (Add a `LICENSE` file to the repo to make this official.)
+Contributions are welcome, especially in the following areas:
+
+* credible scientific sources
+* accessibility improvements
+* mobile design
+* official public data sources
+* chart improvements
+* bug fixes
+* documentation
+* student-friendly science explanations
+* switchgrass and biofuel research summaries
+
+Suggested issue labels:
+
+```text
+good first issue
+documentation
+science-source-needed
+accessibility
+data-source-needed
+student-friendly
+biofuel
+climate
+```
 
 ---
 
-## 🙌 Acknowledgments
+## License
 
-Built as an open exploration of how **agentic AI** and everyday climate awareness can live in one accessible, no-cost tool — making environmental intelligence and next-generation biofuel science available to anyone with a browser. Switchgrass research framing draws on the broader cellulosic-biofuel and agronomy literature.
+This project is intended to be released under the MIT License.
 
-*If this project is useful to you, a ⭐ on the repo helps others find it.*
+A LICENSE file should be added to the repository to make this official.
+
+---
+
+## Acknowledgments
+
+TexasClimate was built as a student-led exploration of how climate data, energy literacy, agriculture, and biofuel science can be presented through an accessible public web platform.
+
+The project is centered on the connection between:
+
+```text
+Texas weather → agriculture → energy demand → fuel use → switchgrass biofuel science
+```
+
+If this project is useful, a star on the repository helps others discover it.
+
