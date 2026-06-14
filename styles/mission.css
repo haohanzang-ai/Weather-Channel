@@ -137,3 +137,41 @@
   .sources-grid { grid-template-columns: 1fr; }
   .process-step { min-width: 52px; padding: 6px 4px; }
 }
+/* ── Sidebar language grid ── */
+.lang-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  padding: 4px 0 8px 0;
+}
+.lang-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--r8);
+  padding: 5px 2px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text2);
+  font-family: var(--font);
+  transition: background 0.15s, border-color 0.15s;
+}
+.lang-btn:hover {
+  background: var(--surface);
+  border-color: var(--border2);
+  color: var(--text0);
+}
+.lang-btn-active {
+  border-color: var(--green);
+  background: rgba(46,204,139,0.1);
+  color: var(--green);
+}
+.lang-code {
+  font-size: 9px;
+  font-weight: 700;
+  font-family: var(--mono);
+  letter-spacing: 0.05em;
+}
