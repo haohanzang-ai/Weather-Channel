@@ -82,7 +82,9 @@
     <div class="nav-section" role="menu" aria-label="Analysis">
       <div class="nav-label" aria-hidden="true">Analysis</div>
       <button class="nav-item" role="menuitem" data-page="compare" onclick="showPage('compare')"><span class="nav-icon" aria-hidden="true">⇌</span>City Comparison</button>
-      <button class="nav-item" role="menuitem" data-page="reports" onclick="showPage('reports')"><span class="nav-icon" aria-hidden="true">📋</span>AI Reports</button>
+            <button class="nav-item" role="menuitem" data-page="reports" onclick="showPage('reports')"><span class="nav-icon" aria-hidden="true">📋</span>AI Reports</button>
+      <button class="nav-item" role="menuitem" data-page="sources" onclick="showPage('sources')"><span class="nav-icon" aria-hidden="true">📚</span>Sources</button>
+    </div>
     </div>
 
     <div class="nav-section" role="group" aria-label="Language selection">
@@ -452,7 +454,199 @@
       <div class="page" id="page-compare" role="region" aria-label="City Comparison"><h2 class="section-title">City Comparison Lab</h2><div id="compareContent"></div></div>
 
       <!-- Reports -->
+            <!-- Reports -->
       <div class="page" id="page-reports" role="region" aria-label="AI Reports"><h2 class="section-title">AI Intelligence Reports</h2><div id="reportsContent"></div></div>
+
+      <!-- Sources -->
+      <div class="page" id="page-sources" role="region" aria-label="Data Sources and Citations">
+
+        <div class="srcpage-hero">
+          <h1 class="srcpage-title">📚 Data Sources &amp; Citations</h1>
+          <p class="srcpage-sub">All data displayed across this platform is either illustrative/educational or grounded in peer-reviewed research and credible government sources. Each category below identifies the data type, values used, and the authoritative source behind it.</p>
+          <div class="srcpage-badges">
+            <span class="badge badge-green">Peer-Reviewed Research</span>
+            <span class="badge badge-blue">Government Sources</span>
+            <span class="badge badge-orange">University Research</span>
+          </div>
+        </div>
+
+        <!-- Weather & Climate -->
+        <div class="src-category">
+          <h2 class="src-cat-title">🌡️ Texas Weather &amp; Climate</h2>
+          <p class="src-cat-note">⚠ Data shown on the dashboard is illustrative and educational — not a live weather feed. For real-time data, use the sources below.</p>
+          <div class="src-table-wrap">
+            <table class="src-table">
+              <thead><tr><th>Data</th><th>Value / Range</th><th>Authoritative Source</th></tr></thead>
+              <tbody>
+                <tr><td>10 cities monitored</td><td>Austin, Houston, Dallas, San Antonio, Fort Worth, El Paso, Arlington, Corpus Christi, Plano, Lubbock</td><td><a href="https://www.weather.gov/" target="_blank" rel="noopener">NOAA National Weather Service</a></td></tr>
+                <tr><td>Temperature readings</td><td>79–96°F (sample)</td><td><a href="https://www.weather.gov/ewx/" target="_blank" rel="noopener">NWS Texas</a></td></tr>
+                <tr><td>Humidity</td><td>22–88% (sample)</td><td><a href="https://www.ncdc.noaa.gov/cdo-web/" target="_blank" rel="noopener">NOAA Climate Data Online</a></td></tr>
+                <tr><td>Wind speed</td><td>7–17 mph (sample)</td><td><a href="https://www.ncei.noaa.gov/" target="_blank" rel="noopener">NOAA NCEI</a></td></tr>
+                <tr><td>7-day forecast</td><td>Mon–Sun, 63–98°F range</td><td><a href="https://www.weather.gov/" target="_blank" rel="noopener">NWS Point Forecasts</a></td></tr>
+                <tr><td>UV Index</td><td>Per city (sample)</td><td><a href="https://www.epa.gov/sunsafety/uv-index-scale-0" target="_blank" rel="noopener">EPA UV Index Scale</a></td></tr>
+                <tr><td>Air Quality Index</td><td>Per city (sample)</td><td><a href="https://www.airnow.gov/" target="_blank" rel="noopener">EPA AirNow</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Agriculture -->
+        <div class="src-category">
+          <h2 class="src-cat-title">🌾 Agriculture</h2>
+          <p class="src-cat-note">⚠ Agricultural indicators shown are illustrative estimates — not real-time USDA data.</p>
+          <div class="src-table-wrap">
+            <table class="src-table">
+              <thead><tr><th>Data</th><th>Value</th><th>Authoritative Source</th></tr></thead>
+              <tbody>
+                <tr><td>Heat Stress Risk</td><td>65% — Moderate-High</td><td><a href="https://www.nass.usda.gov/" target="_blank" rel="noopener">USDA NASS</a></td></tr>
+                <tr><td>Drought Concern</td><td>72% — Concerning</td><td><a href="https://droughtmonitor.unl.edu/" target="_blank" rel="noopener">USDA Drought Monitor</a></td></tr>
+                <tr><td>Irrigation Need</td><td>80% — High</td><td><a href="https://agrilifeextension.tamu.edu/" target="_blank" rel="noopener">Texas A&amp;M AgriLife Extension</a></td></tr>
+                <tr><td>Crop Growth Suitability</td><td>55% — Moderate</td><td><a href="https://www.ers.usda.gov/topics/farm-economy/bioenergy/" target="_blank" rel="noopener">USDA ERS Bioenergy</a></td></tr>
+                <tr><td>Agricultural Risk Index</td><td>68% — Elevated</td><td><a href="https://www.rma.usda.gov/" target="_blank" rel="noopener">USDA Risk Management Agency</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Switchgrass Biofuel Science -->
+        <div class="src-category">
+          <h2 class="src-cat-title">🌿 Switchgrass Biofuel Science</h2>
+          <p class="src-cat-note">✓ All values below are drawn directly from peer-reviewed scientific literature.</p>
+          <div class="src-table-wrap">
+            <table class="src-table">
+              <thead><tr><th>Data</th><th>Value</th><th>Citation</th></tr></thead>
+              <tbody>
+                <tr><td>Net energy return (cellulosic ethanol)</td><td><strong>540%</strong> more than input energy</td><td><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008), <em>PNAS</em> 105(2):464–469</a></td></tr>
+                <tr><td>Switchgrass biofuel yield</td><td>200–280 GJ/ha/yr</td><td><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008), <em>PNAS</em></a></td></tr>
+                <tr><td>Corn ethanol yield (comparison)</td><td>120–160 GJ/ha/yr</td><td><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008), <em>PNAS</em></a></td></tr>
+                <tr><td>Carbon sequestration potential</td><td>1.1–2.3 tCO₂/ha/yr</td><td><a href="https://www.energy.gov/eere/bioenergy/2016-billion-ton-report" target="_blank" rel="noopener">DOE Billion-Ton Report (2016)</a></td></tr>
+                <tr><td>Water footprint — cellulosic ethanol</td><td>6–14 gal/gal</td><td><a href="https://www.nrel.gov/bioenergy/" target="_blank" rel="noopener">NREL Bioenergy Research</a></td></tr>
+                <tr><td>Water footprint — corn ethanol</td><td>784 gal/gal</td><td><a href="https://www.nrel.gov/bioenergy/" target="_blank" rel="noopener">NREL Bioenergy Research</a></td></tr>
+                <tr><td>Lignin as production barrier</td><td>Cell wall blocks enzymatic access to cellulose</td><td><a href="https://doi.org/10.1016/j.biortech.2004.06.025" target="_blank" rel="noopener">Mosier et al. (2005), <em>Bioresource Technology</em> 96(6):673–686</a></td></tr>
+                <tr><td>Pretreatment methods</td><td>Heat, acid, ammonia (AFEX), steam explosion</td><td><a href="https://doi.org/10.1016/j.biortech.2004.06.025" target="_blank" rel="noopener">Mosier et al. (2005)</a></td></tr>
+                <tr><td>Biofuel conversion pathways</td><td>Cellulose → sugars → ethanol / advanced fuels</td><td><a href="https://doi.org/10.1126/science.1114736" target="_blank" rel="noopener">Ragauskas et al. (2006), <em>Science</em> 311(5760):484–489</a></td></tr>
+                <tr><td>Switchgrass as U.S. priority feedstock</td><td>Federal bioenergy crop designation</td><td><a href="https://www.energy.gov/eere/bioenergy/switchgrass" target="_blank" rel="noopener">DOE EERE — Switchgrass</a></td></tr>
+                <tr><td>Farm-scale production costs</td><td>Economic field-scale estimates</td><td><a href="https://doi.org/10.2134/agronj2007.0271" target="_blank" rel="noopener">Perrin et al. (2008), <em>Agron. J.</em> 100(6):1657–1665</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- HAL2 / FIL2 -->
+        <div class="src-category">
+          <h2 class="src-cat-title">🧬 HAL2 / FIL2 Ecotype Research</h2>
+          <p class="src-cat-note">⚠ HAL2 and FIL2 are <em>Panicum hallii</em> model ecotypes used in laboratory research — not commercial switchgrass varieties. Scores shown are prototype model values.</p>
+          <div class="src-table-wrap">
+            <table class="src-table">
+              <thead><tr><th>Data</th><th>Model Score</th><th>Citation</th></tr></thead>
+              <tbody>
+                <tr><td>HAL2 drought tolerance</td><td>92 / 100</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019), <em>Current Biology</em></a></td></tr>
+                <tr><td>HAL2 heat tolerance</td><td>88 / 100</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019)</a></td></tr>
+                <tr><td>HAL2 salinity tolerance</td><td>72 / 100</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019)</a></td></tr>
+                <tr><td>FIL2 biomass yield</td><td>85 / 100</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019)</a></td></tr>
+                <tr><td>FIL2 cold tolerance</td><td>78 / 100</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019)</a></td></tr>
+                <tr><td>FIL2 salinity tolerance</td><td>80 / 100</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019)</a></td></tr>
+                <tr><td>Switchgrass biology overview</td><td>Native perennial grass, <em>Panicum virgatum</em></td><td><a href="https://doi.org/10.1007/s11104-004-0930-5" target="_blank" rel="noopener">Parrish &amp; Fike (2005), <em>Plant &amp; Soil</em> 279:1–21</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Global Regions -->
+        <div class="src-category">
+          <h2 class="src-cat-title">🌍 Global Switchgrass Deployment Regions</h2>
+          <p class="src-cat-note">⚠ Regional scores are AI-generated prototype values for educational purposes — not peer-reviewed regional assessments.</p>
+          <div class="src-table-wrap">
+            <table class="src-table">
+              <thead><tr><th>Region</th><th>Climate Fit Score</th><th>Reference Source</th></tr></thead>
+              <tbody>
+                <tr><td>Great Plains (USA)</td><td>88 / 100</td><td><a href="https://www.energy.gov/eere/bioenergy/2016-billion-ton-report" target="_blank" rel="noopener">DOE Billion-Ton Report (2016)</a></td></tr>
+                <tr><td>Texas</td><td>85 / 100</td><td><a href="https://agrilifeextension.tamu.edu/" target="_blank" rel="noopener">Texas A&amp;M AgriLife Extension</a></td></tr>
+                <tr><td>Brazil Cerrado</td><td>80 / 100</td><td><a href="https://www.fao.org/land-water/en/" target="_blank" rel="noopener">FAO Land &amp; Water Division</a></td></tr>
+                <tr><td>Sub-Saharan Africa</td><td>72 / 100</td><td><a href="https://www.fao.org/land-water/en/" target="_blank" rel="noopener">FAO Land &amp; Water Division</a></td></tr>
+                <tr><td>India — Deccan Plateau</td><td>68 / 100</td><td><a href="https://www.ipcc.ch/assessment-report/ar6/" target="_blank" rel="noopener">IPCC AR6 Report</a></td></tr>
+                <tr><td>N. China Plain</td><td>60 / 100</td><td><a href="https://www.fao.org/land-water/en/" target="_blank" rel="noopener">FAO Land &amp; Water Division</a></td></tr>
+                <tr><td>Eastern Europe</td><td>65 / 100</td><td><a href="https://www.ipcc.ch/assessment-report/ar6/" target="_blank" rel="noopener">IPCC AR6 Report</a></td></tr>
+                <tr><td>Australia Interior</td><td>52 / 100</td><td><a href="https://www.fao.org/land-water/en/" target="_blank" rel="noopener">FAO Land &amp; Water Division</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Energy & Fuel -->
+        <div class="src-category">
+          <h2 class="src-cat-title">⛽ Energy &amp; Fuel</h2>
+          <p class="src-cat-note">⚠ ERCOT and gas price figures shown on the dashboard are illustrative — use the sources below for real data.</p>
+          <div class="src-table-wrap">
+            <table class="src-table">
+              <thead><tr><th>Data</th><th>Authoritative Source</th></tr></thead>
+              <tbody>
+                <tr><td>ERCOT grid demand figures</td><td><a href="https://www.ercot.com/gridinfo" target="_blank" rel="noopener">ERCOT Grid Information</a></td></tr>
+                <tr><td>Weekly retail gasoline prices (Texas)</td><td><a href="https://www.eia.gov/petroleum/gasdiesel/" target="_blank" rel="noopener">EIA Weekly Retail Gasoline Prices</a></td></tr>
+                <tr><td>U.S. bioenergy policy &amp; fuel goals</td><td><a href="https://www.energy.gov/eere/bioenergy/bioenergy-basics" target="_blank" rel="noopener">DOE Bioenergy Basics</a></td></tr>
+                <tr><td>Biofuel production pathway science</td><td><a href="https://www.nrel.gov/bioenergy/" target="_blank" rel="noopener">NREL Bioenergy Research</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Air Quality -->
+        <div class="src-category">
+          <h2 class="src-cat-title">💨 Air Quality</h2>
+          <p class="src-cat-note">⚠ AQI values shown on the dashboard are illustrative sample data.</p>
+          <div class="src-table-wrap">
+            <table class="src-table">
+              <thead><tr><th>Data</th><th>Authoritative Source</th></tr></thead>
+              <tbody>
+                <tr><td>AQI per city</td><td><a href="https://www.airnow.gov/" target="_blank" rel="noopener">EPA AirNow</a></td></tr>
+                <tr><td>Texas air quality monitoring network</td><td><a href="https://www.tceq.texas.gov/airquality" target="_blank" rel="noopener">TCEQ Air Quality Division</a></td></tr>
+                <tr><td>AQI health guidance &amp; thresholds</td><td><a href="https://www.epa.gov/outdoor-air-quality-data" target="_blank" rel="noopener">EPA Outdoor Air Quality Data</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Water Resources -->
+        <div class="src-category">
+          <h2 class="src-cat-title">💧 Water Resources</h2>
+          <p class="src-cat-note">⚠ Reservoir and water availability data shown are illustrative.</p>
+          <div class="src-table-wrap">
+            <table class="src-table">
+              <thead><tr><th>Data</th><th>Authoritative Source</th></tr></thead>
+              <tbody>
+                <tr><td>Texas reservoir levels</td><td><a href="https://www.twdb.texas.gov/" target="_blank" rel="noopener">Texas Water Development Board</a></td></tr>
+                <tr><td>Statewide water availability</td><td><a href="https://www.usgs.gov/centers/tx-water" target="_blank" rel="noopener">USGS Texas Water Resources</a></td></tr>
+                <tr><td>Water use by sector</td><td><a href="https://www.twdb.texas.gov/waterplanning/" target="_blank" rel="noopener">TWDB State Water Plan</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Severe Weather -->
+        <div class="src-category">
+          <h2 class="src-cat-title">⚠️ Severe Weather</h2>
+          <p class="src-cat-note">⚠ Alerts shown on the dashboard are sample illustrative data — not live NWS feeds.</p>
+          <div class="src-table-wrap">
+            <table class="src-table">
+              <thead><tr><th>Data</th><th>Authoritative Source</th></tr></thead>
+              <tbody>
+                <tr><td>Weather alerts &amp; warnings</td><td><a href="https://www.spc.noaa.gov/" target="_blank" rel="noopener">NOAA Storm Prediction Center</a></td></tr>
+                <tr><td>Texas severe weather forecasts</td><td><a href="https://www.weather.gov/ewx/" target="_blank" rel="noopener">NWS San Antonio / Austin</a></td></tr>
+                <tr><td>Hurricane &amp; tropical storm tracking</td><td><a href="https://www.nhc.noaa.gov/" target="_blank" rel="noopener">NOAA National Hurricane Center</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Platform Disclaimer -->
+        <div class="src-disclaimer-block">
+          <h3 class="src-disclaimer-title">About This Platform's Data</h3>
+          <p class="src-disclaimer-text">This is an <strong>educational prototype dashboard</strong>. Weather, agriculture, energy, and AQI figures displayed throughout the dashboard are illustrative sample values — not real-time operational data. Scientific claims about switchgrass biofuel are grounded in the peer-reviewed literature cited above. Global deployment scores and HAL2/FIL2 trait values are AI-generated prototype estimates based on published agronomic literature. This platform does not constitute investment, agronomic, engineering, or policy advice.</p>
+        </div>
+
+      </div>
+
+    </main>
 
     </main>
   </div>
