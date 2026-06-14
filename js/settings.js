@@ -561,7 +561,7 @@ window.TC.setLang = function(id) { save('lang', id); buildLangGrid(); };
 window.TC.getLang = function() { return getSetting('lang'); };
 window.TC.apply   = function() { applySettings(); buildLangGrid(); };
 
-document.addEventListener('DOMContentLoaded', function() {
-  applySettings();
+window.addEventListener('load', function() {
+  if(typeof loadSettings === 'function') loadSettings();
   buildLangGrid();
 });
