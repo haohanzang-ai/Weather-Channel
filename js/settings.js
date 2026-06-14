@@ -543,3 +543,25 @@ function injectSettingsCSS(){
   ;
   document.head.appendChild(s);
 }
+/* ── Sidebar language grid ── */
+function buildLangGrid() {
+  var grid = document.getElementById('langGrid');
+  if (!grid) return;
+  var cur = getSetting('lang');
+  grid.innerHTML = ALL_LANGS.map(function(l) {
+    return '<button class="lang-btn' + (cur === l.id ? ' lang-btn-active' : '') + '" ' +
+      'onclick="window.TC.setLang(\'' + l.id + '\')" ' +
+      'title="' + l.label + '" aria-label="' + l.label + '">' +
+      l.flag + ' <span class="lang-code">' + l.id.toUpperCase() + '</span>' +
+      '</button>';
+  }).join('');
+}
+
+window.TC.setLang = function(id) { save('lang', id); buildLangGrid(); };
+window.TC.getLang = function() { return getSetting('lang'); };
+window.TC.apply   = function() { applySettings(); buildLangGrid(); };
+
+document.addEventListener('DOMContentLoaded', function() {
+  applySettings();
+  buildLangGrid();
+});
