@@ -14,7 +14,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="TexasClimate — Real-Time Intelligence Platform">
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; media-src 'self' blob:; connect-src https://api.open-meteo.com https://air-quality-api.open-meteo.com https://api.weather.gov https://cdn.jsdelivr.net https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com; frame-ancestors 'none';">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; media-src 'self' blob:; connect-src https://api.open-meteo.com https://air-quality-api.open-meteo.com https://api.weather.gov https://cdn.jsdelivr.net https://storage.googleapis.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com; frame-ancestors 'none';">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"TexasClimate Intelligence Platform","description":"Real-time climate, weather, environmental, and agricultural intelligence across Texas.","applicationCategory":"WeatherApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-EPP05BJFJ3"></script>
@@ -510,9 +510,7 @@
         <!-- Confirm Plant Card (hidden until image selected) -->
         <section class="scanCard" id="scanConfirmCard" style="display:none" aria-label="Confirm plant type and location">
           <div class="scanCardTitle">🌿 Step 3 — Confirm Plant Type &amp; Location</div>
-          <p class="scanConfirmNote">
-            ⚠ <strong>Automated plant identification is not performed in this prototype.</strong> Visual analysis by image is unreliable, especially for grass species. Please select the plant type below — or select "Unknown Grass" or "Unknown Broadleaf" if unsure. Your confirmation is required before generating an analysis.
-          </p>
+          <div id="scanAISuggest"></div>
           <div class="scanSelectGroup">
             <div>
               <label class="scanSelectLabel" for="scanPlantSel">Plant Type (confirm or select)</label>

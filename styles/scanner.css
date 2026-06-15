@@ -216,6 +216,61 @@
   line-height:1.6;
 }
 
+/* ── AI Suggestion Box ────────────────────────────────────────────────────── */
+#scanAISuggest { display:none; margin-bottom:14px; }
+
+.scanAIBox {
+  padding:11px 14px;
+  border-radius:var(--r8);
+  font-size:11px;
+  line-height:1.55;
+}
+.scanAIBox-loading {
+  display:flex;align-items:center;gap:10px;
+  background:rgba(74,144,226,0.07);
+  border:1px solid rgba(74,144,226,0.2);
+  color:var(--text2);
+}
+.scanAIDot {
+  width:8px;height:8px;border-radius:50%;
+  background:#7DB9F2;flex-shrink:0;
+  animation:scanAIPulse 1.1s ease-in-out infinite;
+}
+@keyframes scanAIPulse {
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.35;transform:scale(.6)}
+}
+.scanAIStatus { font-size:11px;color:var(--text2); }
+
+.scanAIBox-match {
+  background:rgba(46,204,139,0.07);
+  border:1px solid rgba(46,204,139,0.24);
+}
+.scanAIBox-nomatch {
+  background:rgba(245,166,35,0.07);
+  border:1px solid rgba(245,166,35,0.22);
+}
+.scanAIBox-unavail {
+  display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border2);
+}
+.scanAIBoxRow {
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:5px;
+}
+.scanAIBadge {
+  font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;
+  background:rgba(46,204,139,0.14);border:1px solid rgba(46,204,139,0.3);
+  color:#5DDBA8;border-radius:20px;padding:2px 9px;white-space:nowrap;
+}
+.scanAIBadge-warn {
+  background:rgba(245,166,35,0.12);border-color:rgba(245,166,35,0.3);color:#F8C06A;
+}
+.scanAIConf { font-size:10px;font-family:var(--mono);color:var(--text3); }
+.scanAILabel { font-size:11px;color:var(--text1);margin-bottom:4px; }
+.scanAINote  { font-size:10px;color:var(--text3);line-height:1.5; }
+
 /* ── Confirm Card ─────────────────────────────────────────────────────────── */
 .scanConfirmNote {
   font-size:11px;color:var(--text2);line-height:1.6;

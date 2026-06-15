@@ -240,6 +240,22 @@ const SCAN_LOCATIONS = [
   { id:'other_tx',    label:'Other Texas location',  short:'Texas',           context:'Texas climate varies significantly by region. This analysis uses general Texas context.' }
 ];
 
+// ── TF.js MobileNet label → plant key (first match wins) ─────────────────────
+const _SCAN_LABEL_MAP = [
+  { terms:['corn','maize','ear, spike','cornfield'],                            key:'corn_stover'      },
+  { terms:['sugarcane','sugar cane','saccharum'],                               key:'sugarcane'        },
+  { terms:['sorghum'],                                                           key:'sorghum'          },
+  { terms:['bamboo'],                                                            key:'miscanthus'       },
+  { terms:['hay','straw','switchgrass'],                                         key:'switchgrass'      },
+  { terms:['lawn mower','lawn','grass clipping'],                               key:'grass_clippings'  },
+  { terms:['log','lumber','wood','oak','pine','maple','birch','tree trunk',
+            'tree stump','bark','forest','grove','acorn','willow'],             key:'wood_biomass'     },
+  { terms:['combine','harvester','thresher','stubble'],                         key:'crop_residue'     },
+  { terms:['grass','meadow','prairie','alang','pasture'],                       key:'unknown_grass'    },
+  { terms:['leaf','plant','vine','shrub','bush','flower','daisy','fern',
+            'weed','broadleaf','herb'],                                          key:'unknown_broadleaf'},
+];
+
 // ── Scanner State ─────────────────────────────────────────────────────────────
 let scanInited       = false;
 let scanImageURL     = null;
@@ -247,6 +263,8 @@ let scanCameraStream = null;
 let scanPlantKey     = 'unknown_grass';
 let scanLocationId   = 'austin';
 let scanReportShown  = false;
+let _scanModel       = null;
+let _scanModelState  = 'idle'; // 'idle' | 'loading' | 'ready' | 'failed'
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 function scannerInit() {
@@ -256,6 +274,8 @@ function scannerInit() {
     _scanSetupFileInputs();
     _scanSetupLiveCamera();
     _scanSetupSafetyObserver();
+    if (_scanModelState === 'failed') _scanModelState = 'idle'; // allow retry after code update
+    _scanPreloadModel();
     scanInited = true;
   }
   scanGA('plant_scanner_opened', {});
@@ -331,7 +351,7 @@ function _scanHandleFile(file) {
 }
 
 // ── Show preview ──────────────────────────────────────────────────────────────
-function _scanShowPreview(url) {
+async function _scanShowPreview(url) {
   const img     = document.getElementById('scanPreviewImg');
   const preview = document.getElementById('scanPreviewCard');
   const confirm = document.getElementById('scanConfirmCard');
@@ -341,17 +361,22 @@ function _scanShowPreview(url) {
   if (confirm) confirm.style.display = 'block';
   if (hint)    {
     hint.style.display = 'block';
-    hint.innerHTML = '🔍 <strong>Visual note:</strong> Automated plant identification is not performed in this prototype. Visual analysis by image is unreliable, especially for grasses. Please confirm the plant type below before generating your analysis.';
+    hint.innerHTML = '🔍 <strong>Image analysis:</strong> TF.js MobileNet is running on your image in-browser. Results are approximate — user confirmation is always required before generating the analysis.';
   }
   _scanStopCameraStream();
   setTimeout(() => confirm?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+
+  // Run TF.js identification in the background; update dropdown when done
+  _scanShowAISuggestLoading();
+  const result = await _scanIdentifyImage(img);
+  _scanUpdateAISuggest(result);
 }
 
 // ── Clear image ───────────────────────────────────────────────────────────────
 function scannerClearImage() {
   if (scanImageURL && scanImageURL.startsWith('blob:')) URL.revokeObjectURL(scanImageURL);
   scanImageURL = null;
-  ['scanPreviewImg','scanPreviewCard','scanConfirmCard','scanReportCard','scanVisualHint'].forEach(id => {
+  ['scanPreviewImg','scanPreviewCard','scanConfirmCard','scanReportCard','scanVisualHint','scanAISuggest'].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
     if (id === 'scanPreviewImg') el.src = '';
@@ -467,7 +492,7 @@ function _scanRenderReport() {
 
   el.innerHTML = `
     <div class="scan-report-disclaimer">
-      ⚠ <strong>Educational estimate only.</strong> This analysis is based on <em>user-confirmed plant category</em>, published biomass research, and regional climate context. It is <strong>not a lab test, fuel forecast, agronomic recommendation, or commercial viability assessment.</strong> Plant identification by image is unreliable.
+      ⚠ <strong>Educational estimate only.</strong> This analysis is based on <em>TF.js MobileNet image analysis + user-confirmed plant category</em>, published biomass research, and regional climate context. It is <strong>not a lab test, fuel forecast, agronomic recommendation, or commercial viability assessment.</strong> MobileNet is a general-purpose vision model, not a specialist botanical identifier — user confirmation is always required.
     </div>
 
     <div class="scan-report-header">
@@ -548,6 +573,239 @@ function _scanSetupSafetyObserver() {
   }, { threshold: 0.4 });
   obs.observe(card);
 }
+
+// ── TF.js MobileNet — lazy load + identify ───────────────────────────────────
+
+let _scanTFLib = null; // saved reference — GTM (gtag.js) sets window.tf={} and may overwrite TF.js
+
+function _scanLoadScript(src) {
+  return new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = src; s.onload = res; s.onerror = rej;
+    document.head.appendChild(s);
+  });
+}
+
+function _scanRestoreTF() {
+  // GTM may overwrite window.tf={}; always restore our reference before TF.js calls
+  if (_scanTFLib && typeof _scanTFLib.tensor === 'function') window.tf = _scanTFLib;
+}
+
+async function _scanLoadScripts() {
+  // Load TF.js and capture its reference immediately before GTM can overwrite it
+  if (!_scanTFLib || typeof _scanTFLib.tensor !== 'function') {
+    await _scanLoadScript('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js');
+    _scanTFLib = window.tf; // capture immediately after load
+  }
+  _scanRestoreTF(); // ensure window.tf is TF.js before MobileNet loads
+
+  if (typeof mobilenet === 'undefined' || typeof mobilenet.load !== 'function') {
+    await _scanLoadScript('https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0/dist/mobilenet.min.js');
+  }
+  _scanRestoreTF(); // ensure window.tf is TF.js before mobilenet.load() call
+}
+
+async function _scanPreloadModel() {
+  if (_scanModelState !== 'idle') return;
+  _scanModelState = 'loading';
+  try {
+    await _scanLoadScripts();
+    if (typeof mobilenet === 'undefined' || typeof mobilenet.load !== 'function') {
+      throw new Error('MobileNet not available');
+    }
+    _scanModel = await mobilenet.load({ version: 2, alpha: 1.0 });
+    _scanModelState = 'ready';
+  } catch(e) {
+    console.warn('[Scanner] Model load failed:', e.message);
+    _scanModelState = 'failed';
+  }
+}
+
+async function _scanIdentifyImage(imgEl) {
+  // Wait for image to finish loading
+  if (!imgEl.complete || !imgEl.naturalWidth) {
+    await new Promise(r => { imgEl.onload = r; imgEl.onerror = r; });
+  }
+
+  // Wait up to 30 s for TF.js model
+  const deadline = Date.now() + 30000;
+  while (_scanModelState === 'loading' && Date.now() < deadline) {
+    await new Promise(r => setTimeout(r, 400));
+  }
+
+  if (_scanModelState === 'ready' && _scanModel) {
+    try {
+      _scanRestoreTF(); // GTM may have overwritten window.tf since model loaded
+      const preds = await _scanModel.classify(imgEl, 10);
+      for (const pred of preds) {
+        const lbl = pred.className.toLowerCase();
+        for (const { terms, key } of _SCAN_LABEL_MAP) {
+          if (terms.some(t => lbl.includes(t))) {
+            return { key, confidence: pred.probability, rawLabel: pred.className, matched: true, method: 'mobilenet' };
+          }
+        }
+      }
+      return { key: null, confidence: preds[0]?.probability || 0, rawLabel: preds[0]?.className || 'Unknown', matched: false, method: 'mobilenet' };
+    } catch(e) {
+      console.warn('[Scanner] MobileNet classify error:', e.message);
+    }
+  }
+
+  // Fallback: Canvas color analysis (works in every environment including headless)
+  return _scanColorAnalyze(imgEl);
+}
+
+function _scanColorAnalyze(imgEl) {
+  try {
+    const SIZE = 80;
+    const canvas = document.createElement('canvas');
+    canvas.width = SIZE; canvas.height = SIZE;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(imgEl, 0, 0, SIZE, SIZE);
+    const data = ctx.getImageData(0, 0, SIZE, SIZE).data;
+
+    let rSum=0, gSum=0, bSum=0;
+    let greenPx=0, brownPx=0, yellowPx=0, whitePx=0;
+    const n = SIZE * SIZE;
+
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i], g = data[i+1], b = data[i+2];
+      rSum+=r; gSum+=g; bSum+=b;
+      if (g > r*1.15 && g > b*1.15 && g > 60)   greenPx++;   // plant green
+      if (r > 100 && g > 70 && b < 70 && r > g)  brownPx++;   // bark/wood/straw
+      if (r > 150 && g > 130 && b < 90 && r > b) yellowPx++;  // corn/straw yellow
+      if (r > 200 && g > 200 && b > 200)          whitePx++;   // sky/background
+    }
+
+    const rAvg=rSum/n, gAvg=gSum/n, bAvg=bSum/n;
+    const greenFrac  = greenPx  / n;
+    const brownFrac  = brownPx  / n;
+    const yellowFrac = yellowPx / n;
+    const bgFrac     = whitePx  / n;
+    const plantFrac  = greenFrac + brownFrac + yellowFrac;
+
+    if (plantFrac < 0.10 && bgFrac > 0.50) {
+      return { key: null, confidence: 0.15, rawLabel: `Color analysis: mostly background (avg RGB ${Math.round(rAvg)},${Math.round(gAvg)},${Math.round(bAvg)})`, matched: false, method: 'color' };
+    }
+    if (yellowFrac > 0.25 && yellowFrac >= greenFrac) {
+      return { key: 'corn_stover', confidence: 0.42, rawLabel: `Color analysis: dominant yellow-green tones (${Math.round(yellowFrac*100)}% of pixels)`, matched: true, method: 'color' };
+    }
+    if (greenFrac > 0.30) {
+      const key = greenFrac > 0.55 ? 'unknown_grass' : 'switchgrass';
+      return { key, confidence: 0.40 + greenFrac*0.15, rawLabel: `Color analysis: dominant green tones (${Math.round(greenFrac*100)}% of pixels)`, matched: true, method: 'color' };
+    }
+    if (brownFrac > 0.30) {
+      return { key: 'wood_biomass', confidence: 0.38, rawLabel: `Color analysis: dominant brown/woody tones (${Math.round(brownFrac*100)}% of pixels)`, matched: true, method: 'color' };
+    }
+    if (greenFrac > 0.10) {
+      return { key: 'unknown_grass', confidence: 0.28, rawLabel: `Color analysis: mixed tones with some green (${Math.round(greenFrac*100)}% green pixels)`, matched: true, method: 'color' };
+    }
+    return { key: null, confidence: 0.10, rawLabel: `Color analysis inconclusive (avg RGB ${Math.round(rAvg)},${Math.round(gAvg)},${Math.round(bAvg)})`, matched: false, method: 'color' };
+  } catch(e) {
+    return null;
+  }
+}
+
+function _scanShowAISuggestLoading() {
+  const el = document.getElementById('scanAISuggest');
+  if (!el) return;
+  el.style.display = 'block';
+  el.innerHTML = `<div class="scanAIBox scanAIBox-loading">
+    <span class="scanAIDot" aria-hidden="true"></span>
+    <span class="scanAIStatus">Analyzing image with TF.js MobileNet…</span>
+  </div>`;
+}
+
+function _scanUpdateAISuggest(result) {
+  const el = document.getElementById('scanAISuggest');
+  if (!el) return;
+
+  if (!result) {
+    el.innerHTML = `<div class="scanAIBox scanAIBox-unavail">
+      <span class="scanAIBadge scanAIBadge-warn">⚠ AI unavailable</span>
+      <span class="scanAINote">TF.js model could not load. Please select the plant manually below.</span>
+    </div>`;
+    return;
+  }
+
+  const pct = Math.round(result.confidence * 100);
+
+  const isML     = result.method === 'mobilenet';
+  const isColor  = result.method === 'color';
+  const methodLabel = isML ? '🤖 MobileNet AI' : isColor ? '🎨 Color Analysis' : '🔍 Image Analysis';
+  const methodNote  = isML
+    ? 'Based on TF.js MobileNet (general-purpose vision model). Please verify or correct below.'
+    : isColor
+    ? 'Based on pixel color distribution from your image. Accuracy is limited — please verify or correct the selection below.'
+    : 'Based on image analysis. Please verify or correct the selection below.';
+
+  if (result.matched && result.key) {
+    const plant = SCAN_PLANTS[result.key];
+    const sel = document.getElementById('scanPlantSel');
+    if (sel) { sel.value = result.key; scanPlantKey = result.key; }
+    el.innerHTML = `<div class="scanAIBox scanAIBox-match">
+      <div class="scanAIBoxRow">
+        <span class="scanAIBadge">${escapeHtml(methodLabel)}</span>
+        <span class="scanAIConf">${pct}% confidence</span>
+      </div>
+      <div class="scanAILabel">${escapeHtml(result.rawLabel)} → pre-selected <strong>${plant ? escapeHtml(plant.icon + ' ' + plant.commonName) : result.key}</strong></div>
+      <div class="scanAINote">${escapeHtml(methodNote)}</div>
+    </div>`;
+  } else {
+    el.innerHTML = `<div class="scanAIBox scanAIBox-nomatch">
+      <div class="scanAIBoxRow">
+        <span class="scanAIBadge scanAIBadge-warn">🔍 No plant match</span>
+        <span class="scanAIConf">${pct}% confidence</span>
+      </div>
+      <div class="scanAILabel"><em>${escapeHtml(result.rawLabel)}</em></div>
+      <div class="scanAINote">Could not match to a plant category. Please select manually below. Try a closer photo of leaves or stems.</div>
+    </div>`;
+  }
+}
+
+// ── FUTURE UPGRADE: PlantNet API via serverless proxy ─────────────────────────
+// For real botanical species ID (500 free req/day via PlantNet):
+//
+// 1. Get a free key at https://my.plantnet.org/
+// 2. Create a Cloudflare Worker (free tier: 100k req/day):
+//      export default {
+//        async fetch(req, env) {
+//          const body = await req.formData();
+//          const r = await fetch(
+//            `https://my-api.plantnet.org/v2/identify/all?api-key=${env.PLANTNET_KEY}&nb-results=5`,
+//            { method:'POST', body }
+//          );
+//          const data = await r.json();
+//          return new Response(JSON.stringify(data), {
+//            headers:{ 'Access-Control-Allow-Origin':'https://haohanzang-ai.github.io',
+//                      'Content-Type':'application/json' }
+//          });
+//        }
+//      };
+// 3. Set PLANTNET_KEY as a Worker secret (never in frontend code)
+// 4. Add worker URL to connect-src in CSP
+// 5. Replace _scanIdentifyImage() call in _scanShowPreview() with:
+//
+// async function _scanPlantNetIdentify(imageURL) {
+//   const blob = await fetch(imageURL).then(r => r.blob());
+//   const form = new FormData();
+//   form.append('images', blob, 'plant.jpg');
+//   form.append('organs', 'auto');
+//   const res  = await fetch('https://YOUR-WORKER.workers.dev/identify', { method:'POST', body:form });
+//   if (!res.ok) return null;
+//   const data = await res.json();
+//   const top  = data.results?.[0];
+//   if (!top || top.score < 0.10) return null;
+//   const sci  = top.species?.scientificNameWithoutAuthor || '';
+//   const sciMap = {
+//     'Panicum virgatum':'switchgrass', 'Miscanthus giganteus':'miscanthus',
+//     'Sorghum bicolor':'sorghum',      'Saccharum officinarum':'sugarcane',
+//     'Zea mays':'corn_stover',
+//   };
+//   const key = Object.entries(sciMap).find(([k]) => sci.includes(k))?.[1] || null;
+//   return { key, confidence:top.score, rawLabel:`${sci} (${top.species?.commonNames?.[0]})`, matched:!!key };
+// }
+// ─────────────────────────────────────────────────────────────────────────────
 
 // ── Cleanup when leaving the scanner ─────────────────────────────────────────
 function scannerCleanup() {
