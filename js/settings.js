@@ -4,13 +4,13 @@
 
 const SETTINGS_KEY = 'tc_settings_v1';
 const DEFAULTS = {
-  theme:         'blue',
-  bg:            'dark',
-  fontSize:      'medium',
-  units:         'imperial',
-  complexity:    'standard',
-  lang:          'en',
-  refreshMin:    10,
+  theme:         'blue',     // blue | teal | amber | rose | violet | mint
+  bg:            'dark',     // dark | midnight | slate | charcoal
+  fontSize:      'medium',   // small | medium | large
+  units:         'imperial', // imperial | metric
+  complexity:    'standard', // simple | standard | expert
+  lang:          'en',       // en | es | fr | pt | de
+  refreshMin:    10,         // 5 | 10 | 20 | 30
   reducedMotion: false,
   highContrast:  false
 };
@@ -29,8 +29,11 @@ function save(k, v){
   _cfg[k] = v;
   try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(_cfg)); } catch(e){}
   applySettings();
+  // Re-render the active tab so unit/complexity changes are visible immediately
   const active = document.querySelector('.nav-item[aria-current="page"]');
-  if(active && active.dataset.page !== 'settings') showPage(active.dataset.page);
+  if(active && active.dataset.page !== 'settings'){
+    showPage(active.dataset.page);
+  }
 }
 
 function getSetting(k){ return _cfg[k] ?? DEFAULTS[k]; }
@@ -48,7 +51,7 @@ function resetSettings(){
 window.TC = {
   tempUnit:   () => getSetting('units')==='metric' ? '°C' : '°F',
   windUnit:   () => getSetting('units')==='metric' ? 'km/h' : 'mph',
-  precipUnit: () => 'mm',
+  precipUnit: () => 'mm',   // ET₀ is always mm/day; precip stays mm for consistency
   isMetric:   () => getSetting('units')==='metric',
   complexity: () => getSetting('complexity'),
   describe:   (simple, standard, expert) => {
@@ -66,47 +69,52 @@ const STRINGS = {
     sgbiofuel:'Biofuel Lab',fueleff:'Fuel Efficiency',trends:'Climate Trends',
     airquality:'Air Quality',water:'Water Resources',energy:'Energy',
     severe:'Severe Weather',compare:'City Comparison',reports:'AI Reports',settings:'Settings',
-    main:'Main',environment:'Environment',analysis:'Analysis',
-    syncedAt:'Synced',searchPlaceholder:'Search cities…',liveDot:'Intelligence Platform'
+    main:'Main',environment:'Environment',analysis:'Analysis',preferences:'Preferences',
+    syncedAt:'Synced',searchPlaceholder:'Search cities…',
+    liveDot:'Intelligence Platform'
   },
   es:{
     dashboard:'Tablero',map:'Mapa de Texas',forecasts:'Pronósticos',agriculture:'Agricultura',
     sgbiofuel:'Lab Biocombustible',fueleff:'Eficiencia de Combustible',trends:'Tendencias Climáticas',
     airquality:'Calidad del Aire',water:'Recursos Hídricos',energy:'Energía',
     severe:'Clima Severo',compare:'Comparar Ciudades',reports:'Informes IA',settings:'Ajustes',
-    main:'Principal',environment:'Medio Ambiente',analysis:'Análisis',
-    syncedAt:'Sincronizado',searchPlaceholder:'Buscar ciudades…',liveDot:'Plataforma de Inteligencia'
+    main:'Principal',environment:'Medio Ambiente',analysis:'Análisis',preferences:'Preferencias',
+    syncedAt:'Sincronizado',searchPlaceholder:'Buscar ciudades…',
+    liveDot:'Plataforma de Inteligencia'
   },
   fr:{
     dashboard:'Tableau de bord',map:'Carte du Texas',forecasts:'Prévisions',agriculture:'Agriculture',
     sgbiofuel:'Lab Biocarburant',fueleff:'Efficacité Énergétique',trends:'Tendances Climatiques',
     airquality:"Qualité de l'Air",water:'Ressources en Eau',energy:'Énergie',
     severe:'Météo Sévère',compare:'Comparer les Villes',reports:'Rapports IA',settings:'Paramètres',
-    main:'Principal',environment:'Environnement',analysis:'Analyse',
-    syncedAt:'Synchronisé',searchPlaceholder:'Rechercher des villes…',liveDot:'Plateforme de Renseignement'
+    main:'Principal',environment:'Environnement',analysis:'Analyse',preferences:'Préférences',
+    syncedAt:'Synchronisé',searchPlaceholder:'Rechercher des villes…',
+    liveDot:'Plateforme de Renseignement'
   },
   pt:{
     dashboard:'Painel',map:'Mapa do Texas',forecasts:'Previsões',agriculture:'Agricultura',
     sgbiofuel:'Lab Biocombustível',fueleff:'Eficiência de Combustível',trends:'Tendências Climáticas',
     airquality:'Qualidade do Ar',water:'Recursos Hídricos',energy:'Energia',
     severe:'Clima Severo',compare:'Comparar Cidades',reports:'Relatórios IA',settings:'Configurações',
-    main:'Principal',environment:'Meio Ambiente',analysis:'Análise',
-    syncedAt:'Sincronizado',searchPlaceholder:'Buscar cidades…',liveDot:'Plataforma de Inteligência'
+    main:'Principal',environment:'Meio Ambiente',analysis:'Análise',preferences:'Preferências',
+    syncedAt:'Sincronizado',searchPlaceholder:'Buscar cidades…',
+    liveDot:'Plataforma de Inteligência'
   },
   de:{
     dashboard:'Dashboard',map:'Texas-Karte',forecasts:'Vorhersagen',agriculture:'Landwirtschaft',
     sgbiofuel:'Biokraftstoff-Labor',fueleff:'Kraftstoffeffizienz',trends:'Klimatrends',
     airquality:'Luftqualität',water:'Wasserressourcen',energy:'Energie',
     severe:'Unwetter',compare:'Städtevergleich',reports:'KI-Berichte',settings:'Einstellungen',
-    main:'Hauptmenü',environment:'Umwelt',analysis:'Analyse',
-    syncedAt:'Synchronisiert',searchPlaceholder:'Städte suchen…',liveDot:'Intelligenzplattform'
+    main:'Hauptmenü',environment:'Umwelt',analysis:'Analyse',preferences:'Einstellungen',
+    syncedAt:'Synchronisiert',searchPlaceholder:'Städte suchen…',
+    liveDot:'Intelligenzplattform'
   },
   zh:{
     dashboard:'仪表板',map:'德克萨斯地图',forecasts:'天气预报',agriculture:'农业',
     sgbiofuel:'生物燃料实验室',fueleff:'燃油效率',trends:'气候趋势',
     airquality:'空气质量',water:'水资源',energy:'能源',
     severe:'恶劣天气',compare:'城市对比',reports:'智能报告',settings:'设置',
-    main:'主菜单',environment:'环境',analysis:'分析',
+    main:'主菜单',environment:'环境',analysis:'分析',preferences:'偏好设置',
     syncedAt:'同步于',searchPlaceholder:'搜索城市…',liveDot:'智能平台'
   },
   ko:{
@@ -114,7 +122,7 @@ const STRINGS = {
     sgbiofuel:'바이오연료 랩',fueleff:'연료 효율',trends:'기후 트렌드',
     airquality:'대기질',water:'수자원',energy:'에너지',
     severe:'악천후',compare:'도시 비교',reports:'AI 리포트',settings:'설정',
-    main:'메인',environment:'환경',analysis:'분석',
+    main:'메인',environment:'환경',analysis:'분석',preferences:'환경설정',
     syncedAt:'동기화',searchPlaceholder:'도시 검색…',liveDot:'인텔리전스 플랫폼'
   },
   vi:{
@@ -122,7 +130,7 @@ const STRINGS = {
     sgbiofuel:'Lab Nhiên liệu sinh học',fueleff:'Hiệu quả nhiên liệu',trends:'Xu hướng khí hậu',
     airquality:'Chất lượng không khí',water:'Tài nguyên nước',energy:'Năng lượng',
     severe:'Thời tiết khắc nghiệt',compare:'So sánh thành phố',reports:'Báo cáo AI',settings:'Cài đặt',
-    main:'Chính',environment:'Môi trường',analysis:'Phân tích',
+    main:'Chính',environment:'Môi trường',analysis:'Phân tích',preferences:'Tùy chọn',
     syncedAt:'Đồng bộ',searchPlaceholder:'Tìm kiếm thành phố…',liveDot:'Nền tảng thông minh'
   },
   hi:{
@@ -130,7 +138,7 @@ const STRINGS = {
     sgbiofuel:'जैव ईंधन लैब',fueleff:'ईंधन दक्षता',trends:'जलवायु प्रवृत्तियाँ',
     airquality:'वायु गुणवत्ता',water:'जल संसाधन',energy:'ऊर्जा',
     severe:'गंभीर मौसम',compare:'शहर तुलना',reports:'AI रिपोर्ट',settings:'सेटिंग्स',
-    main:'मुख्य',environment:'पर्यावरण',analysis:'विश्लेषण',
+    main:'मुख्य',environment:'पर्यावरण',analysis:'विश्लेषण',preferences:'प्राथमिकताएँ',
     syncedAt:'सिंक किया',searchPlaceholder:'शहर खोजें…',liveDot:'इंटेलिजेंस प्लेटफ़ॉर्म'
   },
   ar:{
@@ -138,15 +146,15 @@ const STRINGS = {
     sgbiofuel:'مختبر الوقود الحيوي',fueleff:'كفاءة الوقود',trends:'اتجاهات المناخ',
     airquality:'جودة الهواء',water:'الموارد المائية',energy:'الطاقة',
     severe:'الطقس القاسي',compare:'مقارنة المدن',reports:'تقارير الذكاء الاصطناعي',settings:'الإعدادات',
-    main:'الرئيسية',environment:'البيئة',analysis:'التحليل',
+    main:'الرئيسية',environment:'البيئة',analysis:'التحليل',preferences:'التفضيلات',
     syncedAt:'تمت المزامنة',searchPlaceholder:'ابحث عن مدينة…',liveDot:'منصة الذكاء'
   },
   ru:{
-    dashboard:'Панель',map:'Карта Техаса',forecasts:'Прогнозы',agriculture:'Сельское хозяйство',
+    dashboard:'Панель',map:'Карта Техаса',forecasts:'Прогнозы',agriculture:'С/х',
     sgbiofuel:'Лаб. биотоплива',fueleff:'Топливная эффективность',trends:'Климатические тренды',
     airquality:'Качество воздуха',water:'Водные ресурсы',energy:'Энергетика',
     severe:'Опасная погода',compare:'Сравнение городов',reports:'ИИ Отчёты',settings:'Настройки',
-    main:'Главное',environment:'Окружающая среда',analysis:'Анализ',
+    main:'Главное',environment:'Окружающая среда',analysis:'Анализ',preferences:'Настройки',
     syncedAt:'Синхронизировано',searchPlaceholder:'Поиск города…',liveDot:'Платформа аналитики'
   },
   ja:{
@@ -154,7 +162,7 @@ const STRINGS = {
     sgbiofuel:'バイオ燃料ラボ',fueleff:'燃料効率',trends:'気候トレンド',
     airquality:'大気質',water:'水資源',energy:'エネルギー',
     severe:'悪天候',compare:'都市比較',reports:'AIレポート',settings:'設定',
-    main:'メイン',environment:'環境',analysis:'分析',
+    main:'メイン',environment:'環境',analysis:'分析',preferences:'設定',
     syncedAt:'同期',searchPlaceholder:'都市を検索…',liveDot:'インテリジェンスプラットフォーム'
   },
   bn:{
@@ -162,23 +170,23 @@ const STRINGS = {
     sgbiofuel:'জৈব জ্বালানি ল্যাব',fueleff:'জ্বালানি দক্ষতা',trends:'জলবায়ু প্রবণতা',
     airquality:'বায়ু মান',water:'জল সম্পদ',energy:'শক্তি',
     severe:'ভয়াবহ আবহাওয়া',compare:'শহর তুলনা',reports:'AI রিপোর্ট',settings:'সেটিংস',
-    main:'প্রধান',environment:'পরিবেশ',analysis:'বিশ্লেষণ',
-    syncedAt:'সিঙ্ক করা হয়েছে',searchPlaceholder:'শহর খুঁজুন…',liveDot:'ইন্টেলিজেন্স প্ল্যাটফর্ম'
+    main:'প্রধান',environment:'পরিবেশ',analysis:'বিশ্লেষণ',preferences:'পছন্দসমূহ',
+    syncedAt:'সিঙ্ক',searchPlaceholder:'শহর খুঁজুন…',liveDot:'ইন্টেলিজেন্স প্ল্যাটফর্ম'
   },
   tr:{
     dashboard:'Gösterge Paneli',map:'Teksas Haritası',forecasts:'Tahminler',agriculture:'Tarım',
-    sgbiofuel:'Biyoyakıt Laboratuvarı',fueleff:'Yakıt Verimliliği',trends:'İklim Trendleri',
+    sgbiofuel:'Biyoyakıt Lab.',fueleff:'Yakıt Verimliliği',trends:'İklim Trendleri',
     airquality:'Hava Kalitesi',water:'Su Kaynakları',energy:'Enerji',
     severe:'Şiddetli Hava',compare:'Şehir Karşılaştırma',reports:'YZ Raporları',settings:'Ayarlar',
-    main:'Ana Menü',environment:'Çevre',analysis:'Analiz',
+    main:'Ana Menü',environment:'Çevre',analysis:'Analiz',preferences:'Tercihler',
     syncedAt:'Senkronize edildi',searchPlaceholder:'Şehir ara…',liveDot:'Zeka Platformu'
   },
   it:{
     dashboard:'Dashboard',map:'Mappa del Texas',forecasts:'Previsioni',agriculture:'Agricoltura',
-    sgbiofuel:'Lab Biocarburante',fueleff:"Efficienza del Carburante",trends:'Tendenze Climatiche',
+    sgbiofuel:'Lab Biocarburante',fueleff:'Efficienza Carburante',trends:'Tendenze Climatiche',
     airquality:"Qualità dell'Aria",water:'Risorse Idriche',energy:'Energia',
     severe:'Meteo Estremo',compare:'Confronto Città',reports:'Rapporti IA',settings:'Impostazioni',
-    main:'Principale',environment:'Ambiente',analysis:'Analisi',
+    main:'Principale',environment:'Ambiente',analysis:'Analisi',preferences:'Preferenze',
     syncedAt:'Sincronizzato',searchPlaceholder:'Cerca città…',liveDot:'Piattaforma Intelligence'
   },
   id:{
@@ -186,36 +194,35 @@ const STRINGS = {
     sgbiofuel:'Lab Biofuel',fueleff:'Efisiensi Bahan Bakar',trends:'Tren Iklim',
     airquality:'Kualitas Udara',water:'Sumber Daya Air',energy:'Energi',
     severe:'Cuaca Ekstrem',compare:'Perbandingan Kota',reports:'Laporan AI',settings:'Pengaturan',
-    main:'Utama',environment:'Lingkungan',analysis:'Analisis',
+    main:'Utama',environment:'Lingkungan',analysis:'Analisis',preferences:'Preferensi',
     syncedAt:'Disinkronkan',searchPlaceholder:'Cari kota…',liveDot:'Platform Kecerdasan'
   }
 };
 
-// ── All supported languages (for selector) ────────────────────────────────────
+// ── All supported languages ───────────────────────────────────────────────────
 
 const ALL_LANGS = [
-  {id:'en', flag:'🇺🇸', label:'English'},
-  {id:'es', flag:'🇪🇸', label:'Español'},
-  {id:'fr', flag:'🇫🇷', label:'Français'},
-  {id:'pt', flag:'🇧🇷', label:'Português'},
-  {id:'de', flag:'🇩🇪', label:'Deutsch'},
-  {id:'zh', flag:'🇨🇳', label:'中文'},
-  {id:'ko', flag:'🇰🇷', label:'한국어'},
-  {id:'vi', flag:'🇻🇳', label:'Tiếng Việt'},
-  {id:'hi', flag:'🇮🇳', label:'हिन्दी'},
-  {id:'ar', flag:'🇸🇦', label:'العربية'},
-  {id:'ru', flag:'🇷🇺', label:'Русский'},
-  {id:'ja', flag:'🇯🇵', label:'日本語'},
-  {id:'bn', flag:'🇧🇩', label:'বাংলা'},
-  {id:'tr', flag:'🇹🇷', label:'Türkçe'},
-  {id:'it', flag:'🇮🇹', label:'Italiano'},
-  {id:'id', flag:'🇮🇩', label:'Bahasa Indonesia'}
+  {id:'en',flag:'🇺🇸',label:'English'},
+  {id:'es',flag:'🇪🇸',label:'Español'},
+  {id:'fr',flag:'🇫🇷',label:'Français'},
+  {id:'pt',flag:'🇧🇷',label:'Português'},
+  {id:'de',flag:'🇩🇪',label:'Deutsch'},
+  {id:'zh',flag:'🇨🇳',label:'中文'},
+  {id:'ko',flag:'🇰🇷',label:'한국어'},
+  {id:'vi',flag:'🇻🇳',label:'Tiếng Việt'},
+  {id:'hi',flag:'🇮🇳',label:'हिन्दी'},
+  {id:'ar',flag:'🇸🇦',label:'العربية'},
+  {id:'ru',flag:'🇷🇺',label:'Русский'},
+  {id:'ja',flag:'🇯🇵',label:'日本語'},
+  {id:'bn',flag:'🇧🇩',label:'বাংলা'},
+  {id:'tr',flag:'🇹🇷',label:'Türkçe'},
+  {id:'it',flag:'🇮🇹',label:'Italiano'},
+  {id:'id',flag:'🇮🇩',label:'Bahasa Indonesia'}
 ];
 
-// RTL languages
 const RTL_LANGS = new Set(['ar']);
 
-// ── Apply settings → CSS vars + DOM ──────────────────────────────────────────
+// ── Apply settings → DOM + CSS vars ──────────────────────────────────────────
 
 function applySettings(){
   const r = document.documentElement;
@@ -235,7 +242,7 @@ function applySettings(){
   r.style.setProperty('--blue-mid', t[2]);
   r.style.setProperty('--glow', t[3]);
 
-  // Background
+  // Background palette
   const bgs = {
     dark:     ['#070E1A','#0B1623','#0F1E30','#152540'],
     midnight: ['#020408','#050B14','#08101E','#0D1628'],
@@ -243,8 +250,8 @@ function applySettings(){
     charcoal: ['#111827','#1A2535','#1F2D3D','#273549']
   };
   const bg = bgs[_cfg.bg] || bgs.dark;
-  r.style.setProperty('--bg0',bg[0]); r.style.setProperty('--bg1',bg[1]);
-  r.style.setProperty('--bg2',bg[2]); r.style.setProperty('--bg3',bg[3]);
+  r.style.setProperty('--bg0', bg[0]); r.style.setProperty('--bg1', bg[1]);
+  r.style.setProperty('--bg2', bg[2]); r.style.setProperty('--bg3', bg[3]);
 
   // Font size
   document.body.style.fontSize = {small:'11px',medium:'13px',large:'15px'}[_cfg.fontSize]||'13px';
@@ -255,7 +262,7 @@ function applySettings(){
   r.style.setProperty('--text2', hc?'rgba(255,255,255,0.92)':'rgba(255,255,255,0.64)');
   r.style.setProperty('--text3', hc?'rgba(255,255,255,0.78)':'rgba(255,255,255,0.45)');
   r.style.setProperty('--border', hc?'rgba(255,255,255,0.22)':'rgba(255,255,255,0.08)');
-  r.style.setProperty('--border2',hc?'rgba(255,255,255,0.40)':'rgba(255,255,255,0.14)');
+  r.style.setProperty('--border2', hc?'rgba(255,255,255,0.40)':'rgba(255,255,255,0.14)');
 
   // Reduced motion
   if(_cfg.reducedMotion){
@@ -266,8 +273,8 @@ function applySettings(){
     }
   } else { const ex=document.getElementById('_tcNoMotion'); if(ex) ex.remove(); }
 
-  // RTL direction for Arabic
-  r.dir = RTL_LANGS.has(_cfg.lang) ? 'rtl' : 'ltr';
+  // RTL support for Arabic
+  document.documentElement.dir = RTL_LANGS.has(_cfg.lang) ? 'rtl' : 'ltr';
 
   applyLanguage();
   applyRefreshInterval();
@@ -276,7 +283,7 @@ function applySettings(){
 // ── Language ──────────────────────────────────────────────────────────────────
 
 function applyLanguage(){
-  const str = STRINGS[_cfg.lang] || STRINGS.en;
+  const str = STRINGS[_cfg.lang]||STRINGS.en;
 
   // Nav buttons
   document.querySelectorAll('.nav-item[data-page]').forEach(btn=>{
@@ -287,10 +294,10 @@ function applyLanguage(){
     if(icon) btn.insertBefore(icon, btn.firstChild);
   });
 
-  // Nav section labels
+  // Nav section labels (Main / Environment / Analysis / Preferences)
   const secLabels = document.querySelectorAll('.nav-section .nav-label');
-  const secKeys   = ['main','environment','analysis'];
-  secLabels.forEach((el,i)=>{ if(str[secKeys[i]]) el.textContent=str[secKeys[i]]; });
+  const secKeys   = ['main','environment','analysis','preferences'];
+  secLabels.forEach((el,i)=>{ if(str[secKeys[i]]) el.textContent = str[secKeys[i]]; });
 
   // Search placeholder
   const sb = document.getElementById('searchBox');
@@ -304,7 +311,7 @@ function applyLanguage(){
     meta.innerHTML = `${str.syncedAt||'Synced'}: <span id="lastSync">${t}</span>`;
   }
 
-  // Sidebar sub-label
+  // Sidebar sub ("Intelligence Platform")
   const logoSub = document.querySelector('.logo-sub');
   if(logoSub){
     const dot = logoSub.querySelector('.live-dot');
@@ -317,18 +324,22 @@ function applyLanguage(){
     Object.keys(PAGE_TITLES).forEach(k=>{ if(str[k]) PAGE_TITLES[k]=str[k]; });
   }
 
-  // Current page header
+  // Current page title
   const active = document.querySelector('.nav-item[aria-current="page"]');
   if(active){ const pid=active.dataset.page; if(str[pid]) document.getElementById('pageTitle').textContent=str[pid]; }
 }
 
-// ── Auto-refresh ──────────────────────────────────────────────────────────────
+// ── Auto-refresh interval ─────────────────────────────────────────────────────
 
 let _refreshTimer = null;
+let _refreshTimerMs = null;
 function applyRefreshInterval(){
-  if(_refreshTimer) clearInterval(_refreshTimer);
   const mins = Math.max(1, parseInt(_cfg.refreshMin)||10);
-  _refreshTimer = setInterval(()=>{ if(typeof fetchAllWeatherData==='function') fetchAllWeatherData(); }, mins*60*1000);
+  const ms = mins * 60 * 1000;
+  if(ms === _refreshTimerMs) return; // interval unchanged — don't reset the countdown
+  _refreshTimerMs = ms;
+  if(_refreshTimer) clearInterval(_refreshTimer);
+  _refreshTimer = setInterval(()=>{ if(typeof fetchAllWeatherData==='function') fetchAllWeatherData(); }, ms);
 }
 
 // ── Render ────────────────────────────────────────────────────────────────────
@@ -354,9 +365,9 @@ function renderSettings(){
     </div>`;
 
   const complexityPreview = {
-    simple:   "🌡 It's too hot for most crops right now. Farmers should water their fields and watch out for wilting.",
+    simple:   '🌡 It\'s too hot for most crops right now. Farmers should water their fields and watch out for wilting.',
     standard: 'Heat stress levels are elevated across Texas. Temperatures exceed optimal growing ranges. Increased irrigation is recommended to offset high evapotranspiration rates.',
-    expert:   'Thermal stress threshold exceeded: avg temp > 95°F induces stomatal closure and reduced photosynthesis. ET₀ (FAO-56 Penman-Monteith) may exceed 8 mm/day — recommend Kc-adjusted irrigation scheduling and canopy monitoring.'
+    expert:   'Thermal stress threshold exceeded: avg temp > 95°F causes stomatal closure and reduced photosynthesis. ET₀ (FAO-56 Penman-Monteith) may exceed 8 mm/day — recommend Kc-adjusted irrigation scheduling and canopy monitoring.'
   };
 
   pg.innerHTML = `
@@ -410,7 +421,7 @@ function renderSettings(){
           ${chip('imperial',_cfg.units,'🇺🇸 Imperial (°F · mph)',"save('units','imperial');renderSettings()")}
           ${chip('metric',  _cfg.units,'🌍 Metric (°C · km/h)',  "save('units','metric');renderSettings()")}
         </div>
-        ${_cfg.units==='metric'?`<div class="set-hint">Metric units apply after the next refresh. Click <strong>↻ Refresh</strong> in the header to apply immediately. Note: ET₀ (evapotranspiration) is always in mm/day per the FAO-56 standard.</div>`:''}
+        ${_cfg.units==='metric'?`<div class="set-hint">Metric units apply after the next refresh. Click <strong>↻ Refresh</strong> in the header to apply immediately. Note: ET₀ (evapotranspiration) is always displayed in mm/day per the FAO-56 standard.</div>`:''}
       </div>
       <div class="set-group">
         <div class="set-label">Data Complexity</div>
@@ -426,13 +437,13 @@ function renderSettings(){
             onclick="save('complexity','standard');renderSettings()">
             <span class="set-complexity-icon">📊</span>
             <div class="set-complexity-label">Standard</div>
-            <div class="set-complexity-desc">Data with context and units. Default for most users.</div>
+            <div class="set-complexity-desc">Data with context and units. Default experience for most users.</div>
           </button>
           <button class="set-complexity-card${_cfg.complexity==='expert'?' active':''}"
             onclick="save('complexity','expert');renderSettings()">
             <span class="set-complexity-icon">🔬</span>
             <div class="set-complexity-label">Expert</div>
-            <div class="set-complexity-desc">Full metrics, raw values, and formulas. For researchers and professionals.</div>
+            <div class="set-complexity-desc">Full metrics, formulas, and raw values. For researchers and professionals.</div>
           </button>
         </div>
         <div class="set-preview">
@@ -450,18 +461,16 @@ function renderSettings(){
     </div>
 
     <div class="set-section">
-      <div class="set-section-title">🌐 Language <span style="font-size:9px;background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue-mid);border-radius:8px;padding:2px 8px;margin-left:6px;vertical-align:middle;font-weight:700;letter-spacing:.06em">${ALL_LANGS.length} LANGUAGES</span></div>
+      <div class="set-section-title">🌐 Language <span style="font-size:9px;background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue-mid);border-radius:8px;padding:2px 8px;margin-left:8px;vertical-align:middle;font-weight:700;letter-spacing:.06em">${ALL_LANGS.length} LANGUAGES</span></div>
       <div class="set-group" style="margin-bottom:0">
         <div class="set-label">Interface Language</div>
         <div class="set-desc">Translates the full navigation, page titles, and UI strings. Live weather data is always sourced in English from the APIs.</div>
         <div class="set-langs-grid">
-          ${ALL_LANGS.map(l=>`
-            <button class="set-lang-btn${_cfg.lang===l.id?' active':''}"
-              onclick="save('lang','${l.id}');renderSettings()" lang="${l.id}"
-              aria-pressed="${_cfg.lang===l.id}">
-              <span class="set-lang-flag">${l.flag}</span>
-              <span class="set-lang-label">${l.label}</span>
-            </button>`).join('')}
+          ${ALL_LANGS.map(l=>`<button class="set-lang-btn${_cfg.lang===l.id?' active':''}"
+            onclick="save('lang','${l.id}');renderSettings()" lang="${l.id}" aria-pressed="${_cfg.lang===l.id}">
+            <span class="set-lang-flag">${l.flag}</span>
+            <span class="set-lang-label">${l.label}</span>
+          </button>`).join('')}
         </div>
       </div>
     </div>
@@ -479,9 +488,9 @@ function renderSettings(){
         <div class="set-about-item"><span class="set-about-key">Version</span><span>v2.4.1</span></div>
         <div class="set-about-item"><span class="set-about-key">Data Sources</span><span>Open-Meteo · NWS api.weather.gov</span></div>
         <div class="set-about-item"><span class="set-about-key">Monitored Cities</span><span>10 major Texas cities</span></div>
-        <div class="set-about-item"><span class="set-about-key">Interface Languages</span><span>${ALL_LANGS.length} languages supported</span></div>
+        <div class="set-about-item"><span class="set-about-key">License</span><span>Open source · MIT</span></div>
         <div class="set-about-item"><span class="set-about-key">Repository</span>
-          <span><a href="https://github.com/haohanzang-ai/Weather-Channel" target="_blank" rel="noopener" style="color:var(--blue)">github.com/haohanzang-ai</a></span>
+          <span><a href="https://github.com/haohanzang-ai/Weather-Channel" target="_blank" rel="noopener" style="color:var(--blue)">github.com/haohanzang-ai/Weather-Channel</a></span>
         </div>
       </div>
       <div style="margin-top:14px">
@@ -491,14 +500,14 @@ function renderSettings(){
   </div>`;
 }
 
-// ── CSS ───────────────────────────────────────────────────────────────────────
+// ── Settings CSS ──────────────────────────────────────────────────────────────
 
 function injectSettingsCSS(){
   if(document.getElementById('_settingsCSS')) return;
   const s = document.createElement('style'); s.id='_settingsCSS';
   s.textContent=`
 .set-section{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:16px}
-.set-section-title{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.12em;margin-bottom:18px;display:flex;align-items:center}
+.set-section-title{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.12em;margin-bottom:18px}
 .set-group{margin-bottom:22px}.set-group:last-child{margin-bottom:0}
 .set-label{font-size:12px;font-weight:600;color:var(--text0);margin-bottom:3px}
 .set-desc{font-size:10px;color:var(--text3);line-height:1.55;margin-bottom:10px}
@@ -506,7 +515,7 @@ function injectSettingsCSS(){
 .set-swatches{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
 .set-swatch{width:30px;height:30px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:transform .15s,box-shadow .15s;flex-shrink:0}
 .set-swatch:hover{transform:scale(1.18)}
-.set-swatch.active{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,0.22),0 0 12px rgba(255,255,255,0.08)}
+.set-swatch.active{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,0.22),0 0 12px rgba(255,255,255,0.1)}
 .set-chips{display:flex;gap:6px;flex-wrap:wrap}
 .set-chip{padding:6px 15px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:rgba(255,255,255,0.05);color:var(--text1);transition:all .15s;font-family:var(--font)}
 .set-chip:hover{background:rgba(255,255,255,0.1);border-color:var(--blue-mid)}
@@ -521,7 +530,7 @@ function injectSettingsCSS(){
 .set-preview{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:12px}
 .set-preview-label{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px}
 .set-preview-text{font-size:11px;color:var(--text1);line-height:1.65}
-.set-langs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:7px}
+.set-langs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:7px}
 .set-lang-btn{display:flex;align-items:center;gap:8px;padding:9px 13px;border-radius:10px;background:rgba(255,255,255,0.04);border:1.5px solid var(--border);cursor:pointer;font-family:var(--font);transition:all .16s;text-align:left;width:100%}
 .set-lang-btn:hover{background:rgba(255,255,255,0.08);border-color:var(--blue-mid)}
 .set-lang-btn.active{background:var(--blue-dim);border-color:var(--blue)}
@@ -539,29 +548,7 @@ function injectSettingsCSS(){
 .set-about-item{display:flex;flex-direction:column;gap:4px;padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border)}
 .set-about-key{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;font-weight:700}
 .set-about-item>span:last-child{font-size:11px;color:var(--text1)}
-@media(max-width:600px){.set-complexity{grid-template-columns:1fr}.set-about-grid{grid-template-columns:1fr}.set-langs-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}}`
-  ;
+@media(max-width:600px){.set-complexity{grid-template-columns:1fr}.set-about-grid{grid-template-columns:1fr}.set-langs-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}}
+  `;
   document.head.appendChild(s);
 }
-/* ── Sidebar language grid ── */
-function buildLangGrid() {
-  var grid = document.getElementById('langGrid');
-  if (!grid) return;
-  var cur = getSetting('lang');
-  grid.innerHTML = ALL_LANGS.map(function(l) {
-    return '<button class="lang-btn' + (cur === l.id ? ' lang-btn-active' : '') + '" ' +
-      'onclick="window.TC.setLang(\'' + l.id + '\')" ' +
-      'title="' + l.label + '" aria-label="' + l.label + '">' +
-      l.flag + ' <span class="lang-code">' + l.id.toUpperCase() + '</span>' +
-      '</button>';
-  }).join('');
-}
-
-window.TC.setLang = function(id) { save('lang', id); buildLangGrid(); };
-window.TC.getLang = function() { return getSetting('lang'); };
-window.TC.apply   = function() { applySettings(); buildLangGrid(); };
-
-window.addEventListener('load', function() {
-  if(typeof loadSettings === 'function') loadSettings();
-  buildLangGrid();
-});

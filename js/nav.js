@@ -39,6 +39,7 @@ function showPage(id){
   if(id === 'severe')     renderSevere();
   if(id === 'compare')    renderCompare();
   if(id === 'reports')    renderReports();
+  if(id === 'settings')   renderSettings();
 }
 
 // ── Search ────────────────────────────────────────────────────────────────────
@@ -69,16 +70,14 @@ function updateClock(){
   el.textContent = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 }
 
-// ── Refresh ───────────────────────────────────────────────────────────────────
+// ── Refresh — re-fetches live data from Open-Meteo ───────────────────────────
 function refreshData(e){
   const btn = e.currentTarget;
   btn.textContent = '↻ Syncing…';
   btn.disabled = true;
-  setTimeout(()=>{
+  fetchAllWeatherData().finally(() => {
     btn.textContent = '↻ Refresh';
     btn.disabled = false;
-    document.getElementById('lastSync').textContent = 'just now';
-    renderDashboard();
     announce('Dashboard data refreshed');
-  }, 1200);
+  });
 }

@@ -1,39 +1,88 @@
 'use strict';
 
-// ── Energy ────────────────────────────────────────────────────────────────────
+// ── Energy Intelligence — CDI from live temps, honest ERCOT links ─────────────
 function renderEnergy(){
+  if(!dataLoaded || !Object.keys(WEATHER_DATA).length){
+    document.getElementById('energyContent').innerHTML='<div class="card loading-shimmer" style="height:200px"></div>';
+    return;
+  }
+
+  const sorted  = Object.entries(WEATHER_DATA).sort((a,b)=>b[1].temp-a[1].temp);
+  const temps   = sorted.map(([,d])=>d.temp);
+  const avgTemp = Math.round(temps.reduce((a,b)=>a+b,0)/temps.length);
+  const maxTemp = temps[0];
+  const hottest = sorted[0][0];
+
+  // Cooling Demand Index: standard formula for grid load estimation
+  // CDI = max(0, temp − 65°F) × 0.8  — higher = more AC pressure on the grid
+  const cdiEntries = sorted.map(([city,d])=>({
+    city,
+    cdi: Math.max(0, Math.round((d.temp-65)*0.8)),
+    temp: d.temp
+  }));
+  const maxCDI  = Math.max(...cdiEntries.map(e=>e.cdi));
+  const avgCDI  = Math.round(cdiEntries.reduce((s,e)=>s+e.cdi,0)/cdiEntries.length);
+  const gridPressure = avgCDI>30?'High':avgCDI>18?'Moderate':'Low';
+  const gridColor    = avgCDI>30?'#D64545':avgCDI>18?'#F5A623':'#5DDBA8';
+
   document.getElementById('energyContent').innerHTML=`
     <div class="grid-4" style="margin-bottom:16px">
-      <div class="card card-orange"><div class="stat-label">Peak Demand Today</div><div class="stat-value">78.4<span class="stat-unit">GW</span></div><div class="stat-sub">Expected 4–7 PM CDT</div></div>
-      <div class="card card-blue"><div class="stat-label">Current Load</div><div class="stat-value">71.2<span class="stat-unit">GW</span></div><div class="stat-sub">Grid operating normally</div></div>
-      <div class="card card-success"><div class="stat-label">Renewable Mix</div><div class="stat-value" style="color:#5DDBA8">42<span class="stat-unit">%</span></div><div class="stat-sub">Wind + Solar</div></div>
-      <div class="card"><div class="stat-label">Reserve Margin</div><div class="stat-value">8.3<span class="stat-unit">%</span></div><div class="stat-sub">Adequate</div></div>
-    </div>
-    <div class="card" style="margin-bottom:14px">
-      <h3 class="section-title">Cooling Demand Index by City</h3>
-      ${Object.entries(WEATHER_DATA).map(([city,d])=>{
-        const cdi=Math.max(0,Math.round((d.temp-65)*0.8));
-        const col=cdi>25?'#D64545':cdi>15?'#F5A623':'#4A90E2';
-        return`<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)">
-          <div style="width:110px;font-size:11px;color:var(--text1)">${escapeHtml(city)}</div>
-          <div style="flex:1"><div class="progress-bar" role="meter" aria-valuenow="${cdi}" aria-valuemin="0" aria-valuemax="50" aria-label="${escapeHtml(city)} cooling demand index: ${cdi}"><div class="progress-fill" style="width:${Math.min(100,cdi*3)}%;background:${col}"></div></div></div>
-          <span style="font-size:11px;color:${col};font-weight:700;width:60px;text-align:right;font-family:var(--mono)">CDI: ${cdi}</span>
-        </div>`}).join('')}
-    </div>
-    <div class="grid-2">
-      <div class="card card-danger"><div class="insight-tag">⚡ Peak Demand Alert</div><div class="insight-text">ERCOT anticipates near-record demand 4–9 PM today. Reduce thermostat settings, defer laundry until after 9 PM. Commercial facilities: raise AC setpoints to 76–78°F.</div></div>
+      <div class="card card-orange">
+        <div class="stat-label">Avg Texas Temp (Live)</div>
+        <div class="stat-value">${avgTemp}<span class="stat-unit">°F</span></div>
+        <div class="stat-sub">Across all 10 monitored cities</div>
+      </div>
       <div class="card">
-        <h3 class="section-title">Energy Source Mix</h3>
-        <div class="chart-wrap" style="height:155px"><canvas id="energyMix" role="img" aria-label="ERCOT energy source breakdown: Natural Gas 40%, Wind 28%, Solar 14%, Nuclear 10%, Coal 8%"></canvas></div>
+        <div class="stat-label">Peak City Temp</div>
+        <div class="stat-value">${maxTemp}<span class="stat-unit">°F</span></div>
+        <div class="stat-sub">${escapeHtml(hottest)}</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">Avg Cooling Demand</div>
+        <div class="stat-value" style="color:${gridColor}">${avgCDI}</div>
+        <div class="stat-sub">CDI index (0 = no cooling load)</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">Grid Pressure Estimate</div>
+        <div class="stat-value" style="font-size:18px;color:${gridColor}">${escapeHtml(gridPressure)}</div>
+        <div class="stat-sub">Based on avg CDI across cities</div>
       </div>
     </div>
-  `;
-  destroyChart('energyMix');
-  whenReady('energyMix', ctx =>{
-    charts.set('energyMix', new Chart(ctx,{
-      type:'doughnut',
-      data:{labels:['Natural Gas','Wind','Solar','Nuclear','Coal'],datasets:[{data:[40,28,14,10,8],backgroundColor:['#F5A623','#4A90E2','#F5D623','#2ECC8B','#888'],borderWidth:0,hoverOffset:6}]},
-      options:{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'right',labels:{color:'rgba(255,255,255,0.65)',font:{size:10},boxWidth:10,padding:8}}}}
-    }));
-  });
+    <div class="card" style="margin-bottom:14px">
+      <h3 class="section-title">Cooling Demand Index (CDI) by City — Live</h3>
+      <div style="font-size:10px;color:var(--text3);margin-bottom:10px">CDI = max(0, temp − 65°F) × 0.8 · Higher values indicate greater air conditioning pressure on the ERCOT grid</div>
+      ${cdiEntries.map(({city,cdi,temp})=>{
+        const col=cdi>25?'#D64545':cdi>15?'#F5A623':'#4A90E2';
+        return `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)">
+          <div style="width:110px;font-size:11px;color:var(--text1)">${escapeHtml(city)}</div>
+          <div style="flex:1">
+            <div class="progress-bar" role="meter" aria-valuenow="${cdi}" aria-valuemin="0" aria-valuemax="50" aria-label="${escapeHtml(city)} CDI: ${cdi}">
+              <div class="progress-fill" style="width:${Math.min(100,cdi*2.5)}%;background:${col}"></div>
+            </div>
+          </div>
+          <div style="font-size:10px;color:var(--text3);width:48px;text-align:right">${temp}°F</div>
+          <span style="font-size:11px;color:${col};font-weight:700;width:60px;text-align:right;font-family:var(--mono)">CDI: ${cdi}</span>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="grid-2">
+      <div class="card card-blue">
+        <div class="insight-tag">📊 About This Tab</div>
+        <div class="insight-text">The Cooling Demand Index is computed directly from live Open-Meteo temperatures. It estimates relative AC demand — useful as a proxy for grid stress. Real-time ERCOT load data (GW, reserve margins, generation mix) requires direct API access via ERCOT registration. Visit the live sources below for official grid figures.</div>
+      </div>
+      <div class="card">
+        <h3 class="section-title">Official ERCOT Data Sources</h3>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+          ${[
+            {name:'ERCOT Real-Time Dashboard',url:'https://www.ercot.com/gridinfo/load/load_hist'},
+            {name:'ERCOT Current Grid Conditions',url:'https://www.ercot.com/gridinfo'},
+            {name:'ERCOT Hourly Load Data',url:'https://www.ercot.com/gridinfo/load'},
+            {name:'EIA Texas Energy Profile',url:'https://www.eia.gov/state/analysis.php?sid=TX'}
+          ].map(l=>`<a href="${l.url}" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(255,255,255,0.04);border-radius:6px;border:1px solid var(--border);text-decoration:none">
+            <span style="font-size:10px;color:var(--text0);flex:1">${escapeHtml(l.name)}</span>
+            <span style="font-size:10px;color:#4A90E2">→</span>
+          </a>`).join('')}
+        </div>
+      </div>
+    </div>`;
 }
