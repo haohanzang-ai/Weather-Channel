@@ -69,7 +69,7 @@ const STRINGS = {
     sgbiofuel:'Biofuel Lab',fueleff:'Fuel Efficiency',trends:'Climate Trends',
     airquality:'Air Quality',water:'Water Resources',energy:'Energy',
     severe:'Severe Weather',compare:'City Comparison',reports:'AI Reports',settings:'Settings',
-    main:'Main',environment:'Environment',analysis:'Analysis',
+    main:'Main',environment:'Environment',analysis:'Analysis',preferences:'Preferences',
     syncedAt:'Synced',searchPlaceholder:'Search cities…',
     liveDot:'Intelligence Platform'
   },
@@ -78,7 +78,7 @@ const STRINGS = {
     sgbiofuel:'Lab Biocombustible',fueleff:'Eficiencia de Combustible',trends:'Tendencias Climáticas',
     airquality:'Calidad del Aire',water:'Recursos Hídricos',energy:'Energía',
     severe:'Clima Severo',compare:'Comparar Ciudades',reports:'Informes IA',settings:'Ajustes',
-    main:'Principal',environment:'Medio Ambiente',analysis:'Análisis',
+    main:'Principal',environment:'Medio Ambiente',analysis:'Análisis',preferences:'Preferencias',
     syncedAt:'Sincronizado',searchPlaceholder:'Buscar ciudades…',
     liveDot:'Plataforma de Inteligencia'
   },
@@ -87,7 +87,7 @@ const STRINGS = {
     sgbiofuel:'Lab Biocarburant',fueleff:'Efficacité Énergétique',trends:'Tendances Climatiques',
     airquality:"Qualité de l'Air",water:'Ressources en Eau',energy:'Énergie',
     severe:'Météo Sévère',compare:'Comparer les Villes',reports:'Rapports IA',settings:'Paramètres',
-    main:'Principal',environment:'Environnement',analysis:'Analyse',
+    main:'Principal',environment:'Environnement',analysis:'Analyse',preferences:'Préférences',
     syncedAt:'Synchronisé',searchPlaceholder:'Rechercher des villes…',
     liveDot:'Plateforme de Renseignement'
   },
@@ -96,7 +96,7 @@ const STRINGS = {
     sgbiofuel:'Lab Biocombustível',fueleff:'Eficiência de Combustível',trends:'Tendências Climáticas',
     airquality:'Qualidade do Ar',water:'Recursos Hídricos',energy:'Energia',
     severe:'Clima Severo',compare:'Comparar Cidades',reports:'Relatórios IA',settings:'Configurações',
-    main:'Principal',environment:'Meio Ambiente',analysis:'Análise',
+    main:'Principal',environment:'Meio Ambiente',analysis:'Análise',preferences:'Preferências',
     syncedAt:'Sincronizado',searchPlaceholder:'Buscar cidades…',
     liveDot:'Plataforma de Inteligência'
   },
@@ -105,7 +105,7 @@ const STRINGS = {
     sgbiofuel:'Biokraftstoff-Labor',fueleff:'Kraftstoffeffizienz',trends:'Klimatrends',
     airquality:'Luftqualität',water:'Wasserressourcen',energy:'Energie',
     severe:'Unwetter',compare:'Städtevergleich',reports:'KI-Berichte',settings:'Einstellungen',
-    main:'Hauptmenü',environment:'Umwelt',analysis:'Analyse',
+    main:'Hauptmenü',environment:'Umwelt',analysis:'Analyse',preferences:'Einstellungen',
     syncedAt:'Synchronisiert',searchPlaceholder:'Städte suchen…',
     liveDot:'Intelligenzplattform'
   },
@@ -114,7 +114,7 @@ const STRINGS = {
     sgbiofuel:'生物燃料实验室',fueleff:'燃油效率',trends:'气候趋势',
     airquality:'空气质量',water:'水资源',energy:'能源',
     severe:'恶劣天气',compare:'城市对比',reports:'智能报告',settings:'设置',
-    main:'主菜单',environment:'环境',analysis:'分析',
+    main:'主菜单',environment:'环境',analysis:'分析',preferences:'偏好设置',
     syncedAt:'同步于',searchPlaceholder:'搜索城市…',liveDot:'智能平台'
   },
   ko:{
@@ -122,7 +122,7 @@ const STRINGS = {
     sgbiofuel:'바이오연료 랩',fueleff:'연료 효율',trends:'기후 트렌드',
     airquality:'대기질',water:'수자원',energy:'에너지',
     severe:'악천후',compare:'도시 비교',reports:'AI 리포트',settings:'설정',
-    main:'메인',environment:'환경',analysis:'분석',
+    main:'메인',environment:'환경',analysis:'분석',preferences:'환경설정',
     syncedAt:'동기화',searchPlaceholder:'도시 검색…',liveDot:'인텔리전스 플랫폼'
   },
   vi:{
@@ -130,7 +130,7 @@ const STRINGS = {
     sgbiofuel:'Lab Nhiên liệu sinh học',fueleff:'Hiệu quả nhiên liệu',trends:'Xu hướng khí hậu',
     airquality:'Chất lượng không khí',water:'Tài nguyên nước',energy:'Năng lượng',
     severe:'Thời tiết khắc nghiệt',compare:'So sánh thành phố',reports:'Báo cáo AI',settings:'Cài đặt',
-    main:'Chính',environment:'Môi trường',analysis:'Phân tích',
+    main:'Chính',environment:'Môi trường',analysis:'Phân tích',preferences:'Tùy chọn',
     syncedAt:'Đồng bộ',searchPlaceholder:'Tìm kiếm thành phố…',liveDot:'Nền tảng thông minh'
   },
   hi:{
@@ -138,7 +138,7 @@ const STRINGS = {
     sgbiofuel:'जैव ईंधन लैब',fueleff:'ईंधन दक्षता',trends:'जलवायु प्रवृत्तियाँ',
     airquality:'वायु गुणवत्ता',water:'जल संसाधन',energy:'ऊर्जा',
     severe:'गंभीर मौसम',compare:'शहर तुलना',reports:'AI रिपोर्ट',settings:'सेटिंग्स',
-    main:'मुख्य',environment:'पर्यावरण',analysis:'विश्लेषण',
+    main:'मुख्य',environment:'पर्यावरण',analysis:'विश्लेषण',preferences:'प्राथमिकताएँ',
     syncedAt:'सिंक किया',searchPlaceholder:'शहर खोजें…',liveDot:'इंटेलिजेंस प्लेटफ़ॉर्म'
   },
   ar:{
@@ -146,7 +146,7 @@ const STRINGS = {
     sgbiofuel:'مختبر الوقود الحيوي',fueleff:'كفاءة الوقود',trends:'اتجاهات المناخ',
     airquality:'جودة الهواء',water:'الموارد المائية',energy:'الطاقة',
     severe:'الطقس القاسي',compare:'مقارنة المدن',reports:'تقارير الذكاء الاصطناعي',settings:'الإعدادات',
-    main:'الرئيسية',environment:'البيئة',analysis:'التحليل',
+    main:'الرئيسية',environment:'البيئة',analysis:'التحليل',preferences:'التفضيلات',
     syncedAt:'تمت المزامنة',searchPlaceholder:'ابحث عن مدينة…',liveDot:'منصة الذكاء'
   },
   ru:{
@@ -154,7 +154,7 @@ const STRINGS = {
     sgbiofuel:'Лаб. биотоплива',fueleff:'Топливная эффективность',trends:'Климатические тренды',
     airquality:'Качество воздуха',water:'Водные ресурсы',energy:'Энергетика',
     severe:'Опасная погода',compare:'Сравнение городов',reports:'ИИ Отчёты',settings:'Настройки',
-    main:'Главное',environment:'Окружающая среда',analysis:'Анализ',
+    main:'Главное',environment:'Окружающая среда',analysis:'Анализ',preferences:'Настройки',
     syncedAt:'Синхронизировано',searchPlaceholder:'Поиск города…',liveDot:'Платформа аналитики'
   },
   ja:{
@@ -162,7 +162,7 @@ const STRINGS = {
     sgbiofuel:'バイオ燃料ラボ',fueleff:'燃料効率',trends:'気候トレンド',
     airquality:'大気質',water:'水資源',energy:'エネルギー',
     severe:'悪天候',compare:'都市比較',reports:'AIレポート',settings:'設定',
-    main:'メイン',environment:'環境',analysis:'分析',
+    main:'メイン',environment:'環境',analysis:'分析',preferences:'設定',
     syncedAt:'同期',searchPlaceholder:'都市を検索…',liveDot:'インテリジェンスプラットフォーム'
   },
   bn:{
@@ -170,7 +170,7 @@ const STRINGS = {
     sgbiofuel:'জৈব জ্বালানি ল্যাব',fueleff:'জ্বালানি দক্ষতা',trends:'জলবায়ু প্রবণতা',
     airquality:'বায়ু মান',water:'জল সম্পদ',energy:'শক্তি',
     severe:'ভয়াবহ আবহাওয়া',compare:'শহর তুলনা',reports:'AI রিপোর্ট',settings:'সেটিংস',
-    main:'প্রধান',environment:'পরিবেশ',analysis:'বিশ্লেষণ',
+    main:'প্রধান',environment:'পরিবেশ',analysis:'বিশ্লেষণ',preferences:'পছন্দসমূহ',
     syncedAt:'সিঙ্ক',searchPlaceholder:'শহর খুঁজুন…',liveDot:'ইন্টেলিজেন্স প্ল্যাটফর্ম'
   },
   tr:{
@@ -178,7 +178,7 @@ const STRINGS = {
     sgbiofuel:'Biyoyakıt Lab.',fueleff:'Yakıt Verimliliği',trends:'İklim Trendleri',
     airquality:'Hava Kalitesi',water:'Su Kaynakları',energy:'Enerji',
     severe:'Şiddetli Hava',compare:'Şehir Karşılaştırma',reports:'YZ Raporları',settings:'Ayarlar',
-    main:'Ana Menü',environment:'Çevre',analysis:'Analiz',
+    main:'Ana Menü',environment:'Çevre',analysis:'Analiz',preferences:'Tercihler',
     syncedAt:'Senkronize edildi',searchPlaceholder:'Şehir ara…',liveDot:'Zeka Platformu'
   },
   it:{
@@ -186,7 +186,7 @@ const STRINGS = {
     sgbiofuel:'Lab Biocarburante',fueleff:'Efficienza Carburante',trends:'Tendenze Climatiche',
     airquality:"Qualità dell'Aria",water:'Risorse Idriche',energy:'Energia',
     severe:'Meteo Estremo',compare:'Confronto Città',reports:'Rapporti IA',settings:'Impostazioni',
-    main:'Principale',environment:'Ambiente',analysis:'Analisi',
+    main:'Principale',environment:'Ambiente',analysis:'Analisi',preferences:'Preferenze',
     syncedAt:'Sincronizzato',searchPlaceholder:'Cerca città…',liveDot:'Piattaforma Intelligence'
   },
   id:{
@@ -194,7 +194,7 @@ const STRINGS = {
     sgbiofuel:'Lab Biofuel',fueleff:'Efisiensi Bahan Bakar',trends:'Tren Iklim',
     airquality:'Kualitas Udara',water:'Sumber Daya Air',energy:'Energi',
     severe:'Cuaca Ekstrem',compare:'Perbandingan Kota',reports:'Laporan AI',settings:'Pengaturan',
-    main:'Utama',environment:'Lingkungan',analysis:'Analisis',
+    main:'Utama',environment:'Lingkungan',analysis:'Analisis',preferences:'Preferensi',
     syncedAt:'Disinkronkan',searchPlaceholder:'Cari kota…',liveDot:'Platform Kecerdasan'
   }
 };
@@ -294,9 +294,9 @@ function applyLanguage(){
     if(icon) btn.insertBefore(icon, btn.firstChild);
   });
 
-  // Nav section labels (Main / Environment / Analysis)
+  // Nav section labels (Main / Environment / Analysis / Preferences)
   const secLabels = document.querySelectorAll('.nav-section .nav-label');
-  const secKeys   = ['main','environment','analysis'];
+  const secKeys   = ['main','environment','analysis','preferences'];
   secLabels.forEach((el,i)=>{ if(str[secKeys[i]]) el.textContent = str[secKeys[i]]; });
 
   // Search placeholder
