@@ -332,10 +332,14 @@ function applyLanguage(){
 // ── Auto-refresh interval ─────────────────────────────────────────────────────
 
 let _refreshTimer = null;
+let _refreshTimerMs = null;
 function applyRefreshInterval(){
-  if(_refreshTimer) clearInterval(_refreshTimer);
   const mins = Math.max(1, parseInt(_cfg.refreshMin)||10);
-  _refreshTimer = setInterval(()=>{ if(typeof fetchAllWeatherData==='function') fetchAllWeatherData(); }, mins*60*1000);
+  const ms = mins * 60 * 1000;
+  if(ms === _refreshTimerMs) return; // interval unchanged — don't reset the countdown
+  _refreshTimerMs = ms;
+  if(_refreshTimer) clearInterval(_refreshTimer);
+  _refreshTimer = setInterval(()=>{ if(typeof fetchAllWeatherData==='function') fetchAllWeatherData(); }, ms);
 }
 
 // ── Render ────────────────────────────────────────────────────────────────────
