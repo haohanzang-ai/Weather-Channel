@@ -335,31 +335,58 @@
       <!-- Map -->
       <div class="page" id="page-map" role="region" aria-label="Interactive Texas Climate Map">
         <h2 class="section-title">Interactive Texas Climate Map</h2>
+
+        <!-- Weather layer toggles -->
+        <div class="map-layer-controls" role="group" aria-label="Weather overlay layer controls">
+          <span class="map-layer-label">Weather Layers:</span>
+          <button class="map-layer-btn active" data-layer="rain"    onclick="mapToggleLayer('rain')">🌧 Precipitation</button>
+          <button class="map-layer-btn active" data-layer="clouds"  onclick="mapToggleLayer('clouds')">☁️ Cloud Cover</button>
+          <button class="map-layer-btn active" data-layer="severe"  onclick="mapToggleLayer('severe')">⚡ Severe</button>
+          <button class="map-layer-btn active" data-layer="drought" onclick="mapToggleLayer('drought')">🏜 Drought</button>
+        </div>
+
         <div class="map-container">
-          <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center" role="note" aria-label="Temperature color scale legend">
-            <span style="font-size:10px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:0.06em">Temp Scale</span>
-            <span class="badge badge-blue">&#60;50°F Cool</span>
-            <span class="badge badge-green">50–75°F Mild</span>
-            <span class="badge badge-orange">75–90°F Warm</span>
-            <span class="badge badge-red">&#62;90°F Hot</span>
+          <!-- Legend row -->
+          <div class="map-legend-row" role="note" aria-label="Map legend">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+              <span style="font-size:10px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:0.06em">Temp:</span>
+              <span class="badge badge-blue">&#60;50°F Cool</span>
+              <span class="badge badge-green">50–75°F Mild</span>
+              <span class="badge badge-orange">75–90°F Warm</span>
+              <span class="badge badge-red">&#62;90°F Hot</span>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px">
+              <span style="font-size:10px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:0.06em">Overlays:</span>
+              <span class="map-ov-swatch" style="background:rgba(21,101,212,0.5)">Precipitation</span>
+              <span class="map-ov-swatch" style="background:rgba(136,152,170,0.4)">Clouds</span>
+              <span class="map-ov-swatch" style="background:rgba(139,26,26,0.55)">Severe</span>
+              <span class="map-ov-swatch" style="background:rgba(196,122,32,0.5)">Drought</span>
+              <span style="margin-left:auto;font-size:10px;color:var(--text3)">⚫ 100 cities · click any dot for forecast</span>
+            </div>
           </div>
-          <svg class="map-svg" viewBox="0 0 500 420" id="texasSVG"
-               role="img" aria-labelledby="mapSvgTitle mapSvgDesc">
+
+          <svg class="map-svg" viewBox="0 0 580 490" id="texasSVG"
+               role="img" aria-labelledby="mapSvgTitle mapSvgDesc"
+               style="overflow:visible">
             <title id="mapSvgTitle">Interactive Texas Climate Map</title>
-            <desc id="mapSvgDesc">Temperature-coded city markers for 10 Texas cities. Click any marker to view detailed weather conditions.</desc>
-            <path d="M85,20 L420,20 L420,120 L460,155 L460,200 L440,220 L450,260 L430,280 L390,310 L370,380 L330,410 L300,400 L270,380 L240,385 L200,375 L170,360 L140,330 L100,320 L70,290 L60,250 L55,200 L65,150 L70,100 Z" fill="rgba(74,144,226,0.05)" stroke="rgba(74,144,226,0.3)" stroke-width="1.5"/>
-            <text x="150" y="80" fill="rgba(255,255,255,0.12)" font-size="9" text-anchor="middle" font-family="Inter,sans-serif" aria-hidden="true">PANHANDLE</text>
-            <text x="355" y="200" fill="rgba(255,255,255,0.12)" font-size="9" font-family="Inter,sans-serif" aria-hidden="true">W. TEXAS</text>
-            <text x="200" y="200" fill="rgba(255,255,255,0.12)" font-size="9" font-family="Inter,sans-serif" aria-hidden="true">CENTRAL</text>
-            <text x="340" y="320" fill="rgba(255,255,255,0.12)" font-size="9" text-anchor="middle" font-family="Inter,sans-serif" aria-hidden="true">S. TEXAS</text>
-            <line x1="85" y1="160" x2="460" y2="160" stroke="rgba(255,255,255,0.035)" stroke-width="1" aria-hidden="true"/>
-            <line x1="85" y1="260" x2="460" y2="260" stroke="rgba(255,255,255,0.035)" stroke-width="1" aria-hidden="true"/>
-            <line x1="200" y1="20" x2="200" y2="410" stroke="rgba(255,255,255,0.035)" stroke-width="1" aria-hidden="true"/>
-            <line x1="320" y1="20" x2="320" y2="410" stroke="rgba(255,255,255,0.035)" stroke-width="1" aria-hidden="true"/>
+            <desc id="mapSvgDesc">Weather-shaded Texas map with 100 city markers. Click any marker to view detailed weather and forecasts.</desc>
+            <defs id="mapDefs"></defs>
+            <!-- Texas state outline — path filled by renderMap() -->
+            <path id="texasOutline" d="" class="texas-outline"/>
+            <!-- Region labels -->
+            <text x="226" y="65"  fill="rgba(255,255,255,0.13)" font-size="10" text-anchor="middle" font-family="Inter,sans-serif" aria-hidden="true">PANHANDLE</text>
+            <text x="100" y="245" fill="rgba(255,255,255,0.10)" font-size="9"  text-anchor="middle" font-family="Inter,sans-serif" aria-hidden="true">W. TEXAS</text>
+            <text x="300" y="230" fill="rgba(255,255,255,0.10)" font-size="9"  text-anchor="middle" font-family="Inter,sans-serif" aria-hidden="true">CENTRAL TX</text>
+            <text x="480" y="270" fill="rgba(255,255,255,0.10)" font-size="9"  text-anchor="middle" font-family="Inter,sans-serif" aria-hidden="true">EAST TX</text>
+            <text x="380" y="460" fill="rgba(255,255,255,0.10)" font-size="9"  text-anchor="middle" font-family="Inter,sans-serif" aria-hidden="true">RIO GRANDE VALLEY</text>
+            <!-- Weather overlays (filled by JS) -->
+            <g id="weatherOverlays"></g>
+            <!-- City markers (filled by JS) -->
             <g id="cityMarkers"></g>
           </svg>
           <div class="tooltip" id="mapTooltip" role="tooltip" style="display:none" aria-hidden="true"></div>
         </div>
+
         <div id="cityDetail" style="display:none" aria-live="polite">
           <h2 class="section-title">Selected City Details</h2>
           <div id="cityDetailContent"></div>
@@ -718,12 +745,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <!-- ── App Scripts (load order matters) ── -->
-<script src="js/data.js"></script>
+<script src="js/data.js?v=2"></script>
 <script src="js/utils.js"></script>
-<script src="js/nav.js"></script>
+<script src="js/nav.js?v=2"></script>
 <script src="js/dashboard.js"></script>
-<script src="js/map.js"></script>
-<script src="js/forecasts.js"></script>
+<script src="js/map.js?v=2"></script>
+<script src="js/forecasts.js?v=2"></script>
 <script src="js/agriculture.js"></script>
 <script src="js/trends.js"></script>
 <script src="js/airquality.js"></script>

@@ -187,10 +187,29 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offse
 
 /* ── Map ────────────────────────────────────── */
 .map-container{position:relative;background:linear-gradient(135deg,rgba(74,144,226,0.04),rgba(15,30,50,0.8));border:1px solid var(--border);border-radius:var(--r16);padding:18px;margin-bottom:18px}
-.map-svg{width:100%;height:330px}
+.map-legend-row{margin-bottom:14px}
+.map-ov-swatch{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:rgba(255,255,255,0.75);padding:2px 9px 2px 8px;border-radius:12px;border:1px solid rgba(255,255,255,0.12)}
+/* Layer toggle controls */
+.map-layer-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.map-layer-label{font-size:10px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap}
+.map-layer-btn{font-size:10px;font-weight:600;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.18);background:var(--surface2);color:var(--text2);cursor:pointer;transition:all 0.18s ease;font-family:var(--font)}
+.map-layer-btn.active{background:rgba(74,144,226,0.18);border-color:rgba(74,144,226,0.45);color:#7DB9F2}
+.map-layer-btn:hover{background:rgba(74,144,226,0.12);border-color:rgba(74,144,226,0.3);color:var(--text0)}
+/* Texas outline shape */
+.texas-outline{fill:rgba(74,144,226,0.07);stroke:rgba(74,144,226,0.4);stroke-width:1.2;stroke-linejoin:round}
+/* City dots */
+.map-svg{width:100%;height:auto;max-height:500px;display:block}
 .city-dot{cursor:pointer;transition:all 0.18s ease}
-.city-dot:hover circle{stroke-width:2.5}
-.tooltip{position:absolute;background:linear-gradient(135deg,rgba(15,30,55,0.98),rgba(11,22,45,0.98));border:1px solid rgba(74,144,226,0.45);border-radius:10px;padding:11px 14px;font-size:11px;color:var(--text0);pointer-events:none;z-index:100;min-width:140px;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
+.city-dot:hover circle{stroke-width:3;filter:drop-shadow(0 0 4px rgba(255,255,255,0.4))}
+.city-dot:focus{outline:none}
+.city-dot:focus circle{stroke:#7DB9F2;stroke-width:2.5}
+.city-dot-ext{opacity:0.85}
+.city-dot-ext:hover{opacity:1}
+/* Hide dense secondary labels unless hovering parent */
+.map-city-label{pointer-events:none}
+/* Weather overlay blobs */
+.map-overlay{pointer-events:none;mix-blend-mode:screen}
+.tooltip{position:absolute;background:linear-gradient(135deg,rgba(15,30,55,0.98),rgba(11,22,45,0.98));border:1px solid rgba(74,144,226,0.45);border-radius:10px;padding:11px 14px;font-size:11px;color:var(--text0);pointer-events:none;z-index:100;min-width:148px;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
 
 /* ── Alerts ─────────────────────────────────── */
 .alert-banner{background:linear-gradient(90deg,rgba(214,69,69,0.1),rgba(214,69,69,0.04));border:1px solid rgba(214,69,69,0.28);border-left:3px solid var(--red);border-radius:var(--r8);padding:11px 14px;display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:12px;color:#E87A7A}
@@ -268,7 +287,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offse
   .hero-title{font-size:15px}
   .hero-sub{font-size:11px}
   .comparison-grid{grid-template-columns:1fr !important}
-  .map-svg{height:220px}
+  .map-svg{max-height:260px}
 }
 @media(max-width:380px){
   #weatherGrid{grid-template-columns:1fr !important}

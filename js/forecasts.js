@@ -3,20 +3,28 @@
 // ── Forecasts page ────────────────────────────────────────────────────────────
 function populateForecastSelect(){
   const sel = document.getElementById('forecastCity');
-  // Populate from CITIES array so it works before data is loaded
-  sel.innerHTML = CITIES
-    .map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('');
+  // Group: primary cities first, then extended alphabetically
+  const primary  = ALL_CITIES.filter(c =>  c.primary);
+  const extended = ALL_CITIES.filter(c => !c.primary).sort((a,b)=>a.name.localeCompare(b.name));
+  sel.innerHTML =
+    `<optgroup label="Top Cities">${primary.map(c=>`<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('')}</optgroup>` +
+    `<optgroup label="All Texas Cities">${extended.map(c=>`<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('')}</optgroup>`;
 }
 
 function renderForecastPage(){
-  const city = document.getElementById('forecastCity').value;
-  const d = WEATHER_DATA[city];
-  // Live data not yet available — show loading state
+  const cityName = document.getElementById('forecastCity').value;
+  const d = WEATHER_DATA[cityName];
+  // Data not yet loaded — show shimmer and kick off on-demand fetch
   if(!d){
     document.getElementById('forecastContent').innerHTML =
       '<div class="card loading-shimmer" style="height:80px;margin-bottom:10px"></div>'.repeat(3);
+    const cityObj = ALL_CITIES.find(c => c.name === cityName);
+    if(cityObj){
+      fetchCityOnDemand(cityObj).then(()=>{ if(document.getElementById('forecastCity').value===cityName) renderForecastPage(); }).catch(()=>{});
+    }
     return;
   }
+  const city = cityName;
   // Per-city forecast array from Open-Meteo
   const forecast = FORECAST_DATA[city] || [];
   document.getElementById('forecastContent').innerHTML=`

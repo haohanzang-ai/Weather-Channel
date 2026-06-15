@@ -54,11 +54,17 @@ function handleSearch(val){
   const trimmed = val.trim();
   const fb = document.getElementById('searchFeedback');
   if(!trimmed){ fb.textContent=''; fb.classList.remove('visible'); return; }
-  const match = CITIES.find(c => c.name.toLowerCase().includes(trimmed.toLowerCase()));
+  const match = ALL_CITIES.find(c => c.name.toLowerCase().includes(trimmed.toLowerCase()));
   if(match){
     fb.textContent = '';
     fb.classList.remove('visible');
-    selectCity(match.name);
+    showPage('map');
+    selectedCity = match.name;
+    if(WEATHER_DATA[match.name]){
+      showCityDetail(match.name);
+    } else {
+      _mapFetchAndShow(match);
+    }
   } else {
     fb.textContent = `No city matching "${escapeHtml(trimmed)}"`;
     fb.classList.add('visible');
