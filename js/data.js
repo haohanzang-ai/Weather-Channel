@@ -65,6 +65,8 @@ function getConditionFromCode(code){
 // ── Loading Screen helpers ────────────────────────────────────────────────────
 let _lsDone = 0;
 const _lsTotal = CITIES.length;
+const _lsStartTime = Date.now();
+const _lsMinMs = 6000; // show loading screen for at least 6 seconds so users can read a fact
 
 function lsInit(){
   _lsDone = 0;
@@ -97,10 +99,12 @@ function lsDismiss(){
   const ls    = document.getElementById('loadingScreen');
   if(fill) fill.style.width = '100%';
   if(stat) stat.textContent = 'All data loaded ✓';
-  if(typeof lsFactStop === 'function') lsFactStop();
+  const elapsed   = Date.now() - _lsStartTime;
+  const remaining = Math.max(0, _lsMinMs - elapsed);
   setTimeout(()=>{
+    if(typeof lsFactStop === 'function') lsFactStop();
     if(ls){ ls.classList.add('ls-out'); setTimeout(()=>{ ls.style.display='none'; },600); }
-  }, 420);
+  }, remaining);
 }
 
 // ── Loading placeholders ──────────────────────────────────────────────────────
