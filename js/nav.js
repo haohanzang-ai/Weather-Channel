@@ -31,7 +31,9 @@ function showPage(id){
   if(id === 'forecasts')  renderForecastPage();
   if(id === 'agriculture')renderAg();
   if(id === 'sgbiofuel')  sgBiofuelInit();
+  if(id === 'scanner')    scannerInit();
   if(id === 'fueleff')    fuelEffInit();
+  if(id !== 'scanner' && typeof scannerCleanup === 'function') scannerCleanup();
   if(id === 'trends')     renderTrends();
   if(id === 'airquality') renderAQ();
   if(id === 'water')      renderWater();

@@ -43,7 +43,8 @@ const PAGE_TITLES = {
   severe:      'Severe Weather',
   compare:     'City Comparison Lab',
   reports:     'AI Intelligence Reports',
-  sources:     'Data Sources & Citations'
+  sources:     'Data Sources & Citations',
+  scanner:     'Plant-to-Fuel Scanner'
 };
 
 // ── WMO weather code → condition / icon ──────────────────────────────────────

@@ -14,7 +14,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="TexasClimate — Real-Time Intelligence Platform">
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com; connect-src https://api.open-meteo.com https://air-quality-api.open-meteo.com https://api.weather.gov https://cdn.jsdelivr.net https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com; frame-ancestors 'none';">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; media-src 'self' blob:; connect-src https://api.open-meteo.com https://air-quality-api.open-meteo.com https://api.weather.gov https://cdn.jsdelivr.net https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com; frame-ancestors 'none';">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"TexasClimate Intelligence Platform","description":"Real-time climate, weather, environmental, and agricultural intelligence across Texas.","applicationCategory":"WeatherApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-EPP05BJFJ3"></script>
@@ -37,6 +37,7 @@
   <link rel="stylesheet" href="styles/biofuel.css">
   <link rel="stylesheet" href="styles/fuel.css">
   <link rel="stylesheet" href="styles/mission.css">
+  <link rel="stylesheet" href="styles/scanner.css">
 </head>
 <body>
 
@@ -112,6 +113,7 @@
       <button class="nav-item" role="menuitem" data-page="forecasts" onclick="showPage('forecasts')"><span class="nav-icon" aria-hidden="true">☁</span>Forecasts</button>
       <button class="nav-item" role="menuitem" data-page="agriculture" onclick="showPage('agriculture')"><span class="nav-icon" aria-hidden="true">🌾</span>Agriculture</button>
       <button class="nav-item" role="menuitem" data-page="sgbiofuel" onclick="showPage('sgbiofuel')"><span class="nav-icon" aria-hidden="true">🌿</span>Biofuel Lab</button>
+      <button class="nav-item" role="menuitem" data-page="scanner" onclick="showPage('scanner')"><span class="nav-icon" aria-hidden="true">🔬</span>Plant Scanner</button>
       <button class="nav-item" role="menuitem" data-page="fueleff" onclick="showPage('fueleff')"><span class="nav-icon" aria-hidden="true">⛽</span>Fuel Efficiency</button>
       <button class="nav-item" role="menuitem" data-page="trends" onclick="showPage('trends')"><span class="nav-icon" aria-hidden="true">📈</span>Climate Trends</button>
     </div>
@@ -169,7 +171,7 @@
           <div class="hero-badges" aria-label="Status indicators">
             <span class="badge badge-blue"><span class="live-dot" aria-hidden="true"></span>Live Data</span>
             <span class="badge badge-green">10 Cities Monitored</span>
-            <span class="badge badge-orange">2 Active Advisories</span>
+            <span class="badge badge-orange">2 Active Advisories <span style="font-weight:400;opacity:.65">(sample)</span></span>
           </div>
         </section>
 
@@ -403,7 +405,7 @@
         <h2 class="section-title">Climate Scenario Simulator</h2>
         <div class="sgBiofuelScenarioBar" id="sgBiofuelScenBar"></div>
         <div class="sgBiofuelScenNote" id="sgBiofuelScenNote"></div>
-        <h2 class="section-title">8-Region Industrialization Prediction Dashboard</h2>
+        <h2 class="section-title">8-Region Industrialization Prototype Dashboard</h2>
         <div class="sgBiofuelDashGrid" id="sgBiofuelDashGrid"></div>
         <h2 class="section-title">Measurement Methods (13 Metrics)</h2>
         <div class="sgBiofuelMetricsPanel" id="sgBiofuelMetricsPanel"></div>
@@ -420,6 +422,130 @@
         <div class="sgBiofuelImprovGrid" id="sgBiofuelImprovGrid"></div>
         <h2 class="section-title">Credible Sources &amp; References</h2>
         <div class="sgBiofuelSources" id="sgBiofuelSources"></div>
+      </div>
+
+      <!-- Plant-to-Fuel Scanner -->
+      <div class="page" id="page-scanner" role="region" aria-label="Plant-to-Fuel Scanner">
+
+        <!-- Hero -->
+        <div class="scanHero">
+          <h1 class="scanHeroTitle">🔬 Plant-to-Fuel Scanner</h1>
+          <p class="scanHeroSub">Upload or photograph a plant to receive an educational biofuel relevance analysis grounded in published biomass science and Texas climate context. This prototype does not use automated plant identification — user confirmation is always required.</p>
+          <div class="scanHeroBadges">
+            <span class="credibility-badge badge-edu-est">Educational Estimate</span>
+            <span class="credibility-badge badge-cited-sci">Cited Science</span>
+            <span class="credibility-badge badge-proto">Prototype Model</span>
+            <span class="credibility-badge badge-no-live">Not a Lab Test</span>
+          </div>
+          <div class="scanDisclaimer">
+            ⚠ <strong>This is an educational estimate</strong> based on visual review, user-confirmed plant category, published biomass research, and regional climate context. It is <strong>not a lab test, fuel forecast, agronomic recommendation, or commercial viability assessment.</strong> Do not use this tool for emergency, farming, investment, policy, land-use, or fuel-production decisions.
+          </div>
+        </div>
+
+        <!-- Safety Card -->
+        <section class="scanCard" id="scanSafetyCard" aria-label="Safety and privacy information">
+          <div class="scanCardTitle">⚠ Safety &amp; Privacy — Please Read</div>
+          <div class="scanSafetyGrid">
+            <div class="scanSafetyItem">🚫 <strong>Do not use</strong> for emergency, farming, investment, policy, land-use, or fuel-production decisions.</div>
+            <div class="scanSafetyItem">🌿 <strong>Do not eat, touch, harvest, or plant</strong> unknown species based on this tool.</div>
+            <div class="scanSafetyItem">📷 <strong>Do not upload</strong> images containing people, license plates, private property, school interiors, addresses, or sensitive locations.</div>
+            <div class="scanSafetyItem">🔒 Photos are <strong>processed locally in your browser</strong> for preview. This prototype does not store or transmit your images.</div>
+            <div class="scanSafetyItem">📍 Location is <strong>optional</strong> and used only for regional climate context — no GPS or precise location data is collected.</div>
+            <div class="scanSafetyItem">⚠ Plant identification by image is <strong>unreliable</strong>, especially for grasses. User confirmation is always required before any analysis.</div>
+          </div>
+        </section>
+
+        <!-- Upload / Camera Card -->
+        <section class="scanCard" aria-label="Upload or capture a plant image">
+          <div class="scanCardTitle">📷 Step 1 — Upload or Capture Plant Photo</div>
+          <!-- Hidden file inputs -->
+          <input type="file" accept="image/*" id="scanFileInput" class="scan-hidden-input" aria-label="Upload plant image from file library">
+          <input type="file" accept="image/*" capture="environment" id="scanCameraInput" class="scan-hidden-input" aria-label="Take plant photo with device camera">
+          <canvas id="scanCanvas"></canvas>
+          <div class="scanInputGroup">
+            <button class="scanInputBtn" id="scanLibraryBtn" type="button" aria-label="Upload from photo library">
+              <span class="scan-btn-icon" aria-hidden="true">🖼</span>
+              <span>Upload from Library</span>
+              <span class="scanInputNote">Photo roll / file picker</span>
+            </button>
+            <button class="scanInputBtn" id="scanMobileCapBtn" type="button" aria-label="Take photo with device camera">
+              <span class="scan-btn-icon" aria-hidden="true">📸</span>
+              <span>Take Photo</span>
+              <span class="scanInputNote">Opens device camera on mobile</span>
+            </button>
+            <button class="scanInputBtn scanBtn-green" id="scanStartCameraBtn" type="button" aria-label="Start live camera preview">
+              <span class="scan-btn-icon" aria-hidden="true">🎥</span>
+              <span>Live Camera</span>
+              <span class="scanInputNote">Browser camera preview</span>
+            </button>
+          </div>
+          <!-- Live camera section -->
+          <div id="scanLiveCameraSection">
+            <div class="scanLiveDivider">Live Camera Preview</div>
+            <div id="scanLiveWrap">
+              <video id="scanVideo" autoplay playsinline muted aria-label="Live camera preview"></video>
+            </div>
+            <div class="scanCameraControls">
+              <button class="scanBtn scanBtn-green" id="scanCaptureBtn" type="button">📷 Capture Photo</button>
+              <button class="scanBtn scanBtn-red" id="scanStopCameraBtn" type="button">⏹ Stop Camera</button>
+            </div>
+          </div>
+          <p class="scan-note" style="margin-top:14px">
+            📋 <strong>Note:</strong> Future versions of this scanner may use a secure serverless proxy to call the PlantNet API for real plant identification — no API key will ever be exposed in frontend code. See <a href="https://my.plantnet.org/doc/api/openapi" target="_blank" rel="noopener" style="color:#7DB9F2">PlantNet API docs</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/capture" target="_blank" rel="noopener" style="color:#7DB9F2">MDN capture attribute</a>.
+          </p>
+        </section>
+
+        <!-- Image Preview Card (hidden until image selected) -->
+        <section class="scanCard" id="scanPreviewCard" style="display:none" aria-label="Image preview">
+          <div class="scanCardTitle">🖼 Step 2 — Image Preview</div>
+          <div class="scanPreviewImgWrap">
+            <img id="scanPreviewImg" src="" alt="User-uploaded plant image" />
+          </div>
+          <div id="scanVisualHint" role="note"></div>
+          <div style="margin-top:12px">
+            <button class="scanClearBtn" id="scanClearBtn" type="button" aria-label="Clear image and start over">✕ Clear Image &amp; Start Over</button>
+          </div>
+        </section>
+
+        <!-- Confirm Plant Card (hidden until image selected) -->
+        <section class="scanCard" id="scanConfirmCard" style="display:none" aria-label="Confirm plant type and location">
+          <div class="scanCardTitle">🌿 Step 3 — Confirm Plant Type &amp; Location</div>
+          <p class="scanConfirmNote">
+            ⚠ <strong>Automated plant identification is not performed in this prototype.</strong> Visual analysis by image is unreliable, especially for grass species. Please select the plant type below — or select "Unknown Grass" or "Unknown Broadleaf" if unsure. Your confirmation is required before generating an analysis.
+          </p>
+          <div class="scanSelectGroup">
+            <div>
+              <label class="scanSelectLabel" for="scanPlantSel">Plant Type (confirm or select)</label>
+              <select class="scanSelect" id="scanPlantSel" aria-label="Select or confirm plant type"></select>
+            </div>
+            <div>
+              <label class="scanSelectLabel" for="scanLocationSel">Location Context</label>
+              <select class="scanSelect" id="scanLocationSel" aria-label="Select location for climate context"></select>
+            </div>
+          </div>
+          <button class="scanBtn scanBtn-primary" id="scanAnalyzeBtn" type="button" aria-label="Generate educational biofuel analysis">
+            🔬 Generate Educational Analysis
+          </button>
+        </section>
+
+        <!-- Report Card (hidden until analyzed) -->
+        <section class="scanCard" id="scanReportCard" aria-label="Educational biofuel relevance report" aria-live="polite"></section>
+
+        <!-- Static Sources Card -->
+        <section class="scanCard" aria-label="Data sources for the Plant Scanner">
+          <div class="scanCardTitle">📚 Sources &amp; References</div>
+          <div class="scan-src-list">
+            <div class="scan-src-entry">DOE Bioenergy Basics — <a href="https://www.energy.gov/eere/bioenergy/bioenergy-basics" target="_blank" rel="noopener" onclick="scanGA('plant_source_clicked',{source:'DOE Bioenergy Basics'})">energy.gov/eere/bioenergy/bioenergy-basics</a></div>
+            <div class="scan-src-entry">Schmer et al. (2008) — Net energy of cellulosic ethanol from switchgrass. <em>PNAS</em> 105(2):464–469 — <a href="https://www.pnas.org/doi/10.1073/pnas.0704767105" target="_blank" rel="noopener" onclick="scanGA('plant_source_clicked',{source:'Schmer 2008 PNAS'})">doi:10.1073/pnas.0704767105</a></div>
+            <div class="scan-src-entry">NREL Lignocellulosic Biomass to Ethanol Process Design — <a href="https://docs.nrel.gov/docs/fy02osti/32438.pdf" target="_blank" rel="noopener" onclick="scanGA('plant_source_clicked',{source:'NREL 32438'})">docs.nrel.gov/docs/fy02osti/32438.pdf</a></div>
+            <div class="scan-src-entry">Alternative Fuels Data Center — Ethanol Fuel Basics — <a href="https://afdc.energy.gov/fuels/ethanol-fuel-basics" target="_blank" rel="noopener" onclick="scanGA('plant_source_clicked',{source:'AFDC Ethanol'})">afdc.energy.gov/fuels/ethanol-fuel-basics</a></div>
+            <div class="scan-src-entry">USDA ERS — Bioenergy — <a href="https://www.ers.usda.gov/topics/farm-economy/bioenergy/" target="_blank" rel="noopener" onclick="scanGA('plant_source_clicked',{source:'USDA ERS Bioenergy'})">ers.usda.gov/topics/farm-economy/bioenergy</a></div>
+            <div class="scan-src-entry">PlantNet API documentation (future integration reference) — <a href="https://my.plantnet.org/doc/api/openapi" target="_blank" rel="noopener">my.plantnet.org/doc/api/openapi</a></div>
+            <div class="scan-src-entry">MDN — Taking still photos from the camera — <a href="https://developer.mozilla.org/en-US/docs/Web/API/Media_Capture_and_Streams_API/Taking_still_photos" target="_blank" rel="noopener">MDN Media Capture API</a></div>
+            <div class="scan-src-entry">MDN — HTML capture attribute — <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/capture" target="_blank" rel="noopener">MDN capture attribute reference</a></div>
+          </div>
+        </section>
+
       </div>
 
       <!-- Fuel Efficiency -->
@@ -611,6 +737,7 @@
 <script src="js/facts.js"></script>
 <script src="js/biofuel.js"></script>
 <script src="js/fuel.js"></script>
+<script src="js/scanner.js"></script>
 <script src="js/settings.js"></script>
 <script src="js/mission.js"></script>
 <script src="js/main.js"></script>
