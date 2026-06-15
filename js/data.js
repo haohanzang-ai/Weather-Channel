@@ -42,7 +42,8 @@ const PAGE_TITLES = {
   energy:      'Energy Intelligence',
   severe:      'Severe Weather',
   compare:     'City Comparison Lab',
-  reports:     'AI Intelligence Reports'
+  reports:     'AI Intelligence Reports',
+  sources:     'Data Sources & Citations'
 };
 
 // ── WMO weather code → condition / icon ──────────────────────────────────────

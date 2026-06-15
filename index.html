@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="styles/base.css">
   <link rel="stylesheet" href="styles/biofuel.css">
   <link rel="stylesheet" href="styles/fuel.css">
+  <link rel="stylesheet" href="styles/mission.css">
 </head>
 <body>
 
@@ -103,6 +104,7 @@
       <div class="nav-label" aria-hidden="true">Analysis</div>
       <button class="nav-item" role="menuitem" data-page="compare" onclick="showPage('compare')"><span class="nav-icon" aria-hidden="true">⇌</span>City Comparison</button>
       <button class="nav-item" role="menuitem" data-page="reports" onclick="showPage('reports')"><span class="nav-icon" aria-hidden="true">📋</span>AI Reports</button>
+      <button class="nav-item" role="menuitem" data-page="sources" onclick="showPage('sources')"><span class="nav-icon" aria-hidden="true">📚</span>Sources</button>
     </div>
 
     <div class="nav-section" role="menu" aria-label="Preferences">
@@ -139,13 +141,128 @@
       <div class="page active" id="page-dashboard" role="region" aria-label="Dashboard Overview">
         <section class="hero-band" aria-label="Platform summary">
           <h1 class="hero-title">Texas Climate, Agriculture &amp; Infrastructure Intelligence</h1>
-          <p class="hero-sub">Real-time environmental intelligence across 10 Texas cities — covering weather, air quality, water resources, agriculture, and energy demand. Auto-refreshes every 10 minutes.</p>
+          <p class="hero-sub">Real-time environmental intelligence across 10 Texas cities — covering weather, air quality, water resources, agriculture, and energy demand. Auto-refreshes every 10 minutes. <a href="#transparency" class="hero-link" onclick="document.getElementById('transparency').scrollIntoView({behavior:'smooth'});return false;">See Data Transparency →</a></p>
           <div class="hero-badges" aria-label="Status indicators">
             <span class="badge badge-blue"><span class="live-dot" aria-hidden="true"></span>Live Data</span>
             <span class="badge badge-green">10 Cities Monitored</span>
             <span class="badge badge-orange">2 Active Advisories</span>
           </div>
         </section>
+
+        <!-- ─── SECTION A: Mission ────────────────────── -->
+        <section class="mission-section" id="mission" aria-label="Mission: From Texas Weather to Texas Fuel">
+          <div class="mission-header">
+            <h2 class="mission-title">🌿 From Texas Weather to Texas Fuel</h2>
+            <p class="mission-subtitle">Using weather, agriculture, energy, and fuel data to explore whether switchgrass could become a future Texas-grown biofuel source.</p>
+          </div>
+          <div class="mission-cards-grid">
+            <div class="mission-card"><div class="mission-card-icon">👥</div><h3 class="mission-card-title">Who</h3><p class="mission-card-text">Texas residents, students, farmers, energy researchers, and people affected by gas prices, drought, heat, agricultural stress, and rising energy demand.</p></div>
+            <div class="mission-card"><div class="mission-card-icon">🌾</div><h3 class="mission-card-title">What</h3><p class="mission-card-text">Switchgrass (<em>Panicum virgatum</em>) is a native perennial grass studied as a source of cellulosic biofuel — connecting agriculture, renewable energy, climate resilience, and fuel independence.</p></div>
+            <div class="mission-card"><div class="mission-card-icon">⏱</div><h3 class="mission-card-title">When</h3><p class="mission-card-text">This matters now and in the near future, given rising energy demand, climate stress, drought, agricultural pressure, and fuel price volatility.</p></div>
+            <div class="mission-card"><div class="mission-card-icon">📍</div><h3 class="mission-card-title">Where</h3><p class="mission-card-text">Texas first — this dashboard focuses on Texas weather, agriculture, energy, and climate. Suitability may depend on rainfall, soil type, drought stress, land use, and local infrastructure.</p></div>
+            <div class="mission-card"><div class="mission-card-icon">💡</div><h3 class="mission-card-title">Why</h3><p class="mission-card-text">Switchgrass may support local energy resilience, give value to marginal land, reduce reliance on fossil fuels, and help students and the public understand the link between weather, climate, agriculture, energy, and fuel.</p></div>
+            <div class="mission-card"><div class="mission-card-icon">⚙️</div><h3 class="mission-card-title">How</h3><p class="mission-card-text">Switchgrass biomass is grown, harvested, and pretreated. The cell wall must be broken down so cellulose and hemicellulose can be converted into sugars — then fermented or chemically converted into fuel. Lignin is the key barrier that makes this costly.</p></div>
+          </div>
+          <p class="mission-source-note">Source: <a href="https://www.energy.gov/eere/bioenergy/switchgrass" target="_blank" rel="noopener">U.S. DOE Bioenergy Technologies Office — Switchgrass as a Bioenergy Crop</a></p>
+        </section>
+
+        <!-- ─── SECTION B: Process Problem ───────────── -->
+        <section class="process-section" id="process-problem" aria-label="Why switchgrass biofuel is not yet mass-produced">
+          <h2 class="process-title">🔬 Why Isn't Switchgrass Fuel Everywhere Yet?</h2>
+          <p class="process-intro">Switchgrass is a <strong>promising bioenergy crop</strong> — but converting it to fuel at industrial scale faces a significant technical barrier: <strong>lignin</strong>. Here is why that matters.</p>
+          <div class="process-flow-wrap">
+            <p class="process-flow-label">How Switchgrass Becomes Biofuel — Simplified</p>
+            <div class="process-flow" role="list" aria-label="Switchgrass to biofuel production steps">
+              <div class="process-step" role="listitem"><div class="process-step-icon" aria-hidden="true">☀️</div><div class="process-step-label">Sunlight</div></div>
+              <div class="process-arrow" aria-hidden="true">→</div>
+              <div class="process-step" role="listitem"><div class="process-step-icon" aria-hidden="true">🌿</div><div class="process-step-label">Switchgrass Biomass</div></div>
+              <div class="process-arrow" aria-hidden="true">→</div>
+              <div class="process-step process-step-hard" role="listitem"><div class="process-step-icon" aria-hidden="true">⚗️</div><div class="process-step-label">Pretreatment</div></div>
+              <div class="process-arrow" aria-hidden="true">→</div>
+              <div class="process-step process-step-hard" role="listitem"><div class="process-step-icon" aria-hidden="true">🔓</div><div class="process-step-label">Cell Wall Breakdown</div></div>
+              <div class="process-arrow" aria-hidden="true">→</div>
+              <div class="process-step" role="listitem"><div class="process-step-icon" aria-hidden="true">🍬</div><div class="process-step-label">Sugars</div></div>
+              <div class="process-arrow" aria-hidden="true">→</div>
+              <div class="process-step" role="listitem"><div class="process-step-icon" aria-hidden="true">🧪</div><div class="process-step-label">Fermentation / Conversion</div></div>
+              <div class="process-arrow" aria-hidden="true">→</div>
+              <div class="process-step" role="listitem"><div class="process-step-icon" aria-hidden="true">⛽</div><div class="process-step-label">Biofuel</div></div>
+            </div>
+            <div class="process-hardest" role="note">⚠ <strong>Hardest step:</strong> Breaking through lignin so cellulose can become usable sugars. Highlighted steps above are where cost and complexity are highest.</div>
+          </div>
+          <div class="process-barrier-grid">
+            <div class="process-barrier-card"><h4>What's Inside the Plant Cell Wall?</h4><ul><li><strong>Cellulose</strong> — can be broken into sugars, then converted to fuel</li><li><strong>Hemicellulose</strong> — also convertible into sugars</li><li><strong>Lignin</strong> — a tough, protective structure that blocks enzymes and chemicals from reaching the cellulose</li></ul></div>
+            <div class="process-barrier-card"><h4>Why Is This a Problem?</h4><ul><li>Lignin acts like a structural shield around the useful sugars</li><li>Removing it requires pretreatment: heat, acids, ammonia, steam, or engineered microbes</li><li>These steps increase production cost and complexity significantly</li><li>This is one major reason switchgrass biofuel is <em>promising</em> — but not yet mass-produced everywhere</li></ul></div>
+            <div class="process-barrier-card"><h4>What Are Researchers Working On?</h4><ul><li>Cheaper enzyme cocktails to break down cell walls more efficiently</li><li>Engineered microbes that tolerate or digest lignin</li><li>Genetic modifications to grow switchgrass with naturally lower lignin content</li><li>Improved acid, steam, and AFEX pretreatment methods</li></ul></div>
+          </div>
+          <div class="process-citations">
+            <p class="process-cite-label">Scientific Sources</p>
+            <ul>
+              <li>Mosier et al. (2005), "Features of promising technologies for pretreatment of lignocellulosic biomass," <em>Bioresource Technology</em> 96(6): 673–686. <a href="https://doi.org/10.1016/j.biortech.2004.06.025" target="_blank" rel="noopener">doi:10.1016/j.biortech.2004.06.025</a></li>
+              <li>Ragauskas et al. (2006), "The Path Forward for Biofuels and Biomaterials," <em>Science</em> 311(5760): 484–489. <a href="https://doi.org/10.1126/science.1114736" target="_blank" rel="noopener">doi:10.1126/science.1114736</a></li>
+              <li>National Renewable Energy Laboratory — <a href="https://www.nrel.gov/bioenergy/" target="_blank" rel="noopener">Bioenergy Research at NREL</a></li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ─── SECTION C: Gas Price Calculator ──────── -->
+        <section class="calculator-section" id="gas-calculator" aria-label="Educational gas price and biofuel replacement scenario calculator">
+          <h2 class="calc-title">⛽ What Do Gas Prices Have To Do With Switchgrass?</h2>
+          <p class="calc-intro">Gas prices affect everyday Texans. While switchgrass cellulosic biofuel is <strong>not a short-term solution to gas prices</strong>, understanding fuel diversification helps people think about long-term energy resilience. Use this educational scenario calculator — this is <strong>not a price forecast</strong>.</p>
+          <div class="calc-wrapper">
+            <div class="calc-inputs">
+              <h3 class="calc-subtitle">Enter Your Scenario</h3>
+              <div class="calc-field"><label for="calcGallons">Weekly gallons of gasoline used</label><input type="number" id="calcGallons" value="10" min="1" max="999" step="1" aria-label="Weekly gallons of gasoline used" oninput="calcFuel()"></div>
+              <div class="calc-field"><label for="calcPrice">Current gas price per gallon ($)</label><input type="number" id="calcPrice" value="3.20" min="0.50" max="10.00" step="0.01" aria-label="Current gas price per gallon in dollars" oninput="calcFuel()"></div>
+              <div class="calc-field"><label for="calcReplace">Hypothetical biofuel replacement (%)</label><div style="display:flex;align-items:center;gap:10px"><input type="range" id="calcReplace" value="10" min="0" max="100" step="1" aria-label="Hypothetical biofuel replacement percentage" style="flex:1;accent-color:var(--orange)" oninput="document.getElementById('calcReplaceVal').textContent=this.value+'%';calcFuel()"><span class="calc-range-val" id="calcReplaceVal" aria-live="polite">10%</span></div></div>
+              <button class="calc-btn" onclick="calcFuel()" aria-label="Calculate biofuel scenario">Calculate Scenario</button>
+            </div>
+            <div class="calc-results" id="calcResults" aria-live="polite" aria-label="Scenario calculation results">
+              <h3 class="calc-subtitle">Educational Scenario Results</h3>
+              <div class="calc-result-row"><span class="calc-result-label">Estimated weekly fuel cost:</span><span class="calc-result-val" id="resultCost">$32.00</span></div>
+              <div class="calc-result-row"><span class="calc-result-label">Hypothetical gallons replaced by biofuel:</span><span class="calc-result-val" id="resultGallons">1.0 gal</span></div>
+              <div class="calc-result-row"><span class="calc-result-label">Remaining gasoline gallons in scenario:</span><span class="calc-result-val" id="resultRemaining">9.0 gal</span></div>
+              <div class="calc-disclaimer" role="note">⚠ <strong>Educational estimate only.</strong> This is a fuel diversification scenario tool. It does not predict actual savings, market prices, or commercial switchgrass availability.</div>
+            </div>
+          </div>
+          <div class="calc-context-cards">
+            <div class="calc-context-card"><h4>🛢 Why Fuel Diversification Matters</h4><p>Cellulosic biofuels — made from non-food plant material like switchgrass — are a long-term research area. The U.S. DOE actively funds research into cellulosic biofuel production pathways.</p><a href="https://www.energy.gov/eere/bioenergy/bioenergy-basics" target="_blank" rel="noopener" class="calc-link">DOE Bioenergy Basics →</a></div>
+            <div class="calc-context-card"><h4>🌾 Texas's Role</h4><p>Switchgrass grows natively across much of Texas. Texas A&amp;M AgriLife Extension has studied it as a potential bioenergy crop suited to Texas conditions — particularly on marginal or low-input land.</p><a href="https://agrilifeextension.tamu.edu/" target="_blank" rel="noopener" class="calc-link">Texas A&amp;M AgriLife Extension →</a></div>
+            <div class="calc-context-card"><h4>📊 A Real Energy Balance Study</h4><p>Schmer et al. (2008) in <em>PNAS</em> found switchgrass produced 540% more renewable energy than required to grow and convert it to ethanol under U.S. Great Plains conditions. These results are region-specific.</p><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener" class="calc-link">Schmer et al. (2008), PNAS →</a></div>
+          </div>
+        </section>
+
+        <!-- ─── SECTION D: Transparency ──────────────── -->
+        <section class="transparency-section" id="transparency" aria-label="Data and evidence transparency statement">
+          <h2 class="transparency-title">🔍 Data &amp; Evidence Transparency</h2>
+          <div class="transparency-card">
+            <p><strong>This website is an educational prototype dashboard.</strong> Some data shown — including weather statistics, energy figures, agriculture indicators, and AI-assisted summaries — may be sample, illustrative, or demo values. They are not operational forecasts.</p>
+            <ul class="transparency-list">
+              <li>📊 <strong>Dashboard data</strong> is illustrative and educational. It is not guaranteed to reflect real-time or current conditions.</li>
+              <li>🤖 <strong>AI-assisted insights</strong> are educational explanations. Verify against the cited sources listed below.</li>
+              <li>🌿 <strong>Switchgrass biofuel scores and projections</strong> in the Biofuel Lab are AI-generated prototype estimates based on published agronomic literature — not commercial forecasts or investment guidance.</li>
+              <li>⛽ <strong>Fuel efficiency figures</strong> are drawn from published life-cycle assessment studies. Actual results vary by location, technology, and conditions.</li>
+              <li>📋 This platform does <strong>not</strong> constitute investment, agronomic, engineering, or policy advice.</li>
+            </ul>
+            <p class="transparency-goal">Our goal is <strong>public education</strong> — helping everyday Texans, students, and researchers explore connections between weather, climate, agriculture, energy, and biofuel potential.</p>
+          </div>
+        </section>
+
+        <!-- ─── SECTION E: Sources & Evidence ────────── -->
+        <section class="sources-section" id="sources" aria-label="Sources and scientific evidence citations">
+          <h2 class="sources-title">📚 Sources &amp; Evidence</h2>
+          <p class="sources-intro">All scientific and economic claims on this website are grounded in peer-reviewed research or credible government and university sources. Click any citation to verify.</p>
+          <div class="sources-grid">
+            <div class="source-card"><div class="source-tag">Switchgrass as bioenergy crop</div><h4 class="source-title"><a href="https://www.energy.gov/eere/bioenergy/switchgrass" target="_blank" rel="noopener">DOE Bioenergy Technologies Office — Switchgrass</a></h4><p class="source-org">U.S. Department of Energy, EERE</p><p class="source-why">Primary government source establishing switchgrass as a priority cellulosic ethanol feedstock in the U.S.</p></div>
+            <div class="source-card"><div class="source-tag">Energy balance study</div><h4 class="source-title"><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008) — Net energy of cellulosic ethanol from switchgrass</a></h4><p class="source-org"><em>PNAS</em>, 105(2): 464–469</p><p class="source-why">Peer-reviewed field study showing 540% net energy return under U.S. Great Plains field conditions.</p></div>
+            <div class="source-card"><div class="source-tag">Lignin / pretreatment barrier</div><h4 class="source-title"><a href="https://doi.org/10.1016/j.biortech.2004.06.025" target="_blank" rel="noopener">Mosier et al. (2005) — Pretreatment of lignocellulosic biomass</a></h4><p class="source-org"><em>Bioresource Technology</em>, 96(6): 673–686</p><p class="source-why">Explains why lignin is the key technical barrier to affordable cellulosic biofuel production.</p></div>
+            <div class="source-card"><div class="source-tag">Cellulosic biofuel research</div><h4 class="source-title"><a href="https://www.nrel.gov/bioenergy/" target="_blank" rel="noopener">NREL Bioenergy Research</a></h4><p class="source-org">National Renewable Energy Laboratory</p><p class="source-why">Leading federal lab for pretreatment, enzyme development, and biomass-to-fuel conversion pathways.</p></div>
+            <div class="source-card"><div class="source-tag">Biofuel science overview</div><h4 class="source-title"><a href="https://doi.org/10.1126/science.1114736" target="_blank" rel="noopener">Ragauskas et al. (2006) — The Path Forward for Biofuels</a></h4><p class="source-org"><em>Science</em>, 311(5760): 484–489</p><p class="source-why">Seminal overview of scientific challenges in converting lignocellulosic biomass to fuel.</p></div>
+            <div class="source-card"><div class="source-tag">Texas agricultural context</div><h4 class="source-title"><a href="https://agrilifeextension.tamu.edu/" target="_blank" rel="noopener">Texas A&amp;M AgriLife Extension</a></h4><p class="source-org">Texas A&amp;M University System</p><p class="source-why">Research-based guidance on bioenergy crops, including switchgrass, suited to Texas conditions.</p></div>
+            <div class="source-card"><div class="source-tag">USDA bioenergy crops</div><h4 class="source-title"><a href="https://www.ers.usda.gov/topics/farm-economy/bioenergy/" target="_blank" rel="noopener">USDA ERS — Bioenergy</a></h4><p class="source-org">USDA Economic Research Service</p><p class="source-why">Economic data on bioenergy crops, marginal land use, and agricultural energy market trends.</p></div>
+            <div class="source-card"><div class="source-tag">Bioenergy policy &amp; fuel diversity</div><h4 class="source-title"><a href="https://www.energy.gov/eere/bioenergy/bioenergy-basics" target="_blank" rel="noopener">DOE Bioenergy Basics</a></h4><p class="source-org">U.S. Department of Energy, BETO</p><p class="source-why">Overview of bioenergy policy, U.S. biofuel goals, and cellulosic feedstocks in long-term fuel diversification strategies.</p></div>
+          </div>
+        </section>
+
         <h2 class="section-title">Statewide Overview</h2>
         <div class="grid-4" id="stateStats" role="list" aria-label="Statewide statistics"></div>
         <h2 class="section-title">Current Conditions — Major Texas Cities</h2>
@@ -291,6 +408,128 @@
       <!-- Reports -->
       <div class="page" id="page-reports" role="region" aria-label="AI Reports"><h2 class="section-title">AI Intelligence Reports</h2><div id="reportsContent"></div></div>
 
+      <!-- Sources -->
+      <div class="page" id="page-sources" role="region" aria-label="Data Sources and Citations">
+        <div class="srcpage-hero">
+          <h1 class="srcpage-title">📚 Data Sources &amp; Citations</h1>
+          <p class="srcpage-sub">All data displayed across this platform is either illustrative/educational or grounded in peer-reviewed research and credible government sources. Each category below identifies the data type, values used, and the authoritative source behind it.</p>
+          <div class="srcpage-badges">
+            <span class="badge badge-green">Peer-Reviewed Research</span>
+            <span class="badge badge-blue">Government Sources</span>
+            <span class="badge badge-orange">University Research</span>
+          </div>
+        </div>
+        <div class="src-category">
+          <h2 class="src-cat-title">🌡️ Texas Weather &amp; Climate</h2>
+          <p class="src-cat-note">⚠ Data shown on the dashboard is illustrative and educational — not a live weather feed. For real-time data, use the sources below.</p>
+          <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Value / Range</th><th>Authoritative Source</th></tr></thead><tbody>
+            <tr><td>10 cities monitored</td><td>Austin, Houston, Dallas, San Antonio, Fort Worth, El Paso, Arlington, Corpus Christi, Plano, Lubbock</td><td><a href="https://www.weather.gov/" target="_blank" rel="noopener">NOAA National Weather Service</a></td></tr>
+            <tr><td>Temperature readings</td><td>79–96°F (sample)</td><td><a href="https://www.weather.gov/ewx/" target="_blank" rel="noopener">NWS Texas</a></td></tr>
+            <tr><td>Humidity</td><td>22–88% (sample)</td><td><a href="https://www.ncdc.noaa.gov/cdo-web/" target="_blank" rel="noopener">NOAA Climate Data Online</a></td></tr>
+            <tr><td>Wind speed</td><td>7–17 mph (sample)</td><td><a href="https://www.ncei.noaa.gov/" target="_blank" rel="noopener">NOAA NCEI</a></td></tr>
+            <tr><td>7-day forecast</td><td>Mon–Sun, 63–98°F range</td><td><a href="https://www.weather.gov/" target="_blank" rel="noopener">NWS Point Forecasts</a></td></tr>
+            <tr><td>UV Index</td><td>Per city (sample)</td><td><a href="https://www.epa.gov/sunsafety/uv-index-scale-0" target="_blank" rel="noopener">EPA UV Index Scale</a></td></tr>
+            <tr><td>Air Quality Index</td><td>Per city (sample)</td><td><a href="https://www.airnow.gov/" target="_blank" rel="noopener">EPA AirNow</a></td></tr>
+          </tbody></table></div>
+        </div>
+        <div class="src-category">
+          <h2 class="src-cat-title">🌾 Agriculture</h2>
+          <p class="src-cat-note">⚠ Agricultural indicators shown are illustrative estimates — not real-time USDA data.</p>
+          <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Value</th><th>Authoritative Source</th></tr></thead><tbody>
+            <tr><td>Heat Stress Risk</td><td>65% — Moderate-High</td><td><a href="https://www.nass.usda.gov/" target="_blank" rel="noopener">USDA NASS</a></td></tr>
+            <tr><td>Drought Concern</td><td>72% — Concerning</td><td><a href="https://droughtmonitor.unl.edu/" target="_blank" rel="noopener">USDA Drought Monitor</a></td></tr>
+            <tr><td>Irrigation Need</td><td>80% — High</td><td><a href="https://agrilifeextension.tamu.edu/" target="_blank" rel="noopener">Texas A&amp;M AgriLife Extension</a></td></tr>
+            <tr><td>Crop Growth Suitability</td><td>55% — Moderate</td><td><a href="https://www.ers.usda.gov/topics/farm-economy/bioenergy/" target="_blank" rel="noopener">USDA ERS Bioenergy</a></td></tr>
+            <tr><td>Agricultural Risk Index</td><td>68% — Elevated</td><td><a href="https://www.rma.usda.gov/" target="_blank" rel="noopener">USDA Risk Management Agency</a></td></tr>
+          </tbody></table></div>
+        </div>
+        <div class="src-category">
+          <h2 class="src-cat-title">🌿 Switchgrass Biofuel Science</h2>
+          <p class="src-cat-note">✓ All values below are drawn directly from peer-reviewed scientific literature.</p>
+          <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Value</th><th>Citation</th></tr></thead><tbody>
+            <tr><td>Net energy return (cellulosic ethanol)</td><td><strong>540%</strong> more than input energy</td><td><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008), <em>PNAS</em> 105(2):464–469</a></td></tr>
+            <tr><td>Switchgrass biofuel yield</td><td>200–280 GJ/ha/yr</td><td><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008), <em>PNAS</em></a></td></tr>
+            <tr><td>Corn ethanol yield (comparison)</td><td>120–160 GJ/ha/yr</td><td><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008), <em>PNAS</em></a></td></tr>
+            <tr><td>Carbon sequestration potential</td><td>1.1–2.3 tCO₂/ha/yr</td><td><a href="https://www.energy.gov/eere/bioenergy/2016-billion-ton-report" target="_blank" rel="noopener">DOE Billion-Ton Report (2016)</a></td></tr>
+            <tr><td>Water footprint — cellulosic ethanol</td><td>6–14 gal/gal</td><td><a href="https://www.nrel.gov/bioenergy/" target="_blank" rel="noopener">NREL Bioenergy Research</a></td></tr>
+            <tr><td>Water footprint — corn ethanol</td><td>784 gal/gal</td><td><a href="https://www.nrel.gov/bioenergy/" target="_blank" rel="noopener">NREL Bioenergy Research</a></td></tr>
+            <tr><td>Lignin as production barrier</td><td>Cell wall blocks enzymatic access to cellulose</td><td><a href="https://doi.org/10.1016/j.biortech.2004.06.025" target="_blank" rel="noopener">Mosier et al. (2005), <em>Bioresource Technology</em> 96(6):673–686</a></td></tr>
+            <tr><td>Pretreatment methods</td><td>Heat, acid, ammonia (AFEX), steam explosion</td><td><a href="https://doi.org/10.1016/j.biortech.2004.06.025" target="_blank" rel="noopener">Mosier et al. (2005)</a></td></tr>
+            <tr><td>Biofuel conversion pathways</td><td>Cellulose → sugars → ethanol / advanced fuels</td><td><a href="https://doi.org/10.1126/science.1114736" target="_blank" rel="noopener">Ragauskas et al. (2006), <em>Science</em> 311(5760):484–489</a></td></tr>
+            <tr><td>Switchgrass as U.S. priority feedstock</td><td>Federal bioenergy crop designation</td><td><a href="https://www.energy.gov/eere/bioenergy/switchgrass" target="_blank" rel="noopener">DOE EERE — Switchgrass</a></td></tr>
+            <tr><td>Farm-scale production costs</td><td>Economic field-scale estimates</td><td><a href="https://doi.org/10.2134/agronj2007.0271" target="_blank" rel="noopener">Perrin et al. (2008), <em>Agron. J.</em> 100(6):1657–1665</a></td></tr>
+          </tbody></table></div>
+        </div>
+        <div class="src-category">
+          <h2 class="src-cat-title">🧬 HAL2 / FIL2 Ecotype Research</h2>
+          <p class="src-cat-note">⚠ HAL2 and FIL2 are <em>Panicum hallii</em> model ecotypes used in laboratory research — not commercial switchgrass varieties. Scores shown are prototype model values.</p>
+          <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Model Score</th><th>Citation</th></tr></thead><tbody>
+            <tr><td>HAL2 drought tolerance</td><td>92 / 100</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019), <em>Current Biology</em></a></td></tr>
+            <tr><td>HAL2 heat tolerance</td><td>88 / 100</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019)</a></td></tr>
+            <tr><td>HAL2 salinity tolerance</td><td>72 / 100</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019)</a></td></tr>
+            <tr><td>FIL2 biomass yield</td><td>85 / 100</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019)</a></td></tr>
+            <tr><td>FIL2 cold tolerance</td><td>78 / 100</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019)</a></td></tr>
+            <tr><td>FIL2 salinity tolerance</td><td>80 / 100</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019)</a></td></tr>
+            <tr><td>Switchgrass biology overview</td><td>Native perennial grass, <em>Panicum virgatum</em></td><td><a href="https://doi.org/10.1007/s11104-004-0930-5" target="_blank" rel="noopener">Parrish &amp; Fike (2005), <em>Plant &amp; Soil</em> 279:1–21</a></td></tr>
+          </tbody></table></div>
+        </div>
+        <div class="src-category">
+          <h2 class="src-cat-title">🌍 Global Switchgrass Deployment Regions</h2>
+          <p class="src-cat-note">⚠ Regional scores are AI-generated prototype values for educational purposes — not peer-reviewed regional assessments.</p>
+          <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Region</th><th>Climate Fit Score</th><th>Reference Source</th></tr></thead><tbody>
+            <tr><td>Great Plains (USA)</td><td>88 / 100</td><td><a href="https://www.energy.gov/eere/bioenergy/2016-billion-ton-report" target="_blank" rel="noopener">DOE Billion-Ton Report (2016)</a></td></tr>
+            <tr><td>Texas</td><td>85 / 100</td><td><a href="https://agrilifeextension.tamu.edu/" target="_blank" rel="noopener">Texas A&amp;M AgriLife Extension</a></td></tr>
+            <tr><td>Brazil Cerrado</td><td>80 / 100</td><td><a href="https://www.fao.org/land-water/en/" target="_blank" rel="noopener">FAO Land &amp; Water Division</a></td></tr>
+            <tr><td>Sub-Saharan Africa</td><td>72 / 100</td><td><a href="https://www.fao.org/land-water/en/" target="_blank" rel="noopener">FAO Land &amp; Water Division</a></td></tr>
+            <tr><td>India — Deccan Plateau</td><td>68 / 100</td><td><a href="https://www.ipcc.ch/assessment-report/ar6/" target="_blank" rel="noopener">IPCC AR6 Report</a></td></tr>
+            <tr><td>N. China Plain</td><td>60 / 100</td><td><a href="https://www.fao.org/land-water/en/" target="_blank" rel="noopener">FAO Land &amp; Water Division</a></td></tr>
+            <tr><td>Eastern Europe</td><td>65 / 100</td><td><a href="https://www.ipcc.ch/assessment-report/ar6/" target="_blank" rel="noopener">IPCC AR6 Report</a></td></tr>
+            <tr><td>Australia Interior</td><td>52 / 100</td><td><a href="https://www.fao.org/land-water/en/" target="_blank" rel="noopener">FAO Land &amp; Water Division</a></td></tr>
+          </tbody></table></div>
+        </div>
+        <div class="src-category">
+          <h2 class="src-cat-title">⛽ Energy &amp; Fuel</h2>
+          <p class="src-cat-note">⚠ ERCOT and gas price figures shown on the dashboard are illustrative — use the sources below for real data.</p>
+          <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Authoritative Source</th></tr></thead><tbody>
+            <tr><td>ERCOT grid demand figures</td><td><a href="https://www.ercot.com/gridinfo" target="_blank" rel="noopener">ERCOT Grid Information</a></td></tr>
+            <tr><td>Weekly retail gasoline prices (Texas)</td><td><a href="https://www.eia.gov/petroleum/gasdiesel/" target="_blank" rel="noopener">EIA Weekly Retail Gasoline Prices</a></td></tr>
+            <tr><td>U.S. bioenergy policy &amp; fuel goals</td><td><a href="https://www.energy.gov/eere/bioenergy/bioenergy-basics" target="_blank" rel="noopener">DOE Bioenergy Basics</a></td></tr>
+            <tr><td>Biofuel production pathway science</td><td><a href="https://www.nrel.gov/bioenergy/" target="_blank" rel="noopener">NREL Bioenergy Research</a></td></tr>
+          </tbody></table></div>
+        </div>
+        <div class="src-category">
+          <h2 class="src-cat-title">💨 Air Quality</h2>
+          <p class="src-cat-note">⚠ AQI values shown on the dashboard are illustrative sample data.</p>
+          <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Authoritative Source</th></tr></thead><tbody>
+            <tr><td>AQI per city</td><td><a href="https://www.airnow.gov/" target="_blank" rel="noopener">EPA AirNow</a></td></tr>
+            <tr><td>Texas air quality monitoring network</td><td><a href="https://www.tceq.texas.gov/airquality" target="_blank" rel="noopener">TCEQ Air Quality Division</a></td></tr>
+            <tr><td>AQI health guidance &amp; thresholds</td><td><a href="https://www.epa.gov/outdoor-air-quality-data" target="_blank" rel="noopener">EPA Outdoor Air Quality Data</a></td></tr>
+          </tbody></table></div>
+        </div>
+        <div class="src-category">
+          <h2 class="src-cat-title">💧 Water Resources</h2>
+          <p class="src-cat-note">⚠ Reservoir and water availability data shown are illustrative.</p>
+          <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Authoritative Source</th></tr></thead><tbody>
+            <tr><td>Texas reservoir levels</td><td><a href="https://www.twdb.texas.gov/" target="_blank" rel="noopener">Texas Water Development Board</a></td></tr>
+            <tr><td>Statewide water availability</td><td><a href="https://www.usgs.gov/centers/tx-water" target="_blank" rel="noopener">USGS Texas Water Resources</a></td></tr>
+            <tr><td>Water use by sector</td><td><a href="https://www.twdb.texas.gov/waterplanning/" target="_blank" rel="noopener">TWDB State Water Plan</a></td></tr>
+          </tbody></table></div>
+        </div>
+        <div class="src-category">
+          <h2 class="src-cat-title">⚠️ Severe Weather</h2>
+          <p class="src-cat-note">⚠ Alerts shown on the dashboard are sample illustrative data — not live NWS feeds.</p>
+          <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Authoritative Source</th></tr></thead><tbody>
+            <tr><td>Weather alerts &amp; warnings</td><td><a href="https://www.spc.noaa.gov/" target="_blank" rel="noopener">NOAA Storm Prediction Center</a></td></tr>
+            <tr><td>Texas severe weather forecasts</td><td><a href="https://www.weather.gov/ewx/" target="_blank" rel="noopener">NWS San Antonio / Austin</a></td></tr>
+            <tr><td>Hurricane &amp; tropical storm tracking</td><td><a href="https://www.nhc.noaa.gov/" target="_blank" rel="noopener">NOAA National Hurricane Center</a></td></tr>
+          </tbody></table></div>
+        </div>
+        <div class="src-disclaimer-block">
+          <h3 class="src-disclaimer-title">About This Platform's Data</h3>
+          <p class="src-disclaimer-text">This is an <strong>educational prototype dashboard</strong>. Weather, agriculture, energy, and AQI figures displayed throughout the dashboard are illustrative sample values — not real-time operational data. Scientific claims about switchgrass biofuel are grounded in the peer-reviewed literature cited above. Global deployment scores and HAL2/FIL2 trait values are AI-generated prototype estimates based on published agronomic literature. This platform does not constitute investment, agronomic, engineering, or policy advice.</p>
+        </div>
+      </div>
+
       <!-- Settings -->
       <div class="page" id="page-settings" role="region" aria-label="Platform Settings"></div>
 
@@ -321,6 +560,7 @@
 <script src="js/biofuel.js"></script>
 <script src="js/fuel.js"></script>
 <script src="js/settings.js"></script>
+<script src="js/mission.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
