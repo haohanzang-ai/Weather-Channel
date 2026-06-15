@@ -12,3 +12,6 @@ setInterval(updateClock, 1000);
 
 // Initial data fetch — auto-refresh interval is managed by settings module
 fetchAllWeatherData();
+
+// Start dashboard biofuel fact widget
+biofactInit();

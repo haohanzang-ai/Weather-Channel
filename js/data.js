@@ -97,6 +97,7 @@ function lsDismiss(){
   const ls    = document.getElementById('loadingScreen');
   if(fill) fill.style.width = '100%';
   if(stat) stat.textContent = 'All data loaded ✓';
+  if(typeof lsFactStop === 'function') lsFactStop();
   setTimeout(()=>{
     if(ls){ ls.classList.add('ls-out'); setTimeout(()=>{ ls.style.display='none'; },600); }
   }, 420);

@@ -60,7 +60,14 @@
 .ls-cities{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
 .ls-chip{font-size:9px;font-family:'Inter',sans-serif;padding:3px 9px;border-radius:12px;background:rgba(74,144,226,.1);color:rgba(255,255,255,.3);border:1px solid rgba(74,144,226,.18);transition:background .3s,color .3s,border-color .3s}
 .ls-chip.done{background:rgba(93,219,168,.18);color:#5DDBA8;border-color:rgba(93,219,168,.35)}
-.ls-hint{font-size:10px;color:rgba(255,255,255,.18);margin-top:20px;font-family:'Inter',sans-serif}
+.ls-hint{font-size:10px;color:rgba(255,255,255,.18);margin-top:14px;font-family:'Inter',sans-serif}
+.ls-fact-wrap{margin:16px 0 4px;padding:12px 14px;background:rgba(46,204,139,0.07);border:1px solid rgba(46,204,139,0.2);border-radius:10px;text-align:left}
+.ls-fact-header{display:flex;align-items:center;gap:6px;margin-bottom:7px}
+.ls-fact-pill{font-size:8px;font-weight:700;color:#5DDBA8;text-transform:uppercase;letter-spacing:0.13em;background:rgba(46,204,139,0.14);border:1px solid rgba(46,204,139,0.28);border-radius:20px;padding:2px 8px}
+.ls-fact-category{font-size:8px;font-weight:600;color:rgba(93,219,168,0.7);text-transform:uppercase;letter-spacing:0.1em}
+.ls-fact-icon{font-size:13px;line-height:1}
+.ls-fact-text{font-family:'Inter',sans-serif;font-size:10.5px;color:rgba(255,255,255,.72);line-height:1.6;min-height:34px;transition:opacity .28s ease}
+.ls-fact-fade{opacity:0}
 </style>
 
 <div id="loadingScreen" role="status" aria-label="Loading weather data for 10 Texas cities">
@@ -71,6 +78,14 @@
     <div class="ls-status" id="lsStatus">Connecting to weather APIs…</div>
     <div class="ls-bar-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0" id="lsBar">
       <div class="ls-bar-fill" id="lsFill"></div>
+    </div>
+    <div class="ls-fact-wrap" role="status" aria-live="polite" aria-label="Biofuel fact">
+      <div class="ls-fact-header">
+        <span class="ls-fact-pill">Biofuel Fact</span>
+        <span class="ls-fact-icon" id="lsFactIcon" aria-hidden="true">🌿</span>
+        <span class="ls-fact-category" id="lsFactCat">SWITCHGRASS</span>
+      </div>
+      <div class="ls-fact-text" id="lsFact">Switchgrass is a native North American perennial that produces biomass for up to 15 years after a single planting.</div>
     </div>
     <div class="ls-cities" id="lsCities"></div>
     <div class="ls-hint">Fetching live data from Open-Meteo &amp; NWS</div>
@@ -269,6 +284,33 @@
             <div class="source-card"><div class="source-tag">Texas agricultural context</div><h4 class="source-title"><a href="https://agrilifeextension.tamu.edu/" target="_blank" rel="noopener">Texas A&amp;M AgriLife Extension</a></h4><p class="source-org">Texas A&amp;M University System</p><p class="source-why">Research-based guidance on bioenergy crops, including switchgrass, suited to Texas conditions.</p></div>
             <div class="source-card"><div class="source-tag">USDA bioenergy crops</div><h4 class="source-title"><a href="https://www.ers.usda.gov/topics/farm-economy/bioenergy/" target="_blank" rel="noopener">USDA ERS — Bioenergy</a></h4><p class="source-org">USDA Economic Research Service</p><p class="source-why">Economic data on bioenergy crops, marginal land use, and agricultural energy market trends.</p></div>
             <div class="source-card"><div class="source-tag">Bioenergy policy &amp; fuel diversity</div><h4 class="source-title"><a href="https://www.energy.gov/eere/bioenergy/bioenergy-basics" target="_blank" rel="noopener">DOE Bioenergy Basics</a></h4><p class="source-org">U.S. Department of Energy, BETO</p><p class="source-why">Overview of bioenergy policy, U.S. biofuel goals, and cellulosic feedstocks in long-term fuel diversification strategies.</p></div>
+          </div>
+        </section>
+
+        <!-- ─── SECTION F: Biofuel Fact Widget ──────── -->
+        <section class="biofact-section" aria-label="Did you know? Biofuel fact">
+          <div class="biofact-card" id="biofactCard"
+               onclick="biofactNext()"
+               role="button" tabindex="0"
+               aria-label="Biofuel fact — click for next fact"
+               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();biofactNext();}">
+            <div class="biofact-top">
+              <div class="biofact-left">
+                <span class="biofact-badge">Did You Know?</span>
+                <span class="biofact-cat-pill" id="biofactCat">Switchgrass</span>
+              </div>
+              <div class="biofact-right">
+                <span class="biofact-counter" id="biofactCounter">1 / 24</span>
+              </div>
+            </div>
+            <div class="biofact-body">
+              <span class="biofact-icon" id="biofactIcon" aria-hidden="true">🌿</span>
+              <p class="biofact-text" id="biofactText">Loading fact…</p>
+            </div>
+            <div class="biofact-footer">
+              <span class="biofact-click-hint">Click anywhere to reveal the next fact</span>
+              <span class="biofact-arrow" aria-hidden="true">→</span>
+            </div>
           </div>
         </section>
 
@@ -566,6 +608,7 @@
 <script src="js/severe.js"></script>
 <script src="js/compare.js"></script>
 <script src="js/reports.js"></script>
+<script src="js/facts.js"></script>
 <script src="js/biofuel.js"></script>
 <script src="js/fuel.js"></script>
 <script src="js/settings.js"></script>
