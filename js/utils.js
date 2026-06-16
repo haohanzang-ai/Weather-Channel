@@ -2,6 +2,31 @@
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let selectedCity = null;
+
+// ── API Status tracking ───────────────────────────────────────────────────────
+const API_STATUS = {
+  weather: 'pending', // 'ok' | 'fail' | 'pending'
+  aqi:     'pending',
+  nws:     'pending', // updated by severe.js when user visits that tab
+  lastUpdate: null,
+  hasDemoData: false
+};
+
+// ── Data badge helper ─────────────────────────────────────────────────────────
+function dataBadge(type) {
+  const map = {
+    'live-api': ['Live API',        'badge-live-api'],
+    'live-drv': ['Live-Derived',    'badge-live-drv'],
+    'official': ['Official Link',   'badge-official'],
+    'peer-rev': ['Peer-Reviewed',   'badge-peer-rev'],
+    'ai-est':   ['AI Estimate',     'badge-ai-est'],
+    'demo':     ['Demo / Fallback', 'badge-demo-fb'],
+    'edu':      ['Educational',     'badge-edu-only'],
+    'na':       ['Unavailable',     'badge-na'],
+  };
+  const [label, cls] = map[type] || ['Unknown', 'badge-na'];
+  return `<span class="data-badge ${cls}" title="Data type: ${label}">${label}</span>`;
+}
 const charts = new Map();
 let mapRendered = false;
 let searchTimer = null;

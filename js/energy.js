@@ -26,9 +26,14 @@ function renderEnergy(){
   const gridColor    = avgCDI>30?'#D64545':avgCDI>18?'#F5A623':'#5DDBA8';
 
   document.getElementById('energyContent').innerHTML=`
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      ${dataBadge('live-drv')}
+      <span style="font-size:10px;color:var(--text3)">Cooling Demand Index is computed from live temperatures — <strong>not live ERCOT grid data.</strong>
+        For real-time grid figures: <a href="https://www.ercot.com/gridinfo" target="_blank" rel="noopener" style="color:#4A90E2">ercot.com/gridinfo →</a></span>
+    </div>
     <div class="grid-4" style="margin-bottom:16px">
       <div class="card card-orange">
-        <div class="stat-label">Avg Texas Temp (Live)</div>
+        <div class="stat-label">Avg Texas Temp (Live API)</div>
         <div class="stat-value">${avgTemp}<span class="stat-unit">°F</span></div>
         <div class="stat-sub">Across all 10 monitored cities</div>
       </div>
@@ -38,19 +43,19 @@ function renderEnergy(){
         <div class="stat-sub">${escapeHtml(hottest)}</div>
       </div>
       <div class="card">
-        <div class="stat-label">Avg Cooling Demand</div>
+        <div class="stat-label">Avg Cooling Demand Index</div>
         <div class="stat-value" style="color:${gridColor}">${avgCDI}</div>
-        <div class="stat-sub">CDI index (0 = no cooling load)</div>
+        <div class="stat-sub">CDI — temperature-derived estimate</div>
       </div>
       <div class="card">
         <div class="stat-label">Grid Pressure Estimate</div>
         <div class="stat-value" style="font-size:18px;color:${gridColor}">${escapeHtml(gridPressure)}</div>
-        <div class="stat-sub">Based on avg CDI across cities</div>
+        <div class="stat-sub">Live-derived estimate — not ERCOT data</div>
       </div>
     </div>
     <div class="card" style="margin-bottom:14px">
-      <h3 class="section-title">Cooling Demand Index (CDI) by City — Live</h3>
-      <div style="font-size:10px;color:var(--text3);margin-bottom:10px">CDI = max(0, temp − 65°F) × 0.8 · Higher values indicate greater air conditioning pressure on the ERCOT grid</div>
+      <h3 class="section-title">Cooling Demand Index (CDI) by City ${dataBadge('live-drv')}</h3>
+      <div style="font-size:10px;color:var(--text3);margin-bottom:10px">CDI = max(0, temp − 65°F) × 0.8 · Live-temperature-derived estimate — not live ERCOT load data</div>
       ${cdiEntries.map(({city,cdi,temp})=>{
         const col=cdi>25?'#D64545':cdi>15?'#F5A623':'#4A90E2';
         return `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)">

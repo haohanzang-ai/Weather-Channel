@@ -293,3 +293,38 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offse
   #weatherGrid{grid-template-columns:1fr !important}
   .grid-4{grid-template-columns:1fr}
 }
+
+/* ── Data honesty badges ──────────────────────── */
+.data-badge{
+  display:inline-flex;align-items:center;gap:3px;
+  font-size:9px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;
+  padding:2px 7px;border-radius:20px;vertical-align:middle;
+  border:1px solid currentColor;font-family:var(--font);flex-shrink:0;line-height:1.5;
+}
+.badge-live-api {color:#5DDBA8;background:rgba(46,204,139,0.10);border-color:rgba(46,204,139,0.35)}
+.badge-live-drv {color:#4A90E2;background:rgba(74,144,226,0.10);border-color:rgba(74,144,226,0.35)}
+.badge-official {color:#7DB9F2;background:rgba(100,180,255,0.08);border-color:rgba(100,180,255,0.28)}
+.badge-peer-rev {color:#A78BFA;background:rgba(167,139,250,0.10);border-color:rgba(167,139,250,0.35)}
+.badge-ai-est   {color:#F8C06A;background:rgba(245,166,35,0.10);border-color:rgba(245,166,35,0.35)}
+.badge-demo-fb  {color:#E87A7A;background:rgba(214,69,69,0.10);border-color:rgba(214,69,69,0.30)}
+.badge-edu-only {color:rgba(255,255,255,0.55);background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.18)}
+.badge-na       {color:rgba(255,255,255,0.35);background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.12)}
+
+/* ── Data Status Panel ───────────────────────── */
+.data-status-panel{
+  display:flex;gap:10px;flex-wrap:wrap;padding:9px 14px;
+  background:rgba(255,255,255,0.025);
+  border:1px solid var(--border);border-radius:var(--r8);
+  margin-bottom:14px;align-items:center;font-size:10px;
+}
+.ds-label{font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;white-space:nowrap}
+.ds-item {display:flex;align-items:center;gap:5px;color:var(--text2);white-space:nowrap}
+.ds-ok  {width:6px;height:6px;border-radius:50%;background:#5DDBA8;flex-shrink:0}
+.ds-fail{width:6px;height:6px;border-radius:50%;background:#D64545;flex-shrink:0}
+.ds-pend{width:6px;height:6px;border-radius:50%;background:#F5A623;flex-shrink:0;animation:livePulse 2s ease-in-out infinite}
+.ds-sep {color:rgba(255,255,255,0.15)}
+.ds-demo-warn{
+  display:inline-flex;align-items:center;gap:5px;font-size:10px;color:#F8C06A;
+  padding:2px 8px;background:rgba(245,166,35,0.08);border-radius:4px;
+  border:1px solid rgba(245,166,35,0.22);
+}

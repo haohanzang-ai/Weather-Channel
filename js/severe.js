@@ -13,11 +13,18 @@ async function renderSevere(){
     if(!res.ok) throw new Error(`NWS ${res.status}`);
     const data = await res.json();
     alerts = data.features || [];
+    API_STATUS.nws = 'ok';
+    if (typeof renderDataStatus === 'function') renderDataStatus();
   } catch(err){
+    API_STATUS.nws = 'fail';
+    if (typeof renderDataStatus === 'function') renderDataStatus();
     el.innerHTML = `
       <div class="card card-danger">
-        <div class="insight-tag">⚠️ NWS Feed Unavailable</div>
-        <div class="insight-text">Could not reach the National Weather Service API. Visit <a href="https://alerts.weather.gov" target="_blank" rel="noopener noreferrer" style="color:#4A90E2">alerts.weather.gov</a> for current Texas alerts.</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <div class="insight-tag">⚠️ NWS API Unavailable</div>
+          ${dataBadge('na')}
+        </div>
+        <div class="insight-text">Could not reach the National Weather Service API. No alert data is shown — do not assume conditions are calm. Visit <a href="https://alerts.weather.gov" target="_blank" rel="noopener noreferrer" style="color:#4A90E2">alerts.weather.gov</a> for current Texas alerts.</div>
       </div>`;
     return;
   }
@@ -56,7 +63,7 @@ async function renderSevere(){
     </div>
     <div class="grid-2" style="margin-bottom:14px">
       <div class="card">
-        <h3 class="section-title">NWS Active Alerts — Texas <span style="color:var(--text3);font-weight:400">(${alerts.length} total)</span></h3>
+        <h3 class="section-title">NWS Active Alerts — Texas ${dataBadge('live-api')} <span style="color:var(--text3);font-weight:400">(${alerts.length} total)</span></h3>
         ${alerts.length===0
           ? '<div style="color:var(--text2);font-size:12px;padding:24px 0;text-align:center">✅ No active watches, warnings, or advisories for Texas.</div>'
           : alerts.slice(0,10).map(a=>{

@@ -242,9 +242,18 @@ async function fetchWeatherForCity(city){
   ].join('&');
   const aqUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=us_aqi`;
 
-  const [weatherRes, aqRes] = await Promise.all([fetch(weatherUrl), fetch(aqUrl)]);
+  // AQI is fetched separately so its failure doesn't block weather data
+  const [weatherRes, aqRes] = await Promise.all([
+    fetch(weatherUrl),
+    fetch(aqUrl).catch(() => null)
+  ]);
   const weather = await weatherRes.json();
-  const aq      = await aqRes.json();
+  const aq = aqRes ? await aqRes.json().catch(() => ({})) : {};
+
+  // Track per-API status (first city sets it; already-set statuses are preserved)
+  if (API_STATUS.weather !== 'ok') API_STATUS.weather = 'ok';
+  if (aqRes && aqRes.ok) { if (API_STATUS.aqi !== 'ok') API_STATUS.aqi = 'ok'; }
+  else                   { if (API_STATUS.aqi !== 'ok') API_STATUS.aqi = 'fail'; }
 
   const cur  = weather.current;
   const cond = getConditionFromCode(cur.weather_code);
@@ -298,6 +307,7 @@ async function fetchAllWeatherData(){
   try {
     await Promise.all(CITIES.map(c => fetchWeatherForCity(c)));
     dataLoaded = true;
+    API_STATUS.lastUpdate = Date.now();
     const lastSync = document.getElementById('lastSync');
     if(lastSync) lastSync.textContent = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
     renderDashboard();
@@ -317,6 +327,15 @@ async function fetchAllWeatherData(){
     }
   } catch(err){
     console.error('Weather fetch error:', err);
+    API_STATUS.weather = 'fail';
+    API_STATUS.hasDemoData = true;
+    if (typeof renderDataStatus === 'function') renderDataStatus();
+    const wg = document.getElementById('weatherGrid');
+    if (wg) wg.innerHTML = `<div class="card card-danger" style="grid-column:1/-1;padding:16px">
+      <div class="insight-tag">⚠ Open-Meteo API Unavailable</div>
+      <div class="insight-text">Weather data could not be loaded. Check your connection and try again. <button class="btn-sm" onclick="refreshData(event)" style="margin-top:8px">↻ Retry</button></div>
+    </div>`;
+    lsDismiss();
     setTimeout(fetchAllWeatherData, 60000);
   }
 }

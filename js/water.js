@@ -26,16 +26,20 @@ function renderWater(){
     .sort((a,b)=>b[1].precipAvg-a[1].precipAvg);
 
   document.getElementById('waterContent').innerHTML=`
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      ${dataBadge('live-api')}
+      <span style="font-size:10px;color:var(--text3)">Precipitation forecast from Open-Meteo API. Reservoir data: <strong>official external link only</strong> — not integrated directly.</span>
+    </div>
     <div class="alert-banner" role="note" style="margin-bottom:16px">
       <span aria-hidden="true">💧</span>
-      <strong>Live reservoir storage levels</strong> — Visit the
+      ${dataBadge('official')} <strong>Reservoir storage levels</strong> — Visit the
       <a href="https://www.waterdatafortexas.org/reservoirs/statewide" target="_blank" rel="noopener noreferrer" style="color:#4A90E2">Texas Water Development Board →</a>
-      for current capacity percentages for all major Texas lakes.
+      for current capacity percentages. <em>Not directly integrated — official external source only.</em>
     </div>
     <div class="grid-2" style="margin-bottom:14px">
       <div class="card">
-        <h3 class="section-title">7-Day Precipitation Outlook by City</h3>
-        <div style="font-size:10px;color:var(--text3);margin-bottom:10px">Live from Open-Meteo — avg daily precipitation probability over next 7 days</div>
+        <h3 class="section-title">7-Day Precipitation Outlook ${dataBadge('live-api')}</h3>
+        <div style="font-size:10px;color:var(--text3);margin-bottom:10px">Live forecast from Open-Meteo — avg daily precipitation probability over next 7 days</div>
         ${cityRain.map(({city,avgRain,precipSum})=>{
           const col=avgRain>=60?'#4A90E2':avgRain>=30?'#5DDBA8':'#F5A623';
           const precStr = precipSum>0 ? ` · ${precipSum} mm forecast` : '';
@@ -70,7 +74,7 @@ function renderWater(){
       </div>
     </div>
     <div class="card" style="margin-bottom:14px">
-      <h3 class="section-title">Official Texas Water Resources</h3>
+      <h3 class="section-title">Official Texas Water Resources ${dataBadge('official')}</h3>
       <div class="grid-3" style="margin-top:10px">
         ${[
           {name:'TX Reservoir Levels',  url:'https://www.waterdatafortexas.org/reservoirs/statewide',           desc:'Live storage % for all major Texas lakes and reservoirs (TWDB)'},
@@ -88,7 +92,7 @@ function renderWater(){
       </div>
     </div>
     <div class="card card-blue">
-      <div class="insight-tag">📊 Methodology</div>
-      <div class="insight-text">Precipitation probability and forecast totals (mm) are live from the <strong>Open-Meteo 7-day forecast API</strong>. Reservoir storage capacity requires direct access to the TWDB database — the links above open the official live sources. Data refreshes every 10 minutes.</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div class="insight-tag">📊 Methodology</div>${dataBadge('live-api')}</div>
+      <div class="insight-text">Precipitation probability and forecast totals (mm) are live from the <strong>Open-Meteo 7-day forecast API</strong>. Reservoir storage levels are <strong>official external links only</strong> — not directly integrated. Visit TWDB for real reservoir data. Weather data refreshes automatically.</div>
     </div>`;
 }

@@ -52,22 +52,29 @@ function renderReports(){
   const nowStr = new Date().toLocaleString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
 
   document.getElementById('reportsContent').innerHTML=`
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      ${dataBadge('live-drv')}
+      <span style="font-size:10px;color:var(--text3)">These reports are <strong>template-filled summaries</strong> generated from live Open-Meteo and NWS data — not a live AI service. Values update automatically.</span>
+    </div>
     <div class="insight-card" style="margin-bottom:12px">
-      <div class="insight-tag">📊 Live Texas Weather Briefing — ${escapeHtml(nowStr)}</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <div class="insight-tag">📊 Live Data Briefing — ${escapeHtml(nowStr)}</div>
+        ${dataBadge('live-drv')}
+      </div>
       <p class="insight-text" style="margin-bottom:8px">Across <strong>${sorted.length} monitored Texas cities</strong>, the statewide average is <strong>${avgTemp}°F</strong> with ${heatAssess}. The hottest city right now is <strong>${escapeHtml(hottest[0])} at ${hottest[1].temp}°F</strong> (${escapeHtml(hottest[1].condition)}); the coolest is <strong>${escapeHtml(coolest[0])} at ${coolest[1].temp}°F</strong>. Dominant conditions: <strong>${escapeHtml(dominant)}</strong>.</p>
       <p class="insight-text">Statewide averages — Humidity: <strong>${avgHumid}%</strong> · Wind: <strong>${avgWind} mph</strong> · UV Index: <strong>${avgUV}</strong>. 7-day ${escapeHtml(hottest[0])} high range: <strong>${hiRange}</strong>. ${escapeHtml(rainWord)} this week.</p>
     </div>
     <div class="insight-card" style="margin-bottom:12px">
-      <div class="insight-tag">💨 Air Quality Report — Live (Open-Meteo AQI)</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div class="insight-tag">💨 Air Quality Summary</div>${dataBadge('live-api')}</div>
       <p class="insight-text"><strong>${escapeHtml(worstAQI[0])}</strong> has the highest AQI at <strong>${worstAQI[1].aqi}</strong> (${escapeHtml(getAQILabel(worstAQI[1].aqi).label)}). <strong>${escapeHtml(bestAQI[0])}</strong> has the best air quality at AQI <strong>${bestAQI[1].aqi}</strong> (${escapeHtml(getAQILabel(bestAQI[1].aqi).label)}). Statewide average: AQI <strong>${avgAQI}</strong> — ${avgAQI<=50?'Good across all cities. Safe for all outdoor activities.':avgAQI<=100?'Moderate. Most people unaffected; unusually sensitive individuals should take care.':'Unhealthy for sensitive groups in some areas.'}</p>
     </div>
     <div class="insight-card" style="margin-bottom:12px">
-      <div class="insight-tag">🌾 Agricultural Moisture — Live ET₀ Data</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div class="insight-tag">🌾 Agricultural Moisture Estimate</div>${dataBadge('live-drv')}</div>
       <p class="insight-text">${moistLine} ${avgET0!==null&&avgET0>avgPrecip?`This deficit indicates moderate-to-high irrigation demand across Texas. Crops with shallow roots are at greatest risk. Refer to the Agriculture tab for city-level breakdown.`:`Moisture conditions are relatively favorable. Monitor the Agriculture tab for crop-specific outlooks.`} For official drought designation: <a href="https://droughtmonitor.unl.edu/CurrentMap/StateDroughtMonitor.aspx?TX" target="_blank" rel="noopener noreferrer" style="color:#4A90E2">droughtmonitor.unl.edu →</a></p>
     </div>
     <div class="insight-card" style="margin-bottom:12px">
-      <div class="insight-tag">ℹ️ Data Sources &amp; Methodology</div>
-      <p class="insight-text">All data refreshes every 10 minutes automatically. Sources: <strong>Open-Meteo Forecast API</strong> (current conditions, 7-day forecast, ET₀, precipitation) · <strong>Open-Meteo Air Quality API</strong> (US AQI per city) · <strong>NWS api.weather.gov</strong> (severe weather alerts). No API keys required. All sources are free, open, and CORS-enabled.</p>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div class="insight-tag">ℹ️ Data Sources &amp; Methodology</div>${dataBadge('live-drv')}</div>
+      <p class="insight-text">Reports refresh automatically from live APIs. Sources: <strong>Open-Meteo Forecast API</strong> (current conditions, 7-day forecast, ET₀, precipitation) · <strong>Open-Meteo Air Quality API</strong> (US AQI per city) · <strong>NWS api.weather.gov</strong> (severe weather alerts, on Severe tab only). <em>Agriculture and energy figures are weather-derived estimates — not official USDA or ERCOT data.</em></p>
     </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
       <a href="https://open-meteo.com" target="_blank" rel="noopener noreferrer" class="btn-sm">🌐 Open-Meteo</a>

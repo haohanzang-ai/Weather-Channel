@@ -29,7 +29,21 @@ function renderAQ(){
   else
     guidance = `Air quality is <strong style="color:#5DDBA8">Good</strong> across all monitored Texas cities (avg AQI ${avgAQI}). No restrictions recommended — safe for all outdoor activities.`;
 
+  // AQI values of 0 across all cities typically means the AQI fetch failed silently
+  const allZero = vals.every(v => v === 0);
+  if (allZero) {
+    API_STATUS.aqi = 'fail';
+    if (typeof renderDataStatus === 'function') renderDataStatus();
+  }
+
   document.getElementById('aqContent').innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      ${allZero
+        ? `<span class="data-badge badge-na">Unavailable</span>
+           <span style="font-size:10px;color:var(--text3)">AQI data could not be loaded — all values show 0. Check <a href="https://www.airnow.gov/" target="_blank" rel="noopener" style="color:#4A90E2">AirNow →</a> for current readings.</span>`
+        : `${dataBadge('live-api')} <span style="font-size:10px;color:var(--text3)">Open-Meteo Air Quality API · US EPA AQI scale</span>`
+      }
+    </div>
     <div class="grid-4" style="margin-bottom:16px">
       <div class="card"><div class="stat-label">Best AQI</div><div class="stat-value" style="color:${bestQ.color}">${minAQI}</div><div class="stat-sub">${escapeHtml(bestCity)}</div></div>
       <div class="card"><div class="stat-label">Worst AQI</div><div class="stat-value" style="color:${worstQ.color}">${maxAQI}</div><div class="stat-sub">${escapeHtml(worstCity)}</div></div>
@@ -37,7 +51,7 @@ function renderAQ(){
       <div class="card card-success"><div class="stat-label">Good AQI Cities</div><div class="stat-value" style="color:#5DDBA8">${goodCount}</div><div class="stat-sub">AQI ≤ 50 of ${vals.length}</div></div>
     </div>
     <div class="card" style="margin-bottom:14px">
-      <h3 class="section-title">US AQI by City — Live (Open-Meteo Air Quality API)</h3>
+      <h3 class="section-title">US AQI by City ${allZero ? '<span class="data-badge badge-na" style="margin-left:6px">Unavailable</span>' : dataBadge('live-api')}</h3>
       ${entries.map(([city,d])=>{
         const q=getAQILabel(d.aqi);
         return `<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border)">
@@ -53,7 +67,10 @@ function renderAQ(){
       }).join('')}
     </div>
     <div class="card card-blue">
-      <div class="insight-tag">Health Guidance — Live</div>
-      <div class="insight-text">${guidance} Data: Open-Meteo Air Quality API. Last updated ${new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}.</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <div class="insight-tag">Health Guidance</div>
+        ${allZero ? dataBadge('na') : dataBadge('live-api')}
+      </div>
+      <div class="insight-text">${guidance}${allZero ? ' <strong>Note: AQI data unavailable — values above may not reflect current conditions.</strong>' : ` Source: Open-Meteo Air Quality API. Last updated ${new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}.`}</div>
     </div>`;
 }

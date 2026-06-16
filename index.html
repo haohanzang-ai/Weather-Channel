@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TexasClimate — Real-Time Weather &amp; Environmental Intelligence Platform</title>
-  <meta name="description" content="Live weather, air quality, water resources, agriculture, and energy intelligence across 10 major Texas cities. Data refreshes every 10 minutes.">
+  <title>TexasClimate — Weather &amp; Biofuel Education Dashboard</title>
+  <meta name="description" content="Live weather from Open-Meteo API across 10 Texas cities. Agriculture and energy figures are weather-derived estimates. Biofuel scores are AI prototype estimates. Educational dashboard.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://texasclimate.example.com/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="TexasClimate — Real-Time Weather &amp; Environmental Intelligence">
-  <meta property="og:description" content="Live weather, air quality, agriculture, and energy data across 10 Texas cities.">
+  <meta property="og:title" content="TexasClimate — Weather &amp; Biofuel Education Dashboard">
+  <meta property="og:description" content="Live weather from Open-Meteo across 10 Texas cities. Agriculture estimates, energy CDI, and biofuel education.">
   <meta property="og:site_name" content="TexasClimate">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="TexasClimate — Real-Time Intelligence Platform">
+  <meta name="twitter:title" content="TexasClimate — Weather &amp; Education Dashboard">
   <meta http-equiv="Content-Security-Policy"
         content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; media-src 'self' blob:; connect-src https://api.open-meteo.com https://air-quality-api.open-meteo.com https://api.weather.gov https://cdn.jsdelivr.net https://storage.googleapis.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com; frame-ancestors 'none';">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"TexasClimate Intelligence Platform","description":"Real-time climate, weather, environmental, and agricultural intelligence across Texas.","applicationCategory":"WeatherApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
@@ -103,7 +103,7 @@
     <div class="sidebar-logo">
       <span class="logo-icon" aria-hidden="true">🌤</span>
       <div class="logo-title">TexasClimate</div>
-      <div class="logo-sub"><span class="live-dot" aria-hidden="true"></span>Intelligence Platform</div>
+      <div class="logo-sub"><span class="live-dot" aria-hidden="true"></span>Weather &amp; Education</div>
     </div>
 
     <div class="nav-section" role="menu" aria-label="Main">
@@ -139,7 +139,7 @@
     </div>
 
     <div class="sidebar-footer">
-      <div class="sidebar-footer-text">v2.4.1 · Data refreshes every 10 min</div>
+      <div class="sidebar-footer-text">v2.4.1 · Weather API auto-refresh ~10 min</div>
     </div>
   </nav>
 
@@ -165,13 +165,26 @@
 
       <!-- Dashboard -->
       <div class="page active" id="page-dashboard" role="region" aria-label="Dashboard Overview">
+
+        <!-- Data Status Panel — updated by renderDataStatus() in dashboard.js -->
+        <div id="dataStatusPanel" class="data-status-panel" role="status" aria-live="polite">
+          <span class="ds-label">API Status:</span>
+          <span class="ds-item"><span class="ds-pend"></span>Weather: connecting…</span>
+          <span class="ds-sep">·</span>
+          <span class="ds-item"><span class="ds-pend"></span>AQI: connecting…</span>
+          <span class="ds-sep">·</span>
+          <span class="ds-item"><span class="ds-pend"></span>NWS Alerts: visit Severe tab</span>
+          <span class="ds-sep">·</span>
+          <span class="ds-item">Last updated: —</span>
+        </div>
+
         <section class="hero-band" aria-label="Platform summary">
           <h1 class="hero-title">Texas Climate, Agriculture &amp; Infrastructure Intelligence</h1>
-          <p class="hero-sub">Real-time environmental intelligence across 10 Texas cities — covering weather, air quality, water resources, agriculture, and energy demand. Auto-refreshes every 10 minutes. <a href="#transparency" class="hero-link" onclick="document.getElementById('transparency').scrollIntoView({behavior:'smooth'});return false;">See Data Transparency →</a></p>
+          <p class="hero-sub">Live weather from Open-Meteo API across 10 Texas cities. Agriculture and energy values are <strong>weather-derived estimates</strong>. Biofuel scores are <strong>AI prototype estimates</strong>. All sections are labeled with their data type. <a href="#transparency" class="hero-link" onclick="document.getElementById('transparency').scrollIntoView({behavior:'smooth'});return false;">See Data Transparency →</a></p>
           <div class="hero-badges" aria-label="Status indicators">
-            <span class="badge badge-blue"><span class="live-dot" aria-hidden="true"></span>Live Data</span>
+            <span class="badge badge-blue"><span class="live-dot" aria-hidden="true"></span>Weather: Live API</span>
             <span class="badge badge-green">10 Cities Monitored</span>
-            <span class="badge badge-orange">2 Active Advisories <span style="font-weight:400;opacity:.65">(sample)</span></span>
+            <span class="badge badge-orange">Alerts: see Severe tab</span>
           </div>
         </section>
 
@@ -682,7 +695,7 @@
       <div class="page" id="page-water" role="region" aria-label="Water Resources"><h2 class="section-title">Water Resource Center</h2><div id="waterContent"></div></div>
 
       <!-- Energy -->
-      <div class="page" id="page-energy" role="region" aria-label="Energy"><h2 class="section-title">ERCOT Energy Demand Intelligence</h2><div id="energyContent"></div></div>
+      <div class="page" id="page-energy" role="region" aria-label="Energy"><h2 class="section-title">Energy Demand Estimates (Temperature-Derived)</h2><div id="energyContent"></div></div>
 
       <!-- Severe Weather -->
       <div class="page" id="page-severe" role="region" aria-label="Severe Weather"><h2 class="section-title">Severe Weather Monitoring</h2><div id="severeContent"></div></div>
@@ -691,7 +704,7 @@
       <div class="page" id="page-compare" role="region" aria-label="City Comparison"><h2 class="section-title">City Comparison Lab</h2><div id="compareContent"></div></div>
 
       <!-- Reports -->
-      <div class="page" id="page-reports" role="region" aria-label="AI Reports"><h2 class="section-title">AI Intelligence Reports</h2><div id="reportsContent"></div></div>
+      <div class="page" id="page-reports" role="region" aria-label="AI Reports"><h2 class="section-title">Live Data Summaries (AI-Formatted)</h2><div id="reportsContent"></div></div>
 
       <!-- Sources -->
       <div class="page" id="page-sources" role="region" aria-label="Data Sources and Citations">

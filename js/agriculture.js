@@ -118,9 +118,14 @@ function renderAg(){
     : `Avg 7-day rain probability: <strong>${Math.round(m.avgRainProb)}%</strong>`;
 
   document.getElementById('agContent').innerHTML=`
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      ${dataBadge('live-drv')}
+      <span style="font-size:10px;color:var(--text3)">Indices derived from live Open-Meteo weather data — <strong>not official USDA or AgriLife farming advice.</strong>
+        For official drought status: <a href="https://droughtmonitor.unl.edu/CurrentMap/StateDroughtMonitor.aspx?TX" target="_blank" rel="noopener" style="color:#4A90E2">droughtmonitor.unl.edu →</a></span>
+    </div>
     <div class="grid-2" style="margin-bottom:16px">
       <div class="card">
-        <h3 class="section-title">Agronomic Conditions — Computed from Live Data</h3>
+        <h3 class="section-title">Agronomic Conditions ${dataBadge('live-drv')}</h3>
         <div style="font-size:10px;color:var(--text3);margin-bottom:10px">${et0Line} · Avg temp: <strong>${Math.round(m.avgTemp)}°F</strong></div>
         ${agItems.map(a=>`
           <div class="ag-status">
@@ -159,7 +164,7 @@ function renderAg(){
       </div>
     </div>
     <div class="card" style="margin-bottom:14px">
-      <h3 class="section-title">Crop-by-Crop Outlook — Based on Current Conditions</h3>
+      <h3 class="section-title">Crop-by-Crop Outlook ${dataBadge('live-drv')}</h3>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px">
         ${crops.map(c=>{
           const [emoji,...name]=c.crop.split(' ');
@@ -172,7 +177,7 @@ function renderAg(){
       </div>
     </div>
     <div class="card card-blue">
-      <div class="insight-tag">📊 Methodology — Live Data</div>
-      <div class="insight-text">All indices computed from live Open-Meteo data: current temperatures, relative humidity, and 7-day ET₀ (evapotranspiration) vs precipitation_sum. ET₀ is the FAO-56 Penman–Monteith reference rate — the agronomic standard for irrigation scheduling and drought assessment. For official Texas drought designation: <a href="https://droughtmonitor.unl.edu/CurrentMap/StateDroughtMonitor.aspx?TX" target="_blank" rel="noopener noreferrer" style="color:#4A90E2">droughtmonitor.unl.edu →</a> · For USDA crop reports: <a href="https://www.nass.usda.gov/Statistics_by_State/Texas/" target="_blank" rel="noopener noreferrer" style="color:#4A90E2">nass.usda.gov →</a></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div class="insight-tag">📊 Methodology</div>${dataBadge('live-drv')}</div>
+      <div class="insight-text">All indices are <strong>weather-derived estimates</strong> computed from live Open-Meteo data — not official USDA crop reports or certified agronomic assessments. current temperatures, relative humidity, and 7-day ET₀ (evapotranspiration) vs precipitation_sum. ET₀ is the FAO-56 Penman–Monteith reference rate — the agronomic standard for irrigation scheduling and drought assessment. For official Texas drought designation: <a href="https://droughtmonitor.unl.edu/CurrentMap/StateDroughtMonitor.aspx?TX" target="_blank" rel="noopener noreferrer" style="color:#4A90E2">droughtmonitor.unl.edu →</a> · For USDA crop reports: <a href="https://www.nass.usda.gov/Statistics_by_State/Texas/" target="_blank" rel="noopener noreferrer" style="color:#4A90E2">nass.usda.gov →</a></div>
     </div>`;
 }
