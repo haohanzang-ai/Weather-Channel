@@ -467,6 +467,12 @@
           <div class="scanDisclaimer">
             ⚠ <strong>This is an educational estimate</strong> based on visual review, user-confirmed plant category, published biomass research, and regional climate context. It is <strong>not a lab test, fuel forecast, agronomic recommendation, or commercial viability assessment.</strong> Do not use this tool for emergency, farming, investment, policy, land-use, or fuel-production decisions.
           </div>
+          <div style="margin-top:16px;text-align:center">
+            <button id="scanDemoBtn" class="scanBtn scanBtn-primary" type="button" style="background:rgba(74,144,226,0.12);border:1px solid rgba(74,144,226,0.32);color:#7DB9F2" aria-label="Try a pre-loaded demo analysis for switchgrass">
+              🧪 Try Sample: Switchgrass (Demo)
+            </button>
+            <div style="margin-top:6px;font-size:10px;color:var(--text3)">Demo only — pre-filled plant profile, no real photo</div>
+          </div>
         </div>
 
         <!-- Safety Card -->
@@ -480,6 +486,33 @@
             <div class="scanSafetyItem">📍 Location is <strong>optional</strong> and used only for regional climate context — no GPS or precise location data is collected.</div>
             <div class="scanSafetyItem">⚠ Plant identification by image is <strong>unreliable</strong>, especially for grasses. User confirmation is always required before any analysis.</div>
           </div>
+        </section>
+
+        <!-- How It Works Card -->
+        <section class="scanCard" id="scanHowCard" aria-label="How the Plant-to-Fuel Scanner works">
+          <div class="scanCardTitle">ℹ How the Plant-to-Fuel Scanner Works</div>
+          <div class="scan-timeline">
+            <div class="scan-tl-step">📷 Photo uploaded or captured</div>
+            <div class="scan-tl-arrow">↓</div>
+            <div class="scan-tl-step">🌿 Plant type is identified or selected</div>
+            <div class="scan-tl-arrow">↓</div>
+            <div class="scan-tl-step">✅ User confirms or corrects the plant</div>
+            <div class="scan-tl-arrow">↓</div>
+            <div class="scan-tl-step">🔍 Scanner reviews visible traits: greenness, density, stress, and size</div>
+            <div class="scan-tl-arrow">↓</div>
+            <div class="scan-tl-step">📋 Traits are treated as rough indicators, not direct measurements</div>
+            <div class="scan-tl-arrow">↓</div>
+            <div class="scan-tl-step">📚 Confirmed plant identity is matched with credible biomass and biofuel sources</div>
+            <div class="scan-tl-arrow">↓</div>
+            <div class="scan-tl-step">📍 Austin/Cedar Park climate context is added</div>
+            <div class="scan-tl-arrow">↓</div>
+            <div class="scan-tl-step">📊 The scanner generates an educational biomass-energy and biofuel relevance report</div>
+            <div class="scan-tl-arrow">↓</div>
+            <div class="scan-tl-step">📎 The report shows confidence levels, sources, limitations, and safety notes</div>
+          </div>
+          <p class="scan-note" style="margin-top:14px">
+            This process is for learning only. A photo cannot directly measure cellulose, lignin, moisture, dry mass, fuel yield, or commercial value. Results are based on visible traits, user inputs, plant identity, regional climate context, and cited research.
+          </p>
         </section>
 
         <!-- Upload / Camera Card -->
@@ -546,6 +579,56 @@
             <div>
               <label class="scanSelectLabel" for="scanLocationSel">Location Context</label>
               <select class="scanSelect" id="scanLocationSel" aria-label="Select location for climate context"></select>
+            </div>
+          </div>
+          <div style="margin-top:16px">
+            <div class="scanSelectLabel" style="margin-bottom:8px">Optional: describe what you see (helps refine the report)</div>
+            <div class="scanInputExtGrid">
+              <div>
+                <label class="scanSelectLabel" for="scanSizeSel">Plant size category</label>
+                <select class="scanSelect" id="scanSizeSel" aria-label="Select plant size category">
+                  <option value="small">Small (potted / seedling / &lt;0.3 m)</option>
+                  <option value="medium" selected>Medium (shrub / 0.3–1 m)</option>
+                  <option value="large">Large (tall / 1–3 m)</option>
+                  <option value="patch">Patch / stand (multiple plants)</option>
+                </select>
+              </div>
+              <div>
+                <label class="scanSelectLabel" for="scanCondSel">Plant condition</label>
+                <select class="scanSelect" id="scanCondSel" aria-label="Select plant condition">
+                  <option value="fresh" selected>Fresh / actively growing</option>
+                  <option value="stressed">Stressed / wilting</option>
+                  <option value="dry">Dry / senesced / dormant</option>
+                </select>
+              </div>
+              <div>
+                <label class="scanSelectLabel" for="scanDensitySel">Canopy density</label>
+                <select class="scanSelect" id="scanDensitySel" aria-label="Select canopy density">
+                  <option value="sparse">Sparse (lots of gaps / bare stems)</option>
+                  <option value="moderate" selected>Moderate (partial cover)</option>
+                  <option value="dense">Dense (thick / full canopy)</option>
+                </select>
+              </div>
+              <div>
+                <label class="scanSelectLabel" for="scanOrganSel">Organ shown in photo</label>
+                <select class="scanSelect" id="scanOrganSel" aria-label="Select plant organ shown in photo">
+                  <option value="auto" selected>Auto-detect</option>
+                  <option value="whole">Whole plant</option>
+                  <option value="leaf">Leaf</option>
+                  <option value="flower">Flower / inflorescence</option>
+                  <option value="fruit">Fruit / seed</option>
+                  <option value="bark">Bark / trunk</option>
+                  <option value="stem">Stem / cane</option>
+                </select>
+              </div>
+              <div>
+                <label class="scanSelectLabel" for="scanHeightIn">Approximate height (optional)</label>
+                <input class="scanTextInput" id="scanHeightIn" type="text" placeholder="e.g. 1.2 m or 4 ft" aria-label="Approximate plant height" maxlength="30">
+              </div>
+              <div>
+                <label class="scanSelectLabel" for="scanAreaIn">Approximate ground area (optional)</label>
+                <input class="scanTextInput" id="scanAreaIn" type="text" placeholder="e.g. 5 m² or 2 acre" aria-label="Approximate stand area" maxlength="30">
+              </div>
             </div>
           </div>
           <button class="scanBtn scanBtn-primary" id="scanAnalyzeBtn" type="button" aria-label="Generate educational biofuel analysis">
@@ -762,7 +845,7 @@
 <script src="js/facts.js"></script>
 <script src="js/biofuel.js"></script>
 <script src="js/fuel.js"></script>
-<script src="js/scanner.js"></script>
+<script src="js/scanner.js?v=4"></script>
 <script src="js/settings.js"></script>
 <script src="js/mission.js"></script>
 <script src="js/main.js"></script>

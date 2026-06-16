@@ -326,7 +326,7 @@
 .scan-report-cat  { font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px; }
 
 .scan-metrics-grid {
-  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
   margin-bottom:18px;
 }
 @media(max-width:680px){ .scan-metrics-grid{ grid-template-columns:1fr 1fr } }
@@ -395,3 +395,176 @@
   border-radius:var(--r8);
   line-height:1.55;
 }
+
+/* ── Multi-step Analysis Progress ─────────────────────────────────────────── */
+.scan-progress-card {
+  background:var(--surface2);
+  border:1px solid rgba(46,204,139,0.20);
+  border-radius:var(--r12);
+  padding:18px 20px;
+}
+.scan-progress-title {
+  font-size:12px;font-weight:700;color:var(--text0);
+  margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.scan-progress-steps {
+  display:flex;flex-direction:column;gap:8px;
+}
+.scan-step {
+  display:flex;align-items:center;gap:10px;
+  font-size:11px;line-height:1.4;
+  padding:8px 12px;
+  border-radius:var(--r8);
+  transition:background .25s,color .25s,border-color .25s;
+}
+.scan-step-pending {
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);
+  color:var(--text3);
+}
+.scan-step-active {
+  background:rgba(74,144,226,0.08);
+  border:1px solid rgba(74,144,226,0.28);
+  color:#7DB9F2;
+}
+.scan-step-done {
+  background:rgba(46,204,139,0.07);
+  border:1px solid rgba(46,204,139,0.22);
+  color:#5DDBA8;
+}
+.scan-step-icon { font-size:14px;flex-shrink:0; }
+.scan-step-label { flex:1; }
+.scan-step-check {
+  font-size:12px;font-weight:700;
+  width:18px;text-align:center;flex-shrink:0;
+  color:#5DDBA8;
+}
+.scan-step-active .scan-step-check::before {
+  content:'';
+  display:inline-block;width:8px;height:8px;
+  border-radius:50%;background:#7DB9F2;
+  animation:scanStepPulse 0.9s ease-in-out infinite;
+}
+@keyframes scanStepPulse {
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.3;transform:scale(.55)}
+}
+
+/* ── How It Works Timeline ────────────────────────────────────────────────── */
+.scan-timeline { display:flex; flex-direction:column; gap:0; }
+.scan-tl-step {
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:var(--r8);
+  padding:9px 14px;
+  font-size:11px; color:var(--text1); line-height:1.5;
+}
+.scan-tl-arrow {
+  text-align:center;
+  font-size:14px;
+  color:rgba(46,204,139,0.45);
+  line-height:1.4;
+  padding:2px 0;
+}
+
+/* ── Extended Inputs Grid ─────────────────────────────────────────────────── */
+.scanInputExtGrid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+@media(max-width:540px){ .scanInputExtGrid{ grid-template-columns:1fr; } }
+.scanTextInput {
+  width:100%;
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:var(--r8);
+  padding:9px 12px;
+  font-size:11px; color:var(--text0);
+  font-family:var(--font);
+  outline:none;
+  transition:border-color .15s;
+  box-sizing:border-box;
+}
+.scanTextInput:focus { border-color:rgba(46,204,139,0.5); }
+.scanTextInput::placeholder { color:var(--text3); }
+
+/* ── Visual Indicator Badges ──────────────────────────────────────────────── */
+.scan-indicator-row {
+  display:flex; flex-wrap:wrap; gap:7px;
+  margin-bottom:8px;
+}
+.scan-indicator-badge {
+  display:inline-flex; align-items:center;
+  font-size:10px; font-weight:600;
+  border-radius:20px; padding:4px 10px;
+  white-space:nowrap;
+}
+.ind-high    { background:rgba(46,204,139,0.12);  border:1px solid rgba(46,204,139,0.30);  color:#5DDBA8; }
+.ind-med     { background:rgba(245,166,35,0.10);  border:1px solid rgba(245,166,35,0.28);  color:#F8C06A; }
+.ind-low     { background:rgba(214,69,69,0.10);   border:1px solid rgba(214,69,69,0.26);   color:#E87A7A; }
+.ind-neutral { background:rgba(255,255,255,0.05); border:1px solid var(--border2);          color:var(--text2); }
+
+/* ── Confidence Grid ──────────────────────────────────────────────────────── */
+.scan-confidence-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:10px;
+  margin-bottom:14px;
+}
+@media(max-width:540px){ .scan-confidence-grid{ grid-template-columns:1fr; } }
+.scan-conf-item {
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:var(--r12);
+  padding:12px;
+}
+.scan-conf-label {
+  font-size:9px; font-weight:700; color:var(--text3);
+  text-transform:uppercase; letter-spacing:.08em;
+  margin-bottom:5px;
+}
+.scan-conf-level {
+  font-size:13px; font-weight:800;
+  margin-bottom:4px;
+}
+.scan-conf-note {
+  font-size:10px; color:var(--text2); line-height:1.5;
+}
+
+/* ── Warning Card ─────────────────────────────────────────────────────────── */
+.scan-warn-card {
+  background:rgba(214,69,69,0.07);
+  border:1px solid rgba(214,69,69,0.22);
+  border-radius:var(--r12);
+  padding:14px;
+}
+
+/* ── Source Author Line ───────────────────────────────────────────────────── */
+.scan-source-author {
+  font-size:10px; color:var(--text3);
+  margin-top:2px; font-style:italic;
+}
+
+/* ── Productivity Box ─────────────────────────────────────────────────────── */
+.scan-productivity-box {
+  background:var(--surface2);
+  border:1px solid rgba(74,144,226,0.20);
+  border-radius:var(--r12);
+  padding:14px;
+}
+.scan-formula-line {
+  font-size:14px; font-weight:700; color:var(--text0);
+  margin-bottom:8px; letter-spacing:.04em;
+}
+.scan-prod-stats {
+  display:flex; flex-direction:column; gap:5px;
+  font-size:11px; color:var(--text2); line-height:1.55;
+}
+
+/* ── Pathway Item ─────────────────────────────────────────────────────────── */
+.scan-pathway-item {
+  display:flex; align-items:baseline; gap:10px;
+  padding:8px 0;
+  border-bottom:1px solid var(--border);
+}
+.scan-pathway-item:last-child { border-bottom:none; }
