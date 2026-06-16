@@ -41,35 +41,115 @@ function renderDashboard(){
     wg.appendChild(btn);
   });
 
-  // ── Sample alerts — NOT live NWS data. Visit Severe Weather tab for real alerts.
+  // ── Live NWS alerts — fetch from api.weather.gov; no sample/fake content shown
   document.getElementById('alertsPanel').innerHTML=`
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-      <span class="data-badge badge-demo-fb">Demo / Fallback</span>
-      <span style="font-size:10px;color:var(--text3)">Sample alerts — not from NWS. <button class="btn-sm" style="font-size:9px;padding:3px 8px" onclick="showPage('severe')">Live alerts →</button></span>
-    </div>
-    <div class="alert-banner" role="note" style="opacity:0.7"><span aria-hidden="true">⚠</span> <strong>Heat Advisory</strong> (sample) — West Texas. Temps 100–108°F.</div>
-    <div class="info-banner" role="note" style="opacity:0.7"><span aria-hidden="true">⚡</span> <strong>Thunderstorm Watch</strong> (sample) — Houston metro.</div>
-    <div class="info-banner" role="note" style="opacity:0.7"><span aria-hidden="true">💨</span> <strong>Wind Advisory</strong> (sample) — Lubbock &amp; Panhandle.</div>
-    <div style="font-size:10px;color:var(--text3);margin-top:8px">Visit the <button class="btn-sm" style="font-size:9px;padding:3px 8px" onclick="showPage('severe')">Severe Weather tab</button> for live NWS alerts.</div>
-  `;
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 0">
+      <span class="ds-pend"></span>
+      <span style="font-size:11px;color:var(--text3)">Loading NWS alerts…</span>
+    </div>`;
+  _fetchDashboardAlerts();
 
-  // ── AI Summary — derived from live weather data; not a live AI service
+  // ── Live-derived summary — computed from real WEATHER_DATA, no hardcoded values
+  const sorted = Object.entries(WEATHER_DATA).sort((a,b)=>b[1].temp-a[1].temp);
+  const dvAvgTemp = Math.round(sorted.reduce((s,[,d])=>s+d.temp,0)/sorted.length);
+  const dvAvgHumid = Math.round(sorted.reduce((s,[,d])=>s+d.humidity,0)/sorted.length);
+  const dvHeatLevel = dvAvgTemp>=105?'dangerous heat':dvAvgTemp>=100?'extreme heat':dvAvgTemp>=95?'significant heat stress':dvAvgTemp>=85?'elevated heat':'moderate conditions';
+  const dvHeatColor = dvAvgTemp>=100?'#D64545':dvAvgTemp>=90?'#F5A623':'#5DDBA8';
+  const dvAvgAQI = Math.round(Object.values(WEATHER_DATA).reduce((s,d)=>s+(d.aqi||0),0)/Object.values(WEATHER_DATA).length);
+  const dvAQIInfo = typeof getAQILabel==='function' ? getAQILabel(dvAvgAQI) : {label:'—'};
+  const dvAvgCDI = Math.round(Object.values(WEATHER_DATA).reduce((s,d)=>s+Math.max(0,d.temp-65)*0.8,0)/Object.values(WEATHER_DATA).length);
+  const dvGridPres = dvAvgCDI>30?'High':dvAvgCDI>18?'Moderate':'Low';
+  const dvGridColor = dvAvgCDI>30?'#D64545':dvAvgCDI>18?'#F5A623':'#5DDBA8';
+  const dvNow = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+
   document.getElementById('insightPanel').innerHTML=`
     <div class="insight-card">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-        <div class="insight-tag">Daily Weather Summary</div>
-        <span class="data-badge badge-live-drv">Live-Derived</span>
+        <div class="insight-tag">📊 Texas Weather Summary — ${dvNow}</div>
+        ${dataBadge('live-drv')}
       </div>
-      <div class="insight-text">This summary is generated from live Open-Meteo weather values — not a live AI service. View the <button class="btn-sm" style="font-size:9px;padding:3px 8px" onclick="showPage('reports')">AI Reports tab</button> for a full data-derived briefing.</div>
+      <div class="insight-text">Statewide avg: <strong>${dvAvgTemp}°F</strong> · <span style="color:${dvHeatColor}">${dvHeatLevel}</span> · avg humidity <strong>${dvAvgHumid}%</strong>.
+      Hottest: <strong>${escapeHtml(sorted[0][0])}</strong> at <strong>${sorted[0][1].temp}°F</strong> (${escapeHtml(sorted[0][1].condition)}).
+      Coolest: <strong>${escapeHtml(sorted[sorted.length-1][0])}</strong> at <strong>${sorted[sorted.length-1][1].temp}°F</strong>.
+      <button class="btn-sm" style="font-size:9px;padding:3px 8px;margin-left:4px" onclick="showPage('reports')">Full report →</button></div>
     </div>
     <div class="insight-card">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-        <div class="insight-tag">Energy Outlook</div>
-        <span class="data-badge badge-demo-fb">Demo / Fallback</span>
+        <div class="insight-tag">⚡ Energy Demand Estimate</div>
+        ${dataBadge('live-drv')}
       </div>
-      <div class="insight-text">ERCOT real-time grid demand requires direct ERCOT API access. Live grid figures are linked in the <button class="btn-sm" style="font-size:9px;padding:3px 8px" onclick="showPage('energy')">Energy tab</button>. No hardcoded GW values are shown here.</div>
+      <div class="insight-text">Cooling Demand Index: <strong>${dvAvgCDI}</strong> · Grid pressure: <strong style="color:${dvGridColor}">${dvGridPres}</strong>.
+      Calculated from live temps — not ERCOT data.
+      <button class="btn-sm" style="font-size:9px;padding:3px 8px;margin-left:4px" onclick="showPage('energy')">Energy tab →</button></div>
+    </div>
+    <div class="insight-card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <div class="insight-tag">💨 Air Quality</div>
+        ${dataBadge('live-api')}
+      </div>
+      <div class="insight-text">Statewide avg AQI: <strong>${dvAvgAQI}</strong> — <strong>${escapeHtml(dvAQIInfo.label)}</strong>. ${dvAvgAQI<=50?'Good — safe for all outdoor activities.':dvAvgAQI<=100?'Moderate — sensitive individuals should take care.':'Unhealthy for sensitive groups in some areas.'}</div>
     </div>
   `;
+}
+
+// ── Live NWS mini-fetch for dashboard alerts panel ────────────────────────────
+async function _fetchDashboardAlerts(){
+  const panel = document.getElementById('alertsPanel');
+  if (!panel) return;
+  try {
+    const res = await fetch('https://api.weather.gov/alerts/active?area=TX', {
+      headers:{'Accept':'application/geo+json','User-Agent':'TexasClimate/1.0'}
+    });
+    if (!res.ok) throw new Error(`NWS ${res.status}`);
+    const data = await res.json();
+    const alerts = data.features || [];
+    API_STATUS.nws = 'ok';
+    if (typeof renderDataStatus === 'function') renderDataStatus();
+
+    const top = alerts.filter(a=>['Extreme','Severe','Moderate'].includes(a.properties?.severity)).slice(0,3);
+    const escEvt  = a => escapeHtml(a.properties.event||'Alert');
+    const escArea = a => escapeHtml((a.properties.areaDesc||'').split(';')[0].trim());
+
+    if (alerts.length === 0) {
+      panel.innerHTML = `
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          ${dataBadge('live-api')}
+          <span style="font-size:10px;color:var(--text3)">NWS — Live Texas alerts</span>
+        </div>
+        <div class="alert-banner" style="background:rgba(46,204,139,0.1);border-color:#2ECC8B;color:#5DDBA8" role="status">
+          <span aria-hidden="true">✅</span> <strong>No Active Alerts</strong> — Texas conditions are currently calm.
+          <button class="btn-sm" style="font-size:9px;padding:3px 8px;margin-left:8px" onclick="showPage('severe')">Full details →</button>
+        </div>`;
+    } else {
+      panel.innerHTML = `
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          ${dataBadge('live-api')}
+          <span style="font-size:10px;color:var(--text3)"><strong>${alerts.length}</strong> active TX alert${alerts.length!==1?'s':''} · NWS api.weather.gov</span>
+          <button class="btn-sm" style="font-size:9px;padding:3px 8px" onclick="showPage('severe')">View all →</button>
+        </div>
+        ${top.map(a=>{
+          const sev = a.properties.severity;
+          const cls = sev==='Extreme'||sev==='Severe'?'alert-banner':'info-banner';
+          const icon = sev==='Extreme'||sev==='Severe'?'⚠️':'ℹ️';
+          return `<div class="${cls}" role="alert"><span aria-hidden="true">${icon}</span> <strong>${escEvt(a)}</strong> — ${escArea(a)}</div>`;
+        }).join('')}
+        ${alerts.length>top.length?`<div style="font-size:10px;color:var(--text3);margin-top:6px">+${alerts.length-top.length} more — <button class="btn-sm" style="font-size:9px;padding:3px 8px" onclick="showPage('severe')">See all in Severe tab →</button></div>`:''}`;
+    }
+  } catch(e) {
+    API_STATUS.nws = 'fail';
+    if (typeof renderDataStatus === 'function') renderDataStatus();
+    panel.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        ${dataBadge('na')}
+        <span style="font-size:10px;color:var(--text3)">NWS API unavailable</span>
+      </div>
+      <div class="card card-danger" style="margin:0">
+        <div class="insight-text">Could not reach the National Weather Service — no alert data shown. Do not assume conditions are calm.
+        <a href="https://alerts.weather.gov" target="_blank" rel="noopener noreferrer" style="color:#4A90E2">Check alerts.weather.gov →</a>
+        &nbsp;·&nbsp; <button class="btn-sm" style="font-size:9px;padding:3px 8px" onclick="showPage('severe')">Severe tab →</button>
+        </div>
+      </div>`;
+  }
 }
 
 // ── Data Status Panel ─────────────────────────────────────────────────────────
@@ -94,7 +174,11 @@ function renderDataStatus(){
     <span class="ds-sep">·</span>
     <span class="ds-item">${dot(API_STATUS.aqi)}AQI: ${word(API_STATUS.aqi)}</span>
     <span class="ds-sep">·</span>
-    <span class="ds-item">${dot(API_STATUS.nws)}NWS Alerts: ${API_STATUS.nws==='pending'?'<span style="color:var(--text3)">visit Severe tab</span>':word(API_STATUS.nws)}</span>
+    <span class="ds-item">${dot(API_STATUS.nws)}NWS Alerts: ${API_STATUS.nws==='pending'?'<span style="color:var(--text3)">loading…</span>':word(API_STATUS.nws)}</span>
+    <span class="ds-sep">·</span>
+    <span class="ds-item"><span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.25);display:inline-block;flex-shrink:0"></span>ERCOT: Not integrated</span>
+    <span class="ds-sep">·</span>
+    <span class="ds-item"><span class="ds-ok"></span>Water: Official links</span>
     <span class="ds-sep">·</span>
     <span class="ds-item">Last updated: <strong>${lastStr}</strong></span>
     ${demoWarn}

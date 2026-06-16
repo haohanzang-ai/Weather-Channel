@@ -1273,7 +1273,7 @@ async function scannerAnalyze() {
   const steps = [
     { icon: '🔍', label: 'Reading image pixels and color data…' },
     { icon: '🌿', label: `Matching visual features against ${plantCount} plant profiles…` },
-    { icon: '🔬', label: 'Evaluating biomass, drought tolerance, and water use…' },
+    { icon: '🔬', label: 'Looking up biomass & drought data from plant literature database…' },
     { icon: '📍', label: `Applying ${loc.short} regional climate context…` },
     { icon: '📊', label: 'Compiling educational analysis and sources…' },
   ];

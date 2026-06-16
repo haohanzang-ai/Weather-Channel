@@ -65,7 +65,8 @@ let fuelCalcAcres = 1;
 // ── Fuel Efficiency — Functions ───────────────────────────────────────────────
 function fuelEffRenderTypes(){
   const el=document.getElementById('fuelTypesGrid'); if(!el)return;
-  el.innerHTML=fuelTypes.map(f=>`
+  const noteHtml=`<div style="grid-column:1/-1;display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">${dataBadge('peer-rev')}<span style="font-size:10px;color:var(--text3)">Yield, EROI, and GHG values from <strong>peer-reviewed life-cycle literature</strong> (PNAS, NREL, DOE) — not live measurements.</span></div>`;
+  el.innerHTML=noteHtml+fuelTypes.map(f=>`
     <div class="fuelTypeCard" style="border-color:${f.color}22">
       <div class="fuelTypeHeader">
         <div class="fuelTypeIcon" aria-hidden="true">${f.icon}</div>

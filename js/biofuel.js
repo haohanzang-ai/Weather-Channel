@@ -188,7 +188,38 @@ function sgBiofuelSetScen(k){
 
 function sgBiofuelRenderDashGrid(){
   const el=document.getElementById('sgBiofuelDashGrid'); if(!el)return;
-  el.innerHTML=sgBiofuelRegions.map(r=>{
+
+  // Texas live weather context — show real current conditions alongside model scores
+  let texasLiveHtml = '';
+  if(typeof WEATHER_DATA !== 'undefined' && Object.keys(WEATHER_DATA).length) {
+    const txVals = Object.values(WEATHER_DATA);
+    const avgTx  = Math.round(txVals.reduce((s,d)=>s+d.temp,0)/txVals.length);
+    const avgTxH = Math.round(txVals.reduce((s,d)=>s+d.humidity,0)/txVals.length);
+    const heatLabel = avgTx>=105?'Severe heat stress':avgTx>=95?'High heat stress':avgTx>=85?'Moderate heat stress':'Low heat stress';
+    const heatCol   = avgTx>=105?'#D64545':avgTx>=90?'#F5A623':'#5DDBA8';
+    const irrigPress = avgTx>=95?'High irrigation pressure':avgTx>=85?'Moderate irrigation pressure':'Low irrigation pressure';
+    texasLiveHtml = `
+      <div style="background:rgba(74,144,226,0.08);border:1px solid rgba(74,144,226,0.25);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:220px">
+          <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">
+            Texas Live Weather Context ${dataBadge('live-api')}
+          </div>
+          <div style="font-size:11px;color:var(--text1)">
+            Avg temp (${txVals.length} TX cities): <strong>${avgTx}°F</strong> &nbsp;·&nbsp; Avg humidity: <strong>${avgTxH}%</strong><br>
+            Switchgrass heat indicator: <strong style="color:${heatCol}">${heatLabel}</strong> &nbsp;·&nbsp; ${irrigPress}
+          </div>
+          <div style="font-size:10px;color:var(--text3);margin-top:3px">Real current conditions from Open-Meteo — the only live data on this tab</div>
+        </div>
+      </div>`;
+  }
+
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+      ${dataBadge('ai-est')}
+      <span style="font-size:10px;color:var(--text3)">Scores are <strong>AI prototype estimates</strong> calibrated to published agronomic literature (Perrin 2008, DOE 2016, FAO HWSD) — not live measurements. See Credible Sources section below.</span>
+    </div>
+    ${texasLiveHtml}
+    ${sgBiofuelRegions.map(r=>{
     const sc=sgBiofuelCalcScores(r,sgBiofuelCurrentScenario);
     const hi=sgBiofuelHighlightedRegion===r.id;
     return `<div class="sgBiofuelRegionCard${hi?' sgHighlight':''}" onclick="sgBiofuelHighlight('${r.id}')" tabindex="0" role="button" aria-label="${r.name} score ${sc.ind}">
@@ -205,7 +236,7 @@ function sgBiofuelRenderDashGrid(){
       <div class="sgBiofuelRCRow"><span class="sgBiofuelRCKey">Drought Adj</span><span class="sgBiofuelRCVal">${sc.drou}</span></div>
       <div class="sgBiofuelRCRow"><span class="sgBiofuelRCKey">Salinity Adj</span><span class="sgBiofuelRCVal">${sc.sal}</span></div>
     </div>`;
-  }).join('');
+  }).join('')}`;
 }
 
 function sgBiofuelRenderMetrics(){
