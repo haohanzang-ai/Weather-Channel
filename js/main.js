@@ -15,3 +15,6 @@ fetchAllWeatherData();
 
 // Start dashboard biofuel fact widget
 biofactInit();
+
+// Initialize location measurement UI
+locInit();

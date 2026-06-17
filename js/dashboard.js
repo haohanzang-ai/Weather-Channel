@@ -55,8 +55,9 @@ function renderDashboard(){
   const dvAvgHumid = Math.round(sorted.reduce((s,[,d])=>s+d.humidity,0)/sorted.length);
   const dvHeatLevel = dvAvgTemp>=105?'dangerous heat':dvAvgTemp>=100?'extreme heat':dvAvgTemp>=95?'significant heat stress':dvAvgTemp>=85?'elevated heat':'moderate conditions';
   const dvHeatColor = dvAvgTemp>=100?'#D64545':dvAvgTemp>=90?'#F5A623':'#5DDBA8';
-  const dvAvgAQI = Math.round(Object.values(WEATHER_DATA).reduce((s,d)=>s+(d.aqi||0),0)/Object.values(WEATHER_DATA).length);
-  const dvAQIInfo = typeof getAQILabel==='function' ? getAQILabel(dvAvgAQI) : {label:'—'};
+  const _aqiVals = Object.values(WEATHER_DATA).map(d=>d.aqi).filter(v=>v!=null);
+  const dvAvgAQI = _aqiVals.length ? Math.round(_aqiVals.reduce((s,v)=>s+v,0)/_aqiVals.length) : null;
+  const dvAQIInfo = dvAvgAQI!=null && typeof getAQILabel==='function' ? getAQILabel(dvAvgAQI) : {label:'Unavailable'};
   const dvAvgCDI = Math.round(Object.values(WEATHER_DATA).reduce((s,d)=>s+Math.max(0,d.temp-65)*0.8,0)/Object.values(WEATHER_DATA).length);
   const dvGridPres = dvAvgCDI>30?'High':dvAvgCDI>18?'Moderate':'Low';
   const dvGridColor = dvAvgCDI>30?'#D64545':dvAvgCDI>18?'#F5A623':'#5DDBA8';
@@ -87,7 +88,9 @@ function renderDashboard(){
         <div class="insight-tag">💨 Air Quality</div>
         ${dataBadge('live-api')}
       </div>
-      <div class="insight-text">Statewide avg AQI: <strong>${dvAvgAQI}</strong> — <strong>${escapeHtml(dvAQIInfo.label)}</strong>. ${dvAvgAQI<=50?'Good — safe for all outdoor activities.':dvAvgAQI<=100?'Moderate — sensitive individuals should take care.':'Unhealthy for sensitive groups in some areas.'}</div>
+      <div class="insight-text">${dvAvgAQI!=null
+        ? `Statewide avg AQI: <strong>${dvAvgAQI}</strong> — <strong>${escapeHtml(dvAQIInfo.label)}</strong>. ${dvAvgAQI<=50?'Good — safe for all outdoor activities.':dvAvgAQI<=100?'Moderate — sensitive individuals should take care.':'Unhealthy for sensitive groups in some areas.'}`
+        : 'AQI data unavailable — Open-Meteo AQI API did not return data.'}</div>
     </div>
   `;
 }

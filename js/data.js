@@ -277,7 +277,7 @@ async function fetchWeatherForCity(city){
     pressure:   Math.round(cur.surface_pressure),
     visibility: visMiles,
     uv:         Math.round(cur.uv_index || 0),
-    aqi:        (aq.current && aq.current.us_aqi != null) ? aq.current.us_aqi : 0
+    aqi:        (aq.current && aq.current.us_aqi != null) ? aq.current.us_aqi : null
   };
 
   const daily    = weather.daily;
@@ -322,14 +322,9 @@ async function fetchAllWeatherData(){
     const activePage = document.querySelector('.nav-item[aria-current="page"]');
     if(activePage){
       const pid = activePage.dataset.page;
-      if(pid==='agriculture') renderAg();
-      else if(pid==='airquality') renderAQ();
-      else if(pid==='energy')    renderEnergy();
-      else if(pid==='water')     renderWater();
-      else if(pid==='reports')   renderReports();
-      else if(pid==='trends')    renderTrends();
-      else if(pid==='severe')    renderSevere();
-      else if(pid==='compare')   renderCompare();
+      if(pid==='analyze')     renderAg();
+      else if(pid==='mapcompare') { renderAQ(); renderEnergy(); renderWater(); renderTrends(); renderSevere(); renderCompare(); }
+      else if(pid==='sources')   renderReports();
     }
   } catch(err){
     console.error('Weather fetch error:', err);
@@ -383,7 +378,7 @@ async function fetchCityOnDemand(city){
     pressure:  Math.round(cur.surface_pressure),
     visibility:visMiles,
     uv:        Math.round(cur.uv_index||0),
-    aqi:       (aq.current && aq.current.us_aqi!=null) ? aq.current.us_aqi : 0,
+    aqi:       (aq.current && aq.current.us_aqi!=null) ? aq.current.us_aqi : null,
     et0Avg:    et0Arr.length    ? Math.round(et0Arr.reduce((a,b)=>a+b,0)/et0Arr.length*10)/10 : null,
     precipAvg: precipArr.length ? Math.round(precipArr.reduce((a,b)=>a+b,0)/precipArr.length*10)/10 : null
   };

@@ -14,7 +14,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="TexasClimate — Bioenergy Intelligence Platform">
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; media-src 'self' blob:; connect-src https://api.open-meteo.com https://air-quality-api.open-meteo.com https://api.weather.gov https://cdn.jsdelivr.net https://storage.googleapis.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com; frame-ancestors 'none';">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; media-src 'self' blob:; connect-src https://api.open-meteo.com https://air-quality-api.open-meteo.com https://archive-api.open-meteo.com https://api.weather.gov https://cdn.jsdelivr.net https://storage.googleapis.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com; frame-ancestors 'none';">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"TexasClimate Bioenergy Intelligence Platform","description":"Live plant-environment bioenergy intelligence for Texas — weather, agriculture stress, conversion pathway analysis.","applicationCategory":"WeatherApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-EPP05BJFJ3"></script>
@@ -231,17 +231,10 @@
           <div id="agContent"></div>
         </div>
 
-        <!-- Placeholder: Location-Based Environment Profile -->
+        <!-- Location-Based Environment Profile -->
         <div class="tab-subsection">
-          <div class="tab-subsection-header">📍 Local Environment Profile</div>
-          <div class="placeholder-card">
-            <div class="placeholder-card-icon">📍</div>
-            <div class="placeholder-card-body">
-              <div class="placeholder-card-title">Location-Based Environment Measurement</div>
-              <div class="placeholder-card-desc">This step will ask for your location (browser geolocation or manual city/coordinate selection) and fetch a full local environment profile: temperature, humidity, wind, rainfall, ET0 evapotranspiration, vapor pressure deficit, AQI, NWS alerts, and nearby streamflow — using only real live APIs.<br><br>No location is stored unless you choose to export a report.</div>
-              <span class="placeholder-card-tag">Implemented in Prompt 3 — Location-Based Environmental Measurement</span>
-            </div>
-          </div>
+          <div class="tab-subsection-header">📍 Local Environment Profile <span class="tsh-badge">Live API</span></div>
+          <div id="locInputSection"></div>
           <div class="placeholder-card">
             <div class="placeholder-card-icon">⚠</div>
             <div class="placeholder-card-body">
@@ -1099,6 +1092,7 @@
 <script src="js/scanner.js?v=4"></script>
 <script src="js/settings.js"></script>
 <script src="js/mission.js"></script>
+<script src="js/location.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
