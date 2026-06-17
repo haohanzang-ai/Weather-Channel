@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TexasClimate — Weather &amp; Biofuel Education Dashboard</title>
-  <meta name="description" content="Live weather from Open-Meteo API across 10 Texas cities. Agriculture and energy figures are weather-derived estimates. Biofuel scores are AI prototype estimates. Educational dashboard.">
+  <title>TexasClimate — Plant · Environment · Bioenergy Intelligence</title>
+  <meta name="description" content="Live plant-environment bioenergy intelligence for Texas. Real weather from Open-Meteo, agriculture stress, bioenergy pathway analysis, and location-based suitability. Educational platform.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://texasclimate.example.com/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="TexasClimate — Weather &amp; Biofuel Education Dashboard">
-  <meta property="og:description" content="Live weather from Open-Meteo across 10 Texas cities. Agriculture estimates, energy CDI, and biofuel education.">
+  <meta property="og:title" content="TexasClimate — Plant · Environment · Bioenergy Intelligence">
+  <meta property="og:description" content="Live weather, agriculture stress, bioenergy pathway analysis, and location-based plant suitability for Texas.">
   <meta property="og:site_name" content="TexasClimate">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="TexasClimate — Weather &amp; Education Dashboard">
+  <meta name="twitter:title" content="TexasClimate — Bioenergy Intelligence Platform">
   <meta http-equiv="Content-Security-Policy"
         content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; media-src 'self' blob:; connect-src https://api.open-meteo.com https://air-quality-api.open-meteo.com https://api.weather.gov https://cdn.jsdelivr.net https://storage.googleapis.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com; frame-ancestors 'none';">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"TexasClimate Intelligence Platform","description":"Real-time climate, weather, environmental, and agricultural intelligence across Texas.","applicationCategory":"WeatherApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"TexasClimate Bioenergy Intelligence Platform","description":"Live plant-environment bioenergy intelligence for Texas — weather, agriculture stress, conversion pathway analysis.","applicationCategory":"WeatherApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-EPP05BJFJ3"></script>
   <script>
@@ -73,9 +73,9 @@
 
 <div id="loadingScreen" role="status" aria-label="Loading weather data for 10 Texas cities">
   <div class="ls-inner">
-    <span class="ls-icon" aria-hidden="true">🌤</span>
+    <span class="ls-icon" aria-hidden="true">🌿</span>
     <div class="ls-title">TexasClimate</div>
-    <div class="ls-sub"><span class="ls-dot" aria-hidden="true"></span>Intelligence Platform</div>
+    <div class="ls-sub"><span class="ls-dot" aria-hidden="true"></span>Plant · Environment · Bioenergy</div>
     <div class="ls-status" id="lsStatus">Connecting to weather APIs…</div>
     <div class="ls-bar-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0" id="lsBar">
       <div class="ls-bar-fill" id="lsFill"></div>
@@ -101,45 +101,23 @@
   <!-- ─── Sidebar / Primary nav ─────────────── -->
   <nav class="sidebar" id="sidebar" aria-label="Primary navigation">
     <div class="sidebar-logo">
-      <span class="logo-icon" aria-hidden="true">🌤</span>
+      <span class="logo-icon" aria-hidden="true">🌿</span>
       <div class="logo-title">TexasClimate</div>
-      <div class="logo-sub"><span class="live-dot" aria-hidden="true"></span>Weather &amp; Education</div>
+      <div class="logo-sub"><span class="live-dot" aria-hidden="true"></span>Plant · Environment · Bioenergy</div>
     </div>
 
-    <div class="nav-section" role="menu" aria-label="Main">
-      <div class="nav-label" aria-hidden="true">Main</div>
-      <button class="nav-item active" role="menuitem" data-page="dashboard" aria-current="page" onclick="showPage('dashboard')"><span class="nav-icon" aria-hidden="true">⊞</span>Dashboard</button>
-      <button class="nav-item" role="menuitem" data-page="map" onclick="showPage('map')"><span class="nav-icon" aria-hidden="true">◉</span>Texas Map</button>
-      <button class="nav-item" role="menuitem" data-page="forecasts" onclick="showPage('forecasts')"><span class="nav-icon" aria-hidden="true">☁</span>Forecasts</button>
-      <button class="nav-item" role="menuitem" data-page="agriculture" onclick="showPage('agriculture')"><span class="nav-icon" aria-hidden="true">🌾</span>Agriculture</button>
-      <button class="nav-item" role="menuitem" data-page="sgbiofuel" onclick="showPage('sgbiofuel')"><span class="nav-icon" aria-hidden="true">🌿</span>Biofuel Lab</button>
-      <button class="nav-item" role="menuitem" data-page="scanner" onclick="showPage('scanner')"><span class="nav-icon" aria-hidden="true">🔬</span>Plant Scanner</button>
-      <button class="nav-item" role="menuitem" data-page="fueleff" onclick="showPage('fueleff')"><span class="nav-icon" aria-hidden="true">⛽</span>Fuel Efficiency</button>
-      <button class="nav-item" role="menuitem" data-page="trends" onclick="showPage('trends')"><span class="nav-icon" aria-hidden="true">📈</span>Climate Trends</button>
-    </div>
-
-    <div class="nav-section" role="menu" aria-label="Environment">
-      <div class="nav-label" aria-hidden="true">Environment</div>
-      <button class="nav-item" role="menuitem" data-page="airquality" onclick="showPage('airquality')"><span class="nav-icon" aria-hidden="true">💨</span>Air Quality</button>
-      <button class="nav-item" role="menuitem" data-page="water" onclick="showPage('water')"><span class="nav-icon" aria-hidden="true">💧</span>Water Resources</button>
-      <button class="nav-item" role="menuitem" data-page="energy" onclick="showPage('energy')"><span class="nav-icon" aria-hidden="true">⚡</span>Energy</button>
-      <button class="nav-item" role="menuitem" data-page="severe" onclick="showPage('severe')"><span class="nav-icon" aria-hidden="true">⚠</span>Severe Weather</button>
-    </div>
-
-    <div class="nav-section" role="menu" aria-label="Analysis">
-      <div class="nav-label" aria-hidden="true">Analysis</div>
-      <button class="nav-item" role="menuitem" data-page="compare" onclick="showPage('compare')"><span class="nav-icon" aria-hidden="true">⇌</span>City Comparison</button>
-      <button class="nav-item" role="menuitem" data-page="reports" onclick="showPage('reports')"><span class="nav-icon" aria-hidden="true">📋</span>AI Reports</button>
-      <button class="nav-item" role="menuitem" data-page="sources" onclick="showPage('sources')"><span class="nav-icon" aria-hidden="true">📚</span>Sources</button>
-    </div>
-
-    <div class="nav-section" role="menu" aria-label="Preferences">
-      <div class="nav-label" aria-hidden="true">Preferences</div>
-      <button class="nav-item" role="menuitem" data-page="settings" onclick="showPage('settings')"><span class="nav-icon" aria-hidden="true">⚙</span>Settings</button>
+    <div class="nav-section" role="menu" aria-label="Main tabs">
+      <div class="nav-label" aria-hidden="true">Intelligence Platform</div>
+      <button class="nav-item active" role="menuitem" data-page="analyze"    aria-current="page" onclick="showPage('analyze')"><span class="nav-icon" aria-hidden="true">🔬</span>Analyze</button>
+      <button class="nav-item" role="menuitem" data-page="mapcompare" onclick="showPage('mapcompare')"><span class="nav-icon" aria-hidden="true">◉</span>Map &amp; Compare</button>
+      <button class="nav-item" role="menuitem" data-page="bioenergy"  onclick="showPage('bioenergy')"><span class="nav-icon" aria-hidden="true">⚡</span>Bioenergy Engine</button>
+      <button class="nav-item" role="menuitem" data-page="science"    onclick="showPage('science')"><span class="nav-icon" aria-hidden="true">🧬</span>Science &amp; Stress</button>
+      <button class="nav-item" role="menuitem" data-page="sources"    onclick="showPage('sources')"><span class="nav-icon" aria-hidden="true">📚</span>Sources &amp; Data Status</button>
     </div>
 
     <div class="sidebar-footer">
-      <div class="sidebar-footer-text">v2.4.1 · Weather API auto-refresh ~10 min</div>
+      <button class="nav-item" role="menuitem" data-page="settings" onclick="showPage('settings')" style="font-size:11px;opacity:0.7"><span class="nav-icon" aria-hidden="true">⚙</span>Settings</button>
+      <div class="sidebar-footer-text">v3.0 · TexasClimate Bioenergy Intelligence</div>
     </div>
   </nav>
 
@@ -147,7 +125,7 @@
   <div class="main">
     <header class="header" role="banner">
       <button class="hamburger" id="hamburgerBtn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="sidebar" onclick="openSidebar()">☰</button>
-      <div class="header-title" id="pageTitle" aria-live="polite">Dashboard Overview</div>
+      <div class="header-title" id="pageTitle" aria-live="polite">Analyze — Plant · Location · Bioenergy</div>
       <div class="search-wrap">
         <label for="searchBox" class="sr-only">Search Texas cities</label>
         <input class="search-box" placeholder="🔍  Search cities…" id="searchBox"
@@ -163,146 +141,126 @@
 
     <main id="main-content" class="content" tabindex="-1">
 
-      <!-- Dashboard -->
-      <div class="page active" id="page-dashboard" role="region" aria-label="Dashboard Overview">
+      <!-- ═══════════════════════════════════════════════════════════════════
+           TAB 1 — ANALYZE
+           Main guided workflow: Plant → Location → Environment → Stress → Bioenergy → Report
+           Contains: live conditions, agriculture overview, placeholders for next steps
+      ══════════════════════════════════════════════════════════════════════ -->
+      <div class="page active" id="page-analyze" role="region" aria-label="Analyze — Plant Environment Bioenergy Pipeline">
 
-        <!-- Data Status Panel — updated by renderDataStatus() in dashboard.js -->
+        <!-- Data Status Panel -->
         <div id="dataStatusPanel" class="data-status-panel" role="status" aria-live="polite">
           <span class="ds-label">API Status:</span>
           <span class="ds-item"><span class="ds-pend"></span>Weather: connecting…</span>
           <span class="ds-sep">·</span>
           <span class="ds-item"><span class="ds-pend"></span>AQI: connecting…</span>
           <span class="ds-sep">·</span>
-          <span class="ds-item"><span class="ds-pend"></span>NWS Alerts: visit Severe tab</span>
+          <span class="ds-item"><span class="ds-pend"></span>NWS Alerts: visit Map tab</span>
           <span class="ds-sep">·</span>
           <span class="ds-item">Last updated: —</span>
         </div>
 
+        <!-- Hero -->
         <section class="hero-band" aria-label="Platform summary">
-          <h1 class="hero-title">Texas Climate, Agriculture &amp; Infrastructure Intelligence</h1>
-          <p class="hero-sub">Live weather from Open-Meteo API across 10 Texas cities. Agriculture and energy values are <strong>weather-derived estimates</strong>. Biofuel scores are <strong>AI prototype estimates</strong>. All sections are labeled with their data type. <a href="#transparency" class="hero-link" onclick="document.getElementById('transparency').scrollIntoView({behavior:'smooth'});return false;">See Data Transparency →</a></p>
+          <h1 class="hero-title">TexasClimate — Plant · Environment · Bioenergy Intelligence</h1>
+          <p class="hero-sub">For any plant or crop, in any Texas location, under past, current, and future environmental conditions — can it survive, produce biomass, and become reliable clean bioenergy? Live weather from <strong>Open-Meteo API</strong>. Agriculture values are <strong>weather-derived estimates</strong>. Bioenergy scores are <strong>research-based estimates</strong>. All sections are labeled with their data type. <a href="#" class="hero-link" onclick="showPage('sources');return false;">See Data Status →</a></p>
           <div class="hero-badges" aria-label="Status indicators">
             <span class="badge badge-blue"><span class="live-dot" aria-hidden="true"></span>Weather: Live API</span>
             <span class="badge badge-green">10 Cities Monitored</span>
-            <span class="badge badge-orange">Alerts: see Severe tab</span>
+            <span class="badge badge-orange">Alerts: see Map tab</span>
           </div>
         </section>
 
-        <!-- ─── SECTION A: Mission ────────────────────── -->
-        <section class="mission-section" id="mission" aria-label="Mission: From Texas Weather to Texas Fuel">
-          <div class="mission-header">
-            <h2 class="mission-title">🌿 From Texas Weather to Texas Fuel</h2>
-            <p class="mission-subtitle">Using weather, agriculture, energy, and fuel data to explore whether switchgrass could become a future Texas-grown biofuel source.</p>
-          </div>
-          <div class="mission-cards-grid">
-            <div class="mission-card"><div class="mission-card-icon">👥</div><h3 class="mission-card-title">Who</h3><p class="mission-card-text">Texas residents, students, farmers, energy researchers, and people affected by gas prices, drought, heat, agricultural stress, and rising energy demand.</p></div>
-            <div class="mission-card"><div class="mission-card-icon">🌾</div><h3 class="mission-card-title">What</h3><p class="mission-card-text">Switchgrass (<em>Panicum virgatum</em>) is a native perennial grass studied as a source of cellulosic biofuel — connecting agriculture, renewable energy, climate resilience, and fuel independence.</p></div>
-            <div class="mission-card"><div class="mission-card-icon">⏱</div><h3 class="mission-card-title">When</h3><p class="mission-card-text">This matters now and in the near future, given rising energy demand, climate stress, drought, agricultural pressure, and fuel price volatility.</p></div>
-            <div class="mission-card"><div class="mission-card-icon">📍</div><h3 class="mission-card-title">Where</h3><p class="mission-card-text">Texas first — this dashboard focuses on Texas weather, agriculture, energy, and climate. Suitability may depend on rainfall, soil type, drought stress, land use, and local infrastructure.</p></div>
-            <div class="mission-card"><div class="mission-card-icon">💡</div><h3 class="mission-card-title">Why</h3><p class="mission-card-text">Switchgrass may support local energy resilience, give value to marginal land, reduce reliance on fossil fuels, and help students and the public understand the link between weather, climate, agriculture, energy, and fuel.</p></div>
-            <div class="mission-card"><div class="mission-card-icon">⚙️</div><h3 class="mission-card-title">How</h3><p class="mission-card-text">Switchgrass biomass is grown, harvested, and pretreated. The cell wall must be broken down so cellulose and hemicellulose can be converted into sugars — then fermented or chemically converted into fuel. Lignin is the key barrier that makes this costly.</p></div>
-          </div>
-          <p class="mission-source-note">Source: <a href="https://www.energy.gov/eere/bioenergy/switchgrass" target="_blank" rel="noopener">U.S. DOE Bioenergy Technologies Office — Switchgrass as a Bioenergy Crop</a></p>
-        </section>
-
-        <!-- ─── SECTION B: Process Problem ───────────── -->
-        <section class="process-section" id="process-problem" aria-label="Why switchgrass biofuel is not yet mass-produced">
-          <h2 class="process-title">🔬 Why Isn't Switchgrass Fuel Everywhere Yet?</h2>
-          <p class="process-intro">Switchgrass is a <strong>promising bioenergy crop</strong> — but converting it to fuel at industrial scale faces a significant technical barrier: <strong>lignin</strong>. Here is why that matters.</p>
-          <div class="process-flow-wrap">
-            <p class="process-flow-label">How Switchgrass Becomes Biofuel — Simplified</p>
-            <div class="process-flow" role="list" aria-label="Switchgrass to biofuel production steps">
-              <div class="process-step" role="listitem"><div class="process-step-icon" aria-hidden="true">☀️</div><div class="process-step-label">Sunlight</div></div>
-              <div class="process-arrow" aria-hidden="true">→</div>
-              <div class="process-step" role="listitem"><div class="process-step-icon" aria-hidden="true">🌿</div><div class="process-step-label">Switchgrass Biomass</div></div>
-              <div class="process-arrow" aria-hidden="true">→</div>
-              <div class="process-step process-step-hard" role="listitem"><div class="process-step-icon" aria-hidden="true">⚗️</div><div class="process-step-label">Pretreatment</div></div>
-              <div class="process-arrow" aria-hidden="true">→</div>
-              <div class="process-step process-step-hard" role="listitem"><div class="process-step-icon" aria-hidden="true">🔓</div><div class="process-step-label">Cell Wall Breakdown</div></div>
-              <div class="process-arrow" aria-hidden="true">→</div>
-              <div class="process-step" role="listitem"><div class="process-step-icon" aria-hidden="true">🍬</div><div class="process-step-label">Sugars</div></div>
-              <div class="process-arrow" aria-hidden="true">→</div>
-              <div class="process-step" role="listitem"><div class="process-step-icon" aria-hidden="true">🧪</div><div class="process-step-label">Fermentation / Conversion</div></div>
-              <div class="process-arrow" aria-hidden="true">→</div>
-              <div class="process-step" role="listitem"><div class="process-step-icon" aria-hidden="true">⛽</div><div class="process-step-label">Biofuel</div></div>
+        <!-- Guided Workflow Pipeline -->
+        <section class="tc-workflow-section" aria-label="Analysis pipeline — 6 steps">
+          <div class="tc-workflow-bar" role="list" aria-label="TexasClimate analysis pipeline">
+            <div class="tc-wf-step active" role="listitem">
+              <div class="tc-wf-icon">🌿</div>
+              <div class="tc-wf-label">Plant /<br>Crop</div>
             </div>
-            <div class="process-hardest" role="note">⚠ <strong>Hardest step:</strong> Breaking through lignin so cellulose can become usable sugars. Highlighted steps above are where cost and complexity are highest.</div>
-          </div>
-          <div class="process-barrier-grid">
-            <div class="process-barrier-card"><h4>What's Inside the Plant Cell Wall?</h4><ul><li><strong>Cellulose</strong> — can be broken into sugars, then converted to fuel</li><li><strong>Hemicellulose</strong> — also convertible into sugars</li><li><strong>Lignin</strong> — a tough, protective structure that blocks enzymes and chemicals from reaching the cellulose</li></ul></div>
-            <div class="process-barrier-card"><h4>Why Is This a Problem?</h4><ul><li>Lignin acts like a structural shield around the useful sugars</li><li>Removing it requires pretreatment: heat, acids, ammonia, steam, or engineered microbes</li><li>These steps increase production cost and complexity significantly</li><li>This is one major reason switchgrass biofuel is <em>promising</em> — but not yet mass-produced everywhere</li></ul></div>
-            <div class="process-barrier-card"><h4>What Are Researchers Working On?</h4><ul><li>Cheaper enzyme cocktails to break down cell walls more efficiently</li><li>Engineered microbes that tolerate or digest lignin</li><li>Genetic modifications to grow switchgrass with naturally lower lignin content</li><li>Improved acid, steam, and AFEX pretreatment methods</li></ul></div>
-          </div>
-          <div class="process-citations">
-            <p class="process-cite-label">Scientific Sources</p>
-            <ul>
-              <li>Mosier et al. (2005), "Features of promising technologies for pretreatment of lignocellulosic biomass," <em>Bioresource Technology</em> 96(6): 673–686. <a href="https://doi.org/10.1016/j.biortech.2004.06.025" target="_blank" rel="noopener">doi:10.1016/j.biortech.2004.06.025</a></li>
-              <li>Ragauskas et al. (2006), "The Path Forward for Biofuels and Biomaterials," <em>Science</em> 311(5760): 484–489. <a href="https://doi.org/10.1126/science.1114736" target="_blank" rel="noopener">doi:10.1126/science.1114736</a></li>
-              <li>National Renewable Energy Laboratory — <a href="https://www.nrel.gov/bioenergy/" target="_blank" rel="noopener">Bioenergy Research at NREL</a></li>
-            </ul>
-          </div>
-        </section>
-
-        <!-- ─── SECTION C: Gas Price Calculator ──────── -->
-        <section class="calculator-section" id="gas-calculator" aria-label="Educational gas price and biofuel replacement scenario calculator">
-          <h2 class="calc-title">⛽ What Do Gas Prices Have To Do With Switchgrass?</h2>
-          <p class="calc-intro">Gas prices affect everyday Texans. While switchgrass cellulosic biofuel is <strong>not a short-term solution to gas prices</strong>, understanding fuel diversification helps people think about long-term energy resilience. Use this educational scenario calculator — this is <strong>not a price forecast</strong>.</p>
-          <div class="calc-wrapper">
-            <div class="calc-inputs">
-              <h3 class="calc-subtitle">Enter Your Scenario</h3>
-              <div class="calc-field"><label for="calcGallons">Weekly gallons of gasoline used</label><input type="number" id="calcGallons" value="10" min="1" max="999" step="1" aria-label="Weekly gallons of gasoline used" oninput="calcFuel()"></div>
-              <div class="calc-field"><label for="calcPrice">Current gas price per gallon ($)</label><input type="number" id="calcPrice" value="3.20" min="0.50" max="10.00" step="0.01" aria-label="Current gas price per gallon in dollars" oninput="calcFuel()"></div>
-              <div class="calc-field"><label for="calcReplace">Hypothetical biofuel replacement (%)</label><div style="display:flex;align-items:center;gap:10px"><input type="range" id="calcReplace" value="10" min="0" max="100" step="1" aria-label="Hypothetical biofuel replacement percentage" style="flex:1;accent-color:var(--orange)" oninput="document.getElementById('calcReplaceVal').textContent=this.value+'%';calcFuel()"><span class="calc-range-val" id="calcReplaceVal" aria-live="polite">10%</span></div></div>
-              <button class="calc-btn" onclick="calcFuel()" aria-label="Calculate biofuel scenario">Calculate Scenario</button>
+            <div class="tc-wf-arrow" aria-hidden="true">→</div>
+            <div class="tc-wf-step" role="listitem">
+              <div class="tc-wf-icon">📍</div>
+              <div class="tc-wf-label">Location</div>
             </div>
-            <div class="calc-results" id="calcResults" aria-live="polite" aria-label="Scenario calculation results">
-              <h3 class="calc-subtitle">Educational Scenario Results</h3>
-              <div class="calc-result-row"><span class="calc-result-label">Estimated weekly fuel cost:</span><span class="calc-result-val" id="resultCost">$32.00</span></div>
-              <div class="calc-result-row"><span class="calc-result-label">Hypothetical gallons replaced by biofuel:</span><span class="calc-result-val" id="resultGallons">1.0 gal</span></div>
-              <div class="calc-result-row"><span class="calc-result-label">Remaining gasoline gallons in scenario:</span><span class="calc-result-val" id="resultRemaining">9.0 gal</span></div>
-              <div class="calc-disclaimer" role="note">⚠ <strong>Educational estimate only.</strong> This is a fuel diversification scenario tool. It does not predict actual savings, market prices, or commercial switchgrass availability.</div>
+            <div class="tc-wf-arrow" aria-hidden="true">→</div>
+            <div class="tc-wf-step" role="listitem">
+              <div class="tc-wf-icon">🌡</div>
+              <div class="tc-wf-label">Environment</div>
+            </div>
+            <div class="tc-wf-arrow" aria-hidden="true">→</div>
+            <div class="tc-wf-step" role="listitem">
+              <div class="tc-wf-icon">⚠</div>
+              <div class="tc-wf-label">Stress<br>Profile</div>
+            </div>
+            <div class="tc-wf-arrow" aria-hidden="true">→</div>
+            <div class="tc-wf-step" role="listitem">
+              <div class="tc-wf-icon">⚡</div>
+              <div class="tc-wf-label">Bioenergy<br>Score</div>
+            </div>
+            <div class="tc-wf-arrow" aria-hidden="true">→</div>
+            <div class="tc-wf-step" role="listitem">
+              <div class="tc-wf-icon">📋</div>
+              <div class="tc-wf-label">Report</div>
             </div>
           </div>
-          <div class="calc-context-cards">
-            <div class="calc-context-card"><h4>🛢 Why Fuel Diversification Matters</h4><p>Cellulosic biofuels — made from non-food plant material like switchgrass — are a long-term research area. The U.S. DOE actively funds research into cellulosic biofuel production pathways.</p><a href="https://www.energy.gov/eere/bioenergy/bioenergy-basics" target="_blank" rel="noopener" class="calc-link">DOE Bioenergy Basics →</a></div>
-            <div class="calc-context-card"><h4>🌾 Texas's Role</h4><p>Switchgrass grows natively across much of Texas. Texas A&amp;M AgriLife Extension has studied it as a potential bioenergy crop suited to Texas conditions — particularly on marginal or low-input land.</p><a href="https://agrilifeextension.tamu.edu/" target="_blank" rel="noopener" class="calc-link">Texas A&amp;M AgriLife Extension →</a></div>
-            <div class="calc-context-card"><h4>📊 A Real Energy Balance Study</h4><p>Schmer et al. (2008) in <em>PNAS</em> found switchgrass produced 540% more renewable energy than required to grow and convert it to ethanol under U.S. Great Plains conditions. These results are region-specific.</p><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener" class="calc-link">Schmer et al. (2008), PNAS →</a></div>
-          </div>
         </section>
 
-        <!-- ─── SECTION D: Transparency ──────────────── -->
-        <section class="transparency-section" id="transparency" aria-label="Data and evidence transparency statement">
-          <h2 class="transparency-title">🔍 Data &amp; Evidence Transparency</h2>
-          <div class="transparency-card">
-            <p><strong>This website is an educational prototype dashboard.</strong> Some data shown — including weather statistics, energy figures, agriculture indicators, and AI-assisted summaries — may be sample, illustrative, or demo values. They are not operational forecasts.</p>
-            <ul class="transparency-list">
-              <li>📊 <strong>Dashboard data</strong> is illustrative and educational. It is not guaranteed to reflect real-time or current conditions.</li>
-              <li>🤖 <strong>AI-assisted insights</strong> are educational explanations. Verify against the cited sources listed below.</li>
-              <li>🌿 <strong>Switchgrass biofuel scores and projections</strong> in the Biofuel Lab are AI-generated prototype estimates based on published agronomic literature — not commercial forecasts or investment guidance.</li>
-              <li>⛽ <strong>Fuel efficiency figures</strong> are drawn from published life-cycle assessment studies. Actual results vary by location, technology, and conditions.</li>
-              <li>📋 This platform does <strong>not</strong> constitute investment, agronomic, engineering, or policy advice.</li>
-            </ul>
-            <p class="transparency-goal">Our goal is <strong>public education</strong> — helping everyday Texans, students, and researchers explore connections between weather, climate, agriculture, energy, and biofuel potential.</p>
-          </div>
-        </section>
+        <!-- Live Conditions -->
+        <h2 class="section-title">Statewide Overview — Live Conditions</h2>
+        <div class="grid-4" id="stateStats" role="list" aria-label="Statewide statistics"></div>
+        <h2 class="section-title">Current Conditions — Major Texas Cities</h2>
+        <div id="weatherGrid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px" role="list" aria-label="City weather cards"></div>
+        <div class="grid-2">
+          <section aria-label="Active weather alerts">
+            <h2 class="section-title">Active Alerts</h2>
+            <div id="alertsPanel"></div>
+          </section>
+          <section aria-label="AI intelligence summaries">
+            <h2 class="section-title">AI Intelligence Summary</h2>
+            <div id="insightPanel"></div>
+          </section>
+        </div>
 
-        <!-- ─── SECTION E: Sources & Evidence ────────── -->
-        <section class="sources-section" id="sources" aria-label="Sources and scientific evidence citations">
-          <h2 class="sources-title">📚 Sources &amp; Evidence</h2>
-          <p class="sources-intro">All scientific and economic claims on this website are grounded in peer-reviewed research or credible government and university sources. Click any citation to verify.</p>
-          <div class="sources-grid">
-            <div class="source-card"><div class="source-tag">Switchgrass as bioenergy crop</div><h4 class="source-title"><a href="https://www.energy.gov/eere/bioenergy/switchgrass" target="_blank" rel="noopener">DOE Bioenergy Technologies Office — Switchgrass</a></h4><p class="source-org">U.S. Department of Energy, EERE</p><p class="source-why">Primary government source establishing switchgrass as a priority cellulosic ethanol feedstock in the U.S.</p></div>
-            <div class="source-card"><div class="source-tag">Energy balance study</div><h4 class="source-title"><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008) — Net energy of cellulosic ethanol from switchgrass</a></h4><p class="source-org"><em>PNAS</em>, 105(2): 464–469</p><p class="source-why">Peer-reviewed field study showing 540% net energy return under U.S. Great Plains field conditions.</p></div>
-            <div class="source-card"><div class="source-tag">Lignin / pretreatment barrier</div><h4 class="source-title"><a href="https://doi.org/10.1016/j.biortech.2004.06.025" target="_blank" rel="noopener">Mosier et al. (2005) — Pretreatment of lignocellulosic biomass</a></h4><p class="source-org"><em>Bioresource Technology</em>, 96(6): 673–686</p><p class="source-why">Explains why lignin is the key technical barrier to affordable cellulosic biofuel production.</p></div>
-            <div class="source-card"><div class="source-tag">Cellulosic biofuel research</div><h4 class="source-title"><a href="https://www.nrel.gov/bioenergy/" target="_blank" rel="noopener">NREL Bioenergy Research</a></h4><p class="source-org">National Renewable Energy Laboratory</p><p class="source-why">Leading federal lab for pretreatment, enzyme development, and biomass-to-fuel conversion pathways.</p></div>
-            <div class="source-card"><div class="source-tag">Biofuel science overview</div><h4 class="source-title"><a href="https://doi.org/10.1126/science.1114736" target="_blank" rel="noopener">Ragauskas et al. (2006) — The Path Forward for Biofuels</a></h4><p class="source-org"><em>Science</em>, 311(5760): 484–489</p><p class="source-why">Seminal overview of scientific challenges in converting lignocellulosic biomass to fuel.</p></div>
-            <div class="source-card"><div class="source-tag">Texas agricultural context</div><h4 class="source-title"><a href="https://agrilifeextension.tamu.edu/" target="_blank" rel="noopener">Texas A&amp;M AgriLife Extension</a></h4><p class="source-org">Texas A&amp;M University System</p><p class="source-why">Research-based guidance on bioenergy crops, including switchgrass, suited to Texas conditions.</p></div>
-            <div class="source-card"><div class="source-tag">USDA bioenergy crops</div><h4 class="source-title"><a href="https://www.ers.usda.gov/topics/farm-economy/bioenergy/" target="_blank" rel="noopener">USDA ERS — Bioenergy</a></h4><p class="source-org">USDA Economic Research Service</p><p class="source-why">Economic data on bioenergy crops, marginal land use, and agricultural energy market trends.</p></div>
-            <div class="source-card"><div class="source-tag">Bioenergy policy &amp; fuel diversity</div><h4 class="source-title"><a href="https://www.energy.gov/eere/bioenergy/bioenergy-basics" target="_blank" rel="noopener">DOE Bioenergy Basics</a></h4><p class="source-org">U.S. Department of Energy, BETO</p><p class="source-why">Overview of bioenergy policy, U.S. biofuel goals, and cellulosic feedstocks in long-term fuel diversification strategies.</p></div>
+        <!-- Agriculture Overview (moved from old agriculture page) -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">
+            🌾 Agriculture — Live Environmental Stress Overview
+            <span class="tsh-badge">Live-Derived</span>
           </div>
-        </section>
+          <div id="agContent"></div>
+        </div>
 
-        <!-- ─── SECTION F: Biofuel Fact Widget ──────── -->
+        <!-- Placeholder: Location-Based Environment Profile -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">📍 Local Environment Profile</div>
+          <div class="placeholder-card">
+            <div class="placeholder-card-icon">📍</div>
+            <div class="placeholder-card-body">
+              <div class="placeholder-card-title">Location-Based Environment Measurement</div>
+              <div class="placeholder-card-desc">This step will ask for your location (browser geolocation or manual city/coordinate selection) and fetch a full local environment profile: temperature, humidity, wind, rainfall, ET0 evapotranspiration, vapor pressure deficit, AQI, NWS alerts, and nearby streamflow — using only real live APIs.<br><br>No location is stored unless you choose to export a report.</div>
+              <span class="placeholder-card-tag">Implemented in Prompt 3 — Location-Based Environmental Measurement</span>
+            </div>
+          </div>
+          <div class="placeholder-card">
+            <div class="placeholder-card-icon">⚠</div>
+            <div class="placeholder-card-body">
+              <div class="placeholder-card-title">Stress Profile Engine</div>
+              <div class="placeholder-card-desc">Once location is measured, the stress engine will compute: Heat Stress Score, Drought Memory Score, Water Stress Score, Rainfall Deficit, ET0 Pressure, and VPD Pressure — all derived from real Open-Meteo forecast and historical data.</div>
+              <span class="placeholder-card-tag">Implemented in Prompt 4 — Stress &amp; Agriculture Scoring</span>
+            </div>
+          </div>
+          <div class="placeholder-card">
+            <div class="placeholder-card-icon">⚡</div>
+            <div class="placeholder-card-body">
+              <div class="placeholder-card-title">TexasClimate Bioenergy Confidence Score</div>
+              <div class="placeholder-card-desc">The final suitability score combines: Survival (20%) + Productivity (20%) + Water Sustainability (15%) + Stress-Metabolite Safety (15%) + Conversion Compatibility (15%) + Environmental Benefit (10%) + Data Quality (5%). Each sub-score will be shown separately with its source and confidence level.</div>
+              <span class="placeholder-card-tag">Implemented in Prompt 4 — Bioenergy Scoring Engine</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Biofuel Fact Widget -->
         <section class="biofact-section" aria-label="Did you know? Biofuel fact">
           <div class="biofact-card" id="biofactCard"
                onclick="biofactNext()"
@@ -329,506 +287,786 @@
           </div>
         </section>
 
-        <h2 class="section-title">Statewide Overview</h2>
-        <div class="grid-4" id="stateStats" role="list" aria-label="Statewide statistics"></div>
-        <h2 class="section-title">Current Conditions — Major Texas Cities</h2>
-        <div id="weatherGrid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px" role="list" aria-label="City weather cards"></div>
-        <div class="grid-2">
-          <section aria-label="Active weather alerts">
-            <h2 class="section-title">Active Alerts</h2>
-            <div id="alertsPanel"></div>
-          </section>
-          <section aria-label="AI intelligence summaries">
-            <h2 class="section-title">AI Intelligence Summary</h2>
-            <div id="insightPanel"></div>
-          </section>
-        </div>
-      </div>
+      </div><!-- /page-analyze -->
 
-      <!-- Map -->
-      <div class="page" id="page-map" role="region" aria-label="Interactive Texas Climate Map">
-        <h2 class="section-title">Interactive Texas Climate Map</h2>
 
-        <!-- Weather layer toggles -->
-        <div class="map-layer-controls" role="group" aria-label="Weather overlay layer controls">
-          <span class="map-layer-label">Weather Layers:</span>
-          <button class="map-layer-btn active" data-layer="rain"    onclick="mapToggleLayer('rain')">🌧 Precipitation</button>
-          <button class="map-layer-btn active" data-layer="clouds"  onclick="mapToggleLayer('clouds')">☁️ Cloud Cover</button>
-          <button class="map-layer-btn active" data-layer="severe"  onclick="mapToggleLayer('severe')">⚡ Severe</button>
-          <button class="map-layer-btn active" data-layer="drought" onclick="mapToggleLayer('drought')">🏜 Drought</button>
-        </div>
+      <!-- ═══════════════════════════════════════════════════════════════════
+           TAB 2 — MAP & COMPARE
+           Texas map + city comparison + forecasts + trends + AQI + water + energy + severe
+      ══════════════════════════════════════════════════════════════════════ -->
+      <div class="page" id="page-mapcompare" role="region" aria-label="Map and Compare — Texas Locations">
 
-        <div class="map-container">
-          <!-- Legend row -->
-          <div class="map-legend-row" role="note" aria-label="Map legend">
-            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-              <span style="font-size:10px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:0.06em">Temp:</span>
-              <span class="badge badge-blue">&#60;50°F Cool</span>
-              <span class="badge badge-green">50–75°F Mild</span>
-              <span class="badge badge-orange">75–90°F Warm</span>
-              <span class="badge badge-red">&#62;90°F Hot</span>
+        <!-- ── Texas Map ── -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">◉ Interactive Texas Climate Map</div>
+
+          <div class="map-layer-controls" role="group" aria-label="Weather overlay layer controls">
+            <span class="map-layer-label">Weather Layers:</span>
+            <button class="map-layer-btn active" data-layer="rain"    onclick="mapToggleLayer('rain')">🌧 Precipitation</button>
+            <button class="map-layer-btn active" data-layer="clouds"  onclick="mapToggleLayer('clouds')">☁️ Cloud Cover</button>
+            <button class="map-layer-btn active" data-layer="severe"  onclick="mapToggleLayer('severe')">⚡ Severe</button>
+            <button class="map-layer-btn active" data-layer="drought" onclick="mapToggleLayer('drought')">🏜 Drought</button>
+          </div>
+
+          <div class="map-container">
+            <div class="map-legend-row" role="note" aria-label="Map legend">
+              <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+                <span style="font-size:10px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:0.06em">Temp:</span>
+                <span class="badge badge-blue">&#60;50°F Cool</span>
+                <span class="badge badge-green">50–75°F Mild</span>
+                <span class="badge badge-orange">75–90°F Warm</span>
+                <span class="badge badge-red">&#62;90°F Hot</span>
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px">
+                <span style="font-size:10px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:0.06em">Overlays:</span>
+                <span class="map-ov-swatch" style="background:rgba(21,101,212,0.5)">Precipitation</span>
+                <span class="map-ov-swatch" style="background:rgba(136,152,170,0.4)">Clouds</span>
+                <span class="map-ov-swatch" style="background:rgba(139,26,26,0.55)">Severe</span>
+                <span class="map-ov-swatch" style="background:rgba(196,122,32,0.5)">Drought</span>
+                <span style="margin-left:auto;font-size:10px;color:var(--text3)">⚫ 100 cities · click any dot for forecast</span>
+              </div>
             </div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px">
-              <span style="font-size:10px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:0.06em">Overlays:</span>
-              <span class="map-ov-swatch" style="background:rgba(21,101,212,0.5)">Precipitation</span>
-              <span class="map-ov-swatch" style="background:rgba(136,152,170,0.4)">Clouds</span>
-              <span class="map-ov-swatch" style="background:rgba(139,26,26,0.55)">Severe</span>
-              <span class="map-ov-swatch" style="background:rgba(196,122,32,0.5)">Drought</span>
-              <span style="margin-left:auto;font-size:10px;color:var(--text3)">⚫ 100 cities · click any dot for forecast</span>
-            </div>
+
+            <svg class="map-svg" viewBox="0 0 580 490" id="texasSVG"
+                 role="img" aria-labelledby="mapSvgTitle mapSvgDesc"
+                 style="overflow:visible">
+              <title id="mapSvgTitle">Interactive Texas Climate Map</title>
+              <desc id="mapSvgDesc">Weather-shaded Texas map with 100 city markers. Click any marker to view detailed weather and forecasts.</desc>
+              <defs id="mapDefs"></defs>
+              <path id="texasOutline" d="" class="texas-outline"/>
+              <text x="226" y="65"  fill="rgba(255,255,255,0.13)" font-size="10" text-anchor="middle" font-family="Inter,sans-serif" aria-hidden="true">PANHANDLE</text>
+              <text x="100" y="245" fill="rgba(255,255,255,0.10)" font-size="9"  text-anchor="middle" font-family="Inter,sans-serif" aria-hidden="true">W. TEXAS</text>
+              <text x="300" y="230" fill="rgba(255,255,255,0.10)" font-size="9"  text-anchor="middle" font-family="Inter,sans-serif" aria-hidden="true">CENTRAL TX</text>
+              <text x="480" y="270" fill="rgba(255,255,255,0.10)" font-size="9"  text-anchor="middle" font-family="Inter,sans-serif" aria-hidden="true">EAST TX</text>
+              <text x="380" y="460" fill="rgba(255,255,255,0.10)" font-size="9"  text-anchor="middle" font-family="Inter,sans-serif" aria-hidden="true">RIO GRANDE VALLEY</text>
+              <g id="weatherOverlays"></g>
+              <g id="cityMarkers"></g>
+            </svg>
+            <div class="tooltip" id="mapTooltip" role="tooltip" style="display:none" aria-hidden="true"></div>
           </div>
 
-          <svg class="map-svg" viewBox="0 0 580 490" id="texasSVG"
-               role="img" aria-labelledby="mapSvgTitle mapSvgDesc"
-               style="overflow:visible">
-            <title id="mapSvgTitle">Interactive Texas Climate Map</title>
-            <desc id="mapSvgDesc">Weather-shaded Texas map with 100 city markers. Click any marker to view detailed weather and forecasts.</desc>
-            <defs id="mapDefs"></defs>
-            <!-- Texas state outline — path filled by renderMap() -->
-            <path id="texasOutline" d="" class="texas-outline"/>
-            <!-- Region labels -->
-            <text x="226" y="65"  fill="rgba(255,255,255,0.13)" font-size="10" text-anchor="middle" font-family="Inter,sans-serif" aria-hidden="true">PANHANDLE</text>
-            <text x="100" y="245" fill="rgba(255,255,255,0.10)" font-size="9"  text-anchor="middle" font-family="Inter,sans-serif" aria-hidden="true">W. TEXAS</text>
-            <text x="300" y="230" fill="rgba(255,255,255,0.10)" font-size="9"  text-anchor="middle" font-family="Inter,sans-serif" aria-hidden="true">CENTRAL TX</text>
-            <text x="480" y="270" fill="rgba(255,255,255,0.10)" font-size="9"  text-anchor="middle" font-family="Inter,sans-serif" aria-hidden="true">EAST TX</text>
-            <text x="380" y="460" fill="rgba(255,255,255,0.10)" font-size="9"  text-anchor="middle" font-family="Inter,sans-serif" aria-hidden="true">RIO GRANDE VALLEY</text>
-            <!-- Weather overlays (filled by JS) -->
-            <g id="weatherOverlays"></g>
-            <!-- City markers (filled by JS) -->
-            <g id="cityMarkers"></g>
-          </svg>
-          <div class="tooltip" id="mapTooltip" role="tooltip" style="display:none" aria-hidden="true"></div>
-        </div>
-
-        <div id="cityDetail" style="display:none" aria-live="polite">
-          <h2 class="section-title">Selected City Details</h2>
-          <div id="cityDetailContent"></div>
-        </div>
-      </div>
-
-      <!-- Forecasts -->
-      <div class="page" id="page-forecasts" role="region" aria-label="City Forecasts">
-        <h2 class="section-title">7-Day City Forecasts</h2>
-        <div style="margin-bottom:16px">
-          <label for="forecastCity" class="sr-only">Select city for forecast</label>
-          <select id="forecastCity" aria-label="Select city for forecast"
-                  onchange="renderForecastPage()"
-                  style="background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r8);padding:8px 14px;font-size:12px;color:var(--text0);outline:none;font-family:var(--font);cursor:pointer">
-          </select>
-        </div>
-        <div id="forecastContent"></div>
-      </div>
-
-      <!-- Agriculture -->
-      <div class="page" id="page-agriculture" role="region" aria-label="Agriculture Intelligence"><h2 class="section-title">Agriculture Intelligence Center</h2><div id="agContent"></div></div>
-
-      <!-- Switchgrass Biofuel Lab -->
-      <div class="page" id="page-sgbiofuel" role="region" aria-label="Switchgrass Biofuel Industrialization Lab">
-        <div class="sgBiofuelHero">
-          <h1 class="sgBiofuelTitle">🌿 Switchgrass Biofuel Industrialization Lab</h1>
-          <p class="sgBiofuelSub">A prototype research dashboard exploring global switchgrass (<em>Panicum virgatum</em>) deployment potential for cellulosic biofuel industrialization. Scores are AI-generated prototype predictions using mock data — not commercial forecasts.</p>
-          <div class="sgBiofuelDisclaimer">⚠ Research prototype: All scores are illustrative mock data based on published agronomic literature. HAL2 and FIL2 refer to <em>Panicum hallii</em> model ecotypes used in laboratory research — not commercial switchgrass varieties. This tool does not constitute investment, agronomic, or policy advice.</div>
-        </div>
-        <h2 class="section-title">Platform Overview</h2>
-        <div class="sgBiofuelOverviewGrid" id="sgBiofuelOverviewCards"></div>
-        <h2 class="section-title">Global Region Map</h2>
-        <div class="sgBiofuelGlobeWrap">
-          <div class="sgBiofuelGlobeBox">
-            <div class="sgBiofuelGlobeTitle">Orthographic Globe — Drag to Rotate</div>
-            <canvas id="sgBiofuelGlobe" width="420" height="420" role="img" aria-label="Interactive orthographic globe showing switchgrass deployment regions"></canvas>
-            <div class="sgBiofuelGlobeNote">Click a region in the list to highlight it. Drag globe to rotate.</div>
+          <div id="cityDetail" style="display:none" aria-live="polite">
+            <h2 class="section-title">Selected City Details</h2>
+            <div id="cityDetailContent"></div>
           </div>
-          <div>
-            <div class="sgBiofuelRegionList" id="sgBiofuelRegionList"></div>
-          </div>
-        </div>
-        <h2 class="section-title">Climate Scenario Simulator</h2>
-        <div class="sgBiofuelScenarioBar" id="sgBiofuelScenBar"></div>
-        <div class="sgBiofuelScenNote" id="sgBiofuelScenNote"></div>
-        <h2 class="section-title">8-Region Industrialization Prototype Dashboard</h2>
-        <div class="sgBiofuelDashGrid" id="sgBiofuelDashGrid"></div>
-        <h2 class="section-title">Measurement Methods (13 Metrics)</h2>
-        <div class="sgBiofuelMetricsPanel" id="sgBiofuelMetricsPanel"></div>
-        <h2 class="section-title">HAL2 / FIL2 Research Profile Trait Explorer</h2>
-        <div class="sgBiofuelTraitWrap" id="sgBiofuelTraitWrap"></div>
-        <h2 class="section-title">Switchgrass vs. Corn: Biofuel Suitability Comparison</h2>
-        <div style="overflow-x:auto;margin-bottom:20px">
-          <table class="sgBiofuelCompTable">
-            <thead><tr><th>Attribute</th><th>Switchgrass</th><th>Corn (Maize)</th><th>Advantage</th></tr></thead>
-            <tbody id="sgBiofuelCompBody"></tbody>
-          </table>
-        </div>
-        <h2 class="section-title">10 Priority Improvements for Switchgrass Industrialization</h2>
-        <div class="sgBiofuelImprovGrid" id="sgBiofuelImprovGrid"></div>
-        <h2 class="section-title">Credible Sources &amp; References</h2>
-        <div class="sgBiofuelSources" id="sgBiofuelSources"></div>
-      </div>
+        </div><!-- /map subsection -->
 
-      <!-- Plant-to-Fuel Scanner -->
-      <div class="page" id="page-scanner" role="region" aria-label="Plant-to-Fuel Scanner">
-
-        <!-- Hero -->
-        <div class="scanHero">
-          <h1 class="scanHeroTitle">🔬 Plant-to-Fuel Scanner</h1>
-          <p class="scanHeroSub">Upload or photograph a plant to receive an educational biofuel relevance analysis grounded in published biomass science and Texas climate context. This prototype does not use automated plant identification — user confirmation is always required.</p>
-          <div class="scanHeroBadges">
-            <span class="credibility-badge badge-edu-est">Educational Estimate</span>
-            <span class="credibility-badge badge-cited-sci">Cited Science</span>
-            <span class="credibility-badge badge-proto">Prototype Model</span>
-            <span class="credibility-badge badge-no-live">Not a Lab Test</span>
+        <!-- ── City Comparison ── -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">⇌ City Comparison
+            <span class="tsh-badge">Live-Derived</span>
           </div>
-          <div class="scanDisclaimer">
-            ⚠ <strong>This is an educational estimate</strong> based on visual review, user-confirmed plant category, published biomass research, and regional climate context. It is <strong>not a lab test, fuel forecast, agronomic recommendation, or commercial viability assessment.</strong> Do not use this tool for emergency, farming, investment, policy, land-use, or fuel-production decisions.
-          </div>
-          <div style="margin-top:16px;text-align:center">
-            <button id="scanDemoBtn" class="scanBtn scanBtn-primary" type="button" style="background:rgba(74,144,226,0.12);border:1px solid rgba(74,144,226,0.32);color:#7DB9F2" aria-label="Try a pre-loaded demo analysis for switchgrass">
-              🧪 Try Sample: Switchgrass (Demo)
-            </button>
-            <div style="margin-top:6px;font-size:10px;color:var(--text3)">Demo only — pre-filled plant profile, no real photo</div>
-          </div>
-        </div>
-
-        <!-- Safety Card -->
-        <section class="scanCard" id="scanSafetyCard" aria-label="Safety and privacy information">
-          <div class="scanCardTitle">⚠ Safety &amp; Privacy — Please Read</div>
-          <div class="scanSafetyGrid">
-            <div class="scanSafetyItem">🚫 <strong>Do not use</strong> for emergency, farming, investment, policy, land-use, or fuel-production decisions.</div>
-            <div class="scanSafetyItem">🌿 <strong>Do not eat, touch, harvest, or plant</strong> unknown species based on this tool.</div>
-            <div class="scanSafetyItem">📷 <strong>Do not upload</strong> images containing people, license plates, private property, school interiors, addresses, or sensitive locations.</div>
-            <div class="scanSafetyItem">🔒 Photos are <strong>processed locally in your browser</strong> for preview. This prototype does not store or transmit your images.</div>
-            <div class="scanSafetyItem">📍 Location is <strong>optional</strong> and used only for regional climate context — no GPS or precise location data is collected.</div>
-            <div class="scanSafetyItem">⚠ Plant identification by image is <strong>unreliable</strong>, especially for grasses. User confirmation is always required before any analysis.</div>
-          </div>
-        </section>
-
-        <!-- How It Works Card -->
-        <section class="scanCard" id="scanHowCard" aria-label="How the Plant-to-Fuel Scanner works">
-          <div class="scanCardTitle">ℹ How the Plant-to-Fuel Scanner Works</div>
-          <div class="scan-timeline">
-            <div class="scan-tl-step">📷 Photo uploaded or captured</div>
-            <div class="scan-tl-arrow">↓</div>
-            <div class="scan-tl-step">🌿 Plant type is identified or selected</div>
-            <div class="scan-tl-arrow">↓</div>
-            <div class="scan-tl-step">✅ User confirms or corrects the plant</div>
-            <div class="scan-tl-arrow">↓</div>
-            <div class="scan-tl-step">🔍 Scanner reviews visible traits: greenness, density, stress, and size</div>
-            <div class="scan-tl-arrow">↓</div>
-            <div class="scan-tl-step">📋 Traits are treated as rough indicators, not direct measurements</div>
-            <div class="scan-tl-arrow">↓</div>
-            <div class="scan-tl-step">📚 Confirmed plant identity is matched with credible biomass and biofuel sources</div>
-            <div class="scan-tl-arrow">↓</div>
-            <div class="scan-tl-step">📍 Austin/Cedar Park climate context is added</div>
-            <div class="scan-tl-arrow">↓</div>
-            <div class="scan-tl-step">📊 The scanner generates an educational biomass-energy and biofuel relevance report</div>
-            <div class="scan-tl-arrow">↓</div>
-            <div class="scan-tl-step">📎 The report shows confidence levels, sources, limitations, and safety notes</div>
-          </div>
-          <p class="scan-note" style="margin-top:14px">
-            This process is for learning only. A photo cannot directly measure cellulose, lignin, moisture, dry mass, fuel yield, or commercial value. Results are based on visible traits, user inputs, plant identity, regional climate context, and cited research.
-          </p>
-        </section>
-
-        <!-- Upload / Camera Card -->
-        <section class="scanCard" aria-label="Upload or capture a plant image">
-          <div class="scanCardTitle">📷 Step 1 — Upload or Capture Plant Photo</div>
-          <!-- Hidden file inputs -->
-          <input type="file" accept="image/*" id="scanFileInput" class="scan-hidden-input" aria-label="Upload plant image from file library">
-          <input type="file" accept="image/*" capture="environment" id="scanCameraInput" class="scan-hidden-input" aria-label="Take plant photo with device camera">
-          <canvas id="scanCanvas"></canvas>
-          <div class="scanInputGroup">
-            <button class="scanInputBtn" id="scanLibraryBtn" type="button" aria-label="Upload from photo library">
-              <span class="scan-btn-icon" aria-hidden="true">🖼</span>
-              <span>Upload from Library</span>
-              <span class="scanInputNote">Photo roll / file picker</span>
-            </button>
-            <button class="scanInputBtn" id="scanMobileCapBtn" type="button" aria-label="Take photo with device camera">
-              <span class="scan-btn-icon" aria-hidden="true">📸</span>
-              <span>Take Photo</span>
-              <span class="scanInputNote">Opens device camera on mobile</span>
-            </button>
-            <button class="scanInputBtn scanBtn-green" id="scanStartCameraBtn" type="button" aria-label="Start live camera preview">
-              <span class="scan-btn-icon" aria-hidden="true">🎥</span>
-              <span>Live Camera</span>
-              <span class="scanInputNote">Browser camera preview</span>
-            </button>
-          </div>
-          <!-- Live camera section -->
-          <div id="scanLiveCameraSection">
-            <div class="scanLiveDivider">Live Camera Preview</div>
-            <div id="scanLiveWrap">
-              <video id="scanVideo" autoplay playsinline muted aria-label="Live camera preview"></video>
-            </div>
-            <div class="scanCameraControls">
-              <button class="scanBtn scanBtn-green" id="scanCaptureBtn" type="button">📷 Capture Photo</button>
-              <button class="scanBtn scanBtn-red" id="scanStopCameraBtn" type="button">⏹ Stop Camera</button>
+          <div id="compareContent"></div>
+          <div class="placeholder-card" style="margin-top:16px">
+            <div class="placeholder-card-icon">🌾</div>
+            <div class="placeholder-card-body">
+              <div class="placeholder-card-title">Location Bioenergy Ranking</div>
+              <div class="placeholder-card-desc">After stress scoring is implemented, this section will rank cities by survival probability, productivity score, water sustainability, and bioenergy confidence — so users can compare locations for bioenergy suitability.</div>
+              <span class="placeholder-card-tag">Implemented in Prompt 4 — Location Comparison Scoring</span>
             </div>
           </div>
-          <p class="scan-note" style="margin-top:14px">
-            📋 <strong>Note:</strong> Future versions of this scanner may use a secure serverless proxy to call the PlantNet API for real plant identification — no API key will ever be exposed in frontend code. See <a href="https://my.plantnet.org/doc/api/openapi" target="_blank" rel="noopener" style="color:#7DB9F2">PlantNet API docs</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/capture" target="_blank" rel="noopener" style="color:#7DB9F2">MDN capture attribute</a>.
-          </p>
-        </section>
+        </div>
 
-        <!-- Image Preview Card (hidden until image selected) -->
-        <section class="scanCard" id="scanPreviewCard" style="display:none" aria-label="Image preview">
-          <div class="scanCardTitle">🖼 Step 2 — Image Preview</div>
-          <div class="scanPreviewImgWrap">
-            <img id="scanPreviewImg" src="" alt="User-uploaded plant image" />
+        <!-- ── 7-Day Forecasts ── -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">☁ 7-Day City Forecasts
+            <span class="tsh-badge">Live API</span>
           </div>
-          <div id="scanVisualHint" role="note"></div>
-          <div style="margin-top:12px">
-            <button class="scanClearBtn" id="scanClearBtn" type="button" aria-label="Clear image and start over">✕ Clear Image &amp; Start Over</button>
+          <div style="margin-bottom:16px">
+            <label for="forecastCity" class="sr-only">Select city for forecast</label>
+            <select id="forecastCity" aria-label="Select city for forecast"
+                    onchange="renderForecastPage()"
+                    style="background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r8);padding:8px 14px;font-size:12px;color:var(--text0);outline:none;font-family:var(--font);cursor:pointer">
+            </select>
           </div>
-        </section>
+          <div id="forecastContent"></div>
+        </div>
 
-        <!-- Confirm Plant Card (hidden until image selected) -->
-        <section class="scanCard" id="scanConfirmCard" style="display:none" aria-label="Confirm plant type and location">
-          <div class="scanCardTitle">🌿 Step 3 — Confirm Plant Type &amp; Location</div>
-          <div id="scanAISuggest"></div>
-          <div class="scanSelectGroup">
-            <div>
-              <label class="scanSelectLabel" for="scanPlantSel">Plant Type (confirm or select)</label>
-              <select class="scanSelect" id="scanPlantSel" aria-label="Select or confirm plant type"></select>
+        <!-- ── Severe Weather ── -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">⚠ Severe Weather — NWS Alerts
+            <span class="tsh-badge">Live API</span>
+          </div>
+          <div id="severeContent"></div>
+        </div>
+
+        <!-- ── Climate Trends ── -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">📈 Climate Trends — 7-Day Forecast Analysis
+            <span class="tsh-badge">Live-Derived</span>
+          </div>
+          <div id="trendsContent"></div>
+        </div>
+
+        <!-- ── Air Quality ── -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">💨 Air Quality Index — Texas Cities
+            <span class="tsh-badge">Live API</span>
+          </div>
+          <div id="aqContent"></div>
+        </div>
+
+        <!-- ── Water Resources ── -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">💧 Water Resources
+            <span class="tsh-badge">Live-Derived + Official Links</span>
+          </div>
+          <div id="waterContent"></div>
+        </div>
+
+        <!-- ── Energy Intelligence ── -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">⚡ Energy Intelligence — Temperature-Derived CDI
+            <span class="tsh-badge">Live-Derived</span>
+          </div>
+          <div id="energyContent"></div>
+        </div>
+
+      </div><!-- /page-mapcompare -->
+
+
+      <!-- ═══════════════════════════════════════════════════════════════════
+           TAB 3 — BIOENERGY ENGINE
+           Biofuel Lab + Fuel Efficiency + Plant Scanner + Stress-to-Fuel placeholder
+      ══════════════════════════════════════════════════════════════════════ -->
+      <div class="page" id="page-bioenergy" role="region" aria-label="Bioenergy Engine">
+
+        <!-- Quick-nav anchors -->
+        <div class="be-tab-anchors" role="navigation" aria-label="Bioenergy Engine sections">
+          <a class="be-tab-anchor" href="#be-biofuelllab" onclick="document.getElementById('be-biofuellab').scrollIntoView({behavior:'smooth'});return false;">🌿 Biofuel Lab</a>
+          <a class="be-tab-anchor" href="#be-fueleff"     onclick="document.getElementById('be-fueleff').scrollIntoView({behavior:'smooth'});return false;">⛽ Fuel Pathways</a>
+          <a class="be-tab-anchor" href="#be-scanner"     onclick="document.getElementById('be-scanner').scrollIntoView({behavior:'smooth'});return false;">🔬 Plant Scanner</a>
+          <a class="be-tab-anchor" href="#be-stress"      onclick="document.getElementById('be-stress').scrollIntoView({behavior:'smooth'});return false;">⚗️ Stress-to-Fuel</a>
+        </div>
+
+        <!-- ── Switchgrass Biofuel Lab ── -->
+        <div class="tab-subsection" id="be-biofuellab">
+          <div class="tab-subsection-header">🌿 Switchgrass Biofuel Industrialization Lab
+            <span class="tsh-badge">Research Prototype</span>
+          </div>
+          <div class="sgBiofuelHero">
+            <h1 class="sgBiofuelTitle">🌿 Switchgrass Biofuel Industrialization Lab</h1>
+            <p class="sgBiofuelSub">A prototype research dashboard exploring global switchgrass (<em>Panicum virgatum</em>) deployment potential for cellulosic biofuel industrialization. Scores are AI-generated prototype predictions using mock data — not commercial forecasts.</p>
+            <div class="sgBiofuelDisclaimer">⚠ Research prototype: All scores are illustrative mock data based on published agronomic literature. HAL2 and FIL2 refer to <em>Panicum hallii</em> model ecotypes used in laboratory research — not commercial switchgrass varieties. This tool does not constitute investment, agronomic, or policy advice.</div>
+          </div>
+          <h2 class="section-title">Platform Overview</h2>
+          <div class="sgBiofuelOverviewGrid" id="sgBiofuelOverviewCards"></div>
+          <h2 class="section-title">Global Region Map</h2>
+          <div class="sgBiofuelGlobeWrap">
+            <div class="sgBiofuelGlobeBox">
+              <div class="sgBiofuelGlobeTitle">Orthographic Globe — Drag to Rotate</div>
+              <canvas id="sgBiofuelGlobe" width="420" height="420" role="img" aria-label="Interactive orthographic globe showing switchgrass deployment regions"></canvas>
+              <div class="sgBiofuelGlobeNote">Click a region in the list to highlight it. Drag globe to rotate.</div>
             </div>
             <div>
-              <label class="scanSelectLabel" for="scanLocationSel">Location Context</label>
-              <select class="scanSelect" id="scanLocationSel" aria-label="Select location for climate context"></select>
+              <div class="sgBiofuelRegionList" id="sgBiofuelRegionList"></div>
             </div>
           </div>
-          <div style="margin-top:16px">
-            <div class="scanSelectLabel" style="margin-bottom:8px">Optional: describe what you see (helps refine the report)</div>
-            <div class="scanInputExtGrid">
-              <div>
-                <label class="scanSelectLabel" for="scanSizeSel">Plant size category</label>
-                <select class="scanSelect" id="scanSizeSel" aria-label="Select plant size category">
-                  <option value="small">Small (potted / seedling / &lt;0.3 m)</option>
-                  <option value="medium" selected>Medium (shrub / 0.3–1 m)</option>
-                  <option value="large">Large (tall / 1–3 m)</option>
-                  <option value="patch">Patch / stand (multiple plants)</option>
-                </select>
-              </div>
-              <div>
-                <label class="scanSelectLabel" for="scanCondSel">Plant condition</label>
-                <select class="scanSelect" id="scanCondSel" aria-label="Select plant condition">
-                  <option value="fresh" selected>Fresh / actively growing</option>
-                  <option value="stressed">Stressed / wilting</option>
-                  <option value="dry">Dry / senesced / dormant</option>
-                </select>
-              </div>
-              <div>
-                <label class="scanSelectLabel" for="scanDensitySel">Canopy density</label>
-                <select class="scanSelect" id="scanDensitySel" aria-label="Select canopy density">
-                  <option value="sparse">Sparse (lots of gaps / bare stems)</option>
-                  <option value="moderate" selected>Moderate (partial cover)</option>
-                  <option value="dense">Dense (thick / full canopy)</option>
-                </select>
-              </div>
-              <div>
-                <label class="scanSelectLabel" for="scanOrganSel">Organ shown in photo</label>
-                <select class="scanSelect" id="scanOrganSel" aria-label="Select plant organ shown in photo">
-                  <option value="auto" selected>Auto-detect</option>
-                  <option value="whole">Whole plant</option>
-                  <option value="leaf">Leaf</option>
-                  <option value="flower">Flower / inflorescence</option>
-                  <option value="fruit">Fruit / seed</option>
-                  <option value="bark">Bark / trunk</option>
-                  <option value="stem">Stem / cane</option>
-                </select>
-              </div>
-              <div>
-                <label class="scanSelectLabel" for="scanHeightIn">Approximate height (optional)</label>
-                <input class="scanTextInput" id="scanHeightIn" type="text" placeholder="e.g. 1.2 m or 4 ft" aria-label="Approximate plant height" maxlength="30">
-              </div>
-              <div>
-                <label class="scanSelectLabel" for="scanAreaIn">Approximate ground area (optional)</label>
-                <input class="scanTextInput" id="scanAreaIn" type="text" placeholder="e.g. 5 m² or 2 acre" aria-label="Approximate stand area" maxlength="30">
-              </div>
+          <h2 class="section-title">Climate Scenario Simulator</h2>
+          <div class="sgBiofuelScenarioBar" id="sgBiofuelScenBar"></div>
+          <div class="sgBiofuelScenNote" id="sgBiofuelScenNote"></div>
+          <h2 class="section-title">8-Region Industrialization Prototype Dashboard</h2>
+          <div class="sgBiofuelDashGrid" id="sgBiofuelDashGrid"></div>
+          <h2 class="section-title">Measurement Methods (13 Metrics)</h2>
+          <div class="sgBiofuelMetricsPanel" id="sgBiofuelMetricsPanel"></div>
+          <h2 class="section-title">HAL2 / FIL2 Research Profile Trait Explorer</h2>
+          <div class="sgBiofuelTraitWrap" id="sgBiofuelTraitWrap"></div>
+          <h2 class="section-title">Switchgrass vs. Corn: Biofuel Suitability Comparison</h2>
+          <div style="overflow-x:auto;margin-bottom:20px">
+            <table class="sgBiofuelCompTable">
+              <thead><tr><th>Attribute</th><th>Switchgrass</th><th>Corn (Maize)</th><th>Advantage</th></tr></thead>
+              <tbody id="sgBiofuelCompBody"></tbody>
+            </table>
+          </div>
+          <h2 class="section-title">10 Priority Improvements for Switchgrass Industrialization</h2>
+          <div class="sgBiofuelImprovGrid" id="sgBiofuelImprovGrid"></div>
+          <h2 class="section-title">Credible Sources &amp; References</h2>
+          <div class="sgBiofuelSources" id="sgBiofuelSources"></div>
+        </div><!-- /biofuel lab subsection -->
+
+        <!-- ── Fuel Pathways & Production Center ── -->
+        <div class="tab-subsection" id="be-fueleff">
+          <div class="tab-subsection-header">⛽ Fuel Pathways &amp; Production Center
+            <span class="tsh-badge">Peer-Reviewed</span>
+          </div>
+          <div class="fuelHero">
+            <h1 class="fuelHeroTitle">⛽ Fuel Efficiency &amp; Production Center</h1>
+            <p class="fuelHeroSub">Comparative analysis of biofuel pathways from switchgrass biomass — production chemistry, fossil fuel displacement, and head-to-head comparison with corn ethanol. All figures based on published life-cycle and agronomic literature.</p>
+          </div>
+          <h2 class="section-title">Top Biofuels from Switchgrass</h2>
+          <div class="fuelTypesGrid" id="fuelTypesGrid"></div>
+          <h2 class="section-title">Effect on Fossil Fuel Extraction</h2>
+          <div class="fuelImpactGrid" id="fuelImpactGrid"></div>
+          <h2 class="section-title">Deployment Scale Calculator</h2>
+          <div class="fuelCalcPanel" id="fuelCalcPanel"></div>
+          <h2 class="section-title">Corn Ethanol vs Switchgrass Cellulosic Ethanol</h2>
+          <div class="fuelCornWrap" id="fuelCornWrap"></div>
+        </div><!-- /fuel efficiency subsection -->
+
+        <!-- ── Plant-to-Fuel Scanner ── -->
+        <div class="tab-subsection" id="be-scanner">
+          <div class="tab-subsection-header">🔬 Plant Bioenergy Scanner
+            <span class="tsh-badge">Educational Estimate</span>
+          </div>
+
+          <!-- Scanner Hero -->
+          <div class="scanHero">
+            <h1 class="scanHeroTitle">🔬 Plant-to-Fuel Scanner</h1>
+            <p class="scanHeroSub">Upload or photograph a plant to receive an educational biofuel relevance analysis grounded in published biomass science and Texas climate context. This prototype does not use automated plant identification — user confirmation is always required.</p>
+            <div class="scanHeroBadges">
+              <span class="credibility-badge badge-edu-est">Educational Estimate</span>
+              <span class="credibility-badge badge-cited-sci">Cited Science</span>
+              <span class="credibility-badge badge-proto">Prototype Model</span>
+              <span class="credibility-badge badge-no-live">Not a Lab Test</span>
+            </div>
+            <div class="scanDisclaimer">
+              ⚠ <strong>This is an educational estimate</strong> based on visual review, user-confirmed plant category, published biomass research, and regional climate context. It is <strong>not a lab test, fuel forecast, agronomic recommendation, or commercial viability assessment.</strong>
+            </div>
+            <div style="margin-top:16px;text-align:center">
+              <button id="scanDemoBtn" class="scanBtn scanBtn-primary" type="button" style="background:rgba(74,144,226,0.12);border:1px solid rgba(74,144,226,0.32);color:#7DB9F2" aria-label="Try a pre-loaded demo analysis for switchgrass">
+                🧪 Try Sample: Switchgrass (Demo)
+              </button>
+              <div style="margin-top:6px;font-size:10px;color:var(--text3)">Demo only — pre-filled plant profile, no real photo</div>
             </div>
           </div>
-          <button class="scanBtn scanBtn-primary" id="scanAnalyzeBtn" type="button" aria-label="Generate educational biofuel analysis">
-            🔬 Generate Educational Analysis
-          </button>
-        </section>
 
-        <!-- Report Card (hidden until analyzed) -->
-        <section class="scanCard" id="scanReportCard" aria-label="Educational biofuel relevance report" aria-live="polite"></section>
+          <!-- Safety Card -->
+          <section class="scanCard" id="scanSafetyCard" aria-label="Safety and privacy information">
+            <div class="scanCardTitle">⚠ Safety &amp; Privacy — Please Read</div>
+            <div class="scanSafetyGrid">
+              <div class="scanSafetyItem">🚫 <strong>Do not use</strong> for emergency, farming, investment, policy, land-use, or fuel-production decisions.</div>
+              <div class="scanSafetyItem">🌿 <strong>Do not eat, touch, harvest, or plant</strong> unknown species based on this tool.</div>
+              <div class="scanSafetyItem">📷 <strong>Do not upload</strong> images containing people, license plates, private property, school interiors, addresses, or sensitive locations.</div>
+              <div class="scanSafetyItem">🔒 Photos are <strong>processed locally in your browser</strong> for preview. This prototype does not store or transmit your images.</div>
+              <div class="scanSafetyItem">📍 Location is <strong>optional</strong> and used only for regional climate context — no GPS or precise location data is collected.</div>
+              <div class="scanSafetyItem">⚠ Plant identification by image is <strong>unreliable</strong>, especially for grasses. User confirmation is always required before any analysis.</div>
+            </div>
+          </section>
 
-        <!-- Static Sources Card -->
-        <section class="scanCard" aria-label="Data sources for the Plant Scanner">
-          <div class="scanCardTitle">📚 Sources &amp; References</div>
-          <div class="scan-src-list">
-            <div class="scan-src-entry">DOE Bioenergy Basics — <a href="https://www.energy.gov/eere/bioenergy/bioenergy-basics" target="_blank" rel="noopener" onclick="scanGA('plant_source_clicked',{source:'DOE Bioenergy Basics'})">energy.gov/eere/bioenergy/bioenergy-basics</a></div>
-            <div class="scan-src-entry">Schmer et al. (2008) — Net energy of cellulosic ethanol from switchgrass. <em>PNAS</em> 105(2):464–469 — <a href="https://www.pnas.org/doi/10.1073/pnas.0704767105" target="_blank" rel="noopener" onclick="scanGA('plant_source_clicked',{source:'Schmer 2008 PNAS'})">doi:10.1073/pnas.0704767105</a></div>
-            <div class="scan-src-entry">NREL Lignocellulosic Biomass to Ethanol Process Design — <a href="https://docs.nrel.gov/docs/fy02osti/32438.pdf" target="_blank" rel="noopener" onclick="scanGA('plant_source_clicked',{source:'NREL 32438'})">docs.nrel.gov/docs/fy02osti/32438.pdf</a></div>
-            <div class="scan-src-entry">Alternative Fuels Data Center — Ethanol Fuel Basics — <a href="https://afdc.energy.gov/fuels/ethanol-fuel-basics" target="_blank" rel="noopener" onclick="scanGA('plant_source_clicked',{source:'AFDC Ethanol'})">afdc.energy.gov/fuels/ethanol-fuel-basics</a></div>
-            <div class="scan-src-entry">USDA ERS — Bioenergy — <a href="https://www.ers.usda.gov/topics/farm-economy/bioenergy/" target="_blank" rel="noopener" onclick="scanGA('plant_source_clicked',{source:'USDA ERS Bioenergy'})">ers.usda.gov/topics/farm-economy/bioenergy</a></div>
-            <div class="scan-src-entry">PlantNet API documentation (future integration reference) — <a href="https://my.plantnet.org/doc/api/openapi" target="_blank" rel="noopener">my.plantnet.org/doc/api/openapi</a></div>
-            <div class="scan-src-entry">MDN — Taking still photos from the camera — <a href="https://developer.mozilla.org/en-US/docs/Web/API/Media_Capture_and_Streams_API/Taking_still_photos" target="_blank" rel="noopener">MDN Media Capture API</a></div>
-            <div class="scan-src-entry">MDN — HTML capture attribute — <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/capture" target="_blank" rel="noopener">MDN capture attribute reference</a></div>
+          <!-- How It Works Card -->
+          <section class="scanCard" id="scanHowCard" aria-label="How the Plant-to-Fuel Scanner works">
+            <div class="scanCardTitle">ℹ How the Plant-to-Fuel Scanner Works</div>
+            <div class="scan-timeline">
+              <div class="scan-tl-step">📷 Photo uploaded or captured</div>
+              <div class="scan-tl-arrow">↓</div>
+              <div class="scan-tl-step">🌿 Plant type is identified or selected</div>
+              <div class="scan-tl-arrow">↓</div>
+              <div class="scan-tl-step">✅ User confirms or corrects the plant</div>
+              <div class="scan-tl-arrow">↓</div>
+              <div class="scan-tl-step">🔍 Scanner reviews visible traits: greenness, density, stress, and size</div>
+              <div class="scan-tl-arrow">↓</div>
+              <div class="scan-tl-step">📋 Traits are treated as rough indicators, not direct measurements</div>
+              <div class="scan-tl-arrow">↓</div>
+              <div class="scan-tl-step">📚 Confirmed plant identity is matched with credible biomass and biofuel sources</div>
+              <div class="scan-tl-arrow">↓</div>
+              <div class="scan-tl-step">📍 Location climate context is applied</div>
+              <div class="scan-tl-arrow">↓</div>
+              <div class="scan-tl-step">📊 Educational biomass-energy and biofuel relevance report is generated</div>
+              <div class="scan-tl-arrow">↓</div>
+              <div class="scan-tl-step">📎 Report shows confidence levels, sources, limitations, and safety notes</div>
+            </div>
+            <p class="scan-note" style="margin-top:14px">
+              This process is for learning only. A photo cannot directly measure cellulose, lignin, moisture, dry mass, fuel yield, or commercial value.
+            </p>
+          </section>
+
+          <!-- Upload / Camera Card -->
+          <section class="scanCard" aria-label="Upload or capture a plant image">
+            <div class="scanCardTitle">📷 Step 1 — Upload or Capture Plant Photo</div>
+            <input type="file" accept="image/*" id="scanFileInput" class="scan-hidden-input" aria-label="Upload plant image from file library">
+            <input type="file" accept="image/*" capture="environment" id="scanCameraInput" class="scan-hidden-input" aria-label="Take plant photo with device camera">
+            <canvas id="scanCanvas"></canvas>
+            <div class="scanInputGroup">
+              <button class="scanInputBtn" id="scanLibraryBtn" type="button" aria-label="Upload from photo library">
+                <span class="scan-btn-icon" aria-hidden="true">🖼</span>
+                <span>Upload from Library</span>
+                <span class="scanInputNote">Photo roll / file picker</span>
+              </button>
+              <button class="scanInputBtn" id="scanMobileCapBtn" type="button" aria-label="Take photo with device camera">
+                <span class="scan-btn-icon" aria-hidden="true">📸</span>
+                <span>Take Photo</span>
+                <span class="scanInputNote">Opens device camera on mobile</span>
+              </button>
+              <button class="scanInputBtn scanBtn-green" id="scanStartCameraBtn" type="button" aria-label="Start live camera preview">
+                <span class="scan-btn-icon" aria-hidden="true">🎥</span>
+                <span>Live Camera</span>
+                <span class="scanInputNote">Browser camera preview</span>
+              </button>
+            </div>
+            <div id="scanLiveCameraSection">
+              <div class="scanLiveDivider">Live Camera Preview</div>
+              <div id="scanLiveWrap">
+                <video id="scanVideo" autoplay playsinline muted aria-label="Live camera preview"></video>
+              </div>
+              <div class="scanCameraControls">
+                <button class="scanBtn scanBtn-green" id="scanCaptureBtn" type="button">📷 Capture Photo</button>
+                <button class="scanBtn scanBtn-red" id="scanStopCameraBtn" type="button">⏹ Stop Camera</button>
+              </div>
+            </div>
+            <p class="scan-note" style="margin-top:14px">
+              📋 <strong>Note:</strong> Future versions may use a secure serverless proxy to call the PlantNet API for real plant identification. See <a href="https://my.plantnet.org/doc/api/openapi" target="_blank" rel="noopener" style="color:#7DB9F2">PlantNet API docs</a>.
+            </p>
+          </section>
+
+          <!-- Image Preview Card -->
+          <section class="scanCard" id="scanPreviewCard" style="display:none" aria-label="Image preview">
+            <div class="scanCardTitle">🖼 Step 2 — Image Preview</div>
+            <div class="scanPreviewImgWrap">
+              <img id="scanPreviewImg" src="" alt="User-uploaded plant image" />
+            </div>
+            <div id="scanVisualHint" role="note"></div>
+            <div style="margin-top:12px">
+              <button class="scanClearBtn" id="scanClearBtn" type="button" aria-label="Clear image and start over">✕ Clear Image &amp; Start Over</button>
+            </div>
+          </section>
+
+          <!-- Confirm Plant Card -->
+          <section class="scanCard" id="scanConfirmCard" style="display:none" aria-label="Confirm plant type and location">
+            <div class="scanCardTitle">🌿 Step 3 — Confirm Plant Type &amp; Location</div>
+            <div id="scanAISuggest"></div>
+            <div class="scanSelectGroup">
+              <div>
+                <label class="scanSelectLabel" for="scanPlantSel">Plant Type (confirm or select)</label>
+                <select class="scanSelect" id="scanPlantSel" aria-label="Select or confirm plant type"></select>
+              </div>
+              <div>
+                <label class="scanSelectLabel" for="scanLocationSel">Location Context</label>
+                <select class="scanSelect" id="scanLocationSel" aria-label="Select location for climate context"></select>
+              </div>
+            </div>
+            <div style="margin-top:16px">
+              <div class="scanSelectLabel" style="margin-bottom:8px">Optional: describe what you see</div>
+              <div class="scanInputExtGrid">
+                <div>
+                  <label class="scanSelectLabel" for="scanSizeSel">Plant size category</label>
+                  <select class="scanSelect" id="scanSizeSel" aria-label="Select plant size category">
+                    <option value="small">Small (potted / seedling / &lt;0.3 m)</option>
+                    <option value="medium" selected>Medium (shrub / 0.3–1 m)</option>
+                    <option value="large">Large (tall / 1–3 m)</option>
+                    <option value="patch">Patch / stand (multiple plants)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="scanSelectLabel" for="scanCondSel">Plant condition</label>
+                  <select class="scanSelect" id="scanCondSel" aria-label="Select plant condition">
+                    <option value="fresh" selected>Fresh / actively growing</option>
+                    <option value="stressed">Stressed / wilting</option>
+                    <option value="dry">Dry / senesced / dormant</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="scanSelectLabel" for="scanDensitySel">Canopy density</label>
+                  <select class="scanSelect" id="scanDensitySel" aria-label="Select canopy density">
+                    <option value="sparse">Sparse (lots of gaps / bare stems)</option>
+                    <option value="moderate" selected>Moderate (partial cover)</option>
+                    <option value="dense">Dense (thick / full canopy)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="scanSelectLabel" for="scanOrganSel">Organ shown in photo</label>
+                  <select class="scanSelect" id="scanOrganSel" aria-label="Select plant organ shown in photo">
+                    <option value="auto" selected>Auto-detect</option>
+                    <option value="whole">Whole plant</option>
+                    <option value="leaf">Leaf</option>
+                    <option value="flower">Flower / inflorescence</option>
+                    <option value="fruit">Fruit / seed</option>
+                    <option value="bark">Bark / trunk</option>
+                    <option value="stem">Stem / cane</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="scanSelectLabel" for="scanHeightIn">Approximate height (optional)</label>
+                  <input class="scanTextInput" id="scanHeightIn" type="text" placeholder="e.g. 1.2 m or 4 ft" aria-label="Approximate plant height" maxlength="30">
+                </div>
+                <div>
+                  <label class="scanSelectLabel" for="scanAreaIn">Approximate ground area (optional)</label>
+                  <input class="scanTextInput" id="scanAreaIn" type="text" placeholder="e.g. 5 m² or 2 acre" aria-label="Approximate stand area" maxlength="30">
+                </div>
+              </div>
+            </div>
+            <button class="scanBtn scanBtn-primary" id="scanAnalyzeBtn" type="button" aria-label="Generate educational biofuel analysis">
+              🔬 Generate Educational Analysis
+            </button>
+          </section>
+
+          <!-- Report Card -->
+          <section class="scanCard" id="scanReportCard" aria-label="Educational biofuel relevance report" aria-live="polite"></section>
+
+          <!-- Scanner Sources Card -->
+          <section class="scanCard" aria-label="Data sources for the Plant Scanner">
+            <div class="scanCardTitle">📚 Sources &amp; References</div>
+            <div class="scan-src-list">
+              <div class="scan-src-entry">DOE Bioenergy Basics — <a href="https://www.energy.gov/eere/bioenergy/bioenergy-basics" target="_blank" rel="noopener">energy.gov/eere/bioenergy/bioenergy-basics</a></div>
+              <div class="scan-src-entry">Schmer et al. (2008) — Net energy of cellulosic ethanol from switchgrass. <em>PNAS</em> 105(2):464–469 — <a href="https://www.pnas.org/doi/10.1073/pnas.0704767105" target="_blank" rel="noopener">doi:10.1073/pnas.0704767105</a></div>
+              <div class="scan-src-entry">NREL Lignocellulosic Biomass to Ethanol Process Design — <a href="https://docs.nrel.gov/docs/fy02osti/32438.pdf" target="_blank" rel="noopener">docs.nrel.gov/docs/fy02osti/32438.pdf</a></div>
+              <div class="scan-src-entry">Alternative Fuels Data Center — Ethanol Fuel Basics — <a href="https://afdc.energy.gov/fuels/ethanol-fuel-basics" target="_blank" rel="noopener">afdc.energy.gov/fuels/ethanol-fuel-basics</a></div>
+              <div class="scan-src-entry">USDA ERS — Bioenergy — <a href="https://www.ers.usda.gov/topics/farm-economy/bioenergy/" target="_blank" rel="noopener">ers.usda.gov/topics/farm-economy/bioenergy</a></div>
+              <div class="scan-src-entry">PlantNet API documentation (future integration reference) — <a href="https://my.plantnet.org/doc/api/openapi" target="_blank" rel="noopener">my.plantnet.org/doc/api/openapi</a></div>
+            </div>
+          </section>
+
+        </div><!-- /scanner subsection -->
+
+        <!-- ── Stress-to-Fuel Chemistry Risk (placeholder) ── -->
+        <div class="tab-subsection" id="be-stress">
+          <div class="tab-subsection-header">⚗️ Stress-to-Fuel Chemistry Risk
+            <span class="tsh-badge">Requires Location + Stress Data</span>
           </div>
-        </section>
-
-      </div>
-
-      <!-- Fuel Efficiency -->
-      <div class="page" id="page-fueleff" role="region" aria-label="Fuel Efficiency Center">
-        <div class="fuelHero">
-          <h1 class="fuelHeroTitle">⛽ Fuel Efficiency &amp; Production Center</h1>
-          <p class="fuelHeroSub">Comparative analysis of biofuel pathways from switchgrass biomass — production chemistry, fossil fuel displacement, and head-to-head comparison with corn ethanol. All figures based on published life-cycle and agronomic literature.</p>
+          <div class="placeholder-card">
+            <div class="placeholder-card-icon">⚗️</div>
+            <div class="placeholder-card-body">
+              <div class="placeholder-card-title">Osmolyte &amp; Inhibitor Risk Panel</div>
+              <div class="placeholder-card-desc">Once real stress data is measured from the selected location, this panel will estimate risk categories for: osmolyte pressure, saponin/inhibitor risk, phenolic/extractive risk, cell-wall recalcitrance risk, and fermentation lag risk — each rated Low / Medium / High with explanation, method note, missing data, and confidence level.</div>
+              <span class="placeholder-card-tag">Implemented in Prompt 4 — Stress-to-Fuel Engine</span>
+            </div>
+          </div>
+          <div class="placeholder-card">
+            <div class="placeholder-card-icon">🔬</div>
+            <div class="placeholder-card-body">
+              <div class="placeholder-card-title">Lab Data Upload</div>
+              <div class="placeholder-card-desc">Uploading real lab measurements (lignin content, cellulose %, moisture, biomass yield) will unlock precise conversion pathway recommendations. Without lab data, only risk category estimates are shown — never precise fuel yield numbers.</div>
+              <span class="placeholder-card-tag">Future Feature — Lab Data Integration</span>
+            </div>
+          </div>
         </div>
-        <h2 class="section-title">Top Biofuels from Switchgrass</h2>
-        <div class="fuelTypesGrid" id="fuelTypesGrid"></div>
-        <h2 class="section-title">Effect on Fossil Fuel Extraction</h2>
-        <div class="fuelImpactGrid" id="fuelImpactGrid"></div>
-        <h2 class="section-title">Deployment Scale Calculator</h2>
-        <div class="fuelCalcPanel" id="fuelCalcPanel"></div>
-        <h2 class="section-title">Corn Ethanol vs Switchgrass Cellulosic Ethanol</h2>
-        <div class="fuelCornWrap" id="fuelCornWrap"></div>
-      </div>
 
-      <!-- Climate Trends -->
-      <div class="page" id="page-trends" role="region" aria-label="Climate Trends"><h2 class="section-title">Climate Trends &amp; Historical Analysis</h2><div id="trendsContent"></div></div>
+      </div><!-- /page-bioenergy -->
 
-      <!-- Air Quality -->
-      <div class="page" id="page-airquality" role="region" aria-label="Air Quality"><h2 class="section-title">Air Quality Index — Texas Cities</h2><div id="aqContent"></div></div>
 
-      <!-- Water -->
-      <div class="page" id="page-water" role="region" aria-label="Water Resources"><h2 class="section-title">Water Resource Center</h2><div id="waterContent"></div></div>
+      <!-- ═══════════════════════════════════════════════════════════════════
+           TAB 4 — SCIENCE & STRESS METHODS
+           Educational methodology: stress chain, mission, process, calculator, data limits
+      ══════════════════════════════════════════════════════════════════════ -->
+      <div class="page" id="page-science" role="region" aria-label="Science and Stress Methods">
 
-      <!-- Energy -->
-      <div class="page" id="page-energy" role="region" aria-label="Energy"><h2 class="section-title">Energy Demand Estimates (Temperature-Derived)</h2><div id="energyContent"></div></div>
+        <!-- Stress Chain -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">🧬 Stress → Metabolism → Conversion: How Environmental Stress Affects Bioenergy</div>
+          <p style="font-size:12px;color:var(--text2);margin-bottom:18px;line-height:1.7">
+            Environmental stress changes plant physiology and chemistry — affecting not just survival and growth, but also whether the biomass can be efficiently converted to fuel. This chain explains how drought, heat, and salt stress translate into bioenergy conversion risks.
+          </p>
+          <div class="science-chain-wrap" role="list" aria-label="Stress to conversion chain">
 
-      <!-- Severe Weather -->
-      <div class="page" id="page-severe" role="region" aria-label="Severe Weather"><h2 class="section-title">Severe Weather Monitoring</h2><div id="severeContent"></div></div>
+            <div class="sci-chain-step" role="listitem">
+              <div class="sci-chain-step-num">1</div>
+              <div class="sci-chain-step-body">
+                <div class="sci-chain-step-title">🌵 Drought / Heat / Salt Stress</div>
+                <div class="sci-chain-step-desc">Environmental stressors reduce water availability, raise leaf temperature, or introduce toxic ions. The plant detects these as signals and activates protective responses.</div>
+                <div class="sci-chain-step-note">What live data can estimate: Drought stress score from ET0 vs. precipitation deficit (Open-Meteo). Heat stress from temperature thresholds. Salt stress: low confidence without soil/water salinity data.</div>
+              </div>
+            </div>
+            <div class="sci-chain-arrow" aria-hidden="true">↓</div>
 
-      <!-- Compare -->
-      <div class="page" id="page-compare" role="region" aria-label="City Comparison"><h2 class="section-title">City Comparison Lab</h2><div id="compareContent"></div></div>
+            <div class="sci-chain-step" role="listitem">
+              <div class="sci-chain-step-num">2</div>
+              <div class="sci-chain-step-body">
+                <div class="sci-chain-step-title">💧 Osmotic Stress &amp; Stomatal Closure</div>
+                <div class="sci-chain-step-desc">Under drought or salt, plants reduce water loss by closing stomata. This limits CO₂ uptake, slowing photosynthesis and reducing biomass accumulation. Reduced growth directly lowers available feedstock.</div>
+                <div class="sci-chain-step-note">What this means for bioenergy: reduced biomass yield per hectare, lower total fuel potential — even if conversion chemistry is fine.</div>
+              </div>
+            </div>
+            <div class="sci-chain-arrow" aria-hidden="true">↓</div>
 
-      <!-- Reports -->
-      <div class="page" id="page-reports" role="region" aria-label="AI Reports"><h2 class="section-title">Live Data Summaries (AI-Formatted)</h2><div id="reportsContent"></div></div>
+            <div class="sci-chain-step" role="listitem">
+              <div class="sci-chain-step-num">3</div>
+              <div class="sci-chain-step-body">
+                <div class="sci-chain-step-title">🧪 Osmolyte Accumulation</div>
+                <div class="sci-chain-step-desc">To balance osmotic pressure, stressed plants accumulate compatible solutes: proline, glycine betaine, sorbitol, and trehalose. These protect cell structure but some can inhibit the yeast used in ethanol fermentation at elevated concentrations.</div>
+                <div class="sci-chain-step-note">Source: Szabados &amp; Savouré (2010), Trends Plant Sci 15(2):89–97. What requires lab: actual osmolyte concentrations — cannot be measured from weather data alone.</div>
+              </div>
+            </div>
+            <div class="sci-chain-arrow" aria-hidden="true">↓</div>
 
-      <!-- Sources -->
-      <div class="page" id="page-sources" role="region" aria-label="Data Sources and Citations">
+            <div class="sci-chain-step" role="listitem">
+              <div class="sci-chain-step-num">4</div>
+              <div class="sci-chain-step-body">
+                <div class="sci-chain-step-title">⚗️ Secondary Metabolite &amp; Inhibitor Buildup</div>
+                <div class="sci-chain-step-desc">Stressed plants upregulate phenolics, tannins, alkaloids, and saponins as defense compounds. Phenolic compounds — especially those released from lignin during pretreatment — inhibit cellulase enzymes and fermentation microbes, reducing conversion efficiency.</div>
+                <div class="sci-chain-step-note">Source: Palmqvist &amp; Hahn-Hägerdal (2000), Bioresource Technology 74(1):17–24. Risk category can be estimated from stress level; precise amounts require lab analysis.</div>
+              </div>
+            </div>
+            <div class="sci-chain-arrow" aria-hidden="true">↓</div>
+
+            <div class="sci-chain-step" role="listitem">
+              <div class="sci-chain-step-num">5</div>
+              <div class="sci-chain-step-body">
+                <div class="sci-chain-step-title">🪵 Lignin &amp; Cell-Wall Recalcitrance</div>
+                <div class="sci-chain-step-desc">Stress can alter lignin composition (S/G ratio) and content. Higher condensed lignin → greater recalcitrance → more aggressive (and costly) pretreatment is required to expose cellulose for enzymatic hydrolysis. This is the key cost barrier for cellulosic ethanol.</div>
+                <div class="sci-chain-step-note">Source: Mosier et al. (2005), Bioresource Technology 96(6):673–686. Recalcitrance risk can be estimated from stress history; direct lignin % requires lab measurement.</div>
+              </div>
+            </div>
+            <div class="sci-chain-arrow" aria-hidden="true">↓</div>
+
+            <div class="sci-chain-step" role="listitem">
+              <div class="sci-chain-step-num">6</div>
+              <div class="sci-chain-step-body">
+                <div class="sci-chain-step-title">⛽ Conversion Difficulty &amp; Fuel Pathway Confidence</div>
+                <div class="sci-chain-step-desc">The cumulative effect of stress chemistry determines which conversion pathway is most viable and how reliable the fuel output will be. High stress → higher inhibitor load → fermentation lag → lower ethanol yield. Gasification-based pathways (biogas, hydrogen) are generally more stress-tolerant because they don't rely on enzymatic hydrolysis.</div>
+                <div class="sci-chain-step-note">Source: Ragauskas et al. (2006), Science 311(5760):484–489. Pathway confidence is estimated — precise fuel yield requires biomass composition data from the lab.</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- What live data can vs. cannot measure -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">📊 What This App Can Estimate vs. What Requires Lab Data</div>
+          <div style="overflow-x:auto">
+            <table class="data-cap-table">
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Can Estimate from Live Data?</th>
+                  <th>Method / Source</th>
+                  <th>What's Needed for Precision</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Temperature / Humidity / Wind</td><td class="cap-yes">✓ Yes — Live API</td><td>Open-Meteo current conditions</td><td>Already live</td></tr>
+                <tr><td>7-day precipitation forecast</td><td class="cap-yes">✓ Yes — Live API</td><td>Open-Meteo forecast</td><td>Already live</td></tr>
+                <tr><td>ET0 evapotranspiration</td><td class="cap-yes">✓ Yes — Live API</td><td>Open-Meteo ET0 field</td><td>Already live</td></tr>
+                <tr><td>Drought stress score</td><td class="cap-yes">✓ Yes — Derived</td><td>ET0 vs. precipitation deficit formula</td><td>Soil moisture sensor improves accuracy</td></tr>
+                <tr><td>Heat stress score</td><td class="cap-yes">✓ Yes — Derived</td><td>Temperature vs. plant threshold from literature</td><td>Canopy temperature sensor</td></tr>
+                <tr><td>AQI / Air Quality</td><td class="cap-yes">✓ Yes — Live API</td><td>Open-Meteo Air Quality API</td><td>Already live</td></tr>
+                <tr><td>NWS Severe Weather Alerts</td><td class="cap-yes">✓ Yes — Live API</td><td>api.weather.gov</td><td>Already live</td></tr>
+                <tr><td>Vapor pressure deficit (VPD)</td><td class="cap-part">~ Partial</td><td>Calculated from temp + humidity</td><td>Good approximation; wet-bulb sensor improves it</td></tr>
+                <tr><td>Salt / salinity stress risk</td><td class="cap-part">~ Low confidence</td><td>Coastal proximity proxy only</td><td>Soil EC measurement or irrigation water data</td></tr>
+                <tr><td>Soil moisture</td><td class="cap-no">✗ Not integrated</td><td>Not yet — no API connected</td><td>USDA SMAP satellite data or field sensor</td></tr>
+                <tr><td>Reservoir / streamflow levels</td><td class="cap-no">✗ Not integrated</td><td>TWDB / USGS links provided only</td><td>Direct USGS / TWDB API integration</td></tr>
+                <tr><td>Osmolyte concentrations</td><td class="cap-no">✗ Cannot estimate</td><td>No remote sensing method exists</td><td>Biochemical lab assay required</td></tr>
+                <tr><td>Phenolic / inhibitor content</td><td class="cap-no">✗ Cannot estimate</td><td>No remote sensing method exists</td><td>HPLC or spectroscopic analysis</td></tr>
+                <tr><td>Lignin content / S:G ratio</td><td class="cap-no">✗ Cannot estimate</td><td>No remote sensing method exists</td><td>Klason lignin assay or NIRS</td></tr>
+                <tr><td>Cellulose / hemicellulose %</td><td class="cap-no">✗ Cannot estimate</td><td>No remote sensing method exists</td><td>Van Soest fiber analysis</td></tr>
+                <tr><td>Biomass yield (dry tons/ha)</td><td class="cap-no">✗ Cannot estimate</td><td>No remote sensing method integrated</td><td>Field harvest measurement or calibrated NDVI</td></tr>
+                <tr><td>Fuel yield (gal or kg)</td><td class="cap-no">✗ Cannot estimate</td><td>Depends on biomass + composition</td><td>Biomass composition + conversion pilot data</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Mission section (moved from Dashboard) -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">🌿 Mission — From Texas Weather to Texas Fuel</div>
+          <section class="mission-section" id="mission" aria-label="Mission: From Texas Weather to Texas Fuel">
+            <div class="mission-header">
+              <h2 class="mission-title">🌿 From Texas Weather to Texas Fuel</h2>
+              <p class="mission-subtitle">Using weather, agriculture, energy, and fuel data to explore whether switchgrass could become a future Texas-grown biofuel source.</p>
+            </div>
+            <div class="mission-cards-grid">
+              <div class="mission-card"><div class="mission-card-icon">👥</div><h3 class="mission-card-title">Who</h3><p class="mission-card-text">Texas residents, students, farmers, energy researchers, and people affected by gas prices, drought, heat, agricultural stress, and rising energy demand.</p></div>
+              <div class="mission-card"><div class="mission-card-icon">🌾</div><h3 class="mission-card-title">What</h3><p class="mission-card-text">Switchgrass (<em>Panicum virgatum</em>) is a native perennial grass studied as a source of cellulosic biofuel — connecting agriculture, renewable energy, climate resilience, and fuel independence.</p></div>
+              <div class="mission-card"><div class="mission-card-icon">⏱</div><h3 class="mission-card-title">When</h3><p class="mission-card-text">This matters now and in the near future, given rising energy demand, climate stress, drought, agricultural pressure, and fuel price volatility.</p></div>
+              <div class="mission-card"><div class="mission-card-icon">📍</div><h3 class="mission-card-title">Where</h3><p class="mission-card-text">Texas first — this platform focuses on Texas weather, agriculture, energy, and climate. Suitability depends on rainfall, soil type, drought stress, land use, and local infrastructure.</p></div>
+              <div class="mission-card"><div class="mission-card-icon">💡</div><h3 class="mission-card-title">Why</h3><p class="mission-card-text">Switchgrass may support local energy resilience, give value to marginal land, reduce reliance on fossil fuels, and help students and the public understand the link between weather, climate, agriculture, energy, and fuel.</p></div>
+              <div class="mission-card"><div class="mission-card-icon">⚙️</div><h3 class="mission-card-title">How</h3><p class="mission-card-text">Switchgrass biomass is grown, harvested, and pretreated. The cell wall must be broken down so cellulose and hemicellulose can be converted into sugars — then fermented or chemically converted into fuel. Lignin is the key barrier that makes this costly.</p></div>
+            </div>
+            <p class="mission-source-note">Source: <a href="https://www.energy.gov/eere/bioenergy/switchgrass" target="_blank" rel="noopener">U.S. DOE Bioenergy Technologies Office — Switchgrass as a Bioenergy Crop</a></p>
+          </section>
+        </div>
+
+        <!-- Process / Why Not Everywhere section (moved from Dashboard) -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">🔬 Why Isn't Switchgrass Fuel Everywhere Yet?</div>
+          <section class="process-section" id="process-problem" aria-label="Why switchgrass biofuel is not yet mass-produced">
+            <h2 class="process-title">🔬 Why Isn't Switchgrass Fuel Everywhere Yet?</h2>
+            <p class="process-intro">Switchgrass is a <strong>promising bioenergy crop</strong> — but converting it to fuel at industrial scale faces a significant technical barrier: <strong>lignin</strong>.</p>
+            <div class="process-flow-wrap">
+              <p class="process-flow-label">How Switchgrass Becomes Biofuel — Simplified</p>
+              <div class="process-flow" role="list" aria-label="Switchgrass to biofuel production steps">
+                <div class="process-step" role="listitem"><div class="process-step-icon" aria-hidden="true">☀️</div><div class="process-step-label">Sunlight</div></div>
+                <div class="process-arrow" aria-hidden="true">→</div>
+                <div class="process-step" role="listitem"><div class="process-step-icon" aria-hidden="true">🌿</div><div class="process-step-label">Switchgrass Biomass</div></div>
+                <div class="process-arrow" aria-hidden="true">→</div>
+                <div class="process-step process-step-hard" role="listitem"><div class="process-step-icon" aria-hidden="true">⚗️</div><div class="process-step-label">Pretreatment</div></div>
+                <div class="process-arrow" aria-hidden="true">→</div>
+                <div class="process-step process-step-hard" role="listitem"><div class="process-step-icon" aria-hidden="true">🔓</div><div class="process-step-label">Cell Wall Breakdown</div></div>
+                <div class="process-arrow" aria-hidden="true">→</div>
+                <div class="process-step" role="listitem"><div class="process-step-icon" aria-hidden="true">🍬</div><div class="process-step-label">Sugars</div></div>
+                <div class="process-arrow" aria-hidden="true">→</div>
+                <div class="process-step" role="listitem"><div class="process-step-icon" aria-hidden="true">🧪</div><div class="process-step-label">Fermentation / Conversion</div></div>
+                <div class="process-arrow" aria-hidden="true">→</div>
+                <div class="process-step" role="listitem"><div class="process-step-icon" aria-hidden="true">⛽</div><div class="process-step-label">Biofuel</div></div>
+              </div>
+              <div class="process-hardest" role="note">⚠ <strong>Hardest step:</strong> Breaking through lignin so cellulose can become usable sugars.</div>
+            </div>
+            <div class="process-barrier-grid">
+              <div class="process-barrier-card"><h4>What's Inside the Plant Cell Wall?</h4><ul><li><strong>Cellulose</strong> — can be broken into sugars, then converted to fuel</li><li><strong>Hemicellulose</strong> — also convertible into sugars</li><li><strong>Lignin</strong> — a tough, protective structure that blocks enzymes and chemicals from reaching the cellulose</li></ul></div>
+              <div class="process-barrier-card"><h4>Why Is This a Problem?</h4><ul><li>Lignin acts like a structural shield around the useful sugars</li><li>Removing it requires pretreatment: heat, acids, ammonia, steam, or engineered microbes</li><li>These steps increase production cost and complexity significantly</li></ul></div>
+              <div class="process-barrier-card"><h4>What Are Researchers Working On?</h4><ul><li>Cheaper enzyme cocktails to break down cell walls more efficiently</li><li>Engineered microbes that tolerate or digest lignin</li><li>Genetic modifications to grow switchgrass with naturally lower lignin content</li><li>Improved acid, steam, and AFEX pretreatment methods</li></ul></div>
+            </div>
+            <div class="process-citations">
+              <p class="process-cite-label">Scientific Sources</p>
+              <ul>
+                <li>Mosier et al. (2005), "Features of promising technologies for pretreatment of lignocellulosic biomass," <em>Bioresource Technology</em> 96(6): 673–686. <a href="https://doi.org/10.1016/j.biortech.2004.06.025" target="_blank" rel="noopener">doi:10.1016/j.biortech.2004.06.025</a></li>
+                <li>Ragauskas et al. (2006), "The Path Forward for Biofuels and Biomaterials," <em>Science</em> 311(5760): 484–489. <a href="https://doi.org/10.1126/science.1114736" target="_blank" rel="noopener">doi:10.1126/science.1114736</a></li>
+                <li>National Renewable Energy Laboratory — <a href="https://www.nrel.gov/bioenergy/" target="_blank" rel="noopener">Bioenergy Research at NREL</a></li>
+              </ul>
+            </div>
+          </section>
+        </div>
+
+        <!-- Gas Price Calculator (moved from Dashboard) -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">⛽ Educational Fuel Scenario Calculator</div>
+          <section class="calculator-section" id="gas-calculator" aria-label="Educational gas price and biofuel replacement scenario calculator">
+            <h2 class="calc-title">⛽ What Do Gas Prices Have To Do With Switchgrass?</h2>
+            <p class="calc-intro">Gas prices affect everyday Texans. While switchgrass cellulosic biofuel is <strong>not a short-term solution to gas prices</strong>, understanding fuel diversification helps people think about long-term energy resilience. Use this educational scenario calculator — this is <strong>not a price forecast</strong>.</p>
+            <div class="calc-wrapper">
+              <div class="calc-inputs">
+                <h3 class="calc-subtitle">Enter Your Scenario</h3>
+                <div class="calc-field"><label for="calcGallons">Weekly gallons of gasoline used</label><input type="number" id="calcGallons" value="10" min="1" max="999" step="1" aria-label="Weekly gallons of gasoline used" oninput="calcFuel()"></div>
+                <div class="calc-field"><label for="calcPrice">Current gas price per gallon ($)</label><input type="number" id="calcPrice" value="3.20" min="0.50" max="10.00" step="0.01" aria-label="Current gas price per gallon in dollars" oninput="calcFuel()"></div>
+                <div class="calc-field"><label for="calcReplace">Hypothetical biofuel replacement (%)</label><div style="display:flex;align-items:center;gap:10px"><input type="range" id="calcReplace" value="10" min="0" max="100" step="1" aria-label="Hypothetical biofuel replacement percentage" style="flex:1;accent-color:var(--orange)" oninput="document.getElementById('calcReplaceVal').textContent=this.value+'%';calcFuel()"><span class="calc-range-val" id="calcReplaceVal" aria-live="polite">10%</span></div></div>
+                <button class="calc-btn" onclick="calcFuel()" aria-label="Calculate biofuel scenario">Calculate Scenario</button>
+              </div>
+              <div class="calc-results" id="calcResults" aria-live="polite" aria-label="Scenario calculation results">
+                <h3 class="calc-subtitle">Educational Scenario Results</h3>
+                <div class="calc-result-row"><span class="calc-result-label">Estimated weekly fuel cost:</span><span class="calc-result-val" id="resultCost">$32.00</span></div>
+                <div class="calc-result-row"><span class="calc-result-label">Hypothetical gallons replaced by biofuel:</span><span class="calc-result-val" id="resultGallons">1.0 gal</span></div>
+                <div class="calc-result-row"><span class="calc-result-label">Remaining gasoline gallons in scenario:</span><span class="calc-result-val" id="resultRemaining">9.0 gal</span></div>
+                <div class="calc-disclaimer" role="note">⚠ <strong>Educational estimate only.</strong> This is a fuel diversification scenario tool. It does not predict actual savings, market prices, or commercial switchgrass availability.</div>
+              </div>
+            </div>
+            <div class="calc-context-cards">
+              <div class="calc-context-card"><h4>🛢 Why Fuel Diversification Matters</h4><p>Cellulosic biofuels — made from non-food plant material like switchgrass — are a long-term research area. The U.S. DOE actively funds research into cellulosic biofuel production pathways.</p><a href="https://www.energy.gov/eere/bioenergy/bioenergy-basics" target="_blank" rel="noopener" class="calc-link">DOE Bioenergy Basics →</a></div>
+              <div class="calc-context-card"><h4>🌾 Texas's Role</h4><p>Switchgrass grows natively across much of Texas. Texas A&amp;M AgriLife Extension has studied it as a potential bioenergy crop suited to Texas conditions — particularly on marginal or low-input land.</p><a href="https://agrilifeextension.tamu.edu/" target="_blank" rel="noopener" class="calc-link">Texas A&amp;M AgriLife Extension →</a></div>
+              <div class="calc-context-card"><h4>📊 A Real Energy Balance Study</h4><p>Schmer et al. (2008) in <em>PNAS</em> found switchgrass produced 540% more renewable energy than required to grow and convert it to ethanol under U.S. Great Plains conditions. These results are region-specific.</p><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener" class="calc-link">Schmer et al. (2008), PNAS →</a></div>
+            </div>
+          </section>
+        </div>
+
+      </div><!-- /page-science -->
+
+
+      <!-- ═══════════════════════════════════════════════════════════════════
+           TAB 5 — SOURCES & DATA STATUS
+           Sources + citations + transparency + API status + live data report
+      ══════════════════════════════════════════════════════════════════════ -->
+      <div class="page" id="page-sources" role="region" aria-label="Sources and Data Status">
+
         <div class="srcpage-hero">
-          <h1 class="srcpage-title">📚 Data Sources &amp; Citations</h1>
-          <p class="srcpage-sub">All data displayed across this platform is either illustrative/educational or grounded in peer-reviewed research and credible government sources. Each category below identifies the data type, values used, and the authoritative source behind it.</p>
+          <h1 class="srcpage-title">📚 Sources, Data Status &amp; Citations</h1>
+          <p class="srcpage-sub">All data displayed across this platform is either live from a real API, derived from live data using a documented formula, or grounded in peer-reviewed research and credible government sources. Each section below identifies the data type, method, and authoritative source.</p>
           <div class="srcpage-badges">
             <span class="badge badge-green">Peer-Reviewed Research</span>
-            <span class="badge badge-blue">Government Sources</span>
-            <span class="badge badge-orange">University Research</span>
+            <span class="badge badge-blue">Live API</span>
+            <span class="badge badge-orange">Live-Derived</span>
           </div>
         </div>
-        <div class="src-category">
-          <h2 class="src-cat-title">🌡️ Texas Weather &amp; Climate</h2>
-          <p class="src-cat-note">⚠ Data shown on the dashboard is illustrative and educational — not a live weather feed. For real-time data, use the sources below.</p>
-          <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Value / Range</th><th>Authoritative Source</th></tr></thead><tbody>
-            <tr><td>10 cities monitored</td><td>Austin, Houston, Dallas, San Antonio, Fort Worth, El Paso, Arlington, Corpus Christi, Plano, Lubbock</td><td><a href="https://www.weather.gov/" target="_blank" rel="noopener">NOAA National Weather Service</a></td></tr>
-            <tr><td>Temperature readings</td><td>79–96°F (sample)</td><td><a href="https://www.weather.gov/ewx/" target="_blank" rel="noopener">NWS Texas</a></td></tr>
-            <tr><td>Humidity</td><td>22–88% (sample)</td><td><a href="https://www.ncdc.noaa.gov/cdo-web/" target="_blank" rel="noopener">NOAA Climate Data Online</a></td></tr>
-            <tr><td>Wind speed</td><td>7–17 mph (sample)</td><td><a href="https://www.ncei.noaa.gov/" target="_blank" rel="noopener">NOAA NCEI</a></td></tr>
-            <tr><td>7-day forecast</td><td>Mon–Sun, 63–98°F range</td><td><a href="https://www.weather.gov/" target="_blank" rel="noopener">NWS Point Forecasts</a></td></tr>
-            <tr><td>UV Index</td><td>Per city (sample)</td><td><a href="https://www.epa.gov/sunsafety/uv-index-scale-0" target="_blank" rel="noopener">EPA UV Index Scale</a></td></tr>
-            <tr><td>Air Quality Index</td><td>Per city (sample)</td><td><a href="https://www.airnow.gov/" target="_blank" rel="noopener">EPA AirNow</a></td></tr>
-          </tbody></table></div>
+
+        <!-- Live Data Summaries (AI Reports, moved here) -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">📋 Live Data Summaries
+            <span class="tsh-badge">Live-Derived</span>
+          </div>
+          <div id="reportsContent"></div>
         </div>
-        <div class="src-category">
-          <h2 class="src-cat-title">🌾 Agriculture</h2>
-          <p class="src-cat-note">⚠ Agricultural indicators shown are illustrative estimates — not real-time USDA data.</p>
-          <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Value</th><th>Authoritative Source</th></tr></thead><tbody>
-            <tr><td>Heat Stress Risk</td><td>65% — Moderate-High</td><td><a href="https://www.nass.usda.gov/" target="_blank" rel="noopener">USDA NASS</a></td></tr>
-            <tr><td>Drought Concern</td><td>72% — Concerning</td><td><a href="https://droughtmonitor.unl.edu/" target="_blank" rel="noopener">USDA Drought Monitor</a></td></tr>
-            <tr><td>Irrigation Need</td><td>80% — High</td><td><a href="https://agrilifeextension.tamu.edu/" target="_blank" rel="noopener">Texas A&amp;M AgriLife Extension</a></td></tr>
-            <tr><td>Crop Growth Suitability</td><td>55% — Moderate</td><td><a href="https://www.ers.usda.gov/topics/farm-economy/bioenergy/" target="_blank" rel="noopener">USDA ERS Bioenergy</a></td></tr>
-            <tr><td>Agricultural Risk Index</td><td>68% — Elevated</td><td><a href="https://www.rma.usda.gov/" target="_blank" rel="noopener">USDA Risk Management Agency</a></td></tr>
-          </tbody></table></div>
+
+        <!-- Transparency (moved from Dashboard) -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">🔍 Data &amp; Evidence Transparency</div>
+          <section class="transparency-section" id="transparency" aria-label="Data and evidence transparency statement">
+            <div class="transparency-card">
+              <p><strong>This platform is an educational prototype.</strong> Data shown — including weather statistics, energy figures, agriculture indicators, and AI-assisted summaries — is either live from a real API, derived from live data, or illustrative/educational. Labels on each section indicate the data type.</p>
+              <ul class="transparency-list">
+                <li>📡 <strong>Live API data</strong> is fetched in real time from Open-Meteo (weather, AQI, ET0) and the National Weather Service (alerts).</li>
+                <li>📐 <strong>Live-Derived data</strong> (agriculture stress scores, CDI, water stress) is computed from live API values using documented formulas.</li>
+                <li>🤖 <strong>AI-assisted summaries</strong> are generated from displayed live data — they do not invent facts or numbers.</li>
+                <li>🌿 <strong>Biofuel lab scores</strong> are AI-generated prototype estimates based on published agronomic literature — not commercial forecasts.</li>
+                <li>⛽ <strong>Fuel efficiency figures</strong> are drawn from published life-cycle assessment studies.</li>
+                <li>📋 This platform does <strong>not</strong> constitute investment, agronomic, engineering, or policy advice.</li>
+              </ul>
+              <p class="transparency-goal">Goal: <strong>public education</strong> — helping everyday Texans, students, and researchers explore connections between weather, climate, agriculture, energy, and bioenergy potential.</p>
+            </div>
+          </section>
         </div>
-        <div class="src-category">
-          <h2 class="src-cat-title">🌿 Switchgrass Biofuel Science</h2>
-          <p class="src-cat-note">✓ All values below are drawn directly from peer-reviewed scientific literature.</p>
-          <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Value</th><th>Citation</th></tr></thead><tbody>
-            <tr><td>Net energy return (cellulosic ethanol)</td><td><strong>540%</strong> more than input energy</td><td><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008), <em>PNAS</em> 105(2):464–469</a></td></tr>
-            <tr><td>Switchgrass biofuel yield</td><td>200–280 GJ/ha/yr</td><td><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008), <em>PNAS</em></a></td></tr>
-            <tr><td>Corn ethanol yield (comparison)</td><td>120–160 GJ/ha/yr</td><td><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008), <em>PNAS</em></a></td></tr>
-            <tr><td>Carbon sequestration potential</td><td>1.1–2.3 tCO₂/ha/yr</td><td><a href="https://www.energy.gov/eere/bioenergy/2016-billion-ton-report" target="_blank" rel="noopener">DOE Billion-Ton Report (2016)</a></td></tr>
-            <tr><td>Water footprint — cellulosic ethanol</td><td>6–14 gal/gal</td><td><a href="https://www.nrel.gov/bioenergy/" target="_blank" rel="noopener">NREL Bioenergy Research</a></td></tr>
-            <tr><td>Water footprint — corn ethanol</td><td>784 gal/gal</td><td><a href="https://www.nrel.gov/bioenergy/" target="_blank" rel="noopener">NREL Bioenergy Research</a></td></tr>
-            <tr><td>Lignin as production barrier</td><td>Cell wall blocks enzymatic access to cellulose</td><td><a href="https://doi.org/10.1016/j.biortech.2004.06.025" target="_blank" rel="noopener">Mosier et al. (2005), <em>Bioresource Technology</em> 96(6):673–686</a></td></tr>
-            <tr><td>Pretreatment methods</td><td>Heat, acid, ammonia (AFEX), steam explosion</td><td><a href="https://doi.org/10.1016/j.biortech.2004.06.025" target="_blank" rel="noopener">Mosier et al. (2005)</a></td></tr>
-            <tr><td>Biofuel conversion pathways</td><td>Cellulose → sugars → ethanol / advanced fuels</td><td><a href="https://doi.org/10.1126/science.1114736" target="_blank" rel="noopener">Ragauskas et al. (2006), <em>Science</em> 311(5760):484–489</a></td></tr>
-            <tr><td>Switchgrass as U.S. priority feedstock</td><td>Federal bioenergy crop designation</td><td><a href="https://www.energy.gov/eere/bioenergy/switchgrass" target="_blank" rel="noopener">DOE EERE — Switchgrass</a></td></tr>
-            <tr><td>Farm-scale production costs</td><td>Economic field-scale estimates</td><td><a href="https://doi.org/10.2134/agronj2007.0271" target="_blank" rel="noopener">Perrin et al. (2008), <em>Agron. J.</em> 100(6):1657–1665</a></td></tr>
-          </tbody></table></div>
+
+        <!-- Source categories (from old sources page) -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">🌡 Live Data Sources</div>
+          <div class="src-category">
+            <h2 class="src-cat-title">🌡️ Weather, Forecast &amp; ET0</h2>
+            <p class="src-cat-note">✓ Live data fetched from Open-Meteo API on page load and every ~10 minutes.</p>
+            <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Source</th><th>Status</th></tr></thead><tbody>
+              <tr><td>Temperature, humidity, wind, weather code</td><td><a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo Current Weather API</a></td><td class="cap-yes">Live</td></tr>
+              <tr><td>7-day forecast (high/low/precip probability/ET0)</td><td><a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo Forecast API</a></td><td class="cap-yes">Live</td></tr>
+              <tr><td>ET0 evapotranspiration (daily)</td><td><a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo — et0_fao_evapotranspiration</a></td><td class="cap-yes">Live</td></tr>
+              <tr><td>Air Quality Index (AQI US)</td><td><a href="https://air-quality-api.open-meteo.com" target="_blank" rel="noopener">Open-Meteo Air Quality API</a></td><td class="cap-yes">Live</td></tr>
+              <tr><td>NWS Severe Weather Alerts (Texas)</td><td><a href="https://api.weather.gov/alerts/active?area=TX" target="_blank" rel="noopener">api.weather.gov — NWS Active Alerts</a></td><td class="cap-yes">Live</td></tr>
+            </tbody></table></div>
+          </div>
+
+          <div class="src-category">
+            <h2 class="src-cat-title">📐 Live-Derived Data (computed from live APIs)</h2>
+            <p class="src-cat-note">These values are calculated from live API data using documented formulas. They are estimates, not sensor measurements.</p>
+            <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Formula / Method</th><th>Underlying Source</th></tr></thead><tbody>
+              <tr><td>Heat Stress Score</td><td>max(0, (avgTemp − 68°F) / 36 × 100)</td><td>Open-Meteo live temps</td></tr>
+              <tr><td>Moisture Stress Score</td><td>ET0 deficit: max(0, ET0 − precip) / ET0 × 100</td><td>Open-Meteo ET0 + precip</td></tr>
+              <tr><td>Cooling Demand Index (CDI)</td><td>max(0, temp − 65°F) × 0.8</td><td>Open-Meteo live temps</td></tr>
+              <tr><td>7-day rainfall probability avg</td><td>Average of precipitation_probability_max across cities</td><td>Open-Meteo forecast</td></tr>
+              <tr><td>Statewide averages (temp, humidity, wind)</td><td>Arithmetic mean across 10 monitored cities</td><td>Open-Meteo current</td></tr>
+            </tbody></table></div>
+          </div>
+
+          <div class="src-category">
+            <h2 class="src-cat-title">❌ Not Integrated — Official External Links Only</h2>
+            <p class="src-cat-note">These sources are <strong>not connected via API</strong>. No data from these sources is shown as live on this platform. Official links are provided for direct access.</p>
+            <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Official Source</th><th>Status</th></tr></thead><tbody>
+              <tr><td>Texas reservoir / lake levels</td><td><a href="https://www.waterdatafortexas.org/reservoirs/statewide" target="_blank" rel="noopener">Texas Water Development Board (TWDB)</a></td><td class="cap-no">Not integrated</td></tr>
+              <tr><td>Streamflow / gage data</td><td><a href="https://waterdata.usgs.gov/tx/nwis/current/" target="_blank" rel="noopener">USGS Water Services — Texas</a></td><td class="cap-no">Not integrated</td></tr>
+              <tr><td>ERCOT real-time grid demand</td><td><a href="https://www.ercot.com/gridinfo" target="_blank" rel="noopener">ERCOT Grid Information</a></td><td class="cap-no">Not integrated</td></tr>
+              <tr><td>Soil moisture (SMAP satellite)</td><td><a href="https://smap.jpl.nasa.gov/" target="_blank" rel="noopener">NASA SMAP Soil Moisture</a></td><td class="cap-no">Not integrated</td></tr>
+              <tr><td>Cropland data / USDA CropScape</td><td><a href="https://nassgeodata.gmu.edu/CropScape/" target="_blank" rel="noopener">USDA NASS CropScape</a></td><td class="cap-no">Not integrated</td></tr>
+              <tr><td>Groundwater levels</td><td><a href="https://www.twdb.texas.gov/groundwater/" target="_blank" rel="noopener">TWDB Groundwater</a></td><td class="cap-no">Not integrated</td></tr>
+              <tr><td>Texas gas prices (weekly retail)</td><td><a href="https://www.eia.gov/petroleum/gasdiesel/" target="_blank" rel="noopener">EIA Weekly Retail Gasoline Prices</a></td><td class="cap-no">Not integrated</td></tr>
+            </tbody></table></div>
+          </div>
         </div>
-        <div class="src-category">
-          <h2 class="src-cat-title">🧬 HAL2 / FIL2 Ecotype Research</h2>
-          <p class="src-cat-note">⚠ HAL2 and FIL2 are <em>Panicum hallii</em> model ecotypes used in laboratory research — not commercial switchgrass varieties. Scores shown are prototype model values.</p>
-          <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Model Score</th><th>Citation</th></tr></thead><tbody>
-            <tr><td>HAL2 drought tolerance</td><td>92 / 100</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019), <em>Current Biology</em></a></td></tr>
-            <tr><td>HAL2 heat tolerance</td><td>88 / 100</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019)</a></td></tr>
-            <tr><td>HAL2 salinity tolerance</td><td>72 / 100</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019)</a></td></tr>
-            <tr><td>FIL2 biomass yield</td><td>85 / 100</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019)</a></td></tr>
-            <tr><td>FIL2 cold tolerance</td><td>78 / 100</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019)</a></td></tr>
-            <tr><td>FIL2 salinity tolerance</td><td>80 / 100</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019)</a></td></tr>
-            <tr><td>Switchgrass biology overview</td><td>Native perennial grass, <em>Panicum virgatum</em></td><td><a href="https://doi.org/10.1007/s11104-004-0930-5" target="_blank" rel="noopener">Parrish &amp; Fike (2005), <em>Plant &amp; Soil</em> 279:1–21</a></td></tr>
-          </tbody></table></div>
+
+        <!-- Scientific citations -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">📖 Scientific Citations — Switchgrass &amp; Bioenergy</div>
+          <div class="src-category">
+            <p class="src-cat-note">✓ All switchgrass biofuel science claims are grounded in peer-reviewed research or credible government and university sources.</p>
+            <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Value</th><th>Citation</th></tr></thead><tbody>
+              <tr><td>Net energy return (cellulosic ethanol)</td><td><strong>540%</strong> more than input energy</td><td><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008), <em>PNAS</em> 105(2):464–469</a></td></tr>
+              <tr><td>Switchgrass biofuel yield</td><td>200–280 GJ/ha/yr</td><td><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008), <em>PNAS</em></a></td></tr>
+              <tr><td>Corn ethanol yield (comparison)</td><td>120–160 GJ/ha/yr</td><td><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008), <em>PNAS</em></a></td></tr>
+              <tr><td>Carbon sequestration potential</td><td>1.1–2.3 tCO₂/ha/yr</td><td><a href="https://www.energy.gov/eere/bioenergy/2016-billion-ton-report" target="_blank" rel="noopener">DOE Billion-Ton Report (2016)</a></td></tr>
+              <tr><td>Water footprint — cellulosic ethanol</td><td>6–14 gal/gal fuel</td><td><a href="https://www.nrel.gov/bioenergy/" target="_blank" rel="noopener">NREL Bioenergy Research</a></td></tr>
+              <tr><td>Water footprint — corn ethanol</td><td>784 gal/gal fuel</td><td><a href="https://www.nrel.gov/bioenergy/" target="_blank" rel="noopener">NREL Bioenergy Research</a></td></tr>
+              <tr><td>Lignin as production barrier</td><td>Cell wall blocks enzymatic access to cellulose</td><td><a href="https://doi.org/10.1016/j.biortech.2004.06.025" target="_blank" rel="noopener">Mosier et al. (2005), <em>Bioresource Technology</em> 96(6):673–686</a></td></tr>
+              <tr><td>Pretreatment methods</td><td>Heat, acid, ammonia (AFEX), steam explosion</td><td><a href="https://doi.org/10.1016/j.biortech.2004.06.025" target="_blank" rel="noopener">Mosier et al. (2005)</a></td></tr>
+              <tr><td>Biofuel conversion pathways</td><td>Cellulose → sugars → ethanol / advanced fuels</td><td><a href="https://doi.org/10.1126/science.1114736" target="_blank" rel="noopener">Ragauskas et al. (2006), <em>Science</em> 311(5760):484–489</a></td></tr>
+              <tr><td>Switchgrass as U.S. priority feedstock</td><td>Federal bioenergy crop designation</td><td><a href="https://www.energy.gov/eere/bioenergy/switchgrass" target="_blank" rel="noopener">DOE EERE — Switchgrass</a></td></tr>
+              <tr><td>Osmolyte stress response</td><td>Proline, glycine betaine, sorbitol accumulation under stress</td><td>Szabados &amp; Savouré (2010), <em>Trends Plant Sci</em> 15(2):89–97</td></tr>
+              <tr><td>Fermentation inhibitors from stressed biomass</td><td>Phenolics, furfurals, acetic acid reduce yeast yield</td><td><a href="https://doi.org/10.1016/S0960-8524(99)00145-7" target="_blank" rel="noopener">Palmqvist &amp; Hahn-Hägerdal (2000), <em>Bioresource Technology</em> 74(1):17–24</a></td></tr>
+              <tr><td>HAL2 / FIL2 ecotype research</td><td>Drought-tolerant vs. biomass-optimized <em>Panicum hallii</em> ecotypes</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019), <em>Current Biology</em></a></td></tr>
+              <tr><td>Farm-scale production costs</td><td>Economic field-scale estimates</td><td><a href="https://doi.org/10.2134/agronj2007.0271" target="_blank" rel="noopener">Perrin et al. (2008), <em>Agron. J.</em> 100(6):1657–1665</a></td></tr>
+            </tbody></table></div>
+          </div>
+          <div class="sources-grid" style="margin-top:18px">
+            <div class="source-card"><div class="source-tag">Switchgrass as bioenergy crop</div><h4 class="source-title"><a href="https://www.energy.gov/eere/bioenergy/switchgrass" target="_blank" rel="noopener">DOE Bioenergy Technologies Office — Switchgrass</a></h4><p class="source-org">U.S. Department of Energy, EERE</p><p class="source-why">Primary government source establishing switchgrass as a priority cellulosic ethanol feedstock in the U.S.</p></div>
+            <div class="source-card"><div class="source-tag">Energy balance study</div><h4 class="source-title"><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008) — Net energy of cellulosic ethanol from switchgrass</a></h4><p class="source-org"><em>PNAS</em>, 105(2): 464–469</p><p class="source-why">Peer-reviewed field study showing 540% net energy return under U.S. Great Plains field conditions.</p></div>
+            <div class="source-card"><div class="source-tag">Lignin / pretreatment barrier</div><h4 class="source-title"><a href="https://doi.org/10.1016/j.biortech.2004.06.025" target="_blank" rel="noopener">Mosier et al. (2005) — Pretreatment of lignocellulosic biomass</a></h4><p class="source-org"><em>Bioresource Technology</em>, 96(6): 673–686</p><p class="source-why">Explains why lignin is the key technical barrier to affordable cellulosic biofuel production.</p></div>
+            <div class="source-card"><div class="source-tag">Cellulosic biofuel research</div><h4 class="source-title"><a href="https://www.nrel.gov/bioenergy/" target="_blank" rel="noopener">NREL Bioenergy Research</a></h4><p class="source-org">National Renewable Energy Laboratory</p><p class="source-why">Leading federal lab for pretreatment, enzyme development, and biomass-to-fuel conversion pathways.</p></div>
+            <div class="source-card"><div class="source-tag">Biofuel science overview</div><h4 class="source-title"><a href="https://doi.org/10.1126/science.1114736" target="_blank" rel="noopener">Ragauskas et al. (2006) — The Path Forward for Biofuels</a></h4><p class="source-org"><em>Science</em>, 311(5760): 484–489</p><p class="source-why">Seminal overview of scientific challenges in converting lignocellulosic biomass to fuel.</p></div>
+            <div class="source-card"><div class="source-tag">Texas agricultural context</div><h4 class="source-title"><a href="https://agrilifeextension.tamu.edu/" target="_blank" rel="noopener">Texas A&amp;M AgriLife Extension</a></h4><p class="source-org">Texas A&amp;M University System</p><p class="source-why">Research-based guidance on bioenergy crops, including switchgrass, suited to Texas conditions.</p></div>
+          </div>
         </div>
-        <div class="src-category">
-          <h2 class="src-cat-title">🌍 Global Switchgrass Deployment Regions</h2>
-          <p class="src-cat-note">⚠ Regional scores are AI-generated prototype values for educational purposes — not peer-reviewed regional assessments.</p>
-          <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Region</th><th>Climate Fit Score</th><th>Reference Source</th></tr></thead><tbody>
-            <tr><td>Great Plains (USA)</td><td>88 / 100</td><td><a href="https://www.energy.gov/eere/bioenergy/2016-billion-ton-report" target="_blank" rel="noopener">DOE Billion-Ton Report (2016)</a></td></tr>
-            <tr><td>Texas</td><td>85 / 100</td><td><a href="https://agrilifeextension.tamu.edu/" target="_blank" rel="noopener">Texas A&amp;M AgriLife Extension</a></td></tr>
-            <tr><td>Brazil Cerrado</td><td>80 / 100</td><td><a href="https://www.fao.org/land-water/en/" target="_blank" rel="noopener">FAO Land &amp; Water Division</a></td></tr>
-            <tr><td>Sub-Saharan Africa</td><td>72 / 100</td><td><a href="https://www.fao.org/land-water/en/" target="_blank" rel="noopener">FAO Land &amp; Water Division</a></td></tr>
-            <tr><td>India — Deccan Plateau</td><td>68 / 100</td><td><a href="https://www.ipcc.ch/assessment-report/ar6/" target="_blank" rel="noopener">IPCC AR6 Report</a></td></tr>
-            <tr><td>N. China Plain</td><td>60 / 100</td><td><a href="https://www.fao.org/land-water/en/" target="_blank" rel="noopener">FAO Land &amp; Water Division</a></td></tr>
-            <tr><td>Eastern Europe</td><td>65 / 100</td><td><a href="https://www.ipcc.ch/assessment-report/ar6/" target="_blank" rel="noopener">IPCC AR6 Report</a></td></tr>
-            <tr><td>Australia Interior</td><td>52 / 100</td><td><a href="https://www.fao.org/land-water/en/" target="_blank" rel="noopener">FAO Land &amp; Water Division</a></td></tr>
-          </tbody></table></div>
-        </div>
-        <div class="src-category">
-          <h2 class="src-cat-title">⛽ Energy &amp; Fuel</h2>
-          <p class="src-cat-note">⚠ ERCOT and gas price figures shown on the dashboard are illustrative — use the sources below for real data.</p>
-          <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Authoritative Source</th></tr></thead><tbody>
-            <tr><td>ERCOT grid demand figures</td><td><a href="https://www.ercot.com/gridinfo" target="_blank" rel="noopener">ERCOT Grid Information</a></td></tr>
-            <tr><td>Weekly retail gasoline prices (Texas)</td><td><a href="https://www.eia.gov/petroleum/gasdiesel/" target="_blank" rel="noopener">EIA Weekly Retail Gasoline Prices</a></td></tr>
-            <tr><td>U.S. bioenergy policy &amp; fuel goals</td><td><a href="https://www.energy.gov/eere/bioenergy/bioenergy-basics" target="_blank" rel="noopener">DOE Bioenergy Basics</a></td></tr>
-            <tr><td>Biofuel production pathway science</td><td><a href="https://www.nrel.gov/bioenergy/" target="_blank" rel="noopener">NREL Bioenergy Research</a></td></tr>
-          </tbody></table></div>
-        </div>
-        <div class="src-category">
-          <h2 class="src-cat-title">💨 Air Quality</h2>
-          <p class="src-cat-note">⚠ AQI values shown on the dashboard are illustrative sample data.</p>
-          <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Authoritative Source</th></tr></thead><tbody>
-            <tr><td>AQI per city</td><td><a href="https://www.airnow.gov/" target="_blank" rel="noopener">EPA AirNow</a></td></tr>
-            <tr><td>Texas air quality monitoring network</td><td><a href="https://www.tceq.texas.gov/airquality" target="_blank" rel="noopener">TCEQ Air Quality Division</a></td></tr>
-            <tr><td>AQI health guidance &amp; thresholds</td><td><a href="https://www.epa.gov/outdoor-air-quality-data" target="_blank" rel="noopener">EPA Outdoor Air Quality Data</a></td></tr>
-          </tbody></table></div>
-        </div>
-        <div class="src-category">
-          <h2 class="src-cat-title">💧 Water Resources</h2>
-          <p class="src-cat-note">⚠ Reservoir and water availability data shown are illustrative.</p>
-          <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Authoritative Source</th></tr></thead><tbody>
-            <tr><td>Texas reservoir levels</td><td><a href="https://www.twdb.texas.gov/" target="_blank" rel="noopener">Texas Water Development Board</a></td></tr>
-            <tr><td>Statewide water availability</td><td><a href="https://www.usgs.gov/centers/tx-water" target="_blank" rel="noopener">USGS Texas Water Resources</a></td></tr>
-            <tr><td>Water use by sector</td><td><a href="https://www.twdb.texas.gov/waterplanning/" target="_blank" rel="noopener">TWDB State Water Plan</a></td></tr>
-          </tbody></table></div>
-        </div>
-        <div class="src-category">
-          <h2 class="src-cat-title">⚠️ Severe Weather</h2>
-          <p class="src-cat-note">⚠ Alerts shown on the dashboard are sample illustrative data — not live NWS feeds.</p>
-          <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Authoritative Source</th></tr></thead><tbody>
-            <tr><td>Weather alerts &amp; warnings</td><td><a href="https://www.spc.noaa.gov/" target="_blank" rel="noopener">NOAA Storm Prediction Center</a></td></tr>
-            <tr><td>Texas severe weather forecasts</td><td><a href="https://www.weather.gov/ewx/" target="_blank" rel="noopener">NWS San Antonio / Austin</a></td></tr>
-            <tr><td>Hurricane &amp; tropical storm tracking</td><td><a href="https://www.nhc.noaa.gov/" target="_blank" rel="noopener">NOAA National Hurricane Center</a></td></tr>
-          </tbody></table></div>
-        </div>
+
         <div class="src-disclaimer-block">
           <h3 class="src-disclaimer-title">About This Platform's Data</h3>
-          <p class="src-disclaimer-text">This is an <strong>educational prototype dashboard</strong>. Weather, agriculture, energy, and AQI figures displayed throughout the dashboard are illustrative sample values — not real-time operational data. Scientific claims about switchgrass biofuel are grounded in the peer-reviewed literature cited above. Global deployment scores and HAL2/FIL2 trait values are AI-generated prototype estimates based on published agronomic literature. This platform does not constitute investment, agronomic, engineering, or policy advice.</p>
+          <p class="src-disclaimer-text">This is an <strong>educational prototype dashboard</strong>. Weather data is fetched live from Open-Meteo. Agriculture stress, CDI, and other derived values are computed from live data using documented formulas. Biofuel lab scores and HAL2/FIL2 trait values are AI-generated prototype estimates based on published agronomic literature. No fake, hardcoded, or invented values are presented as real data. This platform does not constitute investment, agronomic, engineering, or policy advice.</p>
         </div>
-      </div>
 
-      <!-- Settings -->
+      </div><!-- /page-sources -->
+
+
+      <!-- ═══════════════════════════════════════════════════════════════════
+           SETTINGS PAGE (accessible via footer gear button)
+      ══════════════════════════════════════════════════════════════════════ -->
       <div class="page" id="page-settings" role="region" aria-label="Platform Settings"></div>
 
     </main>
@@ -843,7 +1081,7 @@
 <!-- ── App Scripts (load order matters) ── -->
 <script src="js/data.js?v=2"></script>
 <script src="js/utils.js"></script>
-<script src="js/nav.js?v=2"></script>
+<script src="js/nav.js?v=3"></script>
 <script src="js/dashboard.js"></script>
 <script src="js/map.js?v=2"></script>
 <script src="js/forecasts.js?v=2"></script>

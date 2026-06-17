@@ -328,3 +328,143 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offse
   padding:2px 8px;background:rgba(245,166,35,0.08);border-radius:4px;
   border:1px solid rgba(245,166,35,0.22);
 }
+
+/* ── TexasClimate 5-tab layout additions ─────────────────────────────────── */
+
+/* Tab subsection dividers within combined pages */
+.tab-subsection{
+  margin:32px 0 0;
+  padding-top:24px;
+  border-top:1px solid var(--border2);
+}
+.tab-subsection:first-child{ margin-top:0; padding-top:0; border-top:none; }
+.tab-subsection-header{
+  display:flex;align-items:center;gap:10px;
+  font-size:16px;font-weight:700;color:var(--text0);
+  letter-spacing:-0.2px;margin-bottom:16px;
+  padding:10px 14px;
+  background:linear-gradient(90deg,rgba(74,144,226,0.07),transparent);
+  border-left:3px solid var(--blue);
+  border-radius:0 var(--r8) var(--r8) 0;
+}
+.tab-subsection-header .tsh-badge{
+  font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;
+  padding:2px 8px;border-radius:10px;
+  background:rgba(74,144,226,0.15);color:var(--blue);
+  border:1px solid rgba(74,144,226,0.3);
+  flex-shrink:0;
+}
+
+/* Guided workflow pipeline bar */
+.tc-workflow-section{margin-bottom:24px}
+.tc-workflow-bar{
+  display:flex;align-items:center;gap:0;
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:var(--r12);padding:16px 20px;
+  overflow-x:auto;flex-wrap:nowrap;
+}
+.tc-wf-step{
+  display:flex;flex-direction:column;align-items:center;
+  gap:4px;min-width:80px;flex-shrink:0;
+}
+.tc-wf-icon{
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+  background:var(--surface2);border:1px solid var(--border2);
+  transition:background 0.2s,border-color 0.2s;
+}
+.tc-wf-step.active .tc-wf-icon{
+  background:rgba(74,144,226,0.18);border-color:rgba(74,144,226,0.5);
+  box-shadow:0 0 12px rgba(74,144,226,0.25);
+}
+.tc-wf-label{font-size:10px;font-weight:600;color:var(--text2);text-align:center;letter-spacing:0.02em}
+.tc-wf-step.active .tc-wf-label{color:var(--blue)}
+.tc-wf-arrow{
+  font-size:16px;color:var(--border2);margin:0 2px;flex-shrink:0;
+  padding-bottom:16px;
+}
+
+/* Placeholder cards (features not yet implemented) */
+.placeholder-card{
+  border:1px dashed rgba(93,219,168,0.25);
+  background:rgba(93,219,168,0.03);
+  border-radius:var(--r12);padding:20px 22px;
+  margin-bottom:16px;
+  display:flex;align-items:flex-start;gap:14px;
+}
+.placeholder-card-icon{font-size:28px;flex-shrink:0;margin-top:2px}
+.placeholder-card-body{}
+.placeholder-card-title{
+  font-size:13px;font-weight:700;color:rgba(93,219,168,0.75);margin-bottom:4px;
+}
+.placeholder-card-desc{font-size:11px;color:var(--text3);line-height:1.6}
+.placeholder-card-tag{
+  display:inline-block;margin-top:8px;
+  font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;
+  padding:2px 8px;border-radius:10px;
+  background:rgba(93,219,168,0.1);color:rgba(93,219,168,0.6);
+  border:1px solid rgba(93,219,168,0.2);
+}
+
+/* Science & Stress chain */
+.science-chain-wrap{
+  display:flex;flex-direction:column;gap:12px;margin-bottom:24px;
+}
+.sci-chain-step{
+  display:flex;align-items:flex-start;gap:16px;
+  padding:16px 18px;
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:var(--r12);
+}
+.sci-chain-step-num{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(74,144,226,0.15);border:1px solid rgba(74,144,226,0.35);
+  color:var(--blue);font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.sci-chain-step-body{flex:1}
+.sci-chain-step-title{font-size:13px;font-weight:700;color:var(--text0);margin-bottom:5px}
+.sci-chain-step-desc{font-size:11px;color:var(--text2);line-height:1.65}
+.sci-chain-step-note{
+  margin-top:7px;font-size:10px;color:var(--text3);
+  padding:5px 10px;background:rgba(255,255,255,0.03);
+  border-left:2px solid var(--border2);border-radius:0 4px 4px 0;
+}
+.sci-chain-arrow{
+  text-align:center;font-size:14px;color:var(--border2);
+  padding:2px 0;
+}
+
+/* Data capability table */
+.data-cap-table{width:100%;border-collapse:collapse;font-size:11px}
+.data-cap-table th{
+  text-align:left;padding:8px 12px;font-size:10px;
+  font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;
+  border-bottom:1px solid var(--border2);background:var(--surface);
+}
+.data-cap-table td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text1);vertical-align:top}
+.data-cap-table tr:last-child td{border-bottom:none}
+.cap-yes{color:#5DDBA8;font-weight:600}
+.cap-no {color:#E87A7A;font-weight:600}
+.cap-part{color:#F5A623;font-weight:600}
+
+/* Bioenergy tab nav sub-anchors */
+.be-tab-anchors{
+  display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;
+}
+.be-tab-anchor{
+  font-size:11px;font-weight:600;
+  padding:6px 14px;border-radius:var(--r8);
+  background:var(--surface2);border:1px solid var(--border2);
+  color:var(--text2);cursor:pointer;text-decoration:none;
+  transition:background 0.15s,color 0.15s,border-color 0.15s;
+}
+.be-tab-anchor:hover{background:rgba(74,144,226,0.14);color:var(--blue);border-color:rgba(74,144,226,0.35)}
+
+/* Responsive: stack workflow bar on narrow screens */
+@media(max-width:600px){
+  .tc-workflow-bar{padding:12px 10px;gap:0}
+  .tc-wf-step{min-width:60px}
+  .tc-wf-label{font-size:9px}
+}

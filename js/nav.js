@@ -12,36 +12,58 @@ function closeSidebar(){
   document.getElementById('hamburgerBtn').setAttribute('aria-expanded','false');
 }
 
+// ── Tab render map — what to call when each main tab is shown ─────────────────
+const TAB_RENDERERS = {
+  analyze:    () => { renderDashboard(); renderAg(); },
+  mapcompare: () => {
+    renderMap();
+    renderCompare();
+    renderForecastPage();
+    renderTrends();
+    renderAQ();
+    renderWater();
+    renderEnergy();
+    renderSevere();
+  },
+  bioenergy:  () => { sgBiofuelInit(); fuelEffInit(); scannerInit(); },
+  science:    () => {},
+  sources:    () => { renderReports(); },
+  settings:   () => { renderSettings(); },
+};
+
+// Legacy page IDs → resolved 5-tab IDs (keeps old onclick links working)
+const LEGACY_MAP = {
+  dashboard: 'analyze', agriculture: 'analyze',
+  map: 'mapcompare', forecasts: 'mapcompare', trends: 'mapcompare',
+  airquality: 'mapcompare', water: 'mapcompare', energy: 'mapcompare',
+  severe: 'mapcompare', compare: 'mapcompare',
+  sgbiofuel: 'bioenergy', fueleff: 'bioenergy', scanner: 'bioenergy',
+  reports: 'sources',
+};
+
 // ── Navigation ────────────────────────────────────────────────────────────────
 function showPage(id){
+  const resolved = LEGACY_MAP[id] || id;
+
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => {
-    const isActive = n.dataset.page === id;
+    const isActive = n.dataset.page === resolved;
     n.classList.toggle('active', isActive);
     n.setAttribute('aria-current', isActive ? 'page' : 'false');
   });
-  const page = document.getElementById('page-'+id);
+
+  const page = document.getElementById('page-' + resolved);
   if(page) page.classList.add('active');
-  const title = PAGE_TITLES[id] || 'Dashboard';
+
+  const title = PAGE_TITLES[resolved] || 'TexasClimate';
   document.getElementById('pageTitle').textContent = title;
   announce(`Navigated to ${title}`);
   closeSidebar();
 
-  if(id === 'map')        renderMap();
-  if(id === 'forecasts')  renderForecastPage();
-  if(id === 'agriculture')renderAg();
-  if(id === 'sgbiofuel')  sgBiofuelInit();
-  if(id === 'scanner')    scannerInit();
-  if(id === 'fueleff')    fuelEffInit();
-  if(id !== 'scanner' && typeof scannerCleanup === 'function') scannerCleanup();
-  if(id === 'trends')     renderTrends();
-  if(id === 'airquality') renderAQ();
-  if(id === 'water')      renderWater();
-  if(id === 'energy')     renderEnergy();
-  if(id === 'severe')     renderSevere();
-  if(id === 'compare')    renderCompare();
-  if(id === 'reports')    renderReports();
-  if(id === 'settings')   renderSettings();
+  // Scanner cleanup when leaving the bioenergy tab
+  if(resolved !== 'bioenergy' && typeof scannerCleanup === 'function') scannerCleanup();
+
+  if(TAB_RENDERERS[resolved]) TAB_RENDERERS[resolved]();
 }
 
 // ── Search ────────────────────────────────────────────────────────────────────
@@ -58,7 +80,7 @@ function handleSearch(val){
   if(match){
     fb.textContent = '';
     fb.classList.remove('visible');
-    showPage('map');
+    showPage('mapcompare');
     selectedCity = match.name;
     if(WEATHER_DATA[match.name]){
       showCityDetail(match.name);

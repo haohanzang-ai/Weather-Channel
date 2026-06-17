@@ -133,22 +133,28 @@ const AG_DATA = [
 ];
 
 const PAGE_TITLES = {
-  dashboard:   'Dashboard Overview',
-  map:         'Interactive Texas Map',
-  forecasts:   'City Forecasts',
-  agriculture: 'Agriculture Intelligence',
-  sgbiofuel:   'Switchgrass Biofuel Lab',
-  fueleff:     'Fuel Efficiency Center',
-  settings:    'Settings',
-  trends:      'Climate Trends',
-  airquality:  'Air Quality Center',
-  water:       'Water Resources',
-  energy:      'Energy Intelligence',
-  severe:      'Severe Weather',
-  compare:     'City Comparison Lab',
-  reports:     'AI Intelligence Reports',
-  sources:     'Data Sources & Citations',
-  scanner:     'Plant-to-Fuel Scanner'
+  // ── 5 main TexasClimate tabs ──────────────────────────────────────────────
+  analyze:    'Analyze — Plant · Location · Bioenergy',
+  mapcompare: 'Map & Compare — Texas Locations',
+  bioenergy:  'Bioenergy Engine',
+  science:    'Science & Stress Methods',
+  sources:    'Sources & Data Status',
+  settings:   'Settings',
+  // ── legacy keys kept so any direct showPage() calls still title correctly ─
+  dashboard:   'Analyze — Plant · Location · Bioenergy',
+  map:         'Map & Compare — Texas Locations',
+  forecasts:   'Map & Compare — Texas Locations',
+  agriculture: 'Analyze — Plant · Location · Bioenergy',
+  sgbiofuel:   'Bioenergy Engine',
+  fueleff:     'Bioenergy Engine',
+  scanner:     'Bioenergy Engine',
+  trends:      'Map & Compare — Texas Locations',
+  airquality:  'Map & Compare — Texas Locations',
+  water:       'Map & Compare — Texas Locations',
+  energy:      'Map & Compare — Texas Locations',
+  severe:      'Map & Compare — Texas Locations',
+  compare:     'Map & Compare — Texas Locations',
+  reports:     'Sources & Data Status',
 };
 
 // ── WMO weather code → condition / icon ──────────────────────────────────────
