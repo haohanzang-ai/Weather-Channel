@@ -237,11 +237,17 @@
           <div class="plant-select-card">
             <div class="plant-select-intro">Choose the plant or crop you want to analyze. The bioenergy scoring pipeline uses the plant's published profile (drought tolerance, heat thresholds, conversion chemistry) together with your measured environment to compute stress and suitability scores.</div>
             <div class="plant-select-row">
-              <label for="analyzePlantSel" class="plant-select-label">Plant / Crop</label>
-              <select id="analyzePlantSel" class="plant-select-dropdown" onchange="analyzeSetPlant(this.value)">
-                <option value="">— choose a plant or crop —</option>
-              </select>
-              <button class="btn-sm" onclick="showPage('bioenergy')" style="font-size:11px;white-space:nowrap">🔬 Full Scanner →</button>
+              <label class="plant-select-label">Plant / Crop</label>
+              <div class="pcs-wrap" id="plantCustomSelWrap">
+                <div class="pcs-trigger" id="pcsTrigger" onclick="togglePlantDropdown()"
+                     tabindex="0" role="combobox" aria-haspopup="listbox" aria-expanded="false"
+                     onkeydown="if(event.key==='Enter'||event.key===' ')togglePlantDropdown()">
+                  <span class="pcs-value" id="pcsDisplayValue">— choose a plant or crop —</span>
+                  <span class="pcs-chevron">&#9662;</span>
+                </div>
+                <div class="pcs-panel" id="pcsPanelList" role="listbox" style="display:none"></div>
+              </div>
+              <button class="btn-sm" onclick="showPage('bioenergy')" style="font-size:11px;white-space:nowrap">Full Scanner →</button>
             </div>
             <div id="plantProfilePreview" class="plant-profile-preview" style="display:none"></div>
             <div class="plant-select-note">Image input is available in the Bioenergy Scanner tab. Photo analysis cannot measure lignin, cellulose, moisture, biomass, or fuel yield — bioenergy scores are based on plant profile + measured environment + cited methods. Lab data is needed for exact biomass chemistry.</div>

@@ -1097,24 +1097,91 @@ function _analyzeRenderPlantPreview(key) {
   `;
 }
 
+// Custom dropdown colours per category group
+const _PCS_GROUP_COLORS = {
+  'Energy Crops & Grasses':  '#5DDBA8',
+  'Woody & Shrub Biomass':   '#C49A6C',
+  'Texas Native & Invasive': '#F5A623',
+  'Agricultural Residues':   '#FFD166',
+  'Aquatic & Other':         '#4A90E2',
+  'Unconfirmed':             '#888',
+};
+
+let _pcsSelectedKey = '';
+
 function _analyzeBuildPlantDropdown() {
-  const sel = document.getElementById('analyzePlantSel');
-  if (!sel) return;
+  const panel = document.getElementById('pcsPanelList');
+  if (!panel) return;
+
   const groups = {
     'Energy Crops & Grasses':  ['switchgrass','miscanthus','sorghum','energy_cane','sugarcane','bamboo','hemp','agave'],
     'Woody & Shrub Biomass':   ['poplar','willow','eucalyptus','pine','oak','wood_biomass','wood_chips'],
     'Texas Native & Invasive': ['mesquite','eastern_redcedar','prickly_pear','water_hyacinth','invasive_grass','native_prairie_grass'],
     'Agricultural Residues':   ['corn_stover','corn_plant','cotton_stover','wheat_straw','rice_straw','crop_residue','grass_clippings','leaves_yard'],
     'Aquatic & Other':         ['algae','wetland_plant','ornamental','food_waste'],
-    'Unconfirmed':             ['unknown_grass','unknown_broadleaf','unknown_woody']
+    'Unconfirmed':             ['unknown_grass','unknown_broadleaf','unknown_woody'],
   };
-  sel.innerHTML = '<option value="">— choose a plant or crop —</option>' +
-    Object.entries(groups).map(([grpName, keys]) =>
-      `<optgroup label="${escapeHtml(grpName)}">${keys.map(k => {
-        const p = SCAN_PLANTS[k];
-        return p ? `<option value="${k}">${escapeHtml((p.icon||'') + ' ' + p.commonName)}</option>` : '';
-      }).join('')}</optgroup>`
-    ).join('');
+
+  panel.innerHTML = Object.entries(groups).map(([grpName, keys]) => {
+    const color = _PCS_GROUP_COLORS[grpName] || '#888';
+    const options = keys.map(k => {
+      const p = SCAN_PLANTS[k];
+      if (!p) return '';
+      const sci = p.scientificName ? `<span class="pcs-sci">${escapeHtml(p.scientificName)}</span>` : '';
+      return `<div class="pcs-option" role="option" data-key="${k}"
+                   onclick="_pcsSelectPlant('${k}','${escapeHtml(p.commonName)}')">
+                <span class="pcs-dot" style="background:${color}"></span>
+                <span class="pcs-name">${escapeHtml(p.commonName)}</span>
+                ${sci}
+              </div>`;
+    }).join('');
+    return `<div class="pcs-group-header" style="border-left:3px solid ${color}">${escapeHtml(grpName)}</div>${options}`;
+  }).join('');
+
+  // Close when clicking outside
+  document.addEventListener('click', _pcsOutsideClick, { capture: true });
+}
+
+function _pcsSelectPlant(key, name) {
+  _pcsSelectedKey = key;
+  const display = document.getElementById('pcsDisplayValue');
+  if (display) display.textContent = name;
+  // Mark selected option
+  document.querySelectorAll('#pcsPanelList .pcs-option').forEach(el => {
+    el.classList.toggle('selected', el.dataset.key === key);
+  });
+  closePlantDropdown();
+  analyzeSetPlant(key);
+}
+
+function togglePlantDropdown() {
+  const panel  = document.getElementById('pcsPanelList');
+  const trigger = document.getElementById('pcsTrigger');
+  if (!panel) return;
+  const isOpen = panel.style.display !== 'none';
+  if (isOpen) {
+    closePlantDropdown();
+  } else {
+    panel.style.display = 'block';
+    trigger?.classList.add('open');
+    trigger?.setAttribute('aria-expanded', 'true');
+    // Scroll selected option into view
+    const sel = panel.querySelector('.pcs-option.selected');
+    if (sel) sel.scrollIntoView({ block: 'nearest' });
+  }
+}
+
+function closePlantDropdown() {
+  const panel  = document.getElementById('pcsPanelList');
+  const trigger = document.getElementById('pcsTrigger');
+  if (panel)  panel.style.display = 'none';
+  trigger?.classList.remove('open');
+  trigger?.setAttribute('aria-expanded', 'false');
+}
+
+function _pcsOutsideClick(e) {
+  const wrap = document.getElementById('plantCustomSelWrap');
+  if (wrap && !wrap.contains(e.target)) closePlantDropdown();
 }
 
 // ── Build dropdowns ───────────────────────────────────────────────────────────
