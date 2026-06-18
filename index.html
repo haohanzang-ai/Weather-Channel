@@ -398,11 +398,7 @@
             <span class="tsh-badge">Live API</span>
           </div>
           <div style="margin-bottom:16px">
-            <label for="forecastCity" class="sr-only">Select city for forecast</label>
-            <select id="forecastCity" aria-label="Select city for forecast"
-                    onchange="renderForecastPage()"
-                    style="background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r8);padding:8px 14px;font-size:12px;color:var(--text0);outline:none;font-family:var(--font);cursor:pointer">
-            </select>
+            <div id="forecastCityWrap" style="max-width:320px"></div>
           </div>
           <div id="forecastContent"></div>
         </div>
@@ -1113,11 +1109,11 @@
 
 <!-- ── App Scripts (load order matters) ── -->
 <script src="js/data.js?v=2"></script>
-<script src="js/utils.js"></script>
+<script src="js/utils.js?v=2"></script>
 <script src="js/nav.js?v=3"></script>
 <script src="js/dashboard.js"></script>
 <script src="js/map.js?v=2"></script>
-<script src="js/forecasts.js?v=2"></script>
+<script src="js/forecasts.js?v=3"></script>
 <script src="js/agriculture.js"></script>
 <script src="js/trends.js"></script>
 <script src="js/airquality.js"></script>
@@ -1129,10 +1125,10 @@
 <script src="js/facts.js"></script>
 <script src="js/biofuel.js"></script>
 <script src="js/fuel.js"></script>
-<script src="js/scanner.js?v=4"></script>
+<script src="js/scanner.js?v=5"></script>
 <script src="js/settings.js"></script>
 <script src="js/mission.js"></script>
-<script src="js/location.js"></script>
+<script src="js/location.js?v=2"></script>
 <script src="js/stress.js"></script>
 <script src="js/bioenergy-engine.js"></script>
 <script src="js/report.js"></script>

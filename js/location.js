@@ -100,32 +100,36 @@ function locRequestGPS() {
 function locShowCityPicker() {
   const sub = document.getElementById('locSubInput');
   if (!sub) return;
-  const cityOptions = (typeof ALL_CITIES !== 'undefined' ? ALL_CITIES : [])
-    .map(c => `<option value="${c.lat},${c.lon}" data-name="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`)
-    .join('');
   sub.innerHTML = `
     <div class="loc-sub-wrap">
-      <label for="locCitySelect" class="loc-sub-label">Select Texas City</label>
-      <select id="locCitySelect" class="loc-select" onchange="locCitySelected(this)">
-        <option value="">— choose a city —</option>
-        ${cityOptions}
-      </select>
-    </div>
-  `;
-}
+      <label class="loc-sub-label">Select Texas City</label>
+      <div id="locCitySelWrap"></div>
+    </div>`;
 
-function locCitySelected(sel) {
-  const parts = sel.value.split(',');
-  const lat = parseFloat(parts[0]);
-  const lon = parseFloat(parts[1]);
-  const name = sel.options[sel.selectedIndex].dataset.name;
-  if (!lat || !lon) return;
-  appState.locationMethod = 'city';
-  appState.lat  = lat;
-  appState.lon  = lon;
-  appState.locationLabel = name;
-  _locSetStatus('ok', `City selected: ${name}`);
-  locFetchEnvironment(lat, lon);
+  const cities = (typeof ALL_CITIES !== 'undefined' ? ALL_CITIES : []);
+  const primary  = cities.filter(c =>  c.primary);
+  const extended = cities.filter(c => !c.primary).sort((a,b) => a.name.localeCompare(b.name));
+
+  buildCustomSelect({
+    wrapperId: 'locCitySelWrap',
+    placeholder: '— choose a city —',
+    groups: [
+      { label: 'Top Cities',        color: '#5DDBA8', items: primary.map(c  => ({ value: c.lat+','+c.lon, text: c.name })) },
+      { label: 'All Texas Cities',  color: '#4A90E2', items: extended.map(c => ({ value: c.lat+','+c.lon, text: c.name })) },
+    ],
+    onChange(value) {
+      const [lat, lon] = value.split(',').map(Number);
+      if (!lat || !lon) return;
+      const city = cities.find(c => String(c.lat)+','+String(c.lon) === value);
+      const name = city ? city.name : value;
+      appState.locationMethod = 'city';
+      appState.lat  = lat;
+      appState.lon  = lon;
+      appState.locationLabel = name;
+      _locSetStatus('ok', `City selected: ${name}`);
+      locFetchEnvironment(lat, lon);
+    },
+  });
 }
 
 // ── Coordinate input method ───────────────────────────────────────────────────

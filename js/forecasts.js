@@ -1,18 +1,29 @@
 'use strict';
 
 // ── Forecasts page ────────────────────────────────────────────────────────────
+let _forecastSelectedCity = null;
+
 function populateForecastSelect(){
-  const sel = document.getElementById('forecastCity');
-  // Group: primary cities first, then extended alphabetically
   const primary  = ALL_CITIES.filter(c =>  c.primary);
-  const extended = ALL_CITIES.filter(c => !c.primary).sort((a,b)=>a.name.localeCompare(b.name));
-  sel.innerHTML =
-    `<optgroup label="Top Cities">${primary.map(c=>`<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('')}</optgroup>` +
-    `<optgroup label="All Texas Cities">${extended.map(c=>`<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('')}</optgroup>`;
+  const extended = ALL_CITIES.filter(c => !c.primary).sort((a,b) => a.name.localeCompare(b.name));
+  if (!_forecastSelectedCity && primary.length) _forecastSelectedCity = primary[0].name;
+
+  buildCustomSelect({
+    wrapperId: 'forecastCityWrap',
+    placeholder: _forecastSelectedCity || '— choose a city —',
+    groups: [
+      { label: 'Top Cities',       color: '#5DDBA8', items: primary.map(c  => ({ value: c.name, text: c.name })) },
+      { label: 'All Texas Cities', color: '#4A90E2', items: extended.map(c => ({ value: c.name, text: c.name })) },
+    ],
+    onChange(value) {
+      _forecastSelectedCity = value;
+      renderForecastPage();
+    },
+  });
 }
 
 function renderForecastPage(){
-  const cityName = document.getElementById('forecastCity').value;
+  const cityName = _forecastSelectedCity || (ALL_CITIES.find(c=>c.primary)||ALL_CITIES[0])?.name;
   const d = WEATHER_DATA[cityName];
   // Data not yet loaded — show shimmer and kick off on-demand fetch
   if(!d){
@@ -20,7 +31,7 @@ function renderForecastPage(){
       '<div class="card loading-shimmer" style="height:80px;margin-bottom:10px"></div>'.repeat(3);
     const cityObj = ALL_CITIES.find(c => c.name === cityName);
     if(cityObj){
-      fetchCityOnDemand(cityObj).then(()=>{ if(document.getElementById('forecastCity').value===cityName) renderForecastPage(); }).catch(()=>{});
+      fetchCityOnDemand(cityObj).then(()=>{ if(_forecastSelectedCity===cityName) renderForecastPage(); }).catch(()=>{});
     }
     return;
   }

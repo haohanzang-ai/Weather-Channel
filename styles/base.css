@@ -16,6 +16,17 @@
 html{height:100%;background:var(--bg0)}
 body{font-family:var(--font);color:var(--text0);height:100%;overflow:hidden}
 
+/* ── Global native select dark theme (scanner utility dropdowns) ── */
+select{
+  color-scheme:dark;
+  background:#131c2e;color:var(--text0);
+  border:1px solid var(--border2);border-radius:var(--r8);
+  padding:7px 12px;font-size:12px;font-family:var(--font);
+  cursor:pointer;outline:none;
+}
+select:focus{border-color:var(--green)}
+select option{background:#131c2e;color:var(--text0)}
+
 /* ── Skip link ──────────────────────────────── */
 .skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
 .skip-link:focus{position:fixed;top:0;left:0;width:auto;height:auto;background:var(--blue);color:#fff;padding:12px 20px;font-size:14px;font-weight:600;z-index:9999;border-radius:0 0 8px 0;outline:none}
