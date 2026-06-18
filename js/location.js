@@ -2,12 +2,21 @@
 
 // ── App state: single source of truth for the analysis pipeline ───────────────
 const appState = {
-  locationMethod: null,  // 'gps' | 'city' | 'coords'
-  locationLabel:  null,  // display label
-  lat:            null,
-  lon:            null,
-  envData:        null,  // result of locFetchEnvironment()
-  envFetchTime:   null,
+  // Step 1 — Plant selection
+  plant:            null,  // { key, name, scientificName, category, texasFit, ... } from SCAN_PLANTS
+  // Step 2 — Location
+  locationMethod:   null,  // 'gps' | 'city' | 'coords'
+  locationLabel:    null,
+  lat:              null,
+  lon:              null,
+  envData:          null,  // result of locFetchEnvironment()
+  envFetchTime:     null,
+  // Step 3–5 — Computed scores (populated by stress.js + bioenergy-engine.js)
+  stressScores:     null,
+  chemRisk:         null,
+  agricultureScore: null,
+  pathways:         null,
+  bioenergyScore:   null,
 };
 
 // ── Initialize location UI into #locInputSection ──────────────────────────────
@@ -469,6 +478,22 @@ function locRenderProfile(d) {
       · <a href="#" onclick="showPage('sources');return false;" style="color:#4A90E2">See all Data Sources →</a>
     </div>
   `;
+  _locTriggerScoring();
+}
+
+// ── Trigger downstream scoring when both plant and env are available ──────────
+function _locTriggerScoring() {
+  if (appState.plant && appState.envData) {
+    if (typeof renderStressProfile === 'function') renderStressProfile();
+    _locShowScoringSteps();
+  }
+}
+
+function _locShowScoringSteps() {
+  ['stressTabSection','agTabSection','bioTabSection','reportTabSection'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = '';
+  });
 }
 
 // ── Re-fetch with the current location ───────────────────────────────────────

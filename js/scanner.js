@@ -1042,6 +1042,81 @@ function scanGA(eventName, params) {
   if (typeof gtag === 'function') gtag('event', eventName, params);
 }
 
+// ── Sync selected plant into appState (for Analyze pipeline) ─────────────────
+function _scanSyncAppState(key) {
+  if (typeof appState === 'undefined' || !key) return;
+  const p = SCAN_PLANTS[key];
+  if (!p) return;
+  appState.plant = {
+    key,
+    name:           p.commonName,
+    scientificName: p.scientificName,
+    category:       p.category,
+    texasFit:       p.texasFit,
+    droughtTolerance: p.droughtTolerance,
+    waterUse:       p.waterUse,
+    biomassPotential: p.biomassPotential,
+    conversionMethods: p.conversionMethods,
+    evidenceStrength: p.evidenceStrength,
+    sourceIds:      p.sourceIds,
+  };
+  // Trigger scoring if location data already available
+  if (typeof _locTriggerScoring === 'function') _locTriggerScoring();
+  // Update plant selector UI in Analyze tab if it exists
+  const analyzesel = document.getElementById('analyzePlantSel');
+  if (analyzesel) analyzesel.value = key;
+}
+
+// ── Analyze tab: public plant selector ───────────────────────────────────────
+function analyzeSetPlant(key) {
+  _scanSyncAppState(key);
+  _analyzeRenderPlantPreview(key);
+}
+
+function _analyzeRenderPlantPreview(key) {
+  const el = document.getElementById('plantProfilePreview');
+  if (!el) return;
+  if (!key) { el.style.display = 'none'; el.innerHTML = ''; return; }
+  const p = SCAN_PLANTS[key];
+  if (!p) { el.style.display = 'none'; return; }
+  const profile = (typeof PLANT_ENV_PROFILES !== 'undefined') ? PLANT_ENV_PROFILES[key] : null;
+  const threshStr = profile
+    ? `Heat stress above <strong>${profile.heatStressF}°F</strong>, critical at <strong>${profile.heatCriticalF}°F</strong>. 30-day water need: <strong>${profile.waterReq30mm} mm</strong>.`
+    : 'Environmental thresholds: <em>not in profile library</em>';
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div class="ppv-name">${escapeHtml(p.icon || '')} ${escapeHtml(p.commonName)}</div>
+    <div class="ppv-sci">${escapeHtml(p.scientificName || '')}</div>
+    <div class="ppv-badges">
+      <span class="ppv-badge">Texas Fit: ${escapeHtml(p.texasFit || '—')}</span>
+      <span class="ppv-badge">Drought: ${escapeHtml(p.droughtTolerance || '—')}</span>
+      <span class="ppv-badge">Water Use: ${escapeHtml(p.waterUse || '—')}</span>
+      ${p.biomassPotential ? `<span class="ppv-badge">Biomass: ${escapeHtml(p.biomassPotential)}</span>` : ''}
+    </div>
+    <div class="ppv-chem">${threshStr}<br>Conversion methods: <strong>${(p.conversionMethods||[]).join(', ') || 'Not listed'}</strong></div>
+  `;
+}
+
+function _analyzeBuildPlantDropdown() {
+  const sel = document.getElementById('analyzePlantSel');
+  if (!sel) return;
+  const groups = {
+    'Energy Crops & Grasses':  ['switchgrass','miscanthus','sorghum','energy_cane','sugarcane','bamboo','hemp','agave'],
+    'Woody & Shrub Biomass':   ['poplar','willow','eucalyptus','pine','oak','wood_biomass','wood_chips'],
+    'Texas Native & Invasive': ['mesquite','eastern_redcedar','prickly_pear','water_hyacinth','invasive_grass','native_prairie_grass'],
+    'Agricultural Residues':   ['corn_stover','corn_plant','cotton_stover','wheat_straw','rice_straw','crop_residue','grass_clippings','leaves_yard'],
+    'Aquatic & Other':         ['algae','wetland_plant','ornamental','food_waste'],
+    'Unconfirmed':             ['unknown_grass','unknown_broadleaf','unknown_woody']
+  };
+  sel.innerHTML = '<option value="">— choose a plant or crop —</option>' +
+    Object.entries(groups).map(([grpName, keys]) =>
+      `<optgroup label="${escapeHtml(grpName)}">${keys.map(k => {
+        const p = SCAN_PLANTS[k];
+        return p ? `<option value="${k}">${escapeHtml((p.icon||'') + ' ' + p.commonName)}</option>` : '';
+      }).join('')}</optgroup>`
+    ).join('');
+}
+
 // ── Build dropdowns ───────────────────────────────────────────────────────────
 function _scanBuildPlantOptions() {
   const sel = document.getElementById('scanPlantSel');
@@ -1063,6 +1138,7 @@ function _scanBuildPlantOptions() {
   ).join('');
   sel.addEventListener('change', () => {
     scanPlantKey = sel.value;
+    _scanSyncAppState(sel.value);
     if (scanReportShown) renderScannerReport();
   });
 }

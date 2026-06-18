@@ -14,7 +14,13 @@ function closeSidebar(){
 
 // ── Tab render map — what to call when each main tab is shown ─────────────────
 const TAB_RENDERERS = {
-  analyze:    () => { renderDashboard(); renderAg(); },
+  analyze:    () => {
+    renderDashboard(); renderAg();
+    if (typeof renderStressProfile      === 'function') renderStressProfile();
+    if (typeof renderAgScore            === 'function') renderAgScore();
+    if (typeof renderReport             === 'function') renderReport();
+    if (typeof renderPlantCityComparison=== 'function') renderPlantCityComparison();
+  },
   mapcompare: () => {
     renderMap();
     renderCompare();
@@ -24,6 +30,7 @@ const TAB_RENDERERS = {
     renderWater();
     renderEnergy();
     renderSevere();
+    if (typeof renderPlantCityComparison === 'function') renderPlantCityComparison();
   },
   bioenergy:  () => { sgBiofuelInit(); fuelEffInit(); scannerInit(); },
   science:    () => {},

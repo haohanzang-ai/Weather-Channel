@@ -231,26 +231,52 @@
           <div id="agContent"></div>
         </div>
 
-        <!-- Location-Based Environment Profile -->
+        <!-- Step 1 — Plant / Crop Selection -->
         <div class="tab-subsection">
-          <div class="tab-subsection-header">📍 Local Environment Profile <span class="tsh-badge">Live API</span></div>
+          <div class="tab-subsection-header">🌿 Step 1 — Select Plant or Crop</div>
+          <div class="plant-select-card">
+            <div class="plant-select-intro">Choose the plant or crop you want to analyze. The bioenergy scoring pipeline uses the plant's published profile (drought tolerance, heat thresholds, conversion chemistry) together with your measured environment to compute stress and suitability scores.</div>
+            <div class="plant-select-row">
+              <label for="analyzePlantSel" class="plant-select-label">Plant / Crop</label>
+              <select id="analyzePlantSel" class="plant-select-dropdown" onchange="analyzeSetPlant(this.value)">
+                <option value="">— choose a plant or crop —</option>
+              </select>
+              <button class="btn-sm" onclick="showPage('bioenergy')" style="font-size:11px;white-space:nowrap">🔬 Full Scanner →</button>
+            </div>
+            <div id="plantProfilePreview" class="plant-profile-preview" style="display:none"></div>
+            <div class="plant-select-note">Image input is available in the Bioenergy Scanner tab. Photo analysis cannot measure lignin, cellulose, moisture, biomass, or fuel yield — bioenergy scores are based on plant profile + measured environment + cited methods. Lab data is needed for exact biomass chemistry.</div>
+          </div>
+        </div>
+
+        <!-- Step 2 — Location-Based Environment Profile -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">📍 Step 2 — Measure Your Local Environment <span class="tsh-badge">Live API</span></div>
           <div id="locInputSection"></div>
-          <div class="placeholder-card">
-            <div class="placeholder-card-icon">⚠</div>
-            <div class="placeholder-card-body">
-              <div class="placeholder-card-title">Stress Profile Engine</div>
-              <div class="placeholder-card-desc">Once location is measured, the stress engine will compute: Heat Stress Score, Drought Memory Score, Water Stress Score, Rainfall Deficit, ET0 Pressure, and VPD Pressure — all derived from real Open-Meteo forecast and historical data.</div>
-              <span class="placeholder-card-tag">Implemented in Prompt 4 — Stress &amp; Agriculture Scoring</span>
-            </div>
-          </div>
-          <div class="placeholder-card">
-            <div class="placeholder-card-icon">⚡</div>
-            <div class="placeholder-card-body">
-              <div class="placeholder-card-title">TexasClimate Bioenergy Confidence Score</div>
-              <div class="placeholder-card-desc">The final suitability score combines: Survival (20%) + Productivity (20%) + Water Sustainability (15%) + Stress-Metabolite Safety (15%) + Conversion Compatibility (15%) + Environmental Benefit (10%) + Data Quality (5%). Each sub-score will be shown separately with its source and confidence level.</div>
-              <span class="placeholder-card-tag">Implemented in Prompt 4 — Bioenergy Scoring Engine</span>
-            </div>
-          </div>
+        </div>
+
+        <!-- Step 3 — Stress Profile (shown after Steps 1+2) -->
+        <div class="tab-subsection" id="stressTabSection" style="display:none">
+          <div class="tab-subsection-header">⚠ Step 3 — Stress Profile &amp; Chemistry Risk <span class="tsh-badge">Live-Derived</span></div>
+          <div id="stressProfileSection"><div class="score-needs-data">Complete Steps 1 and 2 to compute stress scores.</div></div>
+          <div id="chemRiskSection"></div>
+        </div>
+
+        <!-- Step 4 — Agriculture Scores + Pathways (shown after Steps 1+2) -->
+        <div class="tab-subsection" id="agTabSection" style="display:none">
+          <div class="tab-subsection-header">🌾 Step 4 — Agriculture &amp; Pathway Scoring <span class="tsh-badge">Live-Derived</span></div>
+          <div id="agScoreSection"><div class="score-needs-data">Complete Steps 1 and 2 to compute agriculture scores.</div></div>
+        </div>
+
+        <!-- Step 5 — Bioenergy Confidence Score (shown after Steps 1+2) -->
+        <div class="tab-subsection" id="bioTabSection" style="display:none">
+          <div class="tab-subsection-header">⚡ Step 5 — TexasClimate Bioenergy Confidence Score <span class="tsh-badge">Research Estimate</span></div>
+          <div id="bioScoreSection"><div class="score-needs-data">Complete Steps 1 and 2 to compute bioenergy score.</div></div>
+        </div>
+
+        <!-- Step 6 — Full Report (shown after Steps 1+2) -->
+        <div class="tab-subsection" id="reportTabSection" style="display:none">
+          <div class="tab-subsection-header">📋 Step 6 — Bioenergy Suitability Report</div>
+          <div id="reportSection"><div class="score-needs-data">Complete Steps 1–5 to generate the report.</div></div>
         </div>
 
         <!-- Biofuel Fact Widget -->
@@ -413,6 +439,14 @@
             <span class="tsh-badge">Live-Derived</span>
           </div>
           <div id="energyContent"></div>
+        </div>
+
+        <!-- ── Plant × City Comparison ── -->
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">🌿 Plant × City Comparison
+            <span class="tsh-badge">Live-Derived</span>
+          </div>
+          <div id="plantCompareContent"><div class="score-needs-data">Select a plant in the Analyze tab and load city data to compare suitability across Texas cities.</div></div>
         </div>
 
       </div><!-- /page-mapcompare -->
@@ -1093,6 +1127,9 @@
 <script src="js/settings.js"></script>
 <script src="js/mission.js"></script>
 <script src="js/location.js"></script>
+<script src="js/stress.js"></script>
+<script src="js/bioenergy-engine.js"></script>
+<script src="js/report.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

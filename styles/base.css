@@ -627,3 +627,271 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offse
   border-radius:var(--r8);
   font-size:10px;color:var(--text3);line-height:1.6;
 }
+
+/* ── Plant Select (Step 1) ─────────────────────────────────────────────────── */
+.plant-select-card{
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:var(--r12);padding:16px 18px;
+}
+.plant-select-intro{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px}
+.plant-select-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.plant-select-label{font-size:11px;font-weight:600;color:var(--text2);white-space:nowrap}
+.plant-select-dropdown{
+  flex:1;min-width:200px;
+  background:var(--surface1);border:1px solid var(--border2);
+  border-radius:var(--r8);padding:7px 12px;
+  font-size:12px;color:var(--text0);font-family:var(--font);
+  outline:none;cursor:pointer;
+}
+.plant-select-dropdown:focus{border-color:var(--green)}
+.plant-select-note{font-size:10px;color:var(--text3);line-height:1.5;margin-top:8px;font-style:italic}
+
+.plant-profile-preview{
+  margin-top:12px;padding:12px 14px;
+  background:var(--surface1);border:1px solid var(--border2);
+  border-radius:var(--r8);
+}
+.ppv-name{font-size:13px;font-weight:700;color:var(--text0);margin-bottom:2px}
+.ppv-sci{font-size:11px;color:var(--text3);font-style:italic;margin-bottom:8px}
+.ppv-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.ppv-badge{
+  font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:20px;
+  border:1px solid var(--border2);color:var(--text2);
+}
+.ppv-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.ppv-item{font-size:11px;color:var(--text2)}
+.ppv-item strong{color:var(--text0)}
+.ppv-chem{font-size:10px;color:var(--text3);margin-top:6px;line-height:1.5}
+
+/* ── Shared score bar ──────────────────────────────────────────────────────── */
+.score-bar-wrap{background:rgba(255,255,255,0.06);border-radius:20px;height:8px;margin:4px 0}
+.score-bar-fill{height:8px;border-radius:20px;transition:width 0.5s ease}
+.score-na{font-size:11px;color:var(--text3);font-style:italic}
+.score-src{font-size:9.5px;color:var(--text3);margin-top:2px}
+.score-conf{font-size:9px;font-weight:700;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle}
+.score-missing-item{font-size:10px;color:#F5A623;padding:2px 0}
+.score-needs-data{
+  font-size:12px;color:var(--text3);font-style:italic;
+  padding:18px;text-align:center;
+}
+
+/* ── Stress profile cards ──────────────────────────────────────────────────── */
+.stress-scores-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;
+  margin-bottom:16px;
+}
+.stress-score-card{
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:var(--r12);padding:14px 16px;
+}
+.stress-score-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.stress-score-icon{font-size:18px}
+.stress-score-name{font-size:12px;font-weight:700;color:var(--text0)}
+.stress-score-composite{
+  font-size:22px;font-weight:800;color:var(--green);margin-bottom:4px;line-height:1;
+}
+.stress-missing-bar{
+  background:rgba(246,164,35,0.08);border:1px solid rgba(246,164,35,0.2);
+  border-radius:var(--r8);padding:8px 10px;margin-top:8px;
+}
+.stress-method-note{font-size:9.5px;color:var(--text3);margin-top:6px;line-height:1.5}
+.stress-data-note{
+  margin-top:12px;padding:10px 14px;
+  background:rgba(74,144,226,0.06);border:1px solid rgba(74,144,226,0.15);
+  border-radius:var(--r8);font-size:10px;color:var(--text3);line-height:1.6;
+}
+
+/* ── Chemistry risk panel ──────────────────────────────────────────────────── */
+.chem-risk-header{
+  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+  margin-bottom:14px;
+}
+.chem-risk-title{font-size:15px;font-weight:700;color:var(--text0)}
+.chem-risk-sub{font-size:11px;color:var(--text3)}
+.chem-risk-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;
+  margin-bottom:12px;
+}
+.chem-risk-card{
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:var(--r12);padding:14px 16px;
+}
+.chem-risk-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.chem-risk-name{font-size:11.5px;font-weight:700;color:var(--text0)}
+.chem-risk-badge{
+  font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:20px;
+  border:1px solid;
+}
+.chem-risk-badge.low{color:#5DDBA8;border-color:#5DDBA8}
+.chem-risk-badge.medium{color:#F6A423;border-color:#F6A423}
+.chem-risk-badge.high{color:#E55;border-color:#E55}
+.chem-risk-explanation{font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:6px}
+.chem-risk-conf{font-size:9.5px;color:var(--text3);margin-bottom:3px}
+.chem-risk-caveat{font-size:10px;color:#F5A623;font-style:italic}
+
+/* ── Agriculture score ─────────────────────────────────────────────────────── */
+.ag-scores-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;
+  margin-bottom:16px;
+}
+.ag-score-card{
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:var(--r12);padding:14px 16px;
+}
+.ag-score-title{font-size:11.5px;font-weight:700;color:var(--text0);margin-bottom:8px}
+.ag-gauge{background:rgba(255,255,255,0.06);border-radius:20px;height:10px;margin-bottom:4px}
+.ag-gauge-fill{height:10px;border-radius:20px;transition:width 0.5s}
+.ag-gauge-val{font-size:18px;font-weight:800;color:var(--green);line-height:1;margin-bottom:3px}
+.ag-score-sub{font-size:10px;color:var(--text3);line-height:1.5}
+
+/* ── Pathway grid ──────────────────────────────────────────────────────────── */
+.sub-section-title{
+  font-size:13px;font-weight:700;color:var(--text0);
+  margin:18px 0 10px;border-left:3px solid var(--green);padding-left:8px;
+}
+.pathway-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;
+  margin-bottom:16px;
+}
+.pathway-card{
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:var(--r12);padding:14px 16px;
+}
+.pathway-card-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.pathway-icon{font-size:20px}
+.pathway-name{font-size:12px;font-weight:700;color:var(--text0)}
+.pathway-tier{font-size:10px;color:var(--text3)}
+.pathway-maturity{
+  font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;
+  background:rgba(255,255,255,0.08);color:var(--text2);margin-left:4px;
+}
+.pathway-score{font-size:22px;font-weight:800;color:var(--green);line-height:1;margin-bottom:4px}
+.pathway-bar-wrap{background:rgba(255,255,255,0.06);border-radius:20px;height:6px;margin-bottom:6px}
+.pathway-bar-fill{height:6px;border-radius:20px;transition:width 0.5s}
+.pathway-desc{font-size:10.5px;color:var(--text2);line-height:1.5;margin-bottom:4px}
+.pathway-penalty{font-size:10px;color:#F5A623;font-style:italic}
+
+/* ── Bioenergy score ring ───────────────────────────────────────────────────── */
+.bio-score-hero{
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:var(--r12);padding:20px 22px;margin-bottom:16px;
+}
+.bio-score-ring{
+  flex-shrink:0;width:80px;height:80px;border-radius:50%;
+  background:conic-gradient(var(--green) 0%, rgba(255,255,255,0.08) 0%);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.bio-score-ring-inner{
+  width:64px;height:64px;border-radius:50%;
+  background:var(--surface2);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.bio-score-number{font-size:22px;font-weight:800;color:var(--green);line-height:1}
+.bio-score-denom{font-size:9px;color:var(--text3)}
+.bio-score-hero-right{flex:1}
+.bio-score-label{font-size:16px;font-weight:700;color:var(--text0);margin-bottom:2px}
+.bio-score-plant{font-size:11px;color:var(--text2);margin-bottom:4px}
+.bio-score-conf{font-size:10.5px;color:var(--text3)}
+.bio-score-note{
+  margin-top:8px;font-size:10px;color:var(--text3);
+  font-style:italic;line-height:1.5;
+}
+.bio-subscore-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.bio-subscore-row{
+  display:flex;align-items:center;gap:10px;
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:var(--r8);padding:10px 14px;
+}
+.bio-subscore-icon{font-size:16px;flex-shrink:0;width:22px;text-align:center}
+.bio-subscore-body{flex:1}
+.bio-subscore-name{font-size:11px;font-weight:600;color:var(--text0)}
+.bio-subscore-wt{font-size:9.5px;color:var(--text3);margin-left:4px}
+.bio-subscore-bar-wrap{background:rgba(255,255,255,0.06);border-radius:20px;height:5px;margin:3px 0}
+.bio-subscore-bar-fill{height:5px;border-radius:20px;transition:width 0.5s}
+.bio-subscore-conf{font-size:9px;color:var(--text3)}
+.bio-subscore-val{font-size:16px;font-weight:700;color:var(--green);min-width:38px;text-align:right}
+.bio-subscore-contrib{font-size:9px;color:var(--text3);text-align:right}
+.bio-score-formula-note{
+  font-size:10px;color:var(--text3);font-style:italic;
+  padding:8px 12px;
+  background:rgba(74,144,226,0.06);border:1px solid rgba(74,144,226,0.15);
+  border-radius:var(--r8);margin-top:6px;
+}
+
+/* ── Suitability report ────────────────────────────────────────────────────── */
+.rpt-header{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:12px;flex-wrap:wrap;margin-bottom:14px;
+}
+.rpt-header-left{flex:1}
+.rpt-title{font-size:17px;font-weight:800;color:var(--text0);margin-bottom:3px}
+.rpt-meta{font-size:10.5px;color:var(--text3);line-height:1.6}
+.rpt-ai-label{
+  margin-top:6px;font-size:10px;
+  padding:5px 10px;border-radius:var(--r8);
+  background:rgba(74,144,226,0.08);border:1px solid rgba(74,144,226,0.2);
+  color:var(--text2);line-height:1.5;
+}
+.rpt-copy-btn{
+  flex-shrink:0;padding:7px 14px;
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:var(--r8);font-size:11px;font-weight:600;
+  color:var(--text0);cursor:pointer;
+  transition:background 0.2s;
+}
+.rpt-copy-btn:hover{background:rgba(255,255,255,0.1)}
+.rpt-body{display:flex;flex-direction:column;gap:10px}
+.rpt-section{
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:var(--r12);padding:14px 16px;
+}
+.rpt-section-title{font-size:12px;font-weight:700;color:var(--green);margin-bottom:8px}
+.rpt-row{display:flex;gap:8px;font-size:11.5px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.rpt-row:last-child{border-bottom:none}
+.rpt-lbl{color:var(--text3);min-width:160px;flex-shrink:0}
+.rpt-val{color:var(--text0);font-weight:500}
+.rpt-na{color:var(--text3);font-style:italic}
+.rpt-final-score{
+  text-align:center;padding:22px;
+  background:linear-gradient(135deg,rgba(93,219,168,0.08),rgba(74,144,226,0.08));
+  border:1px solid var(--border2);border-radius:var(--r12);
+}
+.rpt-final-number{font-size:48px;font-weight:800;color:var(--green);line-height:1}
+.rpt-final-conf{font-size:12px;color:var(--text2);margin-top:4px}
+.rpt-limitations{
+  padding:12px 14px;margin-top:10px;
+  background:rgba(246,164,35,0.06);border:1px solid rgba(246,164,35,0.15);
+  border-radius:var(--r8);font-size:10.5px;color:var(--text2);line-height:1.6;
+}
+.rpt-disclaimer{
+  font-size:10px;color:var(--text3);font-style:italic;
+  padding:8px 12px;border-radius:var(--r8);
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
+  margin-top:8px;line-height:1.5;
+}
+
+/* ── Plant × City comparison ───────────────────────────────────────────────── */
+.plant-compare-header{margin-bottom:12px}
+.plant-compare-title{font-size:15px;font-weight:700;color:var(--text0);margin-bottom:3px}
+.plant-compare-caveat{font-size:10.5px;color:var(--text3);line-height:1.5}
+.plant-compare-table-wrap{overflow-x:auto;margin-bottom:10px}
+.plant-compare-table{
+  width:100%;border-collapse:collapse;font-size:11px;
+}
+.plant-compare-table th{
+  text-align:left;padding:8px 12px;
+  background:var(--surface2);border-bottom:1px solid var(--border2);
+  font-size:10.5px;font-weight:700;color:var(--text2);white-space:nowrap;
+}
+.plant-compare-table td{
+  padding:7px 12px;border-bottom:1px solid rgba(255,255,255,0.04);
+  color:var(--text0);vertical-align:middle;
+}
+.plant-compare-table tr:hover td{background:rgba(255,255,255,0.03)}
+.plant-compare-note{font-size:10px;color:var(--text3);font-style:italic;margin-top:6px}
+.compare-pill{
+  display:inline-block;font-size:9.5px;font-weight:700;
+  padding:1px 7px;border-radius:20px;border:1px solid;
+}
