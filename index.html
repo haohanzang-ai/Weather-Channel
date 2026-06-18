@@ -169,6 +169,12 @@
             <span class="badge badge-green">10 Cities Monitored</span>
             <span class="badge badge-orange">Alerts: see Map tab</span>
           </div>
+          <div class="hero-actions">
+            <button class="btn-sample" id="wfSampleBtn" onclick="wfRunSample()">
+              ▶ Run Sample TexasClimate Analysis
+            </button>
+            <span class="hero-sample-note">Switchgrass · Austin, TX · live weather data</span>
+          </div>
         </section>
 
         <!-- Guided Workflow Pipeline -->
@@ -233,7 +239,7 @@
 
         <!-- Step 1 — Plant / Crop Selection -->
         <div class="tab-subsection" id="az-step1">
-          <div class="tab-subsection-header">🌿 Step 1 — Select Plant or Crop</div>
+          <div class="tab-subsection-header">🌿 Step 1 — Select Plant or Crop <span class="wf-step-status wf-st-active" id="wf-status-1">→ Ready — action required</span></div>
           <div class="plant-select-card">
             <div class="plant-select-intro">Choose the plant or crop you want to analyze. The bioenergy scoring pipeline uses the plant's published profile (drought tolerance, heat thresholds, conversion chemistry) together with your measured environment to compute stress and suitability scores.</div>
             <div class="plant-select-row">
@@ -256,32 +262,32 @@
 
         <!-- Step 2 — Location-Based Environment Profile -->
         <div class="tab-subsection" id="az-step2">
-          <div class="tab-subsection-header">📍 Step 2 — Measure Your Local Environment <span class="tsh-badge">Live API</span></div>
+          <div class="tab-subsection-header">📍 Step 2 — Measure Your Local Environment <span class="tsh-badge">Live API</span> <span class="wf-step-status wf-st-idle" id="wf-status-2">○ Select a plant first</span></div>
           <div id="locInputSection"></div>
         </div>
 
-        <!-- Step 3 — Stress Profile (shown after Steps 1+2) -->
-        <div class="tab-subsection" id="stressTabSection" style="display:none">
-          <div class="tab-subsection-header">⚠ Step 3 — Stress Profile &amp; Chemistry Risk <span class="tsh-badge">Live-Derived</span></div>
+        <!-- Step 3 — Stress Profile -->
+        <div class="tab-subsection" id="stressTabSection">
+          <div class="tab-subsection-header">⚠ Step 3 — Stress Profile &amp; Chemistry Risk <span class="tsh-badge">Live-Derived</span> <span class="wf-step-status wf-st-waiting" id="wf-status-3">○ Needs Steps 1 + 2</span></div>
           <div id="stressProfileSection"><div class="score-needs-data">Complete Steps 1 and 2 to compute stress scores.</div></div>
           <div id="chemRiskSection"></div>
         </div>
 
-        <!-- Step 4 — Agriculture Scores + Pathways (shown after Steps 1+2) -->
-        <div class="tab-subsection" id="agTabSection" style="display:none">
-          <div class="tab-subsection-header">🌾 Step 4 — Agriculture &amp; Pathway Scoring <span class="tsh-badge">Live-Derived</span></div>
+        <!-- Step 4 — Agriculture Scores + Pathways -->
+        <div class="tab-subsection" id="agTabSection">
+          <div class="tab-subsection-header">🌾 Step 4 — Agriculture &amp; Pathway Scoring <span class="tsh-badge">Live-Derived</span> <span class="wf-step-status wf-st-waiting" id="wf-status-4">○ Needs Steps 1 + 2</span></div>
           <div id="agScoreSection"><div class="score-needs-data">Complete Steps 1 and 2 to compute agriculture scores.</div></div>
         </div>
 
-        <!-- Step 5 — Bioenergy Confidence Score (shown after Steps 1+2) -->
-        <div class="tab-subsection" id="bioTabSection" style="display:none">
-          <div class="tab-subsection-header">⚡ Step 5 — TexasClimate Bioenergy Confidence Score <span class="tsh-badge">Research Estimate</span></div>
+        <!-- Step 5 — Bioenergy Confidence Score -->
+        <div class="tab-subsection" id="bioTabSection">
+          <div class="tab-subsection-header">⚡ Step 5 — TexasClimate Bioenergy Confidence Score <span class="tsh-badge">Research Estimate</span> <span class="wf-step-status wf-st-waiting" id="wf-status-5">○ Needs Steps 1 + 2</span></div>
           <div id="bioScoreSection"><div class="score-needs-data">Complete Steps 1 and 2 to compute bioenergy score.</div></div>
         </div>
 
-        <!-- Step 6 — Full Report (shown after Steps 1+2) -->
-        <div class="tab-subsection" id="reportTabSection" style="display:none">
-          <div class="tab-subsection-header">📋 Step 6 — Bioenergy Suitability Report</div>
+        <!-- Step 6 — Full Report -->
+        <div class="tab-subsection" id="reportTabSection">
+          <div class="tab-subsection-header">📋 Step 6 — Bioenergy Suitability Report <span class="wf-step-status wf-st-waiting" id="wf-status-6">○ Needs Steps 1 + 2</span></div>
           <div id="reportSection"><div class="score-needs-data">Complete Steps 1–5 to generate the report.</div></div>
         </div>
 
@@ -1101,14 +1107,15 @@
 <script src="js/facts.js"></script>
 <script src="js/biofuel.js"></script>
 <script src="js/fuel.js"></script>
-<script src="js/scanner.js?v=5"></script>
+<script src="js/scanner.js?v=6"></script>
 <script src="js/settings.js"></script>
 <script src="js/mission.js"></script>
-<script src="js/location.js?v=2"></script>
-<script src="js/subtabs.js"></script>
-<script src="js/stress.js"></script>
-<script src="js/bioenergy-engine.js"></script>
-<script src="js/report.js"></script>
-<script src="js/main.js"></script>
+<script src="js/location.js?v=3"></script>
+<script src="js/subtabs.js?v=2"></script>
+<script src="js/stress.js?v=2"></script>
+<script src="js/bioenergy-engine.js?v=2"></script>
+<script src="js/report.js?v=2"></script>
+<script src="js/workflow.js?v=1"></script>
+<script src="js/main.js?v=2"></script>
 </body>
 </html>

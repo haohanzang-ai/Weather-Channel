@@ -24,3 +24,6 @@ if (typeof _analyzeBuildPlantDropdown === 'function') _analyzeBuildPlantDropdown
 
 // Build sub-tab navigation bars for all pages
 subtabsInit();
+
+// Initialize workflow step status badges + make pipeline diagram clickable
+if (typeof wfInit === 'function') wfInit();

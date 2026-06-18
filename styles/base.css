@@ -454,6 +454,40 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offse
   font-size:16px;color:var(--border2);margin:0 2px;flex-shrink:0;
   padding-bottom:16px;
 }
+.tc-wf-step.complete .tc-wf-icon{
+  background:rgba(93,219,168,0.18);border-color:rgba(93,219,168,0.5);
+}
+.tc-wf-step.complete .tc-wf-label{color:var(--green)}
+.tc-wf-step{transition:opacity 0.2s}
+.tc-wf-step:hover{opacity:0.8}
+
+/* Hero sample-analysis button */
+.hero-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:16px}
+.btn-sample{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 22px;font-size:13px;font-weight:700;letter-spacing:0.01em;
+  background:linear-gradient(135deg,#2ECC8B,#4A90E2);color:#0a111f;
+  border:none;border-radius:var(--r8);cursor:pointer;
+  transition:filter 0.15s,transform 0.1s;
+  white-space:nowrap;
+}
+.btn-sample:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.btn-sample:active{transform:translateY(0)}
+.btn-sample:disabled{filter:brightness(0.7);cursor:wait;transform:none}
+.hero-sample-note{font-size:11px;color:var(--text2)}
+
+/* Workflow step-status badges in tab section headers */
+.wf-step-status{
+  margin-left:auto;flex-shrink:0;
+  font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;
+  padding:3px 9px;border-radius:10px;
+  border:1px solid currentColor;
+  opacity:0.9;
+}
+.wf-st-complete{ color:#2ECC8B;background:rgba(46,204,139,0.10);border-color:rgba(46,204,139,0.35) }
+.wf-st-active{   color:#F5A623;background:rgba(245,166,35,0.10);border-color:rgba(245,166,35,0.35) }
+.wf-st-idle{     color:var(--text2);background:rgba(255,255,255,0.04);border-color:var(--border2) }
+.wf-st-waiting{  color:var(--text2);background:rgba(255,255,255,0.04);border-color:var(--border2) }
 
 /* Placeholder cards (features not yet implemented) */
 .placeholder-card{

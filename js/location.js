@@ -340,6 +340,7 @@ async function locFetchEnvironment(lat, lon) {
   appState.envFetchTime = result.fetchTime;
 
   locRenderProfile(result);
+  if (typeof wfUpdateSteps === 'function') wfUpdateSteps();
   _locSetStatus('ok',
     `Profile loaded at ${result.fetchTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}` +
     (result.errors.length ? ` · ${result.errors.length} source(s) unavailable` : '')
@@ -488,8 +489,12 @@ function locRenderProfile(d) {
 // ── Trigger downstream scoring when both plant and env are available ──────────
 function _locTriggerScoring() {
   if (appState.plant && appState.envData) {
-    if (typeof renderStressProfile === 'function') renderStressProfile();
+    if (typeof renderStressProfile  === 'function') renderStressProfile();
+    if (typeof renderAgScore        === 'function') renderAgScore();
+    if (typeof renderBioScore       === 'function') renderBioScore();
+    if (typeof renderReport         === 'function') renderReport();
     _locShowScoringSteps();
+    if (typeof wfUpdateSteps        === 'function') wfUpdateSteps();
   }
 }
 
