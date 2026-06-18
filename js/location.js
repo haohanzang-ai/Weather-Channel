@@ -497,6 +497,7 @@ function _locShowScoringSteps() {
   ['stressTabSection','agTabSection','bioTabSection','reportTabSection'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = '';
+    if (typeof subtabsUnlock === 'function') subtabsUnlock(id);
   });
 }
 

@@ -161,7 +161,7 @@
         </div>
 
         <!-- Hero -->
-        <section class="hero-band" aria-label="Platform summary">
+        <section class="hero-band" id="az-overview" aria-label="Platform summary">
           <h1 class="hero-title">TexasClimate — Plant · Environment · Bioenergy Intelligence</h1>
           <p class="hero-sub">For any plant or crop, in any Texas location, under past, current, and future environmental conditions — can it survive, produce biomass, and become reliable clean bioenergy? Live weather from <strong>Open-Meteo API</strong>. Agriculture values are <strong>weather-derived estimates</strong>. Bioenergy scores are <strong>research-based estimates</strong>. All sections are labeled with their data type. <a href="#" class="hero-link" onclick="showPage('sources');return false;">See Data Status →</a></p>
           <div class="hero-badges" aria-label="Status indicators">
@@ -223,7 +223,7 @@
         </div>
 
         <!-- Agriculture Overview (moved from old agriculture page) -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="az-ag">
           <div class="tab-subsection-header">
             🌾 Agriculture — Live Environmental Stress Overview
             <span class="tsh-badge">Live-Derived</span>
@@ -232,7 +232,7 @@
         </div>
 
         <!-- Step 1 — Plant / Crop Selection -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="az-step1">
           <div class="tab-subsection-header">🌿 Step 1 — Select Plant or Crop</div>
           <div class="plant-select-card">
             <div class="plant-select-intro">Choose the plant or crop you want to analyze. The bioenergy scoring pipeline uses the plant's published profile (drought tolerance, heat thresholds, conversion chemistry) together with your measured environment to compute stress and suitability scores.</div>
@@ -255,7 +255,7 @@
         </div>
 
         <!-- Step 2 — Location-Based Environment Profile -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="az-step2">
           <div class="tab-subsection-header">📍 Step 2 — Measure Your Local Environment <span class="tsh-badge">Live API</span></div>
           <div id="locInputSection"></div>
         </div>
@@ -322,7 +322,7 @@
       <div class="page" id="page-mapcompare" role="region" aria-label="Map and Compare — Texas Locations">
 
         <!-- ── Texas Map ── -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="mc-map">
           <div class="tab-subsection-header">◉ Interactive Texas Climate Map</div>
 
           <div class="map-layer-controls" role="group" aria-label="Weather overlay layer controls">
@@ -377,7 +377,7 @@
         </div><!-- /map subsection -->
 
         <!-- ── City Comparison ── -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="mc-compare">
           <div class="tab-subsection-header">⇌ City Comparison
             <span class="tsh-badge">Live-Derived</span>
           </div>
@@ -393,7 +393,7 @@
         </div>
 
         <!-- ── 7-Day Forecasts ── -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="mc-forecast">
           <div class="tab-subsection-header">☁ 7-Day City Forecasts
             <span class="tsh-badge">Live API</span>
           </div>
@@ -404,7 +404,7 @@
         </div>
 
         <!-- ── Severe Weather ── -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="mc-severe">
           <div class="tab-subsection-header">⚠ Severe Weather — NWS Alerts
             <span class="tsh-badge">Live API</span>
           </div>
@@ -412,7 +412,7 @@
         </div>
 
         <!-- ── Climate Trends ── -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="mc-trends">
           <div class="tab-subsection-header">📈 Climate Trends — 7-Day Forecast Analysis
             <span class="tsh-badge">Live-Derived</span>
           </div>
@@ -420,7 +420,7 @@
         </div>
 
         <!-- ── Air Quality ── -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="mc-aq">
           <div class="tab-subsection-header">💨 Air Quality Index — Texas Cities
             <span class="tsh-badge">Live API</span>
           </div>
@@ -428,7 +428,7 @@
         </div>
 
         <!-- ── Water Resources ── -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="mc-water">
           <div class="tab-subsection-header">💧 Water Resources
             <span class="tsh-badge">Live-Derived + Official Links</span>
           </div>
@@ -436,7 +436,7 @@
         </div>
 
         <!-- ── Energy Intelligence ── -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="mc-energy">
           <div class="tab-subsection-header">⚡ Energy Intelligence — Temperature-Derived CDI
             <span class="tsh-badge">Live-Derived</span>
           </div>
@@ -444,7 +444,7 @@
         </div>
 
         <!-- ── Plant × City Comparison ── -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="mc-plantcmp">
           <div class="tab-subsection-header">🌿 Plant × City Comparison
             <span class="tsh-badge">Live-Derived</span>
           </div>
@@ -769,7 +769,7 @@
       <div class="page" id="page-science" role="region" aria-label="Science and Stress Methods">
 
         <!-- Stress Chain -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="sc-stress">
           <div class="tab-subsection-header">🧬 Stress → Metabolism → Conversion: How Environmental Stress Affects Bioenergy</div>
           <p style="font-size:12px;color:var(--text2);margin-bottom:18px;line-height:1.7">
             Environmental stress changes plant physiology and chemistry — affecting not just survival and growth, but also whether the biomass can be efficiently converted to fuel. This chain explains how drought, heat, and salt stress translate into bioenergy conversion risks.
@@ -839,7 +839,7 @@
         </div>
 
         <!-- What live data can vs. cannot measure -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="sc-limits">
           <div class="tab-subsection-header">📊 What This App Can Estimate vs. What Requires Lab Data</div>
           <div style="overflow-x:auto">
             <table class="data-cap-table">
@@ -875,7 +875,7 @@
         </div>
 
         <!-- Mission section (moved from Dashboard) -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="sc-mission">
           <div class="tab-subsection-header">🌿 Mission — From Texas Weather to Texas Fuel</div>
           <section class="mission-section" id="mission" aria-label="Mission: From Texas Weather to Texas Fuel">
             <div class="mission-header">
@@ -895,7 +895,7 @@
         </div>
 
         <!-- Process / Why Not Everywhere section (moved from Dashboard) -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="sc-why">
           <div class="tab-subsection-header">🔬 Why Isn't Switchgrass Fuel Everywhere Yet?</div>
           <section class="process-section" id="process-problem" aria-label="Why switchgrass biofuel is not yet mass-produced">
             <h2 class="process-title">🔬 Why Isn't Switchgrass Fuel Everywhere Yet?</h2>
@@ -936,7 +936,7 @@
         </div>
 
         <!-- Gas Price Calculator (moved from Dashboard) -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="sc-calc">
           <div class="tab-subsection-header">⛽ Educational Fuel Scenario Calculator</div>
           <section class="calculator-section" id="gas-calculator" aria-label="Educational gas price and biofuel replacement scenario calculator">
             <h2 class="calc-title">⛽ What Do Gas Prices Have To Do With Switchgrass?</h2>
@@ -985,7 +985,7 @@
         </div>
 
         <!-- Live Data Summaries (AI Reports, moved here) -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="sr-live">
           <div class="tab-subsection-header">📋 Live Data Summaries
             <span class="tsh-badge">Live-Derived</span>
           </div>
@@ -993,7 +993,7 @@
         </div>
 
         <!-- Transparency (moved from Dashboard) -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="sr-transparency">
           <div class="tab-subsection-header">🔍 Data &amp; Evidence Transparency</div>
           <section class="transparency-section" id="transparency" aria-label="Data and evidence transparency statement">
             <div class="transparency-card">
@@ -1012,7 +1012,7 @@
         </div>
 
         <!-- Source categories (from old sources page) -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="sr-sources">
           <div class="tab-subsection-header">🌡 Live Data Sources</div>
           <div class="src-category">
             <h2 class="src-cat-title">🌡️ Weather, Forecast &amp; ET0</h2>
@@ -1054,7 +1054,7 @@
         </div>
 
         <!-- Scientific citations -->
-        <div class="tab-subsection">
+        <div class="tab-subsection" id="sr-citations">
           <div class="tab-subsection-header">📖 Scientific Citations — Switchgrass &amp; Bioenergy</div>
           <div class="src-category">
             <p class="src-cat-note">✓ All switchgrass biofuel science claims are grounded in peer-reviewed research or credible government and university sources.</p>
@@ -1129,6 +1129,7 @@
 <script src="js/settings.js"></script>
 <script src="js/mission.js"></script>
 <script src="js/location.js?v=2"></script>
+<script src="js/subtabs.js"></script>
 <script src="js/stress.js"></script>
 <script src="js/bioenergy-engine.js"></script>
 <script src="js/report.js"></script>

@@ -21,3 +21,6 @@ locInit();
 
 // Populate the Analyze tab plant dropdown (SCAN_PLANTS available from scanner.js)
 if (typeof _analyzeBuildPlantDropdown === 'function') _analyzeBuildPlantDropdown();
+
+// Build sub-tab navigation bars for all pages
+subtabsInit();
