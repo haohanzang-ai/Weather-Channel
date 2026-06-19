@@ -1,202 +1,296 @@
 'use strict';
 
-// Geographic projection constants — Texas bounds
-const _MAP_LON_W = -106.65, _MAP_LON_E = -93.51;
-const _MAP_LAT_N = 36.50,   _MAP_LAT_S = 25.84;
-const _MAP_W = 580,          _MAP_H = 490;
+// ── MapLibre GL map implementation ────────────────────────────────────────────
+// Replaces the legacy SVG map. External API (renderMap, mapToggleLayer,
+// showCityDetail, _mapFetchAndShow, showTooltip, hideTooltip) is preserved.
 
-// Simplified Texas border polygon (clockwise from NW panhandle)
-// Points computed from real lat/lon via _mapProject()
-const _TEXAS_PATH = [
-  'M 159 0',    // NW panhandle (-103.04, 36.50)
-  'L 294 0',    // NE panhandle top (-100.00, 36.50)
-  'L 294 101',  // NE panhandle bottom (-100.00, 34.31)
-  // Oklahoma border / Red River (east)
-  'L 325 109', 'L 360 109', 'L 400 115', 'L 435 120',
-  'L 493 124', 'L 524 127', 'L 554 135',
-  // NE corner & Sabine River (south)
-  'L 556 156', 'L 558 253', 'L 567 311',
-  // Gulf Coast (west/southwest)
-  'L 566 314', 'L 554 322', 'L 524 329', 'L 502 340',
-  'L 471 356', 'L 435 372', 'L 424 399', 'L 409 412',
-  'L 400 473',
-  // Brownsville tip
-  'L 420 490',
-  // Rio Grande (northwest to El Paso)
-  'L 418 483', 'L 382 460', 'L 347 441',
-  'L 315 414',  // Laredo
-  'L 272 358',  // Eagle Pass
-  'L 254 328',  // Del Rio
-  'L 250 314',
-  'L 228 293', 'L 188 276',
-  // Big Bend
-  'L 170 308', 'L 161 333',
-  'L 139 322', 'L 117 319',
-  'L 95 285',  'L 79 252',
-  'L 51 230',  'L 16 218',
-  'L 0 217',    // El Paso
-  // NM border north
-  'L 159 207',  // NM-TX corner (-103.04, 32.00)
-  'Z'
-].join(' ');
+const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
-// Active weather overlay layers
+let _mlMap = null;
+let _mlMapLoaded = false;
+let _mlMarkers = {};
+
+// Weather overlay visibility — mirrors the old _mapLayers state
 const _mapLayers = { rain: true, clouds: true, severe: true, drought: true };
 
-function _mapProject(lat, lon) {
-  const x = (lon - _MAP_LON_W) / (_MAP_LON_E - _MAP_LON_W) * _MAP_W;
-  const y = (_MAP_LAT_N - lat) / (_MAP_LAT_N - _MAP_LAT_S) * _MAP_H;
-  return { x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 };
-}
-
+// ── Layer toggle (called from HTML onclick) ────────────────────────────────────
 function mapToggleLayer(layer) {
   _mapLayers[layer] = !_mapLayers[layer];
   const btn = document.querySelector(`.map-layer-btn[data-layer="${layer}"]`);
   if (btn) btn.classList.toggle('active', _mapLayers[layer]);
-  _mapRenderOverlays();
+  _mlSyncLayerVisibility();
 }
 
-// ── Main render ───────────────────────────────────────────────────────────────
-function renderMap() {
-  const outline = document.getElementById('texasOutline');
-  if (outline) outline.setAttribute('d', _TEXAS_PATH);
-  _mapRenderOverlays();
-  _mapRenderCities();
-  mapRendered = true;
-  if (selectedCity) showCityDetail(selectedCity);
+// ── Map initialisation ────────────────────────────────────────────────────────
+function _mlInit() {
+  const container = document.getElementById('texasSVG');
+  if (!container || _mlMap) return;
+
+  _mlMap = new maplibregl.Map({
+    container: 'texasSVG',
+    style: MAP_STYLE,
+    center: [-99.5, 31.0],
+    zoom: 5.2,
+    minZoom: 4,
+    maxZoom: 14,
+    renderWorldCopies: false,
+    attributionControl: { compact: true },
+  });
+
+  // Controls matching MapControls component (showZoom + showCompass + showLocate + showFullscreen)
+  _mlMap.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'bottom-right');
+  _mlMap.addControl(new maplibregl.FullscreenControl(), 'bottom-right');
+  _mlMap.addControl(
+    new maplibregl.GeolocateControl({ positionOptions: { enableHighAccuracy: true } }),
+    'bottom-right',
+  );
+
+  function _mlOnReady() {
+    if (_mlMapLoaded) return;
+    _mlMapLoaded = true;
+    _mlAddOverlaySources();
+    _mlRenderMarkers();
+    mapRendered = true;
+    if (typeof selectedCity !== 'undefined' && selectedCity && WEATHER_DATA[selectedCity]) {
+      showCityDetail(selectedCity);
+    }
+  }
+
+  _mlMap.on('load', _mlOnReady);
+  // Fallback: if style loads but full 'load' is slow (e.g. first tile batch), init after style
+  _mlMap.on('styledata', () => { if (_mlMap.isStyleLoaded()) _mlOnReady(); });
+  // Hard fallback after 4s in case WebGL/tile loading stalls
+  setTimeout(() => { if (_mlMap && !_mlMapLoaded) _mlOnReady(); }, 4000);
 }
 
-// ── Weather overlay logic ─────────────────────────────────────────────────────
-function _mapRenderOverlays() {
-  const defs    = document.getElementById('mapDefs');
-  const overlayG = document.getElementById('weatherOverlays');
-  if (!defs || !overlayG) return;
-  defs.innerHTML    = '';
-  overlayG.innerHTML = '';
-
-  const NS = 'http://www.w3.org/2000/svg';
-  const R  = 95; // overlay circle radius (SVG units)
-
-  ALL_CITIES.filter(c => WEATHER_DATA[c.name]).forEach(city => {
-    const d   = WEATHER_DATA[city.name];
-    const fc0 = (FORECAST_DATA[city.name] || [])[0];
-    const p   = _mapProject(city.lat, city.lon);
-
-    const layers = [
-      { key: 'rain',    ..._mapRainLayer(d, fc0)    },
-      { key: 'clouds',  ..._mapCloudLayer(d)        },
-      { key: 'severe',  ..._mapSevereLayer(d)       },
-      { key: 'drought', ..._mapDroughtLayer(d)      },
-    ];
-
-    layers.forEach(({ key, color, opacity }) => {
-      if (!_mapLayers[key] || !color || opacity <= 0) return;
-      const gId  = `ov-${key}-${city.name.replace(/\W/g, '')}`;
-      const grad = document.createElementNS(NS, 'radialGradient');
-      grad.setAttribute('id', gId);
-      grad.innerHTML = `
-        <stop offset="0%"   stop-color="${color}" stop-opacity="${Math.min(opacity, 0.82)}"/>
-        <stop offset="55%"  stop-color="${color}" stop-opacity="${(opacity * 0.38).toFixed(2)}"/>
-        <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
-      `;
-      defs.appendChild(grad);
-      const circle = document.createElementNS(NS, 'circle');
-      circle.setAttribute('cx',    p.x);
-      circle.setAttribute('cy',    p.y);
-      circle.setAttribute('r',     R);
-      circle.setAttribute('fill',  `url(#${gId})`);
-      circle.setAttribute('class', `map-overlay map-overlay-${key}`);
-      overlayG.appendChild(circle);
+// ── Weather overlay sources / layers ─────────────────────────────────────────
+function _mlBuildGeoJSON() {
+  const features = ALL_CITIES
+    .filter(c => WEATHER_DATA[c.name])
+    .map(city => {
+      const d   = WEATHER_DATA[city.name];
+      const fc0 = (FORECAST_DATA[city.name] || [])[0];
+      return {
+        type: 'Feature',
+        properties: {
+          rain:    _opRain(d, fc0),
+          cloud:   _opCloud(d),
+          severe:  _opSevere(d),
+          drought: _opDrought(d),
+        },
+        geometry: { type: 'Point', coordinates: [city.lon, city.lat] },
+      };
     });
+  return { type: 'FeatureCollection', features };
+}
+
+function _opRain(d, fc0) {
+  const rain = fc0 ? fc0.rain : 0;
+  const wet  = ['Rain', 'Drizzle', 'Showers', 'Thunderstorms', 'Severe Storm'].includes(d.condition);
+  if (rain < 20 && !wet) return 0;
+  return wet ? 0.62 : (rain / 100) * 0.5;
+}
+function _opCloud(d) {
+  if (!['Overcast', 'Partly Cloudy', 'Foggy'].includes(d.condition)) return 0;
+  return d.condition === 'Overcast' ? 0.32 : d.condition === 'Foggy' ? 0.38 : 0.16;
+}
+function _opSevere(d)  { return ['Thunderstorms', 'Severe Storm'].includes(d.condition) ? 0.7 : 0; }
+function _opDrought(d) {
+  if (d.et0Avg == null || d.precipAvg == null) return 0;
+  const deficit = d.et0Avg - d.precipAvg;
+  return deficit < 1.5 ? 0 : Math.min(0.52, deficit / 8);
+}
+
+// Radius expression: scales with zoom so overlays cover similar geographic area
+function _radiusExpr() {
+  return ['interpolate', ['exponential', 2], ['zoom'], 4, 35, 5, 70, 6, 140, 7, 280];
+}
+
+function _mlAddOverlaySources() {
+  if (!_mlMap) return;
+  const data = _mlBuildGeoJSON();
+
+  const overlays = [
+    { key: 'rain',    color: '#1565D4' },
+    { key: 'cloud',   color: '#8898AA' },
+    { key: 'severe',  color: '#8B1A1A' },
+    { key: 'drought', color: '#C47A20' },
+  ];
+
+  overlays.forEach(({ key, color }) => {
+    _mlMap.addSource(`${key}-src`, { type: 'geojson', data });
+    _mlMap.addLayer({
+      id:     `${key}-layer`,
+      type:   'circle',
+      source: `${key}-src`,
+      paint: {
+        'circle-radius':  _radiusExpr(),
+        'circle-color':   color,
+        'circle-opacity': ['get', key],
+        'circle-blur':    0.85,
+      },
+    });
+  });
+
+  _mlSyncLayerVisibility();
+}
+
+function _mlSyncLayerVisibility() {
+  if (!_mlMap || !_mlMapLoaded) return;
+  const map = {
+    'rain-layer':    _mapLayers.rain,
+    'cloud-layer':   _mapLayers.clouds,
+    'severe-layer':  _mapLayers.severe,
+    'drought-layer': _mapLayers.drought,
+  };
+  Object.entries(map).forEach(([id, visible]) => {
+    if (_mlMap.getLayer(id)) {
+      _mlMap.setLayoutProperty(id, 'visibility', visible ? 'visible' : 'none');
+    }
   });
 }
 
-function _mapRainLayer(d, fc0) {
-  const rain = fc0 ? fc0.rain : 0;
-  const wet  = ['Rain','Drizzle','Showers','Thunderstorms','Severe Storm'].includes(d.condition);
-  if (rain < 20 && !wet) return { color: null, opacity: 0 };
-  const op = wet ? 0.62 : rain / 100 * 0.5;
-  return { color: '#1565D4', opacity: op };
-}
-
-function _mapCloudLayer(d) {
-  if (!['Overcast','Partly Cloudy','Foggy'].includes(d.condition)) return { color: null, opacity: 0 };
-  const op = d.condition === 'Overcast' ? 0.32 : d.condition === 'Foggy' ? 0.38 : 0.16;
-  return { color: '#8898AA', opacity: op };
-}
-
-function _mapSevereLayer(d) {
-  if (!['Thunderstorms','Severe Storm'].includes(d.condition)) return { color: null, opacity: 0 };
-  return { color: '#8B1A1A', opacity: 0.7 };
-}
-
-function _mapDroughtLayer(d) {
-  if (d.et0Avg == null || d.precipAvg == null) return { color: null, opacity: 0 };
-  const deficit = d.et0Avg - d.precipAvg;
-  if (deficit < 1.5) return { color: null, opacity: 0 };
-  return { color: '#C47A20', opacity: Math.min(0.52, deficit / 8) };
+function _mlUpdateOverlaySources() {
+  if (!_mlMap || !_mlMapLoaded) return;
+  const data = _mlBuildGeoJSON();
+  ['rain', 'cloud', 'severe', 'drought'].forEach(key => {
+    const src = _mlMap.getSource(`${key}-src`);
+    if (src) src.setData(data);
+  });
+  _mlSyncLayerVisibility();
 }
 
 // ── City markers ──────────────────────────────────────────────────────────────
-function _mapRenderCities() {
-  const markers = document.getElementById('cityMarkers');
-  if (!markers) return;
-  markers.innerHTML = '';
-  const NS = 'http://www.w3.org/2000/svg';
+function _mlRenderMarkers() {
+  if (!_mlMap) return;
+
+  // Remove existing markers
+  Object.values(_mlMarkers).forEach(m => m.remove());
+  _mlMarkers = {};
 
   ALL_CITIES.forEach(city => {
-    const d   = WEATHER_DATA[city.name];
-    const p   = _mapProject(city.lat, city.lon);
+    const d         = WEATHER_DATA[city.name];
     const isPrimary = !!city.primary;
-    const g   = document.createElementNS(NS, 'g');
-    g.setAttribute('class', 'city-dot' + (isPrimary ? '' : ' city-dot-ext'));
-    g.setAttribute('tabindex', '0');
-    g.setAttribute('role', 'button');
+    const sz        = isPrimary ? (d ? 20 : 14) : (d ? 10 : 7);
+    const col       = d ? getTempColor(d.temp) : 'rgba(130,155,185,0.55)';
 
-    if (d) {
-      const col = getTempColor(d.temp);
-      g.setAttribute('aria-label', `${city.name}: ${d.temp}°F, ${d.condition}`);
-      if (isPrimary) {
-        g.innerHTML = `
-          <circle cx="${p.x}" cy="${p.y}" r="7.5" fill="${col}" opacity="0.93" stroke="rgba(255,255,255,0.75)" stroke-width="1.5"/>
-          <text x="${p.x}" y="${p.y-11}" fill="rgba(255,255,255,0.93)" font-size="7.5" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" aria-hidden="true">${escapeHtml(city.name)}</text>
-          <text x="${p.x}" y="${p.y+3.5}" fill="#fff" font-size="6.5" text-anchor="middle" font-weight="800" font-family="Inter,sans-serif" aria-hidden="true">${d.temp}°</text>
-        `;
-      } else {
-        g.innerHTML = `
-          <circle cx="${p.x}" cy="${p.y}" r="5" fill="${col}" opacity="0.82" stroke="rgba(255,255,255,0.55)" stroke-width="1"/>
-          <text x="${p.x}" y="${p.y-8}" fill="rgba(255,255,255,0.72)" font-size="5.8" text-anchor="middle" font-family="Inter,sans-serif" font-weight="500" aria-hidden="true" class="map-city-label">${escapeHtml(city.name)}</text>
-        `;
-      }
-    } else {
-      // No data yet — small grey placeholder dot
-      g.setAttribute('aria-label', `${city.name}: click to load weather`);
-      const r  = isPrimary ? 5 : 3.5;
-      const fs = isPrimary ? 7 : 5.5;
-      const ty = p.y - r - 2;
-      g.innerHTML = `
-        <circle cx="${p.x}" cy="${p.y}" r="${r}" fill="rgba(130,155,185,0.55)" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
-        <text x="${p.x}" y="${ty}" fill="rgba(255,255,255,0.38)" font-size="${fs}" text-anchor="middle" font-family="Inter,sans-serif" class="map-city-label" aria-hidden="true">${escapeHtml(city.name)}</text>
-      `;
-    }
+    // Container element (position:relative so the label can be absolute)
+    const el = document.createElement('div');
+    el.style.cssText = 'position:relative;cursor:pointer';
+    el.setAttribute('aria-label', d
+      ? `${city.name}: ${d.temp}°F, ${d.condition}`
+      : `${city.name}: click to load weather`);
+    el.setAttribute('role', 'button');
+    el.setAttribute('tabindex', '0');
 
-    g.addEventListener('mouseenter', e => _mapShowTooltip(e, city, d));
-    g.addEventListener('mouseleave', hideTooltip);
-    g.addEventListener('click', () => {
+    // City name label (floats above the dot)
+    const label = document.createElement('div');
+    label.textContent = city.name;
+    label.style.cssText = [
+      'position:absolute',
+      'left:50%',
+      'transform:translateX(-50%)',
+      `bottom:${sz + 3}px`,
+      'white-space:nowrap',
+      'pointer-events:none',
+      'font-family:Inter,sans-serif',
+      `font-size:${isPrimary ? '7.5px' : '5.8px'}`,
+      `font-weight:${isPrimary ? '700' : '500'}`,
+      `color:rgba(255,255,255,${isPrimary ? '0.93' : '0.72'})`,
+      'text-shadow:0 1px 3px rgba(0,0,0,0.9)',
+      'z-index:1',
+    ].join(';');
+
+    // Dot
+    const dot = document.createElement('div');
+    dot.style.cssText = [
+      `width:${sz}px`,
+      `height:${sz}px`,
+      'border-radius:50%',
+      `background:${col}`,
+      `border:${d ? '2px' : '1px'} solid rgba(255,255,255,${d ? '0.75' : '0.28'})`,
+      'box-shadow:0 2px 8px rgba(0,0,0,0.5)',
+      'display:flex',
+      'align-items:center',
+      'justify-content:center',
+      'font-size:6.5px',
+      'font-weight:800',
+      'color:#fff',
+      'font-family:Inter,sans-serif',
+      `opacity:${isPrimary ? '0.93' : '0.82'}`,
+      'transition:transform 0.15s,box-shadow 0.15s',
+      'position:relative',
+      'z-index:2',
+    ].join(';');
+    if (isPrimary && d) dot.textContent = `${d.temp}°`;
+
+    el.appendChild(label);
+    el.appendChild(dot);
+
+    // Hover scale
+    el.addEventListener('mouseenter', () => {
+      dot.style.transform  = 'scale(1.4)';
+      dot.style.boxShadow  = '0 4px 16px rgba(0,0,0,0.6)';
+    });
+    el.addEventListener('mouseleave', () => {
+      dot.style.transform = '';
+      dot.style.boxShadow = '0 2px 8px rgba(0,0,0,0.5)';
+    });
+
+    // Hover popup (styled to match the site's dark theme)
+    const popupHtml = d
+      ? `<div style="font-family:Inter,sans-serif;font-size:11px">
+           <strong style="font-size:12px">${escapeHtml(city.name)}</strong><br>
+           <span style="font-size:14px">${d.icon}</span>&nbsp;${d.temp}°F · ${escapeHtml(d.condition)}<br>
+           <span style="opacity:0.65">💧 ${d.humidity}% &nbsp;💨 ${d.wind} mph</span>
+         </div>`
+      : `<div style="font-family:Inter,sans-serif;font-size:11px">
+           <strong>${escapeHtml(city.name)}</strong><br>
+           <span style="opacity:0.6">Click to load weather</span>
+         </div>`;
+
+    const popup = new maplibregl.Popup({
+      offset:      [0, -(sz + 4)],
+      closeButton: false,
+      closeOnClick:false,
+      maxWidth:    '220px',
+    }).setHTML(popupHtml);
+
+    el.addEventListener('mouseenter', () => popup.setLngLat([city.lon, city.lat]).addTo(_mlMap));
+    el.addEventListener('mouseleave', () => popup.remove());
+
+    // Click → show city detail panel
+    const handleClick = () => {
       selectedCity = city.name;
       if (d) showCityDetail(city.name);
       else   _mapFetchAndShow(city);
+    };
+    el.addEventListener('click', handleClick);
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleClick(); }
     });
-    g.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        selectedCity = city.name;
-        if (d) showCityDetail(city.name);
-        else   _mapFetchAndShow(city);
-      }
-    });
-    markers.appendChild(g);
+
+    const marker = new maplibregl.Marker({ element: el, anchor: 'bottom' })
+      .setLngLat([city.lon, city.lat])
+      .addTo(_mlMap);
+
+    _mlMarkers[city.name] = marker;
   });
+}
+
+// ── Main entry point (called by TAB_RENDERERS.mapcompare) ─────────────────────
+function renderMap() {
+  if (!_mlMap) {
+    _mlInit();
+    // markers & overlays will be added in the 'load' handler
+    return;
+  }
+  if (!_mlMapLoaded) return; // load handler will run soon
+  _mlUpdateOverlaySources();
+  _mlRenderMarkers();
+  if (typeof selectedCity !== 'undefined' && selectedCity && WEATHER_DATA[selectedCity]) {
+    showCityDetail(selectedCity);
+  }
 }
 
 // ── On-demand city fetch ──────────────────────────────────────────────────────
@@ -208,40 +302,19 @@ async function _mapFetchAndShow(city) {
     <div style="text-align:center;padding:24px 0;color:var(--text2)">
       <div style="font-size:22px;margin-bottom:8px">🌐</div>
       <div style="font-size:12px">Loading weather for ${escapeHtml(city.name)}…</div>
-    </div>
-  `;
+    </div>`;
   if (detail) detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   try {
     await fetchCityOnDemand(city);
     showCityDetail(city.name);
-    _mapRenderCities();
-    _mapRenderOverlays();
+    _mlRenderMarkers();
+    _mlUpdateOverlaySources();
   } catch {
-    if (content) content.innerHTML = `<div class="card" style="color:var(--text2);text-align:center;padding:24px">Unable to load weather for ${escapeHtml(city.name)}. Please try again.</div>`;
+    if (content) content.innerHTML = `
+      <div class="card" style="color:var(--text2);text-align:center;padding:24px">
+        Unable to load weather for ${escapeHtml(city.name)}. Please try again.
+      </div>`;
   }
-}
-
-// ── Tooltip ───────────────────────────────────────────────────────────────────
-function _mapShowTooltip(e, city, d) {
-  const tt   = document.getElementById('mapTooltip');
-  const rect = document.getElementById('texasSVG').getBoundingClientRect();
-  const x    = Math.min(e.clientX - rect.left + 14, rect.width - 180);
-  const y    = Math.max(e.clientY - rect.top  - 24, 4);
-  tt.style.cssText += `;display:block;left:${x}px;top:${y}px`;
-  tt.removeAttribute('aria-hidden');
-  if (d) {
-    tt.innerHTML = `<strong style="font-size:12px">${escapeHtml(city.name)}</strong><br><span style="font-size:13px" aria-hidden="true">${d.icon}</span> ${d.temp}°F · ${escapeHtml(d.condition)}<br><span style="color:var(--text2)">💧 ${d.humidity}% &nbsp;💨 ${d.wind} mph</span>`;
-  } else {
-    tt.innerHTML = `<strong style="font-size:12px">${escapeHtml(city.name)}</strong><br><span style="color:var(--text2);font-size:11px">Click to load weather</span>`;
-  }
-}
-
-function showTooltip(e, c, d) { _mapShowTooltip(e, c, d); }
-
-function hideTooltip() {
-  const tt = document.getElementById('mapTooltip');
-  tt.style.display = 'none';
-  tt.setAttribute('aria-hidden', 'true');
 }
 
 // ── City detail panel ─────────────────────────────────────────────────────────
@@ -260,12 +333,12 @@ function showCityDetail(cityName) {
     <div class="grid-4">
       <div class="card"><div class="stat-label">Pressure</div><div class="stat-value" style="font-size:18px">${d.pressure}<span class="stat-unit">hPa</span></div></div>
       <div class="card"><div class="stat-label">Visibility</div><div class="stat-value" style="font-size:18px">${d.visibility}<span class="stat-unit">mi</span></div></div>
-      <div class="card"><div class="stat-label">UV Index</div><div class="stat-value" style="font-size:18px;color:${d.uv>=8?'#E87A7A':'#F8C06A'}">${d.uv}</div></div>
+      <div class="card"><div class="stat-label">UV Index</div><div class="stat-value" style="font-size:18px;color:${d.uv >= 8 ? '#E87A7A' : '#F8C06A'}">${d.uv}</div></div>
       <div class="card"><div class="stat-label">AQI</div><div class="stat-value" style="font-size:18px;color:${getAQILabel(d.aqi).color}">${d.aqi}</div></div>
     </div>
     <div style="margin-top:14px">
       <h3 class="section-title">7-Day Forecast — ${escapeHtml(cityName)}</h3>
-      ${(FORECAST_DATA[cityName]||[]).map(f=>`
+      ${(FORECAST_DATA[cityName] || []).map(f => `
         <div class="forecast-row">
           <div class="forecast-day">${escapeHtml(f.day)}</div>
           <div class="forecast-icon" aria-hidden="true">${f.icon}</div>
@@ -276,8 +349,11 @@ function showCityDetail(cityName) {
             <div style="font-size:9px;color:var(--text3);margin-top:3px">Rain: ${f.rain}%</div>
           </div>
           <div class="forecast-temps"><span class="forecast-hi">${f.hi}°</span><span class="forecast-lo">${f.lo}°</span></div>
-        </div>
-      `).join('')}
+        </div>`).join('')}
     </div>
   `;
 }
+
+// ── Tooltip stubs (kept for backward compat with nav.js search) ───────────────
+function showTooltip() {}
+function hideTooltip() {}
