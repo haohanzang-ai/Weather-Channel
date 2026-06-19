@@ -341,6 +341,12 @@
             <button class="map-layer-btn active" data-layer="severe"  onclick="mapToggleLayer('severe')">⚡ Severe</button>
             <button class="map-layer-btn active" data-layer="drought" onclick="mapToggleLayer('drought')">🏜 Drought</button>
           </div>
+          <div class="map-layer-controls" role="group" aria-label="Pollution overlay layer controls">
+            <span class="map-layer-label">Pollution Layers:</span>
+            <button class="map-layer-btn" data-layer="runoff"    onclick="mapTogglePollutionLayer('runoff')">🌊 Runoff</button>
+            <button class="map-layer-btn" data-layer="pesticide" onclick="mapTogglePollutionLayer('pesticide')">🧪 Pesticide</button>
+            <button class="map-layer-btn" data-layer="ghg"       onclick="mapTogglePollutionLayer('ghg')">💨 GHG Emissions</button>
+          </div>
 
           <div class="map-container">
             <div class="map-legend-row" role="note" aria-label="Map legend">
@@ -369,6 +375,35 @@
           <div id="cityDetail" style="display:none" aria-live="polite">
             <h2 class="section-title">Selected City Details</h2>
             <div id="cityDetailContent"></div>
+          </div>
+
+          <!-- Pollution vs. Biofuel legend -->
+          <div id="pollutionLegend" style="margin-top:18px;background:linear-gradient(135deg,var(--surface2),var(--surface));border:1px solid rgba(46,204,139,0.28);border-radius:var(--r12);padding:16px" role="note" aria-label="Pollution overlay legend">
+            <div style="font-size:11px;font-weight:700;color:var(--text0);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px">🌿 Pollution vs. Biofuel — Layer Guide</div>
+            <div style="display:flex;gap:20px;flex-wrap:wrap">
+              <div style="display:flex;align-items:flex-start;gap:10px">
+                <div style="width:14px;height:14px;border-radius:50%;background:#1A6B3A;flex-shrink:0;margin-top:2px;box-shadow:0 0 8px rgba(26,107,58,0.6)"></div>
+                <div>
+                  <div style="font-size:11px;font-weight:600;color:var(--text0)">🌊 Agricultural Runoff</div>
+                  <div style="font-size:10px;color:var(--text2);line-height:1.5">Fertilizer &amp; sediment runoff from irrigated cropland. High in Rio Grande Valley and Panhandle. Biofuel perennials reduce runoff by maintaining year-round root systems.</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:10px">
+                <div style="width:14px;height:14px;border-radius:50%;background:#8B4513;flex-shrink:0;margin-top:2px;box-shadow:0 0 8px rgba(139,69,19,0.6)"></div>
+                <div>
+                  <div style="font-size:11px;font-weight:600;color:var(--text0)">🧪 Pesticide Intensity</div>
+                  <div style="font-size:10px;color:var(--text2);line-height:1.5">Herbicide &amp; insecticide use concentrated in Panhandle cotton and Lower Rio Grande Valley. Switchgrass and other biofuel crops need far fewer chemical inputs.</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:10px">
+                <div style="width:14px;height:14px;border-radius:50%;background:#FF4500;flex-shrink:0;margin-top:2px;box-shadow:0 0 8px rgba(255,69,0,0.6)"></div>
+                <div>
+                  <div style="font-size:11px;font-weight:600;color:var(--text0)">💨 GHG Emissions</div>
+                  <div style="font-size:10px;color:var(--text2);line-height:1.5">Industrial &amp; fossil fuel emissions hotspots (Houston, Permian Basin, DFW). Cellulosic biofuel from local crops displaces petroleum, cutting lifecycle carbon 60–90%.</div>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:10px;color:var(--text3)">Intensity: <span style="color:#5DDBA8;font-weight:600">Low</span> · <span style="color:#FFD700;font-weight:600">Moderate</span> · <span style="color:#FFA500;font-weight:600">High</span> · <span style="color:#FF4500;font-weight:600">Critical</span> — Opacity reflects relative pollution intensity. Data: county-level static approximation.</div>
           </div>
         </div><!-- /map subsection -->
 
@@ -1088,7 +1123,7 @@
 <script src="js/utils.js?v=2"></script>
 <script src="js/nav.js?v=3"></script>
 <script src="js/dashboard.js"></script>
-<script src="js/map.js?v=6"></script>
+<script src="js/map.js?v=7"></script>
 <script src="js/forecasts.js?v=3"></script>
 <script src="js/agriculture.js"></script>
 <script src="js/trends.js"></script>

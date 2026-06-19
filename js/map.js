@@ -13,6 +13,38 @@ let _mlMarkers = {};
 // Weather overlay visibility — mirrors the old _mapLayers state
 const _mapLayers = { rain: true, clouds: true, severe: true, drought: true };
 
+// ── Static pollution data (county-level approximations) ─────────────────────
+const POLLUTION_DATA = {
+  runoff: [
+    { county: 'Hidalgo',    lon:  -98.18, lat: 26.30, intensity: 0.9 },
+    { county: 'Cameron',    lon:  -97.52, lat: 26.14, intensity: 0.9 },
+    { county: 'Starr',      lon:  -98.75, lat: 26.56, intensity: 0.9 },
+    { county: 'Bell',       lon:  -97.48, lat: 31.03, intensity: 0.6 },
+    { county: 'McLennan',   lon:  -97.20, lat: 31.55, intensity: 0.6 },
+    { county: 'Deaf Smith', lon: -102.60, lat: 34.96, intensity: 0.8 },
+    { county: 'Castro',     lon: -102.26, lat: 34.53, intensity: 0.8 },
+  ],
+  pesticide: [
+    { county: 'Lubbock',  lon: -101.82, lat: 33.61, intensity: 0.85 },
+    { county: 'Hale',     lon: -101.83, lat: 34.07, intensity: 0.85 },
+    { county: 'Floyd',    lon: -101.30, lat: 33.98, intensity: 0.85 },
+    { county: 'Hidalgo',  lon:  -98.18, lat: 26.30, intensity: 0.80 },
+    { county: 'Smith',    lon:  -95.27, lat: 32.37, intensity: 0.65 },
+    { county: 'Rusk',     lon:  -94.77, lat: 31.90, intensity: 0.65 },
+  ],
+  ghg: [
+    { county: 'Harris',   lon:  -95.37, lat: 29.85, intensity: 0.90 },
+    { county: 'Midland',  lon: -102.08, lat: 31.87, intensity: 0.85 },
+    { county: 'Ector',    lon: -102.55, lat: 31.87, intensity: 0.85 },
+    { county: 'Dallas',   lon:  -96.78, lat: 32.77, intensity: 0.75 },
+    { county: 'Tarrant',  lon:  -97.29, lat: 32.73, intensity: 0.75 },
+    { county: 'Nueces',   lon:  -97.40, lat: 27.73, intensity: 0.70 },
+  ],
+};
+
+// Pollution layer toggle state — separate from weather _mapLayers
+const _pollutionLayers = { runoff: false, pesticide: false, ghg: false };
+
 // ── Layer toggle (called from HTML onclick) ────────────────────────────────────
 function mapToggleLayer(layer) {
   _mapLayers[layer] = !_mapLayers[layer];
@@ -49,7 +81,10 @@ function _mlInit() {
     if (_mlMapLoaded) return;
     _mlMapLoaded = true;
     _mlAddOverlaySources();
+    _mlAddPollutionLayers();
+    _mlAddTexasBorder(); // async — inserts Texas outline below weather circles
     _mlRenderMarkers();
+    _mlAddInMapLegend();
     mapRendered = true;
     if (typeof selectedCity !== 'undefined' && selectedCity && WEATHER_DATA[selectedCity]) {
       showCityDetail(selectedCity);
@@ -158,6 +193,90 @@ function _mlUpdateOverlaySources() {
     if (src) src.setData(data);
   });
   _mlSyncLayerVisibility();
+}
+
+// ── Pollution overlay layers ─────────────────────────────────────────────────
+const _POLL_CONFIGS = [
+  {
+    key: 'runoff',    color: '#1A6B3A', label: 'Agricultural Runoff',
+    bio: 'Biofuel crops here could reduce agricultural runoff pollution by replacing conventional row-crop agriculture',
+  },
+  {
+    key: 'pesticide', color: '#8B4513', label: 'Pesticide Intensity',
+    bio: 'Biofuel crops here could reduce pesticide intensity pollution by replacing conventional row-crop agriculture',
+  },
+  {
+    key: 'ghg',       color: '#FF4500', label: 'GHG Emissions',
+    bio: 'Biofuel crops here could reduce GHG emissions pollution by replacing fossil-fuel-dependent conventional agriculture',
+  },
+];
+
+function _mlAddPollutionLayers() {
+  if (!_mlMap) return;
+
+  _POLL_CONFIGS.forEach(({ key, color, label, bio }) => {
+    const features = POLLUTION_DATA[key].map(pt => ({
+      type: 'Feature',
+      properties: { intensity: pt.intensity, county: pt.county },
+      geometry: { type: 'Point', coordinates: [pt.lon, pt.lat] },
+    }));
+
+    _mlMap.addSource(`${key}-poll-src`, {
+      type: 'geojson',
+      data: { type: 'FeatureCollection', features },
+    });
+
+    _mlMap.addLayer({
+      id:     `${key}-poll-layer`,
+      type:   'circle',
+      source: `${key}-poll-src`,
+      layout: { visibility: 'none' },
+      paint: {
+        'circle-radius':  _radiusExpr(),
+        'circle-color':   color,
+        'circle-opacity': ['get', 'intensity'],
+        'circle-blur':    0.85,
+      },
+    });
+
+    const popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, maxWidth: '280px' });
+
+    _mlMap.on('mouseenter', `${key}-poll-layer`, e => {
+      _mlMap.getCanvas().style.cursor = 'pointer';
+      const p   = e.features[0].properties;
+      const lvl = p.intensity >= 0.8 ? 'Critical' : p.intensity >= 0.6 ? 'High' : p.intensity >= 0.4 ? 'Moderate' : 'Low';
+      const lvlColor = { Critical: '#FF4500', High: '#FFA500', Moderate: '#FFD700', Low: '#5DDBA8' }[lvl];
+      popup.setLngLat(e.lngLat).setHTML(
+        `<div style="font-family:Inter,sans-serif;font-size:11px;line-height:1.55;padding:2px">` +
+        `<div style="font-size:12px;font-weight:700;margin-bottom:4px">${escapeHtml(p.county)} County</div>` +
+        `<div style="margin-bottom:6px">${escapeHtml(label)} · <span style="color:${lvlColor};font-weight:700">${lvl}</span></div>` +
+        `<div style="font-size:10px;color:rgba(255,255,255,0.65);line-height:1.5">${escapeHtml(bio)}</div>` +
+        `</div>`
+      ).addTo(_mlMap);
+    });
+
+    _mlMap.on('mouseleave', `${key}-poll-layer`, () => {
+      _mlMap.getCanvas().style.cursor = '';
+      popup.remove();
+    });
+  });
+}
+
+function _mlSyncPollutionLayerVisibility() {
+  if (!_mlMap || !_mlMapLoaded) return;
+  ['runoff', 'pesticide', 'ghg'].forEach(key => {
+    const id = `${key}-poll-layer`;
+    if (_mlMap.getLayer(id)) {
+      _mlMap.setLayoutProperty(id, 'visibility', _pollutionLayers[key] ? 'visible' : 'none');
+    }
+  });
+}
+
+function mapTogglePollutionLayer(layer) {
+  _pollutionLayers[layer] = !_pollutionLayers[layer];
+  const btn = document.querySelector(`.map-layer-btn[data-layer="${layer}"]`);
+  if (btn) btn.classList.toggle('active', _pollutionLayers[layer]);
+  _mlSyncPollutionLayerVisibility();
 }
 
 // ── City markers ──────────────────────────────────────────────────────────────
@@ -353,6 +472,63 @@ function showCityDetail(cityName) {
         </div>`).join('')}
     </div>
   `;
+}
+
+// ── Texas state outline (us-atlas TopoJSON via jsDelivr — already in CSP) ────
+async function _mlAddTexasBorder() {
+  if (!_mlMap) return;
+  try {
+    const res = await fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json');
+    const us  = await res.json();
+    if (typeof topojson === 'undefined') return;
+    const texasFeature = topojson.feature(us, us.objects.states).features
+      .find(f => String(f.id) === '48');
+    if (!texasFeature || _mlMap.getSource('texas-border-src')) return;
+
+    _mlMap.addSource('texas-border-src', { type: 'geojson', data: texasFeature });
+
+    // Insert below existing weather-circle layers so they render on top
+    const firstWeatherLayer = ['rain-layer', 'cloud-layer', 'severe-layer', 'drought-layer']
+      .find(id => _mlMap.getLayer(id));
+
+    _mlMap.addLayer({
+      id: 'texas-fill', type: 'fill', source: 'texas-border-src',
+      paint: { 'fill-color': '#4A90E2', 'fill-opacity': 0.06 },
+    }, firstWeatherLayer);
+
+    _mlMap.addLayer({
+      id: 'texas-border', type: 'line', source: 'texas-border-src',
+      paint: { 'line-color': '#2B6CB0', 'line-width': 2.5, 'line-opacity': 0.9 },
+    }, firstWeatherLayer);
+  } catch {
+    // decorative — silently skip on network error
+  }
+}
+
+// ── In-map floating legend (stays visible in fullscreen) ─────────────────────
+function _mlAddInMapLegend() {
+  const container = document.getElementById('texasSVG');
+  if (!container || document.getElementById('ml-legend')) return;
+
+  const legend = document.createElement('div');
+  legend.id = 'ml-legend';
+  legend.setAttribute('aria-label', 'Map legend');
+  legend.innerHTML = `
+    <div class="ml-legend-title">🌡 Temperature</div>
+    <div class="ml-legend-row"><span class="ml-swatch" style="background:#4A90E2"></span>&lt;50°F Cool</div>
+    <div class="ml-legend-row"><span class="ml-swatch" style="background:#5DDBA8"></span>50–75°F Mild</div>
+    <div class="ml-legend-row"><span class="ml-swatch" style="background:#F8C06A"></span>75–90°F Warm</div>
+    <div class="ml-legend-row"><span class="ml-swatch" style="background:#E87A7A"></span>&gt;90°F Hot</div>
+    <div class="ml-legend-divider"></div>
+    <div class="ml-legend-title">🌦 Weather Overlays</div>
+    <div class="ml-legend-row"><span class="ml-swatch" style="background:rgba(21,101,212,0.65)"></span>Precipitation</div>
+    <div class="ml-legend-row"><span class="ml-swatch" style="background:rgba(136,152,170,0.55)"></span>Cloud Cover</div>
+    <div class="ml-legend-row"><span class="ml-swatch" style="background:rgba(139,26,26,0.7)"></span>Severe</div>
+    <div class="ml-legend-row"><span class="ml-swatch" style="background:rgba(196,122,32,0.6)"></span>Drought</div>
+    <div class="ml-legend-divider"></div>
+    <div class="ml-legend-footer">● 100 cities — click any dot for forecast</div>
+  `;
+  container.appendChild(legend);
 }
 
 // ── Tooltip stubs (kept for backward compat with nav.js search) ───────────────
