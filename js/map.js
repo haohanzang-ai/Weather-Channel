@@ -90,10 +90,11 @@ function _mlInit() {
   _mlMap = new maplibregl.Map({
     container: 'texasSVG',
     style: MAP_STYLE,
-    center: [-99.5, 31.0],
-    zoom: 5.2,
-    minZoom: 4,
+    center: [-99.5, 31.2],
+    zoom: 5.6,
+    minZoom: 5.4,
     maxZoom: 14,
+    maxBounds: [[-107.8, 25.2], [-92.8, 37.0]],
     renderWorldCopies: false,
     attributionControl: { compact: true },
   });
@@ -327,22 +328,18 @@ function _mlRenderMarkers() {
     const col       = d ? getTempColor(d.temp) : 'rgba(110,128,152,0.7)';
 
     const el = document.createElement('div');
-    el.style.cssText = 'position:relative;cursor:pointer';
+    el.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer';
     el.setAttribute('aria-label', d
       ? `${city.name}: ${d.temp}°F, ${d.condition}`
       : `${city.name}: click to load weather`);
     el.setAttribute('role', 'button');
     el.setAttribute('tabindex', '0');
 
-    // Label — city name + temperature together in one pill
+    // Label — city name + temperature in a pill, stacked above the dot in normal flow
     const labelEl = document.createElement('div');
     const tempSuffix = d ? ` · ${d.temp}°F` : '';
     labelEl.textContent = city.name + (isPrimary ? tempSuffix : '');
     labelEl.style.cssText = [
-      'position:absolute',
-      'left:50%',
-      'transform:translateX(-50%)',
-      `bottom:${sz + 5}px`,
       'white-space:nowrap',
       'pointer-events:none',
       'font-family:Roboto,Inter,sans-serif',
@@ -354,11 +351,10 @@ function _mlRenderMarkers() {
       'border-radius:4px',
       'padding:2px 5px',
       'box-shadow:0 1px 4px rgba(0,0,0,0.22)',
-      'z-index:1',
       `display:${isPrimary ? 'block' : (d ? 'block' : 'none')}`,
     ].join(';');
 
-    // Dot — colored indicator ring only (no temp text — it's in the label now)
+    // Dot — colored circle anchored to city coordinate
     const dot = document.createElement('div');
     dot.style.cssText = [
       `width:${sz}px`,
@@ -367,18 +363,9 @@ function _mlRenderMarkers() {
       `background:${col}`,
       `border:${isPrimary ? '3px' : '2px'} solid #FFFFFF`,
       'box-shadow:0 1px 4px rgba(0,0,0,0.3),0 0 0 1px rgba(0,0,0,0.12)',
-      'display:flex',
-      'align-items:center',
-      'justify-content:center',
-      `font-size:${isPrimary ? '8px' : '5.5px'}`,
-      'font-weight:800',
-      'color:#fff',
-      'text-shadow:0 1px 2px rgba(0,0,0,0.6)',
-      'font-family:Roboto,Inter,sans-serif',
+      'flex-shrink:0',
       `opacity:${isPrimary ? '1' : (d ? '0.92' : '0.6')}`,
       'transition:transform 0.15s ease,box-shadow 0.15s ease',
-      'position:relative',
-      'z-index:2',
     ].join(';');
 
     el.appendChild(labelEl);
