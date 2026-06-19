@@ -4,7 +4,7 @@
 // Replaces the legacy SVG map. External API (renderMap, mapToggleLayer,
 // showCityDetail, _mapFetchAndShow, showTooltip, hideTooltip) is preserved.
 
-const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
+const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json';
 
 let _mlMap = null;
 let _mlMapLoaded = false;
