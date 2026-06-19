@@ -4,7 +4,7 @@
 // Replaces the legacy SVG map. External API (renderMap, mapToggleLayer,
 // showCityDetail, _mapFetchAndShow, showTooltip, hideTooltip) is preserved.
 
-const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
 
 let _mlMap = null;
 let _mlMapLoaded = false;
@@ -194,10 +194,10 @@ function _mlRenderMarkers() {
       'white-space:nowrap',
       'pointer-events:none',
       'font-family:Inter,sans-serif',
-      `font-size:${isPrimary ? '7.5px' : '5.8px'}`,
-      `font-weight:${isPrimary ? '700' : '500'}`,
-      `color:rgba(255,255,255,${isPrimary ? '0.93' : '0.72'})`,
-      'text-shadow:0 1px 3px rgba(0,0,0,0.9)',
+      `font-size:${isPrimary ? '8px' : '6px'}`,
+      `font-weight:${isPrimary ? '700' : '600'}`,
+      'color:rgba(20,30,50,0.92)',
+      'text-shadow:0 1px 2px rgba(255,255,255,0.9),0 0 4px rgba(255,255,255,0.7)',
       'z-index:1',
     ].join(';');
 
@@ -208,16 +208,17 @@ function _mlRenderMarkers() {
       `height:${sz}px`,
       'border-radius:50%',
       `background:${col}`,
-      `border:${d ? '2px' : '1px'} solid rgba(255,255,255,${d ? '0.75' : '0.28'})`,
-      'box-shadow:0 2px 8px rgba(0,0,0,0.5)',
+      `border:${d ? '2.5px' : '1.5px'} solid rgba(20,30,50,${d ? '0.7' : '0.3'})`,
+      'box-shadow:0 2px 6px rgba(0,0,0,0.35)',
       'display:flex',
       'align-items:center',
       'justify-content:center',
       'font-size:6.5px',
       'font-weight:800',
       'color:#fff',
+      'text-shadow:0 1px 2px rgba(0,0,0,0.6)',
       'font-family:Inter,sans-serif',
-      `opacity:${isPrimary ? '0.93' : '0.82'}`,
+      `opacity:${isPrimary ? '1' : '0.88'}`,
       'transition:transform 0.15s,box-shadow 0.15s',
       'position:relative',
       'z-index:2',
