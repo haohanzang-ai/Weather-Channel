@@ -1,0 +1,143 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2026-06",
+  "note": "Pathway group definitions for the TexasClimate Plant Gene & Pathway Atlas. Sources: Plant Reactome (plantreactome.gramene.org), PlantCyc / Plant Metabolic Network (plantcyc.org), KEGG, peer-reviewed literature. Pathway relevance to stress conditions is based on published plant physiology and not on real-time expression data.",
+  "speciesSupported": ["Panicum virgatum (switchgrass)"],
+  "pathwayGroups": [
+    {
+      "id": "drought_aba",
+      "name": "Drought / ABA / Osmotic Stress",
+      "shortName": "ABA & Drought",
+      "icon": "💧",
+      "colorHex": "#E67E22",
+      "stressTriggers": ["drought", "osmotic"],
+      "description": "Abscisic acid (ABA) biosynthesis and signaling, osmolyte accumulation, and dehydration-responsive gene expression. ABA is the primary stress hormone that triggers stomatal closure, activates drought-responsive transcription factors (DREBs, RD29), and induces synthesis of protective osmolytes such as proline. In switchgrass, these pathways are critical for surviving Texas drought cycles.",
+      "bioenergyRelevance": "Osmolyte accumulation (proline, glycine betaine) under severe drought can inhibit saccharomyces fermentation at high concentrations. Stomatal closure limits CO₂ fixation and reduces biomass yield per hectare.",
+      "stressHighlightThreshold": 30,
+      "sources": [
+        "Plant Reactome: ABA biosynthesis pathway R-OSA/R-ATH",
+        "Zhu JK. 2002. Salt and Drought Stress Signal Transduction in Plants. Annu Rev Plant Biol 53:247–273",
+        "Cutler SR, Rodriguez PL, Finkelstein RR, Abrams SR. 2010. Abscisic Acid: Emergence of a Core Signaling Network. Annu Rev Plant Biol 61:651–679",
+        "Szabados L, Savouré A. 2010. Proline: a multifunctional amino acid. Trends Plant Sci 15(2):89–97"
+      ]
+    },
+    {
+      "id": "salt_ion",
+      "name": "Salt Stress / Ion Transport",
+      "shortName": "Salt & Ion",
+      "icon": "⚗️",
+      "colorHex": "#3498DB",
+      "stressTriggers": ["salt", "osmotic"],
+      "description": "The SOS (Salt Overly Sensitive) pathway for Na⁺ exclusion, vacuolar Na⁺ compartmentalization via NHX antiporters, and high-affinity potassium transport. Salt stress causes both osmotic stress and ionic toxicity from Na⁺ accumulation. Ion transporters prevent toxic Na⁺ levels in the cytoplasm. These pathways are relevant in coastal Texas and irrigated areas.",
+      "bioenergyRelevance": "Salt-stressed plants may accumulate Na⁺-chelating metabolites and altered cell wall composition. Ionic stress can reduce biomass quality and sugar release efficiency during pretreatment.",
+      "stressHighlightThreshold": 25,
+      "sources": [
+        "Shi H, Ishitani M, Kim C, Zhu JK. 2000. The Arabidopsis thaliana salt tolerance gene SOS1 encodes a putative Na+/H+ antiporter. Proc Natl Acad Sci USA 97(12):6896–6901",
+        "Blumwald E. 2000. Sodium transport and salt tolerance in plants. Curr Opin Cell Biol 12:431–434",
+        "Plant Reactome: SOS pathway / ion homeostasis"
+      ]
+    },
+    {
+      "id": "heat_ros",
+      "name": "Heat Stress / ROS Defense",
+      "shortName": "Heat & ROS",
+      "icon": "🔥",
+      "colorHex": "#E74C3C",
+      "stressTriggers": ["heat"],
+      "description": "Heat shock protein (HSP) chaperone system, heat shock transcription factors (HSFs), and reactive oxygen species (ROS) scavenging enzymes including ascorbate peroxidase (APX), superoxide dismutase (SOD), catalase (CAT), and glutathione peroxidase (GPX). Heat stress denatures proteins and triggers ROS accumulation; these defense systems prevent irreversible cellular damage.",
+      "bioenergyRelevance": "Heat-induced ROS accumulation and protein denaturation can alter cell wall cross-linking and phenolic content. Elevated temperatures during growing season can accelerate lignification, reducing conversion efficiency.",
+      "stressHighlightThreshold": 35,
+      "sources": [
+        "Vierling E. 1991. The roles of heat shock proteins in plants. Annu Rev Plant Physiol Plant Mol Biol 42:579–620",
+        "Gill SS, Tuteja N. 2010. Reactive oxygen species and antioxidant machinery in abiotic stress tolerance in crop plants. Plant Physiol Biochem 48(12):909–930",
+        "Schramm F et al. 2006. A cascade of transcription factor DREB2A and heat stress transcription factor HsfA3 regulates the heat stress response of Arabidopsis. Plant J 47(1):1–14"
+      ]
+    },
+    {
+      "id": "lignin_cellwall",
+      "name": "Lignin / Phenylpropanoid / Cell Wall",
+      "shortName": "Lignin & Cell Wall",
+      "icon": "🪵",
+      "colorHex": "#8B6914",
+      "stressTriggers": ["drought", "heat", "bioenergy_recalcitrance"],
+      "description": "The phenylpropanoid pathway produces monolignols (coniferyl alcohol, sinapyl alcohol) that are polymerized into lignin by laccases and peroxidases. S-lignin (from sinapyl alcohol) vs. G-lignin (from coniferyl alcohol) ratio (S/G ratio) determines cell wall recalcitrance. In switchgrass, genes like PvCOMT1, PvCAD1, PvPAL1, and the transcription factor PvMYB4 have been directly characterized and are the primary targets for bioeneregy improvement.",
+      "bioenergyRelevance": "Lignin is the primary barrier to cellulosic ethanol production. High lignin content and condensed G-type lignin increase pretreatment cost and reduce enzyme access to cellulose. Stress increases lignin as a structural defense. This pathway is directly relevant to Conversion Compatibility Score.",
+      "stressHighlightThreshold": 20,
+      "sources": [
+        "Mosier N et al. 2005. Features of promising technologies for pretreatment of lignocellulosic biomass. Bioresour Technol 96(6):673–686. doi:10.1016/j.biortech.2004.06.025",
+        "Fu C, Mielenz JR, Xiao X et al. 2011. Genetic manipulation of lignin reduces recalcitrance and improves ethanol production from switchgrass. Proc Natl Acad Sci USA 108(9):3803–3808. doi:10.1073/pnas.1100310108",
+        "Shen H et al. 2012. Functional characterization of the switchgrass (Panicum virgatum) R2R3-MYB transcription factor PvMYB4 for improvement of lignocellulosic feedstocks. New Phytol 193(1):121–136",
+        "Saathoff AJ et al. 2011. Switchgrass contains two cinnamyl alcohol dehydrogenases involved in lignin formation. BioEnergy Res 4(3):184–197",
+        "Plant Reactome: Phenylpropanoid biosynthesis; KEGG: Phenylpropanoid biosynthesis (map00940)"
+      ]
+    },
+    {
+      "id": "cellulose_biomass",
+      "name": "Cellulose / Biomass / Carbon Allocation",
+      "shortName": "Cellulose & Biomass",
+      "icon": "🌾",
+      "colorHex": "#27AE60",
+      "stressTriggers": ["drought", "bioenergy_yield"],
+      "description": "Cellulose synthase (CesA) complexes and cellulose synthase-like (Csl) proteins build the primary and secondary cell walls. Sucrose synthase (SUS) provides UDP-glucose substrate. These genes determine the total cellulose content of switchgrass biomass — the primary target sugar for cellulosic ethanol production.",
+      "bioenergyRelevance": "Cellulose content directly determines ethanol yield potential. Higher cellulose-to-lignin ratio improves conversion efficiency. Switchgrass CesA gene families (CesA3, CesA6, CesA7, CesA8) have been characterized in the context of bioenergy improvement.",
+      "stressHighlightThreshold": 0,
+      "sources": [
+        "Shen H, Poovaiah CR, Ziebell A et al. 2012. Enhanced characteristics of genetically modified switchgrass (Panicum virgatum L.) for high biofuel production. Biotechnol Biofuels 5:69. doi:10.1186/1754-6834-5-69",
+        "Kim SJ et al. 2004. Functional reclassification of the putative cinnamyl alcohol dehydrogenase multigene family in Arabidopsis. Proc Natl Acad Sci USA 101(6):1455–1460",
+        "Phytozome v13 — Panicum virgatum genome (JGI / DOE): phytozome-next.jgi.doe.gov",
+        "KEGG: Starch and sucrose metabolism (map00500)"
+      ]
+    },
+    {
+      "id": "secondary_metabolites",
+      "name": "Secondary Metabolites / Inhibitors / Fermentation Risk",
+      "shortName": "Inhibitors & Metabolites",
+      "icon": "⚠",
+      "colorHex": "#9B59B6",
+      "stressTriggers": ["drought", "heat", "salt"],
+      "description": "Flavonoid biosynthesis, ferulic acid esterification (via BAHD acyltransferases), and other phenolic secondary metabolites produced under stress. Ferulic acid, released from grass cell walls during pretreatment, is a known fermentation inhibitor. Flavonoids and condensed tannins can also inhibit enzymatic hydrolysis. This pathway determines the Stress-Metabolite Safety Score.",
+      "bioenergyRelevance": "Stressed switchgrass accumulates higher phenolic content. During pretreatment, phenolic compounds (ferulic acid, p-coumaric acid, furfurals, and HMF) are released and inhibit yeast fermentation and cellulase enzymes. Relevant to Stress-Metabolite Safety Score and fermentation efficiency.",
+      "stressHighlightThreshold": 40,
+      "sources": [
+        "Palmqvist E, Hahn-Hägerdal B. 2000. Fermentation of lignocellulosic hydrolysates. II: inhibitors and mechanisms of inhibition. Bioresour Technol 74(1):17–24. doi:10.1016/S0960-8524(99)00145-7",
+        "Mitchell RA, Dupree P, Shewry PR. 2007. A novel bioinformatics approach identifies candidate genes for the synthesis and feruloylation of arabinoxylan. Plant Physiol 144(1):43–53",
+        "Buanafina MM. 2009. Feruloylation in Grasses: Current and Future Perspectives. Mol Plant 2(5):861–872",
+        "Ferrer JL et al. 1999. Structure of chalcone synthase and the molecular basis of plant polyketide biosynthesis. Nat Struct Biol 6(8):775–784"
+      ]
+    },
+    {
+      "id": "photosynthesis_c4",
+      "name": "Photosynthesis / C4 Carbon Fixation",
+      "shortName": "C4 Photosynthesis",
+      "icon": "☀️",
+      "colorHex": "#F1C40F",
+      "stressTriggers": ["drought", "heat"],
+      "description": "Switchgrass uses the NAD-ME type C4 photosynthetic pathway, concentrating CO₂ in bundle sheath cells around Rubisco to suppress photorespiration. Phosphoenolpyruvate carboxylase (PEPC) fixes CO₂ in mesophyll cells; pyruvate orthophosphate dikinase (PPDK) regenerates PEP. This C4 mechanism gives switchgrass high water-use efficiency and heat tolerance.",
+      "bioenergyRelevance": "C4 photosynthesis efficiency directly determines biomass accumulation rate. Under drought or heat stress, reduced photosynthetic activity leads to lower sugar production, reduced biomass yield, and ultimately lower bioenergy potential.",
+      "stressHighlightThreshold": 30,
+      "sources": [
+        "Edwards GE, Nakamoto H, Burnell JN, Hatch MD. 1985. Pyruvate,Pi dikinase and NADP-malate dehydrogenase in C4 photosynthesis: Properties and mechanism of light/dark regulation. Annu Rev Plant Physiol 36:255–286",
+        "Wang L, Peterson RB, Brutnell TP. 2011. Regulatory mechanisms underlying C4 photosynthesis. New Phytol 190(1):9–20",
+        "Lepiniec L et al. 1994. Sorghum phosphoenolpyruvate carboxylase gene family: structure, function and molecular evolution. Plant Mol Biol 26(3):901–916",
+        "KEGG: Carbon fixation in photosynthetic organisms (map00710)"
+      ]
+    },
+    {
+      "id": "growth_productivity",
+      "name": "Growth / Tillering / Productivity",
+      "shortName": "Growth & Yield",
+      "icon": "📈",
+      "colorHex": "#1ABC9C",
+      "stressTriggers": ["drought", "heat"],
+      "description": "Photoperiod-regulated flowering (phytochrome B, GIGANTEA, FT), strigolactone-mediated tiller branching (D14/SMXL), gibberellin-driven stem elongation (GA20ox), and cell wall biosynthesis transcription factors (KNOX). These pathways control biomass yield, tiller number, and canopy structure. Photoperiod adaptation is a key ecotypic difference between northern and southern switchgrass ecotypes.",
+      "bioenergyRelevance": "Tiller number and stem height directly determine total biomass yield per hectare. Photoperiod-insensitive varieties with higher tiller density are favored for bioenergy. Gibberellin signaling and KNOX transcription factors can increase stem height and total biomass.",
+      "stressHighlightThreshold": 30,
+      "sources": [
+        "Lowry DB et al. 2019. QTL×environment interactions underlie adaptive divergence in switchgrass across a large latitudinal gradient. Proc Natl Acad Sci USA 116(12):5564–5573",
+        "Wuddineh WA, Mazarei M, Zhang J et al. 2015. Identification and Overexpression of a Knotted1-Like Transcription Factor in Switchgrass (Panicum virgatum L.) for Lignocellulosic Feedstock Improvement. Front Plant Sci 6:71. doi:10.3389/fpls.2015.00071",
+        "Arite T et al. 2009. d14, a strigolactone-insensitive mutant of rice, shows an accelerated outgrowth of tillers. Plant Cell Physiol 50(8):1416–1424",
+        "Casler MD. 2012. Switchgrass Breeding, Genetics, and Genomics. In: Monti A (ed) Switchgrass. Springer"
+      ]
+    }
+  ]
+}

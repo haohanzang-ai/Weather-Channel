@@ -33,6 +33,7 @@ const SUBTAB_CONFIG = {
   ],
   science: [
     { label: 'Stress Chain',  id: 'sc-stress' },
+    { label: 'Gene Atlas',    id: 'sc-atlas' },
     { label: 'Data Limits',   id: 'sc-limits' },
     { label: 'Mission',       id: 'sc-mission' },
     { label: 'Why Not Yet',   id: 'sc-why' },

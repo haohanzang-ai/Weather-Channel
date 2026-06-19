@@ -1064,6 +1064,8 @@ function _scanSyncAppState(key) {
   if (typeof _locTriggerScoring === 'function') _locTriggerScoring();
   // Update workflow step 1 badge immediately (regardless of location state)
   if (typeof wfUpdateSteps === 'function') wfUpdateSteps();
+  // Refresh atlas if plant changes (non-switchgrass shows fallback)
+  if (typeof atlasOnPlantChange === 'function') atlasOnPlantChange();
   // Update plant selector UI in Analyze tab if it exists
   const analyzesel = document.getElementById('analyzePlantSel');
   if (analyzesel) analyzesel.value = key;

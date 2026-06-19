@@ -27,3 +27,6 @@ subtabsInit();
 
 // Initialize workflow step status badges + make pipeline diagram clickable
 if (typeof wfInit === 'function') wfInit();
+
+// Initialize Plant Gene & Pathway Atlas (loads JSON data asynchronously)
+if (typeof atlasInit === 'function') atlasInit('sc-atlas');

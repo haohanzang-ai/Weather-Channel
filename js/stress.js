@@ -216,6 +216,7 @@ function renderStressProfile() {
   const stress = stressCompute(appState.envData, appState.plant);
   if (!stress) { el.innerHTML = '<div class="score-needs-data">Unable to compute stress scores.</div>'; return; }
   appState.stressScores = stress;
+  if (typeof atlasOnStressUpdate === 'function') atlasOnStressUpdate();
 
   const _bar = (score, color) => score != null
     ? `<div class="score-bar-wrap"><div class="score-bar-fill" style="width:${score}%;background:${color}"></div></div>`

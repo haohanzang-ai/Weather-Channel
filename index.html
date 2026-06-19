@@ -14,7 +14,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="TexasClimate — Bioenergy Intelligence Platform">
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; media-src 'self' blob:; connect-src https://api.open-meteo.com https://air-quality-api.open-meteo.com https://archive-api.open-meteo.com https://api.weather.gov https://cdn.jsdelivr.net https://storage.googleapis.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com; frame-ancestors 'none';">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; media-src 'self' blob:; connect-src 'self' https://api.open-meteo.com https://air-quality-api.open-meteo.com https://archive-api.open-meteo.com https://api.weather.gov https://cdn.jsdelivr.net https://storage.googleapis.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com; frame-ancestors 'none';">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"TexasClimate Bioenergy Intelligence Platform","description":"Live plant-environment bioenergy intelligence for Texas — weather, agriculture stress, conversion pathway analysis.","applicationCategory":"WeatherApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-EPP05BJFJ3"></script>
@@ -38,6 +38,7 @@
   <link rel="stylesheet" href="styles/fuel.css">
   <link rel="stylesheet" href="styles/mission.css">
   <link rel="stylesheet" href="styles/scanner.css">
+  <link rel="stylesheet" href="styles/gene-atlas.css">
 </head>
 <body>
 
@@ -820,6 +821,9 @@
           </div>
         </div>
 
+        <!-- Gene & Pathway Atlas -->
+        <div class="tab-subsection" id="sc-atlas"></div>
+
         <!-- What live data can vs. cannot measure -->
         <div class="tab-subsection" id="sc-limits">
           <div class="tab-subsection-header">📊 What This App Can Estimate vs. What Requires Lab Data</div>
@@ -1115,6 +1119,7 @@
 <script src="js/stress.js?v=2"></script>
 <script src="js/bioenergy-engine.js?v=2"></script>
 <script src="js/report.js?v=2"></script>
+<script src="js/gene-atlas.js?v=1"></script>
 <script src="js/workflow.js?v=1"></script>
 <script src="js/main.js?v=2"></script>
 </body>
