@@ -10,6 +10,24 @@ const ATLAS_DATA_PATHS = {
   genes:    'data/plant_genes_switchgrass.json',
 };
 
+// Multi-plant gene atlas lookup (plant key → gene JSON file)
+const ATLAS_PLANT_GENE_FILES = {
+  switchgrass:      'data/plant_genes_switchgrass.json',
+  sorghum:          'data/plant_genes_sorghum.json',
+  miscanthus:       'data/plant_genes_miscanthus.json',
+  agave:            'data/plant_genes_agave.json',
+  algae:            'data/plant_genes_algae.json',
+};
+
+// Human-readable species names for atlas header
+const ATLAS_SPECIES_LABELS = {
+  switchgrass:  { badge: '🌿 Panicum virgatum — Switchgrass',          intro: 'Switchgrass (<em>Panicum virgatum</em>), Texas\'s primary native cellulosic bioenergy crop.' },
+  sorghum:      { badge: '🌱 Sorghum bicolor — Energy Sorghum',        intro: 'Energy Sorghum (<em>Sorghum bicolor</em>), a drought-tolerant C4 annual with strong Texas bioenergy potential.' },
+  miscanthus:   { badge: '🌾 Miscanthus × giganteus — Miscanthus',     intro: 'Miscanthus (<em>Miscanthus × giganteus</em>), a high-yield perennial C4 grass for cellulosic ethanol.' },
+  agave:        { badge: '🌵 Agave spp. — Agave / Century Plant',      intro: 'Agave (<em>Agave spp.</em>), a CAM succulent uniquely adapted to arid West Texas with minimal water use.' },
+  algae:        { badge: '💧 Chlorella / Chlamydomonas — Microalgae',  intro: 'Microalgae (<em>Chlorella vulgaris / Chlamydomonas reinhardtii</em>), high-productivity aquatic biofuel organisms.' },
+};
+
 // Module state
 const _atlasState = {
   pathways: null,
@@ -39,12 +57,14 @@ const EVIDENCE_CONFIG = {
   'Environment-Relevance Estimate': { cls: 'estimate', label: 'Environment-Relevance Estimate', dot: '#E57373' },
 };
 
-// ── Public init (called from index.html after DOM ready) ──────────────────────
+// ── Public init (called from index.html or subtabs.js after DOM ready) ────────
 function atlasInit(containerId) {
   const container = document.getElementById(containerId || 'sc-atlas');
   if (!container) return;
 
-  // Show loading state
+  const plantKey = (typeof appState !== 'undefined' && appState.plant?.key) || 'switchgrass';
+  const geneFile = ATLAS_PLANT_GENE_FILES[plantKey] || null;
+
   container.innerHTML = `
     <div class="tab-subsection-header">🧬 Plant Gene &amp; Pathway Atlas
       <span class="tsh-badge">Curated Database</span>
@@ -53,13 +73,28 @@ function atlasInit(containerId) {
       Loading gene atlas data…
     </div>`;
 
+  if (!geneFile) {
+    // Plant has no gene data — show supported-plant list
+    container.innerHTML = `
+      <div class="tab-subsection-header">🧬 Plant Gene &amp; Pathway Atlas
+        <span class="tsh-badge">Curated Database</span>
+      </div>
+      <div class="atlas-wrap">
+        ${_atlasRenderFallback(plantKey)}
+      </div>`;
+    return;
+  }
+
   Promise.all([
     fetch(ATLAS_DATA_PATHS.pathways).then(r => r.json()),
-    fetch(ATLAS_DATA_PATHS.genes).then(r => r.json()),
+    fetch(geneFile).then(r => r.json()),
   ]).then(([pathwayData, geneData]) => {
-    _atlasState.pathways = pathwayData;
-    _atlasState.genes    = geneData.genes || [];
-    _atlasState.loaded   = true;
+    _atlasState.pathways   = pathwayData;
+    _atlasState.genes      = geneData.genes || [];
+    _atlasState.species    = geneData.species || '';
+    _atlasState.commonName = geneData.commonName || '';
+    _atlasState.plantKey   = plantKey;
+    _atlasState.loaded     = true;
     _atlasState.activeRegion = 'all';
     _atlasRender(container);
   }).catch(err => {
@@ -67,8 +102,8 @@ function atlasInit(containerId) {
       <div class="tab-subsection-header">🧬 Plant Gene &amp; Pathway Atlas</div>
       <div style="padding:20px;color:var(--text3);font-size:11px">
         Gene atlas data could not be loaded. Ensure data/plant_pathways.json and
-        data/plant_genes_switchgrass.json are present.
-        <br><small style="opacity:0.6">${err.message}</small>
+        ${escapeHtml(geneFile)} are present.
+        <br><small style="opacity:0.6">${escapeHtml(err.message)}</small>
       </div>`;
   });
 }
@@ -78,9 +113,7 @@ function _atlasRender(container) {
   const pd = _atlasState.pathways;
   const genes = _atlasState.genes;
 
-  // Determine which plant is selected
-  const plantKey = (typeof appState !== 'undefined' && appState.plant?.key) || null;
-  const isSwitchgrass = !plantKey || plantKey === 'switchgrass';
+  const currentPlantKey = _atlasState.plantKey || 'switchgrass';
 
   // Build the full section
   const html = `
@@ -88,14 +121,10 @@ function _atlasRender(container) {
       <span class="tsh-badge">Curated Database</span>
     </div>
     <div class="atlas-wrap" id="atlasWrap">
-
-      ${isSwitchgrass ? _atlasRenderMain(pd, genes) : _atlasRenderFallback(plantKey)}
-
+      ${_atlasRenderMain(pd, genes, currentPlantKey)}
     </div>`;
 
   container.innerHTML = html;
-
-  if (!isSwitchgrass) return;
 
   // Wire up interactions after DOM insertion
   _atlasWireRegions();
@@ -103,41 +132,45 @@ function _atlasRender(container) {
   _atlasUpdateStressBar();
 }
 
-// ── Fallback for non-switchgrass plants ──────────────────────────────────────
+// ── Fallback for plants without gene atlas data ───────────────────────────────
 function _atlasRenderFallback(plantKey) {
   const name = (typeof appState !== 'undefined' && appState.plant?.name) || (plantKey || 'this plant');
+  const supported = Object.keys(ATLAS_PLANT_GENE_FILES);
   return `
     <div class="atlas-fallback">
       <div class="atlas-fallback-title">🧬 Gene Atlas — ${escapeHtml(name)}</div>
-      <p>Detailed gene atlas is currently available for <strong>switchgrass (<em>Panicum virgatum</em>)</strong> only.</p>
+      <p>Gene atlas data is not yet available for this species.</p>
       <p style="margin-top:8px;color:var(--text3);font-size:10.5px">
-        Other species support can be added later using curated databases such as Phytozome, Gramene, Plant Reactome, and KEGG.<br>
-        Select <strong>Switchgrass</strong> in Step 1 to explore the full atlas.
+        <strong>Currently supported species:</strong><br>
+        ${supported.map(k => `<span style="display:inline-block;margin:2px 4px;padding:2px 8px;background:var(--surface2);border-radius:10px;font-size:10px">${escapeHtml(ATLAS_SPECIES_LABELS[k]?.badge || k)}</span>`).join('')}
+      </p>
+      <p style="margin-top:8px;color:var(--text3);font-size:10px">
+        Select one of the supported plants in Step 1 of the Analyze tab, then re-open the Gene Atlas subtab.
       </p>
     </div>`;
 }
 
-// ── Main atlas render (switchgrass) ──────────────────────────────────────────
-function _atlasRenderMain(pd, genes) {
+// ── Main atlas render (multi-species) ────────────────────────────────────────
+function _atlasRenderMain(pd, genes, plantKey) {
   const groups = pd.pathwayGroups;
   const totalGenes = genes.length;
   const peerCount = genes.filter(g => g.evidenceLevel === 'Peer-Reviewed Literature').length;
   const curatedCount = genes.filter(g => g.evidenceLevel === 'Curated Database Reference').length;
+  const specLabel = ATLAS_SPECIES_LABELS[plantKey] || ATLAS_SPECIES_LABELS.switchgrass;
 
   return `
     <!-- Intro banner -->
     <div class="atlas-intro">
-      <div class="atlas-species-badge">🌿 Panicum virgatum — Switchgrass</div>
+      <div class="atlas-species-badge">${escapeHtml(specLabel.badge)}</div>
       <div class="atlas-intro-title">🧬 Plant Gene &amp; Pathway Atlas</div>
       <div class="atlas-intro-desc">
         Explore how environmental stress connects to plant pathways, genes, survival, productivity,
-        and bioenergy conversion — for switchgrass (<em>Panicum virgatum</em>), Texas's primary candidate bioenergy crop.
+        and bioenergy conversion — for ${specLabel.intro}
         Click a pathway group to expand it, then click any gene chip to see its function, evidence level, and source.
       </div>
       <div class="atlas-intro-note">
-        TexasClimate begins with a curated pathway-focused gene atlas for switchgrass, prioritizing genes most relevant
-        to environmental stress, survival, biomass formation, and bioenergy conversion. The database is designed to scale,
-        but the current version focuses on explainable, source-linked biology instead of raw gene quantity.
+        Genes are curated from peer-reviewed literature, Phytozome, Gramene, Plant Reactome, and KEGG.
+        Evidence level is shown for each gene. Homology-based projections require lab validation in the target species.
       </div>
     </div>
 

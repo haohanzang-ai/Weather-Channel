@@ -334,9 +334,10 @@ function _mlRenderMarkers() {
     el.setAttribute('role', 'button');
     el.setAttribute('tabindex', '0');
 
-    // Label — Google Maps white pill
+    // Label — city name + temperature together in one pill
     const labelEl = document.createElement('div');
-    labelEl.textContent = city.name;
+    const tempSuffix = d ? ` · ${d.temp}°F` : '';
+    labelEl.textContent = city.name + (isPrimary ? tempSuffix : '');
     labelEl.style.cssText = [
       'position:absolute',
       'left:50%',
@@ -345,19 +346,19 @@ function _mlRenderMarkers() {
       'white-space:nowrap',
       'pointer-events:none',
       'font-family:Roboto,Inter,sans-serif',
-      `font-size:${isPrimary ? '10px' : '8px'}`,
-      `font-weight:${isPrimary ? '600' : '500'}`,
+      `font-size:${isPrimary ? '10.5px' : '8px'}`,
+      `font-weight:${isPrimary ? '700' : '500'}`,
       `color:${_GM.labelText}`,
       `background:${_GM.labelBg}`,
-      `border:1px solid ${_GM.labelBorder}`,
-      'border-radius:3px',
-      'padding:1px 4px',
-      'box-shadow:0 1px 3px rgba(0,0,0,0.18)',
+      `border:1px solid ${d ? col : _GM.labelBorder}`,
+      'border-radius:4px',
+      'padding:2px 5px',
+      'box-shadow:0 1px 4px rgba(0,0,0,0.22)',
       'z-index:1',
       `display:${isPrimary ? 'block' : (d ? 'block' : 'none')}`,
     ].join(';');
 
-    // Dot — Google Maps style: colored fill + white ring
+    // Dot — colored indicator ring only (no temp text — it's in the label now)
     const dot = document.createElement('div');
     dot.style.cssText = [
       `width:${sz}px`,
@@ -369,17 +370,16 @@ function _mlRenderMarkers() {
       'display:flex',
       'align-items:center',
       'justify-content:center',
-      `font-size:${isPrimary ? '7px' : '5.5px'}`,
-      'font-weight:700',
+      `font-size:${isPrimary ? '8px' : '5.5px'}`,
+      'font-weight:800',
       'color:#fff',
-      'text-shadow:0 1px 2px rgba(0,0,0,0.55)',
+      'text-shadow:0 1px 2px rgba(0,0,0,0.6)',
       'font-family:Roboto,Inter,sans-serif',
       `opacity:${isPrimary ? '1' : (d ? '0.92' : '0.6')}`,
       'transition:transform 0.15s ease,box-shadow 0.15s ease',
       'position:relative',
       'z-index:2',
     ].join(';');
-    if (isPrimary && d) dot.textContent = `${d.temp}°`;
 
     el.appendChild(labelEl);
     el.appendChild(dot);

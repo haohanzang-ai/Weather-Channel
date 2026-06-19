@@ -392,7 +392,7 @@ function renderBioScore() {
         <div class="bio-subscore-row">
           <span class="bio-subscore-icon">${r.icon}</span>
           <div class="bio-subscore-body">
-            <div class="bio-subscore-name">${r.name} <span class="bio-subscore-wt">(${s?.weight}%)</span></div>
+            <div class="bio-subscore-name">${r.label} <span class="bio-subscore-wt">(${s?.weight}%)</span></div>
             <div class="bio-subscore-bar-wrap"><div class="bio-subscore-bar-fill" style="width:${v ?? 0}%;background:${color}"></div></div>
             <div class="bio-subscore-conf">${s?.value != null ? escapeHtml(s.conf||'') : '<span class="score-na">Needs data</span>'}</div>
           </div>
