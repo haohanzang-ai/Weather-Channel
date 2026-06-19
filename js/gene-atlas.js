@@ -18,6 +18,7 @@ const _atlasState = {
   activeRegion: null,   // 'all' | region key
   activeGroup: null,    // pathway group id
   selectedGene: null,   // gene record
+  compareGene:  null,   // gene saved for side-by-side comparison
 };
 
 // Plant regions definition (display label → region keys in gene data)
@@ -375,89 +376,311 @@ function atlasSelectGene(geneId) {
 
   _atlasState.selectedGene = gene;
 
-  // Mark all chips; deselect others
+  // Update chip selection state + ring highlight
   document.querySelectorAll('.atlas-gene-chip').forEach(chip => {
     chip.classList.toggle('selected', chip.dataset.geneId === geneId);
   });
 
-  const detail = document.getElementById('atlasGeneDetail');
-  if (!detail) return;
+  // Show slide-in deep-dive panel
+  _atlasShowGeneDetail(gene);
 
-  const ev = EVIDENCE_CONFIG[gene.evidenceLevel] || EVIDENCE_CONFIG['Homology-Based Projection'];
+  // Right column: mini-state indicating panel is open
+  const detail = document.getElementById('atlasGeneDetail');
+  if (detail) {
+    detail.innerHTML = `
+      <div class="atlas-gene-detail-empty">
+        <div class="atlas-gene-detail-empty-icon">🧬</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text1);font-family:var(--mono)">${escapeHtml(gene.symbol)}</div>
+        <div class="atlas-gene-detail-empty-text" style="margin-top:3px">Detail panel open →</div>
+      </div>`;
+  }
+}
+
+// ── Slide-in gene detail panel ────────────────────────────────────────────────
+function _atlasShowGeneDetail(gene) {
+  const ev    = EVIDENCE_CONFIG[gene.evidenceLevel] || EVIDENCE_CONFIG['Homology-Based Projection'];
   const group = _atlasState.pathways?.pathwayGroups?.find(g => g.id === gene.pathwayGroup);
 
-  const stressTags = (gene.stressLinks || [])
-    .map(s => `<span class="atlas-gd-tag stress">${escapeHtml(s.replace(/_/g, ' '))}</span>`).join('');
-  const bioTags = (gene.bioenergyLinks || [])
-    .map(s => `<span class="atlas-gd-tag bio">${escapeHtml(s.replace(/_/g, ' '))}</span>`).join('');
-  const regionTags = (gene.plantRegions || [])
-    .map(s => `<span class="atlas-gd-tag region">${escapeHtml(s.replace(/_/g, ' '))}</span>`).join('');
+  // ── Expression table (only rendered if gene.expression data exists) ──
+  let exprHtml = '';
+  if (gene.expression) {
+    const COND = { drought: 'Drought', heat: 'Heat', cold: 'Cold', normal: 'Normal' };
+    const ARROWS = {
+      up:        { sym: '↑', cls: 'up',   text: 'Up' },
+      down:      { sym: '↓', cls: 'down', text: 'Down' },
+      no_change: { sym: '→', cls: 'nc',   text: 'No change' },
+    };
+    const rows = Object.entries(COND).map(([key, label]) => {
+      const val = gene.expression[key];
+      if (!val) return '';
+      const a = ARROWS[val] || { sym: '—', cls: 'nc', text: val };
+      return `<tr>
+        <td class="atlas-expr-cond">${escapeHtml(label)}</td>
+        <td class="atlas-expr-val atlas-expr-${a.cls}">${a.sym} ${a.text}</td>
+      </tr>`;
+    }).filter(Boolean).join('');
+    if (rows) {
+      exprHtml = `
+        <div class="atlas-dp-section">
+          <div class="atlas-dp-label">Expression Levels</div>
+          <table class="atlas-expr-table">
+            <thead><tr><th>Condition</th><th>Level</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>`;
+    }
+  }
 
-  const sourceLinks = (gene.sourceLinks || []).map(url => {
-    const domain = _atlasDomainLabel(url);
-    return `<div class="atlas-gd-source-item">→ <a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(domain)}</a></div>`;
-  }).join('');
+  // ── Biofuel connection card ──
+  const bioNote  = _atlasBiofuelNote(gene, group);
+  const biofuelHtml = bioNote ? `
+    <div class="atlas-dp-biofuel-card">
+      <div class="atlas-dp-biofuel-title">⚡ Bioenergy Connection</div>
+      <p class="atlas-dp-text">${escapeHtml(bioNote)}</p>
+    </div>` : '';
 
-  detail.innerHTML = `
-    <div class="atlas-gene-detail">
-      <div class="atlas-gd-header">
-        <div class="atlas-gd-symbol">${escapeHtml(gene.symbol)}</div>
-        <div class="atlas-gd-name">${escapeHtml(gene.name)}</div>
-        <div class="atlas-gd-species"><em>${escapeHtml(gene.species)}</em></div>
-        <span class="atlas-evidence-badge ${ev.cls}">● ${escapeHtml(ev.label)}</span>
+  // ── Source citations (footnote-style) ──
+  const sourceLinks = gene.sourceLinks || [];
+  const sourcesHtml = sourceLinks.length ? `
+    <div class="atlas-dp-section">
+      <div class="atlas-dp-label">Sources</div>
+      <div class="atlas-dp-sources">
+        ${sourceLinks.map((url, i) => `
+          <div class="atlas-dp-source-item">
+            <span class="atlas-dp-source-num">${i + 1}</span>
+            <a href="${escapeHtml(url)}" target="_blank" rel="noopener"
+               class="atlas-dp-source-link">${escapeHtml(_atlasDomainLabel(url))}</a>
+          </div>`).join('')}
       </div>
+    </div>` : '';
 
-      ${group ? `
-      <div class="atlas-gd-section">
-        <div class="atlas-gd-section-label">Pathway</div>
-        <div class="atlas-gd-section-body">
-          <span style="color:${group.colorHex}">${group.icon}</span>
-          ${escapeHtml(group.name)} — ${escapeHtml(gene.pathwayName)}
-        </div>
-      </div>` : ''}
-
-      <div class="atlas-gd-section">
-        <div class="atlas-gd-section-label">Function</div>
-        <div class="atlas-gd-section-body">${escapeHtml(gene.functionSummary)}</div>
-      </div>
-
-      ${stressTags ? `
-      <div class="atlas-gd-section">
-        <div class="atlas-gd-section-label">Stress Relevance</div>
-        <div class="atlas-gd-tags">${stressTags}</div>
-      </div>` : ''}
-
-      ${bioTags ? `
-      <div class="atlas-gd-section">
-        <div class="atlas-gd-section-label">Bioenergy Relevance</div>
-        <div class="atlas-gd-tags">${bioTags}</div>
-      </div>` : ''}
-
-      ${regionTags ? `
-      <div class="atlas-gd-section">
-        <div class="atlas-gd-section-label">Plant Regions</div>
-        <div class="atlas-gd-tags">${regionTags}</div>
-      </div>` : ''}
-
-      <div class="atlas-gd-section">
-        <div class="atlas-gd-section-label">Evidence &amp; Source</div>
-        <div class="atlas-gd-section-body" style="font-size:10.5px">
-          ${escapeHtml(gene.orthologSource || gene.evidenceLevel)}
-        </div>
-        <div class="atlas-gd-sources" style="margin-top:4px">${sourceLinks}</div>
-      </div>
-
-      ${gene.requiresLabValidation ? `
-      <div class="atlas-lab-note">
-        ⚠ Expression or lab data is needed to confirm activity of this gene under specific field conditions.
-        Environmental conditions suggest this pathway may be important, but gene-level activity has not been directly
-        measured from weather data or plant images.
-      </div>` : ''}
-
-      <div class="atlas-limit-note">
-        ${escapeHtml(gene.limitationNote || 'No additional limitation notes.')}
-      </div>
+  // ── Compare button ──
+  const cmpGene   = _atlasState.compareGene;
+  const hasCompare = cmpGene && cmpGene.geneId !== gene.geneId;
+  const compareBtnHtml = `
+    <div class="atlas-dp-compare-wrap">
+      <button class="atlas-dp-compare-btn" id="atlasDpCmpBtn"
+              onclick="_atlasCompareAction('${escapeHtml(gene.geneId)}')">
+        ${hasCompare ? `⚖ Compare with ${escapeHtml(cmpGene.symbol)}` : '⊕ Save to Compare'}
+      </button>
     </div>`;
+
+  // ── Remove any existing panel ──
+  document.getElementById('atlasDpOverlay')?.remove();
+  document.getElementById('atlasDpPanel')?.remove();
+
+  // ── Inject overlay + panel ──
+  document.body.insertAdjacentHTML('beforeend', `
+    <div class="atlas-dp-overlay" id="atlasDpOverlay"
+         onclick="_atlasCloseGeneDetail()"></div>
+    <div class="atlas-dp-panel" id="atlasDpPanel"
+         role="dialog" aria-modal="true"
+         aria-label="Gene detail: ${escapeHtml(gene.symbol)}">
+
+      <div class="atlas-dp-header">
+        <div class="atlas-dp-header-text">
+          <div class="atlas-dp-symbol">${escapeHtml(gene.symbol)}</div>
+          <div class="atlas-dp-name">${escapeHtml(gene.name)}</div>
+          <div class="atlas-dp-species-badge">🌿 Panicum virgatum — Switchgrass</div>
+        </div>
+        <button class="atlas-dp-close" onclick="_atlasCloseGeneDetail()"
+                aria-label="Close gene detail panel">✕</button>
+      </div>
+
+      <div class="atlas-dp-body">
+        <span class="atlas-evidence-badge ${escapeHtml(ev.cls)}">● ${escapeHtml(ev.label)}</span>
+
+        <div class="atlas-dp-section">
+          <div class="atlas-dp-label">Function</div>
+          <p class="atlas-dp-text">${escapeHtml(gene.functionSummary)}</p>
+        </div>
+
+        ${exprHtml}
+        ${biofuelHtml}
+        ${sourcesHtml}
+        ${compareBtnHtml}
+      </div>
+    </div>`);
+
+  // Animate in next frame so CSS transition fires
+  requestAnimationFrame(() => {
+    document.getElementById('atlasDpPanel')?.classList.add('open');
+    document.getElementById('atlasDpOverlay')?.classList.add('open');
+  });
+}
+
+// ── Close gene detail panel ───────────────────────────────────────────────────
+function _atlasCloseGeneDetail() {
+  const panel   = document.getElementById('atlasDpPanel');
+  const overlay = document.getElementById('atlasDpOverlay');
+  if (!panel) return;
+
+  panel.classList.remove('open');
+  overlay?.classList.remove('open');
+
+  setTimeout(() => { panel.remove(); overlay?.remove(); }, 300);
+
+  // Remove selected chip ring
+  document.querySelectorAll('.atlas-gene-chip').forEach(c => c.classList.remove('selected'));
+  _atlasState.selectedGene = null;
+
+  // Restore right panel empty state
+  const detail = document.getElementById('atlasGeneDetail');
+  if (detail) {
+    detail.innerHTML = `
+      <div class="atlas-gene-detail-empty">
+        <div class="atlas-gene-detail-empty-icon">🧬</div>
+        <div class="atlas-gene-detail-empty-text">
+          Click a pathway group to expand it,<br>then click any gene chip to view details.
+        </div>
+      </div>`;
+  }
+}
+
+// ── Compare action ─────────────────────────────────────────────────────────────
+function _atlasCompareAction(geneId) {
+  const gene = _atlasState.genes.find(g => g.geneId === geneId);
+  if (!gene) return;
+
+  const cmp = _atlasState.compareGene;
+  if (cmp && cmp.geneId !== geneId) {
+    // Both genes ready — show side-by-side modal
+    _atlasShowCompareModal(cmp, gene);
+  } else {
+    // Save this gene and toast
+    _atlasState.compareGene = gene;
+    _atlasShowToast(`${gene.symbol} saved — click another gene to compare`);
+    const btn = document.getElementById('atlasDpCmpBtn');
+    if (btn) btn.textContent = `✓ ${gene.symbol} saved for comparison`;
+  }
+}
+
+// ── Side-by-side comparison modal ────────────────────────────────────────────
+function _atlasShowCompareModal(geneA, geneB) {
+  document.getElementById('atlasCompareModal')?.remove();
+
+  const evA  = EVIDENCE_CONFIG[geneA.evidenceLevel] || EVIDENCE_CONFIG['Homology-Based Projection'];
+  const evB  = EVIDENCE_CONFIG[geneB.evidenceLevel] || EVIDENCE_CONFIG['Homology-Based Projection'];
+  const grpA = _atlasState.pathways?.pathwayGroups?.find(g => g.id === geneA.pathwayGroup);
+  const grpB = _atlasState.pathways?.pathwayGroups?.find(g => g.id === geneB.pathwayGroup);
+
+  const tagRow = arr => (arr && arr.length)
+    ? `<div class="atlas-gd-tags">${arr.map(t => `<span class="atlas-gd-tag">${escapeHtml(t.replace(/_/g,' '))}</span>`).join('')}</div>`
+    : '<span style="color:var(--text3);font-style:italic;font-size:10px">—</span>';
+
+  const row = (label, a, b) => `
+    <tr>
+      <td class="atlas-cmp-label">${label}</td>
+      <td class="atlas-cmp-val">${a}</td>
+      <td class="atlas-cmp-val">${b}</td>
+    </tr>`;
+
+  document.body.insertAdjacentHTML('beforeend', `
+    <div class="atlas-cmp-backdrop" id="atlasCompareModal"
+         onclick="if(event.target===this)_atlasCloseCompare()">
+      <div class="atlas-cmp-modal">
+        <div class="atlas-cmp-header">
+          <div class="atlas-cmp-title">⚖ Gene Comparison</div>
+          <button class="atlas-dp-close" onclick="_atlasCloseCompare()"
+                  aria-label="Close comparison">✕</button>
+        </div>
+        <div class="atlas-cmp-body">
+          <table class="atlas-cmp-table">
+            <thead>
+              <tr>
+                <th class="atlas-cmp-th-label">Field</th>
+                <th class="atlas-cmp-th-gene">${escapeHtml(geneA.symbol)}</th>
+                <th class="atlas-cmp-th-gene">${escapeHtml(geneB.symbol)}</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${row('Full Name', escapeHtml(geneA.name), escapeHtml(geneB.name))}
+              ${row('Evidence',
+                `<span class="atlas-evidence-badge ${evA.cls}">● ${escapeHtml(evA.label)}</span>`,
+                `<span class="atlas-evidence-badge ${evB.cls}">● ${escapeHtml(evB.label)}</span>`)}
+              ${row('Pathway',
+                escapeHtml((grpA?.name||'') + (geneA.pathwayName ? ' — ' + geneA.pathwayName : '')),
+                escapeHtml((grpB?.name||'') + (geneB.pathwayName ? ' — ' + geneB.pathwayName : '')))}
+              ${row('Function', escapeHtml(geneA.functionSummary), escapeHtml(geneB.functionSummary))}
+              ${row('Stress Links',     tagRow(geneA.stressLinks),    tagRow(geneB.stressLinks))}
+              ${row('Bioenergy Links',  tagRow(geneA.bioenergyLinks), tagRow(geneB.bioenergyLinks))}
+              ${row('Plant Regions',   tagRow(geneA.plantRegions),   tagRow(geneB.plantRegions))}
+            </tbody>
+          </table>
+        </div>
+        <div class="atlas-cmp-footer">
+          <button class="atlas-dp-compare-btn" onclick="_atlasCloseCompare()">
+            ✕ Clear &amp; Close
+          </button>
+        </div>
+      </div>
+    </div>`);
+}
+
+// ── Close comparison modal ────────────────────────────────────────────────────
+function _atlasCloseCompare() {
+  document.getElementById('atlasCompareModal')?.remove();
+  _atlasState.compareGene = null;
+  // Reset compare button if detail panel still open
+  const btn = document.getElementById('atlasDpCmpBtn');
+  if (btn && _atlasState.selectedGene) {
+    btn.textContent = '⊕ Save to Compare';
+    btn.onclick = () => _atlasCompareAction(_atlasState.selectedGene.geneId);
+  }
+}
+
+// ── Toast notification ─────────────────────────────────────────────────────────
+function _atlasShowToast(msg) {
+  document.getElementById('atlasToast')?.remove();
+  const toast = document.createElement('div');
+  toast.id = 'atlasToast';
+  toast.className = 'atlas-toast';
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add('show'));
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 2800);
+}
+
+// ── Biofuel connection note (derived from pathway group) ──────────────────────
+function _atlasBiofuelNote(gene, group) {
+  const NOTES = {
+    lignin_cellwall:
+      'Genes in this pathway directly control lignin deposition and cellulose synthesis in cell walls. ' +
+      'Lower lignin and higher cellulose content mean more fermentable sugar — greater ethanol output per ton of switchgrass.',
+    cellulose_biomass:
+      'Cellulose-synthesis genes set the raw fermentable sugar content of switchgrass biomass. ' +
+      'Higher cellulose fractions mean more glucose available for microbial fermentation into bioethanol.',
+    drought_aba:
+      'Drought-stress response genes govern water-use efficiency and sustained biomass production during dry years. ' +
+      'Better drought tolerance keeps switchgrass productive even under Texas\'s irregular rainfall, protecting feedstock yield.',
+    heat_ros:
+      'Heat and ROS-management genes protect photosynthetic machinery through peak Texas summers. ' +
+      'Plants that survive heat stress maintain biomass supply needed for year-round biorefinery operation.',
+    photosynthesis_c4:
+      'C4 photosynthesis genes underpin switchgrass\'s exceptional carbon-capture efficiency — up to 3× higher than C3 crops. ' +
+      'Maximizing C4 performance directly increases dry-matter biomass available for ethanol or advanced biofuel conversion.',
+    growth_productivity:
+      'Growth regulators set the final biomass yield ceiling per acre. ' +
+      'Genes promoting tiller count, stem elongation, and dry-matter accumulation directly scale the feedstock supply for biorefining.',
+    salt_ion:
+      'Ion-transport and salt-tolerance genes allow switchgrass to colonize marginal, saline soils unsuitable for food crops. ' +
+      'Expanding the cultivable land base increases total biofuel feedstock without displacing existing agriculture.',
+    secondary_metabolites:
+      'Secondary metabolite pathways — especially phenylpropanoid biosynthesis — feed into lignin formation. ' +
+      'Tuning these genes can reduce cell-wall recalcitrance and improve the efficiency of cellulosic ethanol production.',
+  };
+
+  if (NOTES[gene.pathwayGroup]) return NOTES[gene.pathwayGroup];
+  if (group?.bioenergyRelevance) return group.bioenergyRelevance;
+  const links = gene.bioenergyLinks || [];
+  if (links.length) {
+    return `This gene is linked to ${links.map(l => l.replace(/_/g,' ')).join(', ')}, ` +
+      'which are key factors in bioenergy conversion and biomass quality in switchgrass.';
+  }
+  return null;
 }
 
 // ── Helper: extract readable domain from URL ──────────────────────────────────
@@ -482,3 +705,10 @@ function atlasOnPlantChange() {
   if (!container || !_atlasState.loaded) return;
   _atlasRender(container);
 }
+
+// ── Global Escape handler (compare modal takes priority over detail panel) ────
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Escape') return;
+  if (document.getElementById('atlasCompareModal')) { _atlasCloseCompare(); return; }
+  if (document.getElementById('atlasDpPanel'))       { _atlasCloseGeneDetail(); }
+});

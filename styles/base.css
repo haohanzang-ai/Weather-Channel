@@ -11,6 +11,14 @@
   --glow:0 0 30px rgba(74,144,226,0.14);
   --shadow:0 4px 24px rgba(0,0,0,0.4);
   --sidebar-w:230px;
+  /* §1 Typography scale — 7 steps, no rogue font sizes */
+  --text-xs:10px;--text-sm:12px;--text-base:14px;--text-md:16px;
+  --text-lg:20px;--text-xl:28px;--text-2xl:40px;
+  /* §2 Spacing tokens — 8-step system */
+  --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;
+  --space-5:24px;--space-6:32px;--space-7:48px;--space-8:64px;
+  /* §3 Card depth — 3-level surface hierarchy */
+  --card1:rgba(255,255,255,0.04);--card2:rgba(255,255,255,0.07);--card3:rgba(255,255,255,0.11);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{height:100%;background:var(--bg0)}
@@ -1077,4 +1085,51 @@ canvas.maplibregl-canvas{border-radius:0}
 .compare-pill{
   display:inline-block;font-size:9.5px;font-weight:700;
   padding:1px 7px;border-radius:20px;border:1px solid;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   §3 CARD DEPTH — 3-level surface hierarchy (extends existing .card)
+   card1 = base surface, card2 = nested content, card3 = highlight / hover
+   ══════════════════════════════════════════════════════════════════════════════ */
+.card{
+  border-radius:12px;
+  padding:var(--space-5);
+  background:var(--card1);
+  border:1px solid rgba(255,255,255,0.06);
+}
+.card2{background:var(--card2)}
+.card3{background:var(--card3)}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   §4 MICRO-INTERACTIONS — smooth transitions on all interactive elements
+   ══════════════════════════════════════════════════════════════════════════════ */
+.btn{
+  transition:background 0.18s ease,transform 0.12s ease,box-shadow 0.18s ease;
+}
+.btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(0,0,0,0.28);
+}
+.btn:active{transform:translateY(0)}
+
+/* Accessible focus ring on all interactive elements */
+:focus-visible{
+  outline:2px solid var(--blue);
+  outline-offset:2px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   §5 MOBILE — design-system overrides for ≤640px
+   (Layout overrides are in the existing mobile block above;
+    this block handles design-token and typography adjustments only)
+   ══════════════════════════════════════════════════════════════════════════════ */
+@media(max-width:640px){
+  :root{
+    --text-xl:22px;
+    --text-2xl:28px;
+  }
+  .card{padding:var(--space-4)}
+  .flex-row{flex-direction:column}
+  /* Tighter section header on small screens */
+  .tab-subsection-header{font-size:14px;padding:8px 12px}
 }

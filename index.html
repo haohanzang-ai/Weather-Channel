@@ -41,6 +41,7 @@
   <link rel="stylesheet" href="styles/mission.css">
   <link rel="stylesheet" href="styles/scanner.css">
   <link rel="stylesheet" href="styles/gene-atlas.css">
+  <link rel="stylesheet" href="styles/graphbuilder.css">
 </head>
 <body>
 
@@ -114,8 +115,9 @@
       <button class="nav-item active" role="menuitem" data-page="analyze"    aria-current="page" onclick="showPage('analyze')"><span class="nav-icon" aria-hidden="true">🔬</span>Analyze</button>
       <button class="nav-item" role="menuitem" data-page="mapcompare" onclick="showPage('mapcompare')"><span class="nav-icon" aria-hidden="true">◉</span>Map &amp; Compare</button>
       <button class="nav-item" role="menuitem" data-page="bioenergy"  onclick="showPage('bioenergy')"><span class="nav-icon" aria-hidden="true">⚡</span>Bioenergy Engine</button>
-      <button class="nav-item" role="menuitem" data-page="science"    onclick="showPage('science')"><span class="nav-icon" aria-hidden="true">🧬</span>Science &amp; Stress</button>
-      <button class="nav-item" role="menuitem" data-page="sources"    onclick="showPage('sources')"><span class="nav-icon" aria-hidden="true">📚</span>Sources &amp; Data Status</button>
+      <button class="nav-item" role="menuitem" data-page="science"      onclick="showPage('science')"><span class="nav-icon" aria-hidden="true">🧬</span>Science &amp; Stress</button>
+      <button class="nav-item" role="menuitem" data-page="graphbuilder" onclick="showPage('graphbuilder')"><span class="nav-icon" aria-hidden="true">📊</span>Graph Builder</button>
+      <button class="nav-item" role="menuitem" data-page="sources"      onclick="showPage('sources')"><span class="nav-icon" aria-hidden="true">📚</span>Sources &amp; Data Status</button>
     </div>
 
     <div class="sidebar-footer">
@@ -729,6 +731,9 @@
           <!-- Report Card -->
           <section class="scanCard" id="scanReportCard" aria-label="Educational biofuel relevance report" aria-live="polite"></section>
 
+          <!-- Site Suitability Survey Card (populated by _surveyLand) -->
+          <section id="scanSurveyCard" style="display:none" aria-label="Site suitability analysis results" aria-live="polite"></section>
+
           <!-- Scanner Sources Card -->
           <section class="scanCard" aria-label="Data sources for the Plant Scanner">
             <div class="scanCardTitle">📚 Sources &amp; References</div>
@@ -1089,6 +1094,27 @@
 
 
       <!-- ═══════════════════════════════════════════════════════════════════
+           TAB 6 — GRAPH BUILDER
+           Interactive chart builder using live weather data
+      ══════════════════════════════════════════════════════════════════════ -->
+      <div class="page" id="page-graphbuilder" role="region" aria-label="Graph Builder — Interactive Data Visualization">
+
+        <div class="tab-subsection">
+          <div class="tab-subsection-header">📊 Graph Builder — Interactive Data Visualization
+            <span class="tsh-badge">Live API</span>
+          </div>
+          <p style="font-size:12px;color:var(--text2);margin-bottom:18px;line-height:1.7">
+            Choose a chart type, pick your axes, and generate live charts from real Open-Meteo weather data.
+            Compare current readings across all 10 Texas cities, or visualize 7-day forecast trends for one city.
+            Use <strong>Export PNG</strong> to save any chart as an image.
+          </p>
+          <div id="sc-graphbuilder"></div>
+        </div>
+
+      </div><!-- /page-graphbuilder -->
+
+
+      <!-- ═══════════════════════════════════════════════════════════════════
            SETTINGS PAGE (accessible via footer gear button)
       ══════════════════════════════════════════════════════════════════════ -->
       <div class="page" id="page-settings" role="region" aria-label="Platform Settings"></div>
@@ -1104,9 +1130,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <!-- ── App Scripts (load order matters) ── -->
-<script src="js/data.js?v=2"></script>
+<script src="js/data.js?v=3"></script>
 <script src="js/utils.js?v=2"></script>
-<script src="js/nav.js?v=3"></script>
+<script src="js/nav.js?v=4"></script>
 <script src="js/dashboard.js"></script>
 <script src="js/map.js?v=11"></script>
 <script src="js/forecasts.js?v=3"></script>
@@ -1121,7 +1147,7 @@
 <script src="js/facts.js"></script>
 <script src="js/biofuel.js"></script>
 <script src="js/fuel.js"></script>
-<script src="js/scanner.js?v=6"></script>
+<script src="js/scanner.js?v=7"></script>
 <script src="js/settings.js"></script>
 <script src="js/mission.js"></script>
 <script src="js/location.js?v=3"></script>
@@ -1129,8 +1155,9 @@
 <script src="js/stress.js?v=2"></script>
 <script src="js/bioenergy-engine.js?v=2"></script>
 <script src="js/report.js?v=2"></script>
-<script src="js/gene-atlas.js?v=1"></script>
+<script src="js/gene-atlas.js?v=2"></script>
 <script src="js/workflow.js?v=1"></script>
+<script src="js/graphbuilder.js?v=1"></script>
 <script src="js/main.js?v=2"></script>
 </body>
 </html>

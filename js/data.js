@@ -137,8 +137,9 @@ const PAGE_TITLES = {
   analyze:    'Analyze — Plant · Location · Bioenergy',
   mapcompare: 'Map & Compare — Texas Locations',
   bioenergy:  'Bioenergy Engine',
-  science:    'Science & Stress Methods',
-  sources:    'Sources & Data Status',
+  science:      'Science & Stress Methods',
+  graphbuilder: 'Graph Builder — Interactive Data Visualization',
+  sources:      'Sources & Data Status',
   settings:   'Settings',
   // ── legacy keys kept so any direct showPage() calls still title correctly ─
   dashboard:   'Analyze — Plant · Location · Bioenergy',

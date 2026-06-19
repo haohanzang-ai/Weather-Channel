@@ -33,8 +33,9 @@ const TAB_RENDERERS = {
     if (typeof renderPlantCityComparison === 'function') renderPlantCityComparison();
   },
   bioenergy:  () => { sgBiofuelInit(); fuelEffInit(); scannerInit(); },
-  science:    () => {},
-  sources:    () => { renderReports(); },
+  science:      () => {},
+  graphbuilder: () => { if (typeof graphBuilderInit === 'function') graphBuilderInit('sc-graphbuilder'); },
+  sources:      () => { renderReports(); },
   settings:   () => { renderSettings(); },
 };
 

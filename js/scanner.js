@@ -1346,6 +1346,8 @@ function scannerClearImage() {
     if (id === 'scanPreviewImg') el.src = '';
     else el.style.display = 'none';
   });
+  const surveyCard = document.getElementById('scanSurveyCard');
+  if (surveyCard) { surveyCard.style.display = 'none'; surveyCard.innerHTML = ''; }
   scanReportShown = false;
 }
 
@@ -2146,8 +2148,331 @@ function renderScannerReport() {
         Future mode: PlantNet-assisted identification and AI-generated explanation through secure backend.
       </p>
     </div>
+
+    <div class="scan-report-section" style="margin-top:4px">
+      <div class="scan-section-title">📍 11. Site Suitability Analysis</div>
+      <p style="font-size:11px;color:var(--text2);margin:0 0 12px;line-height:1.6">
+        Survey your GPS location against this plant's known climate tolerances. Fetches 10-year daily weather records (2015–2024) from the Open-Meteo Archive API and calculates a survival probability score.
+      </p>
+      <button class="scan-survey-trigger-btn" id="scanSurveyTriggerBtn"
+              onclick="_scanTriggerSurvey()" type="button">
+        📍 Analyze My Location
+      </button>
+    </div>
   `;
   scanGA('productivity_estimate_generated', { plant_key: scanPlantKey, demo: scanDemoMode });
+}
+
+// ── Site Suitability: Plant Tolerance Data ────────────────────────────────────
+// Real-world values drawn from published agronomy / ecology literature.
+// minTempC / maxTempC  = annual-average survival temperature range (°C).
+// minPrecipMm / maxPrecipMm = annual precipitation tolerance range (mm).
+const PLANT_TOLERANCES = {
+  switchgrass:            { minTempC:-40, maxTempC:42, minPrecipMm:300,  maxPrecipMm:1500, droughtTolerant:true  },
+  mesquite:               { minTempC:-15, maxTempC:48, minPrecipMm:150,  maxPrecipMm:900,  droughtTolerant:true  },
+  eastern_redcedar:       { minTempC:-30, maxTempC:40, minPrecipMm:250,  maxPrecipMm:1300, droughtTolerant:true  },
+  giant_miscanthus:       { minTempC:-20, maxTempC:35, minPrecipMm:600,  maxPrecipMm:1800, droughtTolerant:false },
+  agave:                  { minTempC: -7, maxTempC:46, minPrecipMm:100,  maxPrecipMm:700,  droughtTolerant:true  },
+  sorghum:                { minTempC:  5, maxTempC:42, minPrecipMm:300,  maxPrecipMm:1500, droughtTolerant:true  },
+  hemp:                   { minTempC: -2, maxTempC:36, minPrecipMm:400,  maxPrecipMm:1200, droughtTolerant:false },
+  eastern_gamagrass:      { minTempC:-25, maxTempC:40, minPrecipMm:400,  maxPrecipMm:1500, droughtTolerant:true  },
+  sugarcanesorghumhybrid: { minTempC:  2, maxTempC:38, minPrecipMm:600,  maxPrecipMm:2000, droughtTolerant:false },
+  bermudagrass:           { minTempC:-10, maxTempC:42, minPrecipMm:300,  maxPrecipMm:1200, droughtTolerant:true  },
+};
+
+// Map scanner plant keys to PLANT_TOLERANCES keys when they differ
+const _SURVEY_PLANT_MAP = {
+  miscanthus:          'giant_miscanthus',
+  energy_cane:         'sugarcanesorghumhybrid',
+  sugarcane:           'sugarcanesorghumhybrid',
+  corn_plant:          'sorghum',
+  grass_clippings:     'bermudagrass',
+  invasive_grass:      'bermudagrass',
+  native_prairie_grass:'switchgrass',
+};
+
+function _surveyGetTolerance(plantKey) {
+  if (PLANT_TOLERANCES[plantKey]) return PLANT_TOLERANCES[plantKey];
+  const mapped = _SURVEY_PLANT_MAP[plantKey];
+  return (mapped && PLANT_TOLERANCES[mapped]) ? PLANT_TOLERANCES[mapped] : null;
+}
+
+// ── Site Suitability: Texas climate approximation for city comparisons ─────────
+// Calibrated against NOAA 1991-2020 normals for key Texas cities.
+// Returns { precipMm, maxTempC, minTempC } — annual averages.
+function _surveyEstimateClimateTX(lat, lon) {
+  // Precipitation: steep gradient in eastern TX, gentler further west
+  let precipMm;
+  if (lon >= -98) {
+    precipMm = 1520 - Math.max(0, -(lon + 94)) * 185;
+  } else {
+    precipMm = 780 - Math.max(0, -(lon + 98)) * 70;
+  }
+  precipMm += Math.max(0, 31.5 - lat) * 18; // Gulf proximity bonus
+  precipMm = Math.max(230, Math.min(1600, Math.round(precipMm)));
+
+  // Annual avg of daily max temps: decreases ~0.7 °C per degree of latitude northward
+  const maxTempC = Math.max(20, Math.min(32,
+    Math.round((26.5 + (30 - lat) * 0.7) * 10) / 10
+  ));
+
+  // Annual avg of daily min temps: latitude + western-aridity effect
+  const aridAdj  = Math.max(0, -(lon + 95)) * 0.4;
+  const minTempC = Math.max(4, Math.min(20,
+    Math.round((17 - (lat - 29.76) * 0.88 - aridAdj) * 10) / 10
+  ));
+
+  return { precipMm, maxTempC, minTempC };
+}
+
+// ── Site Suitability: Score calculation ───────────────────────────────────────
+// Returns { total 0-100, tempScore 0-40, precipScore 0-40, droughtScore 0-20 }
+function _surveyCalcScore(tols, precipMm, avgMaxTempC, avgMinTempC) {
+  // Estimate absolute winter low from annual avg min temp (approx. -12 °C shift)
+  const absWinterLow = avgMinTempC - 12;
+
+  // Temperature score (0–40)
+  let tempScore = 40;
+  if (avgMaxTempC > tols.maxTempC) {
+    tempScore -= Math.min(40, (avgMaxTempC - tols.maxTempC) * 5);
+  }
+  if (absWinterLow < tols.minTempC) {
+    tempScore -= Math.min(40, (tols.minTempC - absWinterLow) * 3);
+  }
+  tempScore = Math.max(0, Math.round(tempScore));
+
+  // Precipitation score (0–40)
+  let precipScore = 40;
+  if (precipMm < tols.minPrecipMm) {
+    const deficit = (tols.minPrecipMm - precipMm) / tols.minPrecipMm;
+    precipScore -= Math.min(40, deficit * 60);
+  } else if (precipMm > tols.maxPrecipMm) {
+    const excess = (precipMm - tols.maxPrecipMm) / tols.maxPrecipMm;
+    precipScore -= Math.min(20, excess * 25);
+  }
+  precipScore = Math.max(0, Math.round(precipScore));
+
+  // Drought resilience score (0–20): drought-tolerant plants always score 20;
+  // non-drought-tolerant plants score proportionally to available rainfall.
+  let droughtScore;
+  if (tols.droughtTolerant) {
+    droughtScore = 20;
+  } else if (precipMm >= 600) {
+    droughtScore = 20;
+  } else {
+    droughtScore = Math.max(0, Math.round((precipMm / 600) * 20));
+  }
+
+  return {
+    total: Math.min(100, tempScore + precipScore + droughtScore),
+    tempScore,
+    precipScore,
+    droughtScore,
+  };
+}
+
+// ── Site Suitability: Render result card ──────────────────────────────────────
+function _surveyRenderCard(plantKey, score, precipMm, maxTempC, minTempC, topCities) {
+  const container = document.getElementById('scanSurveyCard');
+  if (!container) return;
+  const plant     = SCAN_PLANTS[plantKey];
+  const plantName = plant ? plant.commonName : plantKey;
+
+  const scoreColor = score.total >= 70 ? '#5DDBA8' : score.total >= 40 ? '#F8C06A' : '#E87A7A';
+  const verdictAdj = score.total >= 70 ? 'excellent' : score.total >= 40 ? 'marginal' : 'unsuitable';
+
+  const barColor = pct => pct >= 70 ? '#5DDBA8' : pct >= 40 ? '#F8C06A' : '#E87A7A';
+  const tempPct    = Math.round((score.tempScore   / 40) * 100);
+  const precipPct  = Math.round((score.precipScore / 40) * 100);
+  const droughtPct = Math.round((score.droughtScore / 20) * 100);
+
+  const chips = topCities.map(c => {
+    const cc = c.score >= 70 ? '#5DDBA8' : c.score >= 40 ? '#F8C06A' : '#E87A7A';
+    return `<span class="scan-survey-chip" style="border-color:${cc};color:${cc}">${escapeHtml(c.name)}&nbsp;<strong>${c.score}</strong></span>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="scan-survey-card">
+      <div class="scan-section-title">
+        📍 Site Suitability Analysis
+        <span class="scan-survey-api-note">Open-Meteo archive 2015–2024</span>
+      </div>
+
+      <div class="scan-survey-score-row">
+        <div class="scan-survey-score" style="color:${scoreColor}">${score.total}</div>
+        <div>
+          <div class="scan-survey-score-title">Site Suitability Score</div>
+          <div class="scan-survey-score-sub">out of 100</div>
+        </div>
+      </div>
+
+      <div class="scan-survey-breakdown">
+        <div class="scan-survey-row">
+          <div class="scan-survey-row-label">🌡 Temperature fit</div>
+          <div class="scan-survey-bar-wrap"><div class="scan-survey-bar" style="width:${tempPct}%;background:${barColor(tempPct)}"></div></div>
+          <div class="scan-survey-row-val" style="color:${barColor(tempPct)}">${score.tempScore}<span class="scan-survey-denom">/40</span></div>
+        </div>
+        <div class="scan-survey-row">
+          <div class="scan-survey-row-label">🌧 Precipitation fit</div>
+          <div class="scan-survey-bar-wrap"><div class="scan-survey-bar" style="width:${precipPct}%;background:${barColor(precipPct)}"></div></div>
+          <div class="scan-survey-row-val" style="color:${barColor(precipPct)}">${score.precipScore}<span class="scan-survey-denom">/40</span></div>
+        </div>
+        <div class="scan-survey-row">
+          <div class="scan-survey-row-label">💧 Drought resilience</div>
+          <div class="scan-survey-bar-wrap"><div class="scan-survey-bar" style="width:${droughtPct}%;background:${barColor(droughtPct)}"></div></div>
+          <div class="scan-survey-row-val" style="color:${barColor(droughtPct)}">${score.droughtScore}<span class="scan-survey-denom">/20</span></div>
+        </div>
+      </div>
+
+      <div class="scan-survey-climate-row">
+        <span>Avg annual precip: <strong>${Math.round(precipMm)} mm</strong></span>
+        <span>Avg daily max: <strong>${maxTempC.toFixed(1)}°C</strong></span>
+        <span>Avg daily min: <strong>${minTempC.toFixed(1)}°C</strong></span>
+      </div>
+
+      <div class="scan-survey-verdict">
+        This site is <strong>${verdictAdj}</strong> for <strong>${escapeHtml(plantName)}</strong> based on 10-year climate averages.
+      </div>
+
+      <div class="scan-survey-alts">
+        <div class="scan-survey-alts-label">Top Texas alternatives for ${escapeHtml(plantName)}:</div>
+        <div class="scan-survey-chips">${chips}</div>
+      </div>
+    </div>`;
+}
+
+// ── Site Suitability: Fetch + analyze ────────────────────────────────────────
+async function _surveyLand(plantKey, lat, lon) {
+  const container = document.getElementById('scanSurveyCard');
+  if (!container) return;
+
+  const tols = _surveyGetTolerance(plantKey);
+  const plant = SCAN_PLANTS[plantKey];
+  const plantName = plant ? plant.commonName : plantKey;
+
+  if (!tols) {
+    container.innerHTML = `
+      <div class="scan-survey-card scan-survey-nodata">
+        <div class="scan-section-title">📍 Site Suitability Analysis</div>
+        <p class="scan-report-text">No climate tolerance data available for <strong>${escapeHtml(plantName)}</strong>. Analysis is available for switchgrass, mesquite, eastern redcedar, miscanthus, agave, sorghum, hemp, and several others.</p>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="scan-survey-card">
+      <div class="scan-section-title">📍 Site Suitability Analysis</div>
+      <div class="scan-survey-loading">
+        <span class="ls-dot" aria-hidden="true"></span>
+        <span>Fetching 10-year climate normals (${lat.toFixed(3)}, ${lon.toFixed(3)})…</span>
+      </div>
+    </div>`;
+
+  try {
+    const url = new URL('https://archive-api.open-meteo.com/v1/archive');
+    url.searchParams.set('latitude',   lat.toFixed(4));
+    url.searchParams.set('longitude',  lon.toFixed(4));
+    url.searchParams.set('start_date', '2015-01-01');
+    url.searchParams.set('end_date',   '2024-12-31');
+    url.searchParams.set('daily',
+      'temperature_2m_max,temperature_2m_min,precipitation_sum,et0_fao_evapotranspiration');
+
+    const resp = await fetch(url.toString());
+    if (!resp.ok) throw new Error(`Open-Meteo returned HTTP ${resp.status}`);
+    const data = await resp.json();
+
+    const daily = data.daily;
+    if (!daily || !Array.isArray(daily.temperature_2m_max)) {
+      throw new Error('Unexpected response format from climate API');
+    }
+
+    const tmx = daily.temperature_2m_max.filter(v => v !== null);
+    const tmn = daily.temperature_2m_min.filter(v => v !== null);
+    const prc = daily.precipitation_sum.filter(v => v !== null);
+    if (!tmx.length || !prc.length) throw new Error('Climate data is empty for this location');
+
+    const sum = arr => arr.reduce((a, v) => a + v, 0);
+    const avgMaxTempC    = sum(tmx) / tmx.length;
+    const avgMinTempC    = sum(tmn) / tmn.length;
+    const avgAnnualPrecip = sum(prc) / 10; // 10 years → annual average
+
+    const score = _surveyCalcScore(tols, avgAnnualPrecip, avgMaxTempC, avgMinTempC);
+
+    // Rank ALL_CITIES by score for this plant using approximate climate normals
+    const cityRanking = (typeof ALL_CITIES !== 'undefined' ? ALL_CITIES : [])
+      .map(city => {
+        const cl = _surveyEstimateClimateTX(city.lat, city.lon);
+        return { name: city.name, score: _surveyCalcScore(tols, cl.precipMm, cl.maxTempC, cl.minTempC).total };
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3);
+
+    _surveyRenderCard(plantKey, score, avgAnnualPrecip, avgMaxTempC, avgMinTempC, cityRanking);
+    scanGA('site_suitability_analyzed', { plant_key: plantKey, score: score.total });
+
+  } catch (err) {
+    container.innerHTML = `
+      <div class="scan-survey-card scan-survey-nodata">
+        <div class="scan-section-title">📍 Site Suitability Analysis</div>
+        <p class="scan-report-text" style="color:#E87A7A">
+          ⚠ Could not fetch climate data: ${escapeHtml(err.message)}.
+        </p>
+        <button class="scan-survey-trigger-btn" style="margin-top:10px"
+                onclick="_scanTriggerSurvey()" type="button">↺ Retry</button>
+      </div>`;
+  }
+}
+
+// ── Site Suitability: Geolocation trigger ────────────────────────────────────
+function _scanTriggerSurvey() {
+  const btn        = document.getElementById('scanSurveyTriggerBtn');
+  const surveyCard = document.getElementById('scanSurveyCard');
+  if (!surveyCard) return;
+
+  if (!navigator.geolocation) {
+    surveyCard.style.display = 'block';
+    surveyCard.innerHTML = `
+      <div class="scan-survey-card scan-survey-nodata">
+        <div class="scan-section-title">📍 Site Suitability Analysis</div>
+        <p class="scan-report-text" style="color:#E87A7A">⚠ Geolocation is not supported by this browser.</p>
+      </div>`;
+    surveyCard.scrollIntoView({ behavior:'smooth', block:'start' });
+    return;
+  }
+
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="ls-dot" style="margin-right:7px" aria-hidden="true"></span>Getting location…'; }
+
+  surveyCard.style.display = 'block';
+  surveyCard.innerHTML = `
+    <div class="scan-survey-card">
+      <div class="scan-section-title">📍 Site Suitability Analysis</div>
+      <div class="scan-survey-loading">
+        <span class="ls-dot" aria-hidden="true"></span>
+        <span>Requesting location access…</span>
+      </div>
+    </div>`;
+  surveyCard.scrollIntoView({ behavior:'smooth', block:'start' });
+
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      if (btn) { btn.disabled = false; btn.innerHTML = '📍 Analyze My Location'; }
+      _surveyLand(scanPlantKey, pos.coords.latitude, pos.coords.longitude);
+    },
+    err => {
+      if (btn) { btn.disabled = false; btn.innerHTML = '📍 Analyze My Location'; }
+      const msg = err.code === 1
+        ? 'Location access denied. Allow location access in your browser settings.'
+        : err.code === 2
+        ? 'Location unavailable. Check your device location settings.'
+        : 'Location request timed out. Please try again.';
+      surveyCard.innerHTML = `
+        <div class="scan-survey-card scan-survey-nodata">
+          <div class="scan-section-title">📍 Site Suitability Analysis</div>
+          <p class="scan-report-text" style="color:#E87A7A">⚠ ${escapeHtml(msg)}</p>
+        </div>`;
+    },
+    { timeout: 15000, maximumAge: 300000 }
+  );
 }
 
 // ── Cleanup ───────────────────────────────────────────────────────────────────
