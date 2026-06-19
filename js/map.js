@@ -107,21 +107,30 @@ function _mlInit() {
 
   function _mlOnReady() {
     if (_mlMapLoaded) return;
-    _mlMapLoaded = true;
-    _mlAddOverlaySources();
-    _mlAddPollutionLayers();
-    _mlAddTexasBorder();
-    _mlRenderMarkers();
-    _mlAddInMapLegend();
-    mapRendered = true;
-    if (typeof selectedCity !== 'undefined' && selectedCity && WEATHER_DATA[selectedCity]) {
-      showCityDetail(selectedCity);
+    try {
+      _mlMapLoaded = true;
+      _mlAddOverlaySources();
+      _mlAddPollutionLayers();
+      _mlAddTexasBorder();
+      _mlRenderMarkers();
+      _mlAddInMapLegend();
+      mapRendered = true;
+      if (typeof selectedCity !== 'undefined' && selectedCity && WEATHER_DATA[selectedCity]) {
+        showCityDetail(selectedCity);
+      }
+    } catch (e) {
+      // "Style is not done loading" — styledata fired too early; retry
+      if (/not done loading/i.test(e.message)) {
+        _mlMapLoaded = false;
+        setTimeout(_mlOnReady, 300);
+      }
     }
   }
 
+  _mlMap.once('idle', _mlOnReady);
   _mlMap.on('load', _mlOnReady);
   _mlMap.on('styledata', () => { if (_mlMap.isStyleLoaded()) _mlOnReady(); });
-  setTimeout(() => { if (_mlMap && !_mlMapLoaded) _mlOnReady(); }, 4000);
+  setTimeout(() => { if (_mlMap && !_mlMapLoaded) _mlOnReady(); }, 5000);
 }
 
 // ── Weather overlay sources / layers ─────────────────────────────────────────
