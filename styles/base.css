@@ -212,15 +212,33 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offse
 .progress-fill{height:100%;border-radius:3px;transition:width 0.6s cubic-bezier(0.4,0,0.2,1)}
 
 /* ── Map ────────────────────────────────────── */
-.map-container{position:relative;background:linear-gradient(135deg,rgba(74,144,226,0.04),rgba(15,30,50,0.8));border:1px solid var(--border);border-radius:var(--r16);padding:18px;margin-bottom:18px}
+/* Google Maps–style container — light, minimal, clean */
+.map-container{position:relative;background:#F2EFE9;border:1px solid #E8EAED;border-radius:var(--r16);padding:16px 18px 18px;margin-bottom:18px;box-shadow:0 1px 4px rgba(0,0,0,0.10)}
 .map-legend-row{margin-bottom:14px}
 .map-ov-swatch{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:rgba(255,255,255,0.75);padding:2px 9px 2px 8px;border-radius:12px;border:1px solid rgba(255,255,255,0.12)}
-/* Layer toggle controls */
-.map-layer-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.map-layer-label{font-size:10px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap}
-.map-layer-btn{font-size:10px;font-weight:600;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.18);background:var(--surface2);color:var(--text2);cursor:pointer;transition:all 0.18s ease;font-family:var(--font)}
-.map-layer-btn.active{background:rgba(74,144,226,0.18);border-color:rgba(74,144,226,0.45);color:#7DB9F2}
-.map-layer-btn:hover{background:rgba(74,144,226,0.12);border-color:rgba(74,144,226,0.3);color:var(--text0)}
+
+/* ── Layer toggle controls — Google Maps chip style ── */
+.map-layer-controls{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.map-layer-label{
+  font-size:10px;font-weight:700;color:var(--text2);
+  text-transform:uppercase;letter-spacing:0.08em;
+  white-space:nowrap;margin-right:2px;
+}
+/* Google Maps chip: white bg, pill shape, gray border, subtle shadow */
+.map-layer-btn{
+  font-size:11px;font-weight:500;padding:5px 12px;border-radius:20px;
+  border:1px solid #DADCE0;background:#FFFFFF;color:#3C4043;
+  cursor:pointer;transition:background 0.15s,border-color 0.15s,color 0.15s,box-shadow 0.15s;
+  font-family:Roboto,Inter,sans-serif;
+  box-shadow:0 1px 2px rgba(0,0,0,0.10);
+  display:inline-flex;align-items:center;gap:4px;
+}
+.map-layer-btn:hover{background:#F8F9FA;border-color:#BBBFC4;box-shadow:0 2px 4px rgba(0,0,0,0.14)}
+/* Active weather layer — Google blue */
+.map-layer-btn.active{background:#E8F0FE;border-color:#1A73E8;color:#1A73E8;font-weight:600;box-shadow:none}
+.map-layer-btn.active:hover{background:#D2E3FC}
+/* Active pollution layer — Google green */
+.map-layer-btn.poll-btn.active{background:#E6F4EA;border-color:#137333;color:#137333;font-weight:600}
 /* Texas outline shape */
 .texas-outline{fill:rgba(74,144,226,0.07);stroke:rgba(74,144,226,0.4);stroke-width:1.2;stroke-linejoin:round}
 /* City dots */
@@ -237,11 +255,16 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offse
 .map-overlay{pointer-events:none;mix-blend-mode:screen}
 .tooltip{position:absolute;background:linear-gradient(135deg,rgba(15,30,55,0.98),rgba(11,22,45,0.98));border:1px solid rgba(74,144,226,0.45);border-radius:10px;padding:11px 14px;font-size:11px;color:var(--text0);pointer-events:none;z-index:100;min-width:148px;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
 
-/* ── MapLibre GL overrides (positron/light map) ───────────────── */
-.maplibregl-popup-content{background:linear-gradient(135deg,rgba(15,30,55,0.97),rgba(11,22,45,0.97));border:1px solid rgba(74,144,226,0.45);border-radius:10px;padding:11px 14px;color:var(--text0);box-shadow:0 8px 24px rgba(0,0,0,0.45)}
-.maplibregl-popup-tip{border-top-color:rgba(11,22,45,0.97) !important;border-bottom-color:rgba(11,22,45,0.97) !important}
-.maplibregl-popup-close-button{color:var(--text2);font-size:16px;padding:4px 8px}
-.maplibregl-popup-close-button:hover{background:rgba(255,255,255,0.08);color:var(--text0)}
+/* ── MapLibre GL overrides — Google Maps white info-window style ── */
+.maplibregl-popup-content{
+  background:#FFFFFF;border:none;border-radius:8px;
+  padding:12px 14px;color:#3C4043;
+  box-shadow:0 2px 7px rgba(0,0,0,0.3),0 0 0 1px rgba(0,0,0,0.06);
+  font-family:Roboto,Inter,sans-serif;
+}
+.maplibregl-popup-tip{border-top-color:#FFFFFF !important;border-bottom-color:#FFFFFF !important}
+.maplibregl-popup-close-button{color:#5F6368;font-size:18px;padding:4px 8px;line-height:1}
+.maplibregl-popup-close-button:hover{background:#F1F3F4;color:#202124;border-radius:50%}
 .maplibregl-ctrl-group{background:#fff !important;border:1px solid rgba(0,0,0,0.15) !important;border-radius:8px !important;box-shadow:0 2px 8px rgba(0,0,0,0.18) !important}
 .maplibregl-ctrl-group button{background:#fff !important;border-bottom:1px solid rgba(0,0,0,0.1) !important;width:30px !important;height:30px !important}
 .maplibregl-ctrl-group button:hover{background:#f0f4f8 !important}
@@ -251,12 +274,13 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offse
 .maplibregl-ctrl-attrib a{color:rgba(74,144,226,1) !important}
 .maplibregl-compact-toggle{filter:none}
 canvas.maplibregl-canvas{border-radius:0}
-/* ── In-map floating legend ───────────────────────────────────────────────── */
-#ml-legend{position:absolute;bottom:36px;left:10px;z-index:10;background:rgba(10,16,30,0.90);color:rgba(255,255,255,0.88);font-family:Inter,sans-serif;font-size:10px;padding:10px 12px;border-radius:8px;border:1px solid rgba(74,144,226,0.35);box-shadow:0 4px 16px rgba(0,0,0,0.45);pointer-events:none;line-height:1.4;min-width:135px}
-.ml-legend-title{font-weight:700;font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.55);margin-bottom:5px;margin-top:2px}
-.ml-legend-row{display:flex;align-items:center;gap:7px;margin-bottom:3px;font-size:10px}
-.ml-swatch{width:11px;height:11px;border-radius:50%;display:inline-block;flex-shrink:0}
-.ml-legend-divider{border-top:1px solid rgba(255,255,255,0.12);margin:7px 0}
+/* ── In-map legend — now styled inline in JS as a Google Maps white panel ──── */
+/* These classes kept for fallback compatibility but legend is rendered inline */
+.ml-legend-title{font-weight:600;font-size:10px;color:#202124;margin-bottom:6px}
+.ml-legend-row{display:flex;align-items:center;gap:7px;margin-bottom:3px;font-size:10.5px;color:#5F6368}
+.ml-swatch{width:12px;height:12px;border-radius:50%;display:inline-block;flex-shrink:0;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,0.15)}
+.ml-legend-divider{border-top:1px solid #E8EAED;margin:7px 0}
+.ml-legend-footer{font-size:9.5px;color:#9AA0A6}
 .ml-legend-footer{font-size:9px;color:rgba(255,255,255,0.4)}
 
 /* ── Alerts ─────────────────────────────────── */

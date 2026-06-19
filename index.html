@@ -14,7 +14,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="TexasClimate — Bioenergy Intelligence Platform">
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com https://basemaps.cartocdn.com https://*.cartocdn.com https://tiles.basemaps.cartocdn.com; media-src 'self' blob:; connect-src 'self' https://api.open-meteo.com https://air-quality-api.open-meteo.com https://archive-api.open-meteo.com https://api.weather.gov https://cdn.jsdelivr.net https://storage.googleapis.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://basemaps.cartocdn.com https://*.cartocdn.com https://tiles.basemaps.cartocdn.com https://fonts.openmaptiles.org; frame-ancestors 'none';">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com https://basemaps.cartocdn.com https://*.cartocdn.com https://tiles.basemaps.cartocdn.com https://*.basemaps.cartocdn.com; media-src 'self' blob:; connect-src 'self' https://api.open-meteo.com https://air-quality-api.open-meteo.com https://archive-api.open-meteo.com https://api.weather.gov https://cdn.jsdelivr.net https://storage.googleapis.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://basemaps.cartocdn.com https://*.cartocdn.com https://tiles.basemaps.cartocdn.com https://*.basemaps.cartocdn.com https://fonts.openmaptiles.org; frame-ancestors 'none';">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"TexasClimate Bioenergy Intelligence Platform","description":"Live plant-environment bioenergy intelligence for Texas — weather, agriculture stress, conversion pathway analysis.","applicationCategory":"WeatherApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-EPP05BJFJ3"></script>
@@ -335,37 +335,22 @@
           <div class="tab-subsection-header">◉ Interactive Texas Climate Map</div>
 
           <div class="map-layer-controls" role="group" aria-label="Weather overlay layer controls">
-            <span class="map-layer-label">Weather Layers:</span>
+            <span class="map-layer-label">OVERLAYS:</span>
             <button class="map-layer-btn active" data-layer="rain"    onclick="mapToggleLayer('rain')">🌧 Precipitation</button>
-            <button class="map-layer-btn active" data-layer="clouds"  onclick="mapToggleLayer('clouds')">☁️ Cloud Cover</button>
+            <button class="map-layer-btn active" data-layer="clouds"  onclick="mapToggleLayer('clouds')">☁️ Clouds</button>
             <button class="map-layer-btn active" data-layer="severe"  onclick="mapToggleLayer('severe')">⚡ Severe</button>
             <button class="map-layer-btn active" data-layer="drought" onclick="mapToggleLayer('drought')">🏜 Drought</button>
           </div>
           <div class="map-layer-controls" role="group" aria-label="Pollution overlay layer controls">
-            <span class="map-layer-label">Pollution Layers:</span>
-            <button class="map-layer-btn" data-layer="runoff"    onclick="mapTogglePollutionLayer('runoff')">🌊 Runoff</button>
-            <button class="map-layer-btn" data-layer="pesticide" onclick="mapTogglePollutionLayer('pesticide')">🧪 Pesticide</button>
-            <button class="map-layer-btn" data-layer="ghg"       onclick="mapTogglePollutionLayer('ghg')">💨 GHG Emissions</button>
+            <span class="map-layer-label">POLLUTION LAYERS:</span>
+            <button class="map-layer-btn poll-btn active" data-layer="runoff"    onclick="mapTogglePollutionLayer('runoff')">🌊 Runoff</button>
+            <button class="map-layer-btn poll-btn active" data-layer="pesticide" onclick="mapTogglePollutionLayer('pesticide')">🧪 Pesticide</button>
+            <button class="map-layer-btn poll-btn" data-layer="ghg"       onclick="mapTogglePollutionLayer('ghg')">💨 GHG Emissions</button>
+            <span style="font-size:9px;font-weight:700;color:#EA4335;background:#FDE8E8;border-radius:4px;padding:2px 7px;letter-spacing:0.06em;align-self:center">● LIVE</span>
           </div>
 
           <div class="map-container">
-            <div class="map-legend-row" role="note" aria-label="Map legend">
-              <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-                <span style="font-size:10px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:0.06em">Temp:</span>
-                <span class="badge badge-blue">&#60;50°F Cool</span>
-                <span class="badge badge-green">50–75°F Mild</span>
-                <span class="badge badge-orange">75–90°F Warm</span>
-                <span class="badge badge-red">&#62;90°F Hot</span>
-              </div>
-              <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px">
-                <span style="font-size:10px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:0.06em">Overlays:</span>
-                <span class="map-ov-swatch" style="background:rgba(21,101,212,0.5)">Precipitation</span>
-                <span class="map-ov-swatch" style="background:rgba(136,152,170,0.4)">Clouds</span>
-                <span class="map-ov-swatch" style="background:rgba(139,26,26,0.55)">Severe</span>
-                <span class="map-ov-swatch" style="background:rgba(196,122,32,0.5)">Drought</span>
-                <span style="margin-left:auto;font-size:10px;color:var(--text3)">⚫ 100 cities · click any dot for forecast</span>
-              </div>
-            </div>
+            <!-- Legend lives inside the map as a Google Maps–style floating panel (added by JS) -->
 
             <div class="map-svg" id="texasSVG"
                  role="application" aria-label="Interactive Texas Climate Map — powered by MapLibre GL"
@@ -1123,7 +1108,7 @@
 <script src="js/utils.js?v=2"></script>
 <script src="js/nav.js?v=3"></script>
 <script src="js/dashboard.js"></script>
-<script src="js/map.js?v=8"></script>
+<script src="js/map.js?v=9"></script>
 <script src="js/forecasts.js?v=3"></script>
 <script src="js/agriculture.js"></script>
 <script src="js/trends.js"></script>
