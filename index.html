@@ -42,6 +42,8 @@
   <link rel="stylesheet" href="styles/scanner.css">
   <link rel="stylesheet" href="styles/gene-atlas.css">
   <link rel="stylesheet" href="styles/graphbuilder.css">
+  <link rel="stylesheet" href="styles/demo.css">
+  <link rel="stylesheet" href="styles/chatbot.css">
 </head>
 <body>
 
@@ -112,6 +114,7 @@
 
     <div class="nav-section" role="menu" aria-label="Main tabs">
       <div class="nav-label" aria-hidden="true">Intelligence Platform</div>
+      <button class="nav-item" role="menuitem" data-page="demo" onclick="showPage('demo');demoStart()" style="background:rgba(74,144,226,0.1);border-left:2px solid #4A90E2"><span class="nav-icon" aria-hidden="true">🎭</span>Demo / Judges</button>
       <button class="nav-item active" role="menuitem" data-page="analyze"    aria-current="page" onclick="showPage('analyze')"><span class="nav-icon" aria-hidden="true">🔬</span>Analyze</button>
       <button class="nav-item" role="menuitem" data-page="mapcompare" onclick="showPage('mapcompare')"><span class="nav-icon" aria-hidden="true">◉</span>Map &amp; Compare</button>
       <button class="nav-item" role="menuitem" data-page="bioenergy"  onclick="showPage('bioenergy')"><span class="nav-icon" aria-hidden="true">⚡</span>Bioenergy Engine</button>
@@ -141,6 +144,7 @@
       </div>
       <div class="header-meta">Synced: <span id="lastSync">just now</span></div>
       <time class="clock" id="clock" aria-label="Current time">00:00:00</time>
+      <button class="judge-mode-btn" id="judgeModeBtn" onclick="toggleJudgeMode()" aria-pressed="false" title="Simplify interface for judges — hides long science sections">⚖ Judge Mode</button>
       <button class="btn-sm" id="refreshBtn" onclick="refreshData(event)" aria-label="Refresh dashboard data">↻ Refresh</button>
     </header>
 
@@ -165,20 +169,52 @@
           <span class="ds-item">Last updated: —</span>
         </div>
 
-        <!-- Hero -->
+        <!-- Hero — redesigned for judges -->
         <section class="hero-band" id="az-overview" aria-label="Platform summary">
-          <h1 class="hero-title">TexasClimate — Plant · Environment · Bioenergy Intelligence</h1>
-          <p class="hero-sub">For any plant or crop, in any Texas location, under past, current, and future environmental conditions — can it survive, produce biomass, and become reliable clean bioenergy? Live weather from <strong>Open-Meteo API</strong>. Agriculture values are <strong>weather-derived estimates</strong>. Bioenergy scores are <strong>research-based estimates</strong>. All sections are labeled with their data type. <a href="#" class="hero-link" onclick="showPage('sources');return false;">See Data Status →</a></p>
-          <div class="hero-badges" aria-label="Status indicators">
-            <span class="badge badge-blue"><span class="live-dot" aria-hidden="true"></span>Weather: Live API</span>
-            <span class="badge badge-green">10 Cities Monitored</span>
-            <span class="badge badge-orange">Alerts: see Map tab</span>
+          <div class="hero-main">
+            <h1 class="hero-title">Can this plant survive here and become useful clean bioenergy?</h1>
+            <p class="hero-tagline">TexasClimate connects live Texas weather data with plant biology and bioenergy science — helping students and Texans understand how climate, agriculture, and clean energy are linked.</p>
+            <div class="hero-cta-grid" role="group" aria-label="Quick actions">
+              <button class="hero-cta-btn hero-cta-demo" onclick="showPage('demo');demoStart()" aria-label="Launch 12-step judge walkthrough">
+                <span class="hero-cta-icon" aria-hidden="true">▶</span>
+                <div><div class="hero-cta-title">Run Guided Demo</div><div class="hero-cta-sub">12-step judge walkthrough</div></div>
+              </button>
+              <button class="hero-cta-btn hero-cta-analyze" onclick="document.getElementById('az-step1').scrollIntoView({behavior:'smooth'})" aria-label="Choose a plant and analyze it">
+                <span class="hero-cta-icon" aria-hidden="true">🔬</span>
+                <div><div class="hero-cta-title">Analyze My Plant</div><div class="hero-cta-sub">Choose plant + Texas location</div></div>
+              </button>
+              <button class="hero-cta-btn hero-cta-map" onclick="showPage('mapcompare')" aria-label="View interactive Texas climate map">
+                <span class="hero-cta-icon" aria-hidden="true">◉</span>
+                <div><div class="hero-cta-title">View Live Texas Map</div><div class="hero-cta-sub">Weather + pollution overlays</div></div>
+              </button>
+            </div>
           </div>
-          <div class="hero-actions">
-            <button class="btn-sample" id="wfSampleBtn" onclick="wfRunSample()">
-              ▶ Run Sample TexasClimate Analysis
-            </button>
-            <span class="hero-sample-note">Switchgrass · Austin, TX · live weather data</span>
+
+          <!-- 3 top metrics above the fold -->
+          <div class="hero-metrics" id="heroMetrics" aria-label="Top 3 live metrics">
+            <div class="hero-metric-card">
+              <div class="hero-metric-label"><span class="live-dot" aria-hidden="true"></span> Live Weather Status</div>
+              <div class="hero-metric-value" id="heroWeatherVal">—</div>
+              <div class="hero-metric-sub" id="heroWeatherSub">Loading 10 Texas cities…</div>
+              <span class="badge badge-blue">Open-Meteo API</span>
+            </div>
+            <div class="hero-metric-card">
+              <div class="hero-metric-label">Statewide Heat Stress</div>
+              <div class="hero-metric-value" id="heroStressVal">—</div>
+              <div class="hero-metric-sub">TX avg heat stress score</div>
+              <span class="badge badge-orange">Live-Derived</span>
+            </div>
+            <div class="hero-metric-card">
+              <div class="hero-metric-label">Bioenergy Confidence</div>
+              <div class="hero-metric-value" id="heroBioVal">—</div>
+              <div class="hero-metric-sub" id="heroBioSub">Select plant in Step 1</div>
+              <span class="badge badge-green">Research Estimate</span>
+            </div>
+          </div>
+
+          <div class="hero-disclaimer-chip" onclick="showPage('sources');return false;" role="button" tabindex="0"
+               aria-label="See data source labels — Live API, Live-Derived, Research Estimate">
+            All data labeled: Live API · Live-Derived · Research Estimate · Demo <span class="hero-link">See sources →</span>
           </div>
         </section>
 
@@ -1115,6 +1151,89 @@
 
 
       <!-- ═══════════════════════════════════════════════════════════════════
+           DEMO / JUDGE WALKTHROUGH PAGE
+           12-step guided walkthrough for judges and first-time users.
+           Uses live data where available; clearly labeled demo values otherwise.
+      ══════════════════════════════════════════════════════════════════════ -->
+      <div class="page" id="page-demo" role="region" aria-label="Demo Walkthrough — Judge Mode">
+
+        <!-- Demo Mode Banner -->
+        <div class="demo-mode-banner" role="note">
+          <span class="demo-mode-icon" aria-hidden="true">🎭</span>
+          <span class="demo-mode-text">DEMO / JUDGE WALKTHROUGH</span>
+          <span class="demo-mode-note">Sample: Switchgrass · Austin, TX · Live data where available, clearly labeled otherwise</span>
+        </div>
+
+        <!-- For Judges Card -->
+        <div class="for-judges-card" id="forJudgesCard">
+          <div class="for-judges-title">⚖ For Congressional App Challenge Judges</div>
+          <div class="for-judges-grid">
+            <div class="fj-item"><div class="fj-label">🔴 Problem</div><div class="fj-text">Texas faces rising heat, drought, agricultural stress, and energy costs. Students and Texans lack easy tools to understand how climate, crops, and clean energy connect.</div></div>
+            <div class="fj-item"><div class="fj-label">🟢 Solution</div><div class="fj-text">TexasClimate connects live environmental data with plant stress science and bioenergy education — making the path from Texas weather to clean fuel visible.</div></div>
+            <div class="fj-item"><div class="fj-label">💻 What I Coded</div><div class="fj-text">Live API fetching · Stress formulas · Score model · MapLibre map layers · Plant scanner · 12-step demo engine · Local AI chatbot · Data transparency system</div></div>
+            <div class="fj-item"><div class="fj-label">⚠ Honest Limits</div><div class="fj-text">Educational prototype — not farming, investment, or emergency advice. No PlantNet API yet. Lab biomass data needed for exact chemistry values.</div></div>
+          </div>
+        </div>
+
+        <!-- Step Header -->
+        <div class="demo-header">
+          <div class="demo-step-meta">
+            <div class="demo-step-icon" id="demoStepIcon" aria-hidden="true">🌿</div>
+            <div>
+              <div class="demo-step-title" id="demoStepTitle">Step 1: What TexasClimate Does</div>
+              <div class="demo-step-narration" id="demoStepNarration">Click "Next" below to begin the walkthrough, or use the sidebar to explore any tab directly.</div>
+            </div>
+          </div>
+          <div class="demo-progress-wrap" aria-label="Walkthrough progress">
+            <div class="demo-progress-label" id="demoProgress" aria-live="polite">1 / 12</div>
+            <div class="demo-progress-track" role="progressbar" aria-valuemin="1" aria-valuemax="12" aria-valuenow="1">
+              <div class="demo-progress-bar" id="demoProgressBar" style="width:8.33%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step Content -->
+        <div class="demo-step-content" id="demoStepContent" aria-live="polite">
+          <!-- Populated by demo.js on demoStart() -->
+        </div>
+
+        <!-- Demo Navigation -->
+        <div class="demo-nav" role="navigation" aria-label="Demo walkthrough navigation">
+          <button class="demo-nav-btn prev" id="demoPrevBtn" onclick="demoPrev()" disabled aria-label="Previous step">← Back</button>
+          <button class="demo-nav-btn skip" id="demoSkipBtn" onclick="demoGoStep(12)" aria-label="Skip to final judge summary">Skip to Summary →</button>
+          <button class="demo-nav-btn reset" onclick="demoReset()" aria-label="Restart demo from step 1">↩ Reset</button>
+          <button class="demo-nav-btn next" id="demoNextBtn" onclick="demoNext()" aria-label="Next step">Next →</button>
+        </div>
+
+        <!-- Feature Checklist (always visible at bottom of demo page) -->
+        <div class="feature-checklist-section" style="margin-top:24px">
+          <div class="feature-checklist-title">Complete Feature Checklist</div>
+          <div class="feature-checklist-grid">
+            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Live Weather API (Open-Meteo)<span class="fc-type badge-live">Live</span></div></div>
+            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Live AQI — 10 Cities<span class="fc-type badge-live">Live</span></div></div>
+            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">NWS Severe Weather Alerts<span class="fc-type badge-live">Live</span></div></div>
+            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Texas City Comparison<span class="fc-type badge-derived">Derived</span></div></div>
+            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Plant Stress Scoring<span class="fc-type badge-derived">Derived</span></div></div>
+            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Bioenergy Confidence Model<span class="fc-type badge-research">Research</span></div></div>
+            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Plant-to-Fuel Scanner<span class="fc-type badge-research">Educational</span></div></div>
+            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Fuel Pathway / Lignin Diagram<span class="fc-type badge-research">Research</span></div></div>
+            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Interactive Texas Map (MapLibre)<span class="fc-type badge-live">Live</span></div></div>
+            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Pollution Overlays (3 layers)<span class="fc-type badge-static">Static</span></div></div>
+            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Gene &amp; Pathway Atlas<span class="fc-type badge-research">Research</span></div></div>
+            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Graph Builder (live data)<span class="fc-type badge-live">Live</span></div></div>
+            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Source Transparency Labels<span class="fc-type badge-research">All tabs</span></div></div>
+            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Safety / Limitations System<span class="fc-type badge-research">All tabs</span></div></div>
+            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Local AI Chatbot Guide<span class="fc-type badge-derived">No API key</span></div></div>
+            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">12-Step Demo Walkthrough<span class="fc-type badge-demo">This page</span></div></div>
+            <div class="fc-item"><span class="fc-status">⬜</span><div class="fc-label">PlantNet Plant ID API<span class="fc-type" style="background:rgba(255,255,255,0.06);color:var(--text3);border-radius:10px;padding:1px 6px;font-size:8px;letter-spacing:.06em;font-weight:700">Future</span></div></div>
+            <div class="fc-item"><span class="fc-status">⬜</span><div class="fc-label">USDA Soil / Crop APIs<span class="fc-type" style="background:rgba(255,255,255,0.06);color:var(--text3);border-radius:10px;padding:1px 6px;font-size:8px;letter-spacing:.06em;font-weight:700">Future</span></div></div>
+          </div>
+        </div>
+
+      </div><!-- /page-demo -->
+
+
+      <!-- ═══════════════════════════════════════════════════════════════════
            SETTINGS PAGE (accessible via footer gear button)
       ══════════════════════════════════════════════════════════════════════ -->
       <div class="page" id="page-settings" role="region" aria-label="Platform Settings"></div>
@@ -1158,6 +1277,70 @@
 <script src="js/gene-atlas.js?v=2"></script>
 <script src="js/workflow.js?v=1"></script>
 <script src="js/graphbuilder.js?v=1"></script>
+<script src="js/demo.js?v=1"></script>
+<script src="js/chatbot.js?v=1"></script>
 <script src="js/main.js?v=2"></script>
+<script>
+/* ── Judge Mode toggle ─────────────────────────────────────────────────── */
+function toggleJudgeMode() {
+  var active = document.body.classList.toggle('judge-mode');
+  var btn = document.getElementById('judgeModeBtn');
+  if (btn) {
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    btn.textContent = active ? '✓ Judge Mode ON' : '⚖ Judge Mode';
+  }
+}
+
+/* ── Hero metrics update (called after weather data loads) ──────────────── */
+function updateHeroMetrics() {
+  // WEATHER_DATA is a let-scoped global in data.js (not window.WEATHER_DATA)
+  var cd;
+  try { cd = WEATHER_DATA; } catch(e) { return; }
+  if (!cd) return;
+  var cities = Object.values(cd);
+  if (!cities.length) return;
+
+  var temps = cities.map(function(c){ return c.temp || 0; });
+  var avgTemp = Math.round(temps.reduce(function(s,t){ return s+t; }, 0) / temps.length);
+  var heatScores = temps.map(function(t){ return Math.max(0, (t - 68) / 36 * 100); });
+  var avgHeat = Math.round(heatScores.reduce(function(s,v){ return s+v; }, 0) / heatScores.length);
+
+  var weatherVal = document.getElementById('heroWeatherVal');
+  var weatherSub = document.getElementById('heroWeatherSub');
+  if (weatherVal) weatherVal.textContent = avgTemp + '°F avg';
+  if (weatherSub) weatherSub.textContent = cities.length + ' cities live now';
+
+  var stressVal = document.getElementById('heroStressVal');
+  if (stressVal) stressVal.textContent = avgHeat + '%';
+
+  // Bio score updates when a plant is selected in the Analyze tab
+  // (bioenergy-engine.js sets window.lastBioScore)
+  var bioVal = document.getElementById('heroBioVal');
+  var bioSub = document.getElementById('heroBioSub');
+  if (bioVal && window.lastBioScore != null) {
+    bioVal.textContent = window.lastBioScore + '%';
+    if (bioSub) bioSub.textContent = window.lastBioPlant || 'Current selection';
+  }
+}
+
+/* Poll until WEATHER_DATA is ready, then update hero metrics once */
+(function() {
+  var attempts = 0;
+  var timer = setInterval(function() {
+    attempts++;
+    try {
+      if (WEATHER_DATA && Object.keys(WEATHER_DATA).length > 0) {
+        updateHeroMetrics();
+        clearInterval(timer);
+      }
+    } catch(e) {}
+    if (attempts > 60) clearInterval(timer); // give up after 30s
+  }, 500);
+})();
+
+/* Re-update hero metrics whenever data refreshes (hook into existing event) */
+document.addEventListener('texasclimate:dataready', updateHeroMetrics);
+</script>
 </body>
 </html>
