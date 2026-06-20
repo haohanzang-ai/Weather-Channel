@@ -68,7 +68,7 @@ Add 3 new pollution overlay layers using static county-level approximation data:
    - radius expression same as existing _radiusExpr()
 
 3. Add the 3 new toggle buttons to the map controls section in index.html alongside existing
-   layer buttons. Use the same .map-layer-btn class and data-layer attribute. Label them:
+   layer buttons. Use the same .map-layer-b3tn class and data-layer attribute. Label them:
    "🌊 Runoff", "🧪 Pesticide", "💨 GHG Emissions". Default state: off (not in _mapLayers).
 
 4. On hover over any pollution circle, show a tooltip (using existing showTooltip/hideTooltip
