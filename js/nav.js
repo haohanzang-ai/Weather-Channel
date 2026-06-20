@@ -14,6 +14,7 @@ function closeSidebar(){
 
 // ── Tab render map — what to call when each main tab is shown ─────────────────
 const TAB_RENDERERS = {
+  overview:   () => {}, // static landing page — no dynamic rendering needed
   analyze:    () => {
     renderDashboard(); renderAg();
     if (typeof renderStressProfile      === 'function') renderStressProfile();
@@ -39,7 +40,7 @@ const TAB_RENDERERS = {
   settings:   () => { renderSettings(); },
 };
 
-// Legacy page IDs → resolved 5-tab IDs (keeps old onclick links working)
+// Legacy page IDs → resolved tab IDs (keeps old onclick links working)
 const LEGACY_MAP = {
   dashboard: 'analyze', agriculture: 'analyze',
   map: 'mapcompare', forecasts: 'mapcompare', trends: 'mapcompare',
@@ -47,6 +48,8 @@ const LEGACY_MAP = {
   severe: 'mapcompare', compare: 'mapcompare',
   sgbiofuel: 'bioenergy', fueleff: 'bioenergy', scanner: 'bioenergy',
   reports: 'sources',
+  // "Science & Sources" top-nav tab covers both existing tabs
+  'science-sources': 'science',
 };
 
 // ── Navigation ────────────────────────────────────────────────────────────────
@@ -54,10 +57,17 @@ function showPage(id){
   const resolved = LEGACY_MAP[id] || id;
 
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+
+  // Sidebar nav items
   document.querySelectorAll('.nav-item').forEach(n => {
     const isActive = n.dataset.page === resolved;
     n.classList.toggle('active', isActive);
     n.setAttribute('aria-current', isActive ? 'page' : 'false');
+  });
+
+  // Top nav tabs — ptn-active mirrors the resolved page
+  document.querySelectorAll('.ptn-tab[data-page]').forEach(n => {
+    n.classList.toggle('ptn-active', n.dataset.page === resolved);
   });
 
   const page = document.getElementById('page-' + resolved);
@@ -67,6 +77,10 @@ function showPage(id){
   document.getElementById('pageTitle').textContent = title;
   announce(`Navigated to ${title}`);
   closeSidebar();
+
+  // Scroll content area back to top on page switch
+  const content = document.querySelector('.content');
+  if(content) content.scrollTop = 0;
 
   // Scanner cleanup when leaving the bioenergy tab
   if(resolved !== 'bioenergy' && typeof scannerCleanup === 'function') scannerCleanup();

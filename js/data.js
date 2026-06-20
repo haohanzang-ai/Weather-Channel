@@ -133,8 +133,9 @@ const AG_DATA = [
 ];
 
 const PAGE_TITLES = {
-  // ── 5 main TexasClimate tabs ──────────────────────────────────────────────
-  analyze:    'Analyze — Plant · Location · Bioenergy',
+  // ── Main tabs ─────────────────────────────────────────────────────────────
+  overview:   'TexasClimate — Plant · Climate · Bioenergy Intelligence',
+  analyze:    'Dashboard — Plant · Location · Bioenergy',
   mapcompare: 'Map & Compare — Texas Locations',
   bioenergy:  'Bioenergy Engine',
   science:      'Science & Stress Methods',

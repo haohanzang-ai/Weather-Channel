@@ -44,6 +44,7 @@
   <link rel="stylesheet" href="styles/graphbuilder.css">
   <link rel="stylesheet" href="styles/demo.css">
   <link rel="stylesheet" href="styles/chatbot.css">
+  <link rel="stylesheet" href="styles/premium.css">
 </head>
 <body>
 
@@ -99,12 +100,34 @@
   </div>
 </div>
 
+<!-- ── Premium Top Navigation ─────────────────────────────────────── -->
+<nav class="ptn" id="premiumTopNav" role="navigation" aria-label="Main navigation">
+  <div class="ptn-brand" onclick="showPage('overview')" role="button" tabindex="0"
+       aria-label="TexasClimate home" onkeydown="if(event.key==='Enter')showPage('overview')">
+    <span class="ptn-logo" aria-hidden="true">🌿</span>
+    <span class="ptn-name">TexasClimate</span>
+  </div>
+  <span class="ptn-live-badge"><span class="ptn-live-dot" aria-hidden="true"></span>Live Data</span>
+
+  <div class="ptn-tabs" role="menubar" aria-label="Main tabs">
+    <button class="ptn-tab ptn-active" role="menuitem" data-page="overview"    onclick="showPage('overview')">Overview</button>
+    <button class="ptn-tab"            role="menuitem" data-page="analyze"     onclick="showPage('analyze')">Dashboard</button>
+    <button class="ptn-tab"            role="menuitem" data-page="bioenergy"   onclick="showPage('bioenergy')">Plant Scanner</button>
+    <button class="ptn-tab"            role="menuitem" data-page="mapcompare"  onclick="showPage('mapcompare')">Climate Map</button>
+    <button class="ptn-tab"            role="menuitem" data-page="science"     onclick="showPage('science')">Science &amp; Sources</button>
+  </div>
+
+  <div class="ptn-right">
+    <button class="btn-sm" onclick="refreshData(event)" aria-label="Refresh live data" title="Refresh data">↻</button>
+  </div>
+</nav>
+
 <div class="app" id="app">
 
   <!-- Sidebar overlay (mobile) -->
   <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()" aria-hidden="true"></div>
 
-  <!-- ─── Sidebar / Primary nav ─────────────── -->
+  <!-- ─── Sidebar / Primary nav (mobile only) ───────────── -->
   <nav class="sidebar" id="sidebar" aria-label="Primary navigation">
     <div class="sidebar-logo">
       <span class="logo-icon" aria-hidden="true">🌿</span>
@@ -113,14 +136,19 @@
     </div>
 
     <div class="nav-section" role="menu" aria-label="Main tabs">
-      <div class="nav-label" aria-hidden="true">Intelligence Platform</div>
-      <button class="nav-item" role="menuitem" data-page="demo" onclick="showPage('demo');demoStart()" style="background:rgba(74,144,226,0.1);border-left:2px solid #4A90E2"><span class="nav-icon" aria-hidden="true">🎭</span>Demo / Judges</button>
-      <button class="nav-item active" role="menuitem" data-page="analyze"    aria-current="page" onclick="showPage('analyze')"><span class="nav-icon" aria-hidden="true">🔬</span>Analyze</button>
-      <button class="nav-item" role="menuitem" data-page="mapcompare" onclick="showPage('mapcompare')"><span class="nav-icon" aria-hidden="true">◉</span>Map &amp; Compare</button>
-      <button class="nav-item" role="menuitem" data-page="bioenergy"  onclick="showPage('bioenergy')"><span class="nav-icon" aria-hidden="true">⚡</span>Bioenergy Engine</button>
-      <button class="nav-item" role="menuitem" data-page="science"      onclick="showPage('science')"><span class="nav-icon" aria-hidden="true">🧬</span>Science &amp; Stress</button>
-      <button class="nav-item" role="menuitem" data-page="graphbuilder" onclick="showPage('graphbuilder')"><span class="nav-icon" aria-hidden="true">📊</span>Graph Builder</button>
-      <button class="nav-item" role="menuitem" data-page="sources"      onclick="showPage('sources')"><span class="nav-icon" aria-hidden="true">📚</span>Sources &amp; Data Status</button>
+      <div class="nav-label" aria-hidden="true">Main</div>
+      <button class="nav-item active" role="menuitem" data-page="overview"    aria-current="page" onclick="showPage('overview')"><span class="nav-icon" aria-hidden="true">🏠</span>Overview</button>
+      <button class="nav-item"        role="menuitem" data-page="analyze"     onclick="showPage('analyze')"><span class="nav-icon" aria-hidden="true">🔬</span>Dashboard</button>
+      <button class="nav-item"        role="menuitem" data-page="bioenergy"   onclick="showPage('bioenergy')"><span class="nav-icon" aria-hidden="true">⚡</span>Plant Scanner</button>
+      <button class="nav-item"        role="menuitem" data-page="mapcompare"  onclick="showPage('mapcompare')"><span class="nav-icon" aria-hidden="true">◉</span>Climate Map</button>
+      <button class="nav-item"        role="menuitem" data-page="science"     onclick="showPage('science')"><span class="nav-icon" aria-hidden="true">🧬</span>Science &amp; Sources</button>
+    </div>
+
+    <div class="nav-section" role="menu" aria-label="More tools">
+      <div class="nav-label" aria-hidden="true">More</div>
+      <button class="nav-item" role="menuitem" data-page="demo"         onclick="showPage('demo');demoStart()" style="font-size:11px"><span class="nav-icon" aria-hidden="true">🎭</span>Demo / Judges</button>
+      <button class="nav-item" role="menuitem" data-page="graphbuilder" onclick="showPage('graphbuilder')"     style="font-size:11px"><span class="nav-icon" aria-hidden="true">📊</span>Graph Builder</button>
+      <button class="nav-item" role="menuitem" data-page="sources"      onclick="showPage('sources')"          style="font-size:11px"><span class="nav-icon" aria-hidden="true">📚</span>Sources</button>
     </div>
 
     <div class="sidebar-footer">
@@ -151,11 +179,379 @@
     <main id="main-content" class="content" tabindex="-1">
 
       <!-- ═══════════════════════════════════════════════════════════════════
+           OVERVIEW — Premium landing page
+      ══════════════════════════════════════════════════════════════════════ -->
+      <div class="page active" id="page-overview" role="region" aria-label="TexasClimate Overview">
+
+        <!-- HERO ─────────────────────────────────────────── -->
+        <section class="ov-hero" aria-label="Platform hero">
+          <div class="ov-eyebrow-tag">
+            <span class="ov-eyebrow-dot" aria-hidden="true"></span>
+            Congressional App Challenge 2026 · Texas
+          </div>
+          <h1 class="ov-headline">
+            Analyze <em>plant survival</em>, climate stress,<br>and bioenergy potential — with sources you can check.
+          </h1>
+          <p class="ov-subline">
+            TexasClimate combines live Texas weather data, plant biology, and cited bioenergy research to explain whether a plant can survive, produce biomass, and support clean fuel — with honest confidence labels on every result.
+          </p>
+          <div class="ov-cta-row">
+            <button class="ov-cta-primary" onclick="showPage('bioenergy')" aria-label="Open Plant Scanner">
+              🔬 Run Plant Analysis
+            </button>
+            <button class="ov-cta-secondary" onclick="showPage('mapcompare')" aria-label="Open Climate Dashboard">
+              ◉ View Climate Map
+            </button>
+          </div>
+          <div class="ov-trust-row" role="list" aria-label="Platform trust signals">
+            <span class="ov-trust-badge" role="listitem"><span class="ov-tb-dot ov-tb-green" aria-hidden="true"></span>Live Climate Data</span>
+            <span class="ov-trust-badge" role="listitem"><span class="ov-tb-dot ov-tb-blue"  aria-hidden="true"></span>Cited Biology</span>
+            <span class="ov-trust-badge" role="listitem"><span class="ov-tb-dot ov-tb-orange" aria-hidden="true"></span>Confidence-Labeled Estimates</span>
+          </div>
+        </section>
+
+        <!-- HOW IT WORKS ─────────────────────────────────── -->
+        <section class="ov-section" aria-label="How it works">
+          <div class="ov-section-eyebrow">How It Works</div>
+          <h2 class="ov-section-title">Three steps from plant to report</h2>
+          <p class="ov-section-sub">No lab required to start. Every result shows its data source and confidence level.</p>
+          <div class="ov-steps" role="list">
+            <div class="ov-step" role="listitem">
+              <div class="ov-step-num" aria-hidden="true">1</div>
+              <div class="ov-step-title">Choose or scan a plant</div>
+              <p class="ov-step-desc">Select from 36 plant profiles including switchgrass, miscanthus, sorghum, and agave — or upload a photo for a visual review.</p>
+            </div>
+            <div class="ov-step" role="listitem">
+              <div class="ov-step-num" aria-hidden="true">2</div>
+              <div class="ov-step-title">Match with local climate</div>
+              <p class="ov-step-desc">Pick any Texas city. The app fetches live weather from Open-Meteo and computes heat stress, drought risk, and vapor pressure in real time.</p>
+            </div>
+            <div class="ov-step" role="listitem">
+              <div class="ov-step-num" aria-hidden="true">3</div>
+              <div class="ov-step-title">Get a confidence-labeled report</div>
+              <p class="ov-step-desc">Receive a survival score, stress profile, bioenergy confidence estimate, and a clear list of what this app can and cannot measure.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- WHO IT'S FOR ─────────────────────────────────── -->
+        <section class="ov-section" aria-label="Who this platform is for">
+          <div class="ov-section-eyebrow">Who It's For</div>
+          <h2 class="ov-section-title">Built for curious minds at every level</h2>
+          <p class="ov-section-sub">From classroom to research — understand the plant–climate–fuel connection.</p>
+          <div class="ov-audience" role="list">
+            <div class="ov-aud-card" role="listitem">
+              <span class="ov-aud-icon" aria-hidden="true">🎓</span>
+              <div class="ov-aud-title">Students</div>
+              <p class="ov-aud-desc">Learn plant biology, climate stress, and bioenergy in one connected tool with cited sources you can trace back.</p>
+            </div>
+            <div class="ov-aud-card" role="listitem">
+              <span class="ov-aud-icon" aria-hidden="true">🔬</span>
+              <div class="ov-aud-title">Researchers</div>
+              <p class="ov-aud-desc">Explore stress signals, biomass traits, and conversion limits with a transparent evidence pipeline and gene-level data.</p>
+            </div>
+            <div class="ov-aud-card" role="listitem">
+              <span class="ov-aud-icon" aria-hidden="true">🌾</span>
+              <div class="ov-aud-title">Farmers &amp; Land Planners</div>
+              <p class="ov-aud-desc">Compare climate suitability across Texas cities before deeper field testing. Clearly labeled — not a substitute for lab or agronomic data.</p>
+            </div>
+            <div class="ov-aud-card" role="listitem">
+              <span class="ov-aud-icon" aria-hidden="true">⚡</span>
+              <div class="ov-aud-title">Policy &amp; Energy Audiences</div>
+              <p class="ov-aud-desc">Understand how local crops connect to fuel resilience and what role bioenergy could play in Texas' clean energy future.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- BIOLOGY GRAPHICS ─────────────────────────────── -->
+        <section class="ov-section" aria-label="Biology infographics">
+          <div class="ov-section-eyebrow">The Science, Visualized</div>
+          <h2 class="ov-section-title">Plant → Climate → Stress → Bioenergy</h2>
+          <p class="ov-section-sub">Four key concepts that connect weather data to fuel potential.</p>
+          <div class="ov-graphics" role="list">
+
+            <!-- Graphic 1: Stress Pathway -->
+            <div class="ov-graphic-card" role="listitem">
+              <div class="ov-graphic-title">Plant Stress Pathway</div>
+              <div class="ov-graphic-sub">How climate stress reduces bioenergy potential</div>
+              <svg viewBox="0 0 520 96" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Flowchart: Climate Stress leads to Stomata Close, then Photosynthesis Drop, then Biomass Reduced, then Fuel Potential Down">
+                <defs>
+                  <marker id="sp-arr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                    <polygon points="0,0 7,3.5 0,7" fill="rgba(255,255,255,0.22)"/>
+                  </marker>
+                </defs>
+                <rect x="2" y="18" width="88" height="60" rx="9" fill="rgba(214,69,69,0.13)" stroke="rgba(214,69,69,0.4)" stroke-width="1.5"/>
+                <text x="46" y="43" text-anchor="middle" font-size="10" font-weight="700" fill="rgba(232,122,122,0.94)" font-family="system-ui">Climate</text>
+                <text x="46" y="57" text-anchor="middle" font-size="10" font-weight="700" fill="rgba(232,122,122,0.94)" font-family="system-ui">Stress</text>
+                <text x="46" y="70" text-anchor="middle" font-size="8" fill="rgba(232,122,122,0.48)" font-family="system-ui">heat · drought</text>
+                <line x1="92" y1="48" x2="106" y2="48" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" marker-end="url(#sp-arr)"/>
+                <rect x="108" y="18" width="88" height="60" rx="9" fill="rgba(245,166,35,0.11)" stroke="rgba(245,166,35,0.33)" stroke-width="1.5"/>
+                <text x="152" y="43" text-anchor="middle" font-size="10" font-weight="700" fill="rgba(248,192,106,0.92)" font-family="system-ui">Stomata</text>
+                <text x="152" y="57" text-anchor="middle" font-size="10" font-weight="700" fill="rgba(248,192,106,0.92)" font-family="system-ui">Close</text>
+                <text x="152" y="70" text-anchor="middle" font-size="8" fill="rgba(248,192,106,0.48)" font-family="system-ui">CO₂ intake ↓</text>
+                <line x1="198" y1="48" x2="212" y2="48" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" marker-end="url(#sp-arr)"/>
+                <rect x="214" y="18" width="88" height="60" rx="9" fill="rgba(245,166,35,0.08)" stroke="rgba(245,166,35,0.27)" stroke-width="1.5"/>
+                <text x="258" y="40" text-anchor="middle" font-size="9.5" font-weight="700" fill="rgba(248,192,106,0.88)" font-family="system-ui">Photo-</text>
+                <text x="258" y="53" text-anchor="middle" font-size="9.5" font-weight="700" fill="rgba(248,192,106,0.88)" font-family="system-ui">synthesis ↓</text>
+                <text x="258" y="68" text-anchor="middle" font-size="8" fill="rgba(248,192,106,0.46)" font-family="system-ui">less growth</text>
+                <line x1="304" y1="48" x2="318" y2="48" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" marker-end="url(#sp-arr)"/>
+                <rect x="320" y="18" width="88" height="60" rx="9" fill="rgba(214,69,69,0.10)" stroke="rgba(214,69,69,0.30)" stroke-width="1.5"/>
+                <text x="364" y="43" text-anchor="middle" font-size="10" font-weight="700" fill="rgba(232,122,122,0.9)" font-family="system-ui">Biomass</text>
+                <text x="364" y="57" text-anchor="middle" font-size="10" font-weight="700" fill="rgba(232,122,122,0.9)" font-family="system-ui">Reduced</text>
+                <text x="364" y="70" text-anchor="middle" font-size="8" fill="rgba(232,122,122,0.46)" font-family="system-ui">less feedstock</text>
+                <line x1="410" y1="48" x2="424" y2="48" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" marker-end="url(#sp-arr)"/>
+                <rect x="426" y="18" width="90" height="60" rx="9" fill="rgba(167,139,250,0.10)" stroke="rgba(167,139,250,0.30)" stroke-width="1.5"/>
+                <text x="471" y="43" text-anchor="middle" font-size="10" font-weight="700" fill="rgba(167,139,250,0.92)" font-family="system-ui">Bioenergy</text>
+                <text x="471" y="57" text-anchor="middle" font-size="10" font-weight="700" fill="rgba(167,139,250,0.92)" font-family="system-ui">Impact ↓</text>
+                <text x="471" y="70" text-anchor="middle" font-size="8" fill="rgba(167,139,250,0.46)" font-family="system-ui">fuel yield ↓</text>
+              </svg>
+            </div>
+
+            <!-- Graphic 2: Cell Wall -->
+            <div class="ov-graphic-card" role="listitem">
+              <div class="ov-graphic-title">Plant Cell Wall Structure</div>
+              <div class="ov-graphic-sub">Why lignin is the key barrier to cellulosic biofuel</div>
+              <svg viewBox="0 0 480 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram showing cell wall layers: Lignin barrier wrapping Hemicellulose wrapping Cellulose, with conversion path to biofuel on the right">
+                <defs>
+                  <marker id="cw-arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                    <polygon points="0,0 6,3 0,6" fill="rgba(255,255,255,0.26)"/>
+                  </marker>
+                </defs>
+                <!-- Labels -->
+                <text x="100" y="11" text-anchor="middle" font-size="8" font-weight="700" letter-spacing="0.12em" fill="rgba(255,255,255,0.30)" font-family="system-ui">CELL WALL</text>
+                <text x="350" y="11" text-anchor="middle" font-size="8" font-weight="700" letter-spacing="0.12em" fill="rgba(255,255,255,0.30)" font-family="system-ui">CONVERSION PATH</text>
+                <!-- Lignin (outermost) -->
+                <rect x="6" y="16" width="194" height="106" rx="11" fill="rgba(160,100,40,0.20)" stroke="rgba(190,130,60,0.50)" stroke-width="2"/>
+                <text x="40" y="32" font-size="8.5" font-weight="700" fill="rgba(210,150,70,0.80)" font-family="system-ui">LIGNIN BARRIER</text>
+                <text x="40" y="43" font-size="7.5" fill="rgba(210,150,70,0.42)" font-family="system-ui">blocks enzyme access</text>
+                <!-- Hemicellulose -->
+                <rect x="20" y="52" width="166" height="54" rx="8" fill="rgba(245,166,35,0.13)" stroke="rgba(245,166,35,0.35)" stroke-width="1.5"/>
+                <text x="103" y="73" text-anchor="middle" font-size="9" font-weight="700" fill="rgba(248,192,106,0.86)" font-family="system-ui">Hemicellulose</text>
+                <text x="103" y="86" text-anchor="middle" font-size="7.5" fill="rgba(248,192,106,0.43)" font-family="system-ui">binds cellulose fibers</text>
+                <!-- Cellulose (innermost) -->
+                <rect x="36" y="64" width="134" height="32" rx="6" fill="rgba(46,204,139,0.15)" stroke="rgba(46,204,139,0.42)" stroke-width="1.5"/>
+                <text x="103" y="82" text-anchor="middle" font-size="10" font-weight="700" fill="rgba(93,219,168,0.94)" font-family="system-ui">CELLULOSE → FUEL</text>
+                <!-- Divider -->
+                <line x1="214" y1="14" x2="214" y2="118" stroke="rgba(255,255,255,0.07)" stroke-width="1" stroke-dasharray="4,3"/>
+                <!-- Conversion steps -->
+                <rect x="228" y="20" width="232" height="28" rx="7" fill="rgba(245,166,35,0.11)" stroke="rgba(245,166,35,0.32)" stroke-width="1.5"/>
+                <text x="344" y="37" text-anchor="middle" font-size="9.5" font-weight="700" fill="rgba(248,192,106,0.88)" font-family="system-ui">Pretreatment (heat · acid · AFEX)</text>
+                <line x1="344" y1="50" x2="344" y2="63" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" marker-end="url(#cw-arr)"/>
+                <rect x="228" y="65" width="232" height="28" rx="7" fill="rgba(74,144,226,0.11)" stroke="rgba(74,144,226,0.28)" stroke-width="1.5"/>
+                <text x="344" y="82" text-anchor="middle" font-size="9.5" font-weight="700" fill="rgba(125,185,242,0.88)" font-family="system-ui">Enzymatic Hydrolysis → Sugars</text>
+                <line x1="344" y1="95" x2="344" y2="108" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" marker-end="url(#cw-arr)"/>
+                <rect x="228" y="110" width="232" height="24" rx="7" fill="rgba(46,204,139,0.14)" stroke="rgba(46,204,139,0.38)" stroke-width="1.5"/>
+                <text x="344" y="125" text-anchor="middle" font-size="10" font-weight="700" fill="rgba(93,219,168,0.94)" font-family="system-ui">Fermentation → Ethanol / Biogas ⚡</text>
+              </svg>
+            </div>
+
+            <!-- Graphic 3: Gene Pathway -->
+            <div class="ov-graphic-card" role="listitem">
+              <div class="ov-graphic-title">Gene Expression &amp; Stress Response</div>
+              <div class="ov-graphic-sub">How plant genes translate stress into survival behavior</div>
+              <svg viewBox="0 0 480 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Flow: Environmental Signal activates Gene Expression, producing Stress-Tolerance Proteins, enabling Metabolic Response, yielding Survival Score">
+                <defs>
+                  <marker id="gn-arr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                    <polygon points="0,0 7,3.5 0,7" fill="rgba(167,139,250,0.35)"/>
+                  </marker>
+                </defs>
+                <!-- Node 1 -->
+                <rect x="2" y="30" width="104" height="56" rx="9" fill="rgba(214,69,69,0.11)" stroke="rgba(214,69,69,0.32)" stroke-width="1.5"/>
+                <text x="54" y="53" text-anchor="middle" font-size="9.5" font-weight="700" fill="rgba(232,122,122,0.9)" font-family="system-ui">Environmental</text>
+                <text x="54" y="66" text-anchor="middle" font-size="9.5" font-weight="700" fill="rgba(232,122,122,0.9)" font-family="system-ui">Signal</text>
+                <text x="54" y="79" text-anchor="middle" font-size="8" fill="rgba(232,122,122,0.45)" font-family="system-ui">drought · heat · salt</text>
+                <line x1="108" y1="58" x2="122" y2="58" stroke="rgba(167,139,250,0.28)" stroke-width="1.5" marker-end="url(#gn-arr)"/>
+                <!-- Node 2 -->
+                <rect x="124" y="30" width="104" height="56" rx="9" fill="rgba(167,139,250,0.10)" stroke="rgba(167,139,250,0.28)" stroke-width="1.5"/>
+                <text x="176" y="53" text-anchor="middle" font-size="9.5" font-weight="700" fill="rgba(167,139,250,0.92)" font-family="system-ui">Gene</text>
+                <text x="176" y="66" text-anchor="middle" font-size="9.5" font-weight="700" fill="rgba(167,139,250,0.92)" font-family="system-ui">Activation</text>
+                <text x="176" y="79" text-anchor="middle" font-size="8" fill="rgba(167,139,250,0.44)" font-family="system-ui">DREB · HSP · LEA</text>
+                <line x1="230" y1="58" x2="244" y2="58" stroke="rgba(167,139,250,0.28)" stroke-width="1.5" marker-end="url(#gn-arr)"/>
+                <!-- Node 3 -->
+                <rect x="246" y="30" width="104" height="56" rx="9" fill="rgba(74,144,226,0.10)" stroke="rgba(74,144,226,0.27)" stroke-width="1.5"/>
+                <text x="298" y="50" text-anchor="middle" font-size="9" font-weight="700" fill="rgba(125,185,242,0.9)" font-family="system-ui">Tolerance</text>
+                <text x="298" y="63" text-anchor="middle" font-size="9" font-weight="700" fill="rgba(125,185,242,0.9)" font-family="system-ui">Proteins</text>
+                <text x="298" y="76" text-anchor="middle" font-size="8" fill="rgba(125,185,242,0.42)" font-family="system-ui">osmolytes · repair</text>
+                <line x1="352" y1="58" x2="366" y2="58" stroke="rgba(167,139,250,0.28)" stroke-width="1.5" marker-end="url(#gn-arr)"/>
+                <!-- Node 4 -->
+                <rect x="368" y="30" width="108" height="56" rx="9" fill="rgba(46,204,139,0.10)" stroke="rgba(46,204,139,0.28)" stroke-width="1.5"/>
+                <text x="422" y="50" text-anchor="middle" font-size="9.5" font-weight="700" fill="rgba(93,219,168,0.92)" font-family="system-ui">Survival</text>
+                <text x="422" y="63" text-anchor="middle" font-size="9.5" font-weight="700" fill="rgba(93,219,168,0.92)" font-family="system-ui">Probability</text>
+                <text x="422" y="76" text-anchor="middle" font-size="8" fill="rgba(93,219,168,0.44)" font-family="system-ui">estimated score</text>
+                <!-- Bottom note -->
+                <text x="240" y="108" text-anchor="middle" font-size="8.5" fill="rgba(255,255,255,0.22)" font-family="system-ui">Source: Gene Atlas — DREB, HSP, LEA gene families · confidence: literature estimate</text>
+              </svg>
+            </div>
+
+            <!-- Graphic 4: Confidence Pipeline -->
+            <div class="ov-graphic-card" role="listitem">
+              <div class="ov-graphic-title">Confidence Label Pipeline</div>
+              <div class="ov-graphic-sub">How every output earns its confidence level</div>
+              <svg viewBox="0 0 480 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pipeline: Live Weather plus Plant Profile goes into Climate Stress Formula, producing Stress Score, then Confidence Label, finally generating Report">
+                <defs>
+                  <marker id="cp-arr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                    <polygon points="0,0 7,3.5 0,7" fill="rgba(74,144,226,0.35)"/>
+                  </marker>
+                </defs>
+                <!-- Input block -->
+                <rect x="2" y="18" width="116" height="80" rx="9" fill="rgba(74,144,226,0.10)" stroke="rgba(74,144,226,0.28)" stroke-width="1.5"/>
+                <text x="60" y="36" text-anchor="middle" font-size="8.5" font-weight="700" fill="rgba(125,185,242,0.7)" font-family="system-ui" letter-spacing="0.08em">INPUTS</text>
+                <text x="60" y="54" text-anchor="middle" font-size="9.5" font-weight="700" fill="rgba(125,185,242,0.94)" font-family="system-ui">Live Weather</text>
+                <text x="60" y="67" text-anchor="middle" font-size="9.5" font-weight="700" fill="rgba(125,185,242,0.94)" font-family="system-ui">Plant Profile</text>
+                <text x="60" y="80" text-anchor="middle" font-size="8" fill="rgba(125,185,242,0.42)" font-family="system-ui">Open-Meteo API</text>
+                <line x1="120" y1="58" x2="134" y2="58" stroke="rgba(74,144,226,0.30)" stroke-width="1.5" marker-end="url(#cp-arr)"/>
+                <!-- Stress Formula -->
+                <rect x="136" y="26" width="100" height="64" rx="9" fill="rgba(245,166,35,0.10)" stroke="rgba(245,166,35,0.28)" stroke-width="1.5"/>
+                <text x="186" y="47" text-anchor="middle" font-size="9" font-weight="700" fill="rgba(248,192,106,0.90)" font-family="system-ui">Climate</text>
+                <text x="186" y="60" text-anchor="middle" font-size="9" font-weight="700" fill="rgba(248,192,106,0.90)" font-family="system-ui">Model</text>
+                <text x="186" y="73" text-anchor="middle" font-size="8" fill="rgba(248,192,106,0.42)" font-family="system-ui">stress formulas</text>
+                <line x1="238" y1="58" x2="252" y2="58" stroke="rgba(74,144,226,0.30)" stroke-width="1.5" marker-end="url(#cp-arr)"/>
+                <!-- Score -->
+                <rect x="254" y="26" width="92" height="64" rx="9" fill="rgba(214,69,69,0.10)" stroke="rgba(214,69,69,0.28)" stroke-width="1.5"/>
+                <text x="300" y="50" text-anchor="middle" font-size="9.5" font-weight="700" fill="rgba(232,122,122,0.90)" font-family="system-ui">Stress</text>
+                <text x="300" y="63" text-anchor="middle" font-size="9.5" font-weight="700" fill="rgba(232,122,122,0.90)" font-family="system-ui">Score</text>
+                <text x="300" y="76" text-anchor="middle" font-size="8" fill="rgba(232,122,122,0.42)" font-family="system-ui">0–100 scale</text>
+                <line x1="348" y1="58" x2="362" y2="58" stroke="rgba(74,144,226,0.30)" stroke-width="1.5" marker-end="url(#cp-arr)"/>
+                <!-- Confidence + Report -->
+                <rect x="364" y="18" width="112" height="80" rx="9" fill="rgba(46,204,139,0.10)" stroke="rgba(46,204,139,0.30)" stroke-width="1.5"/>
+                <text x="420" y="36" text-anchor="middle" font-size="8.5" font-weight="700" fill="rgba(93,219,168,0.68)" font-family="system-ui" letter-spacing="0.08em">OUTPUT</text>
+                <text x="420" y="54" text-anchor="middle" font-size="9.5" font-weight="700" fill="rgba(93,219,168,0.94)" font-family="system-ui">Confidence</text>
+                <text x="420" y="67" text-anchor="middle" font-size="9.5" font-weight="700" fill="rgba(93,219,168,0.94)" font-family="system-ui">Label + Report</text>
+                <text x="420" y="80" text-anchor="middle" font-size="8" fill="rgba(93,219,168,0.42)" font-family="system-ui">High / Med / Low</text>
+                <!-- Bottom note -->
+                <text x="240" y="110" text-anchor="middle" font-size="8.5" fill="rgba(255,255,255,0.22)" font-family="system-ui">Every result shows: source · method · confidence · limitation</text>
+              </svg>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- RELIABILITY ──────────────────────────────────── -->
+        <section class="ov-section" aria-label="What this app can and cannot measure">
+          <div class="ov-section-eyebrow">Reliability</div>
+          <h2 class="ov-section-title">What this app can and cannot measure</h2>
+          <p class="ov-section-sub">Honest labeling makes this tool more credible, not less. Every output is clearly tagged.</p>
+          <div class="ov-reliability">
+            <div class="ov-rel-col ov-rel-can" role="region" aria-label="What can be estimated from live data">
+              <div class="ov-rel-head ov-rel-head-can">
+                <span class="ov-rel-head-icon" aria-hidden="true">✓</span>
+                Can estimate from live data
+              </div>
+              <ul class="ov-rel-list">
+                <li class="ov-rel-item"><span class="ov-rel-icon ov-rel-icon-can" aria-hidden="true">✓</span>Temperature stress (live API)</li>
+                <li class="ov-rel-item"><span class="ov-rel-icon ov-rel-icon-can" aria-hidden="true">✓</span>Drought risk from ET₀ deficit</li>
+                <li class="ov-rel-item"><span class="ov-rel-icon ov-rel-icon-can" aria-hidden="true">✓</span>Humidity / vapor pressure (VPD)</li>
+                <li class="ov-rel-item"><span class="ov-rel-icon ov-rel-icon-can" aria-hidden="true">✓</span>Air quality index (live API)</li>
+                <li class="ov-rel-item"><span class="ov-rel-icon ov-rel-icon-can" aria-hidden="true">✓</span>Regional climate suitability score</li>
+                <li class="ov-rel-item"><span class="ov-rel-icon ov-rel-icon-can" aria-hidden="true">✓</span>Bioenergy confidence estimate (literature-based)</li>
+                <li class="ov-rel-item"><span class="ov-rel-icon ov-rel-icon-can" aria-hidden="true">✓</span>NWS severe weather alerts (live API)</li>
+              </ul>
+              <div class="ov-rel-foot">Sources: Open-Meteo, api.weather.gov, plant stress literature (DOE, USDA, peer-reviewed)</div>
+            </div>
+            <div class="ov-rel-col ov-rel-lab" role="region" aria-label="What requires lab or field data">
+              <div class="ov-rel-head ov-rel-head-lab">
+                <span class="ov-rel-head-icon" aria-hidden="true">⚗</span>
+                Requires lab or field data
+              </div>
+              <ul class="ov-rel-list">
+                <li class="ov-rel-item"><span class="ov-rel-icon ov-rel-icon-lab" aria-hidden="true">⚗</span>Exact lignin % (Klason assay)</li>
+                <li class="ov-rel-item"><span class="ov-rel-icon ov-rel-icon-lab" aria-hidden="true">⚗</span>Cellulose / hemicellulose content</li>
+                <li class="ov-rel-item"><span class="ov-rel-icon ov-rel-icon-lab" aria-hidden="true">⚗</span>Moisture content (gravimetric)</li>
+                <li class="ov-rel-item"><span class="ov-rel-icon ov-rel-icon-lab" aria-hidden="true">⚗</span>Dry biomass yield (field harvest)</li>
+                <li class="ov-rel-item"><span class="ov-rel-icon ov-rel-icon-lab" aria-hidden="true">⚗</span>Fuel yield (conversion pilot)</li>
+                <li class="ov-rel-item"><span class="ov-rel-icon ov-rel-icon-lab" aria-hidden="true">⚗</span>Soil salinity / EC measurement</li>
+                <li class="ov-rel-item"><span class="ov-rel-icon ov-rel-icon-lab" aria-hidden="true">⚗</span>Osmolyte concentrations (biochemical assay)</li>
+              </ul>
+              <div class="ov-rel-foot">A photo cannot measure any of the above. Bioenergy scores here are educational estimates, not lab measurements.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- FAQ ──────────────────────────────────────────── -->
+        <section class="ov-section" aria-label="Frequently asked questions">
+          <div class="ov-section-eyebrow">FAQ</div>
+          <h2 class="ov-section-title">Common questions</h2>
+          <p class="ov-section-sub">Short, honest answers about what this app does and doesn't do.</p>
+          <div class="ov-faq-list" role="list">
+
+            <div class="ov-faq-item" role="listitem">
+              <button class="ov-faq-q" onclick="ovToggleFaq(this)" aria-expanded="false">
+                Is this a real plant lab test?
+                <span class="ov-faq-chevron" aria-hidden="true">▼</span>
+              </button>
+              <div class="ov-faq-a">No. This is an educational prototype. It uses live weather data and published plant biology literature to estimate stress and bioenergy potential. It is not a substitute for laboratory analysis, agronomic field trials, or professional advice.</div>
+            </div>
+
+            <div class="ov-faq-item" role="listitem">
+              <button class="ov-faq-q" onclick="ovToggleFaq(this)" aria-expanded="false">
+                Can a photo measure fuel yield or lignin content?
+                <span class="ov-faq-chevron" aria-hidden="true">▼</span>
+              </button>
+              <div class="ov-faq-a">No. A photo can tell us about a plant's visible condition — size, color, and stress symptoms. It cannot directly measure lignin %, cellulose content, moisture, biomass yield, or fuel output. These require lab equipment. The app clearly states this on every scan result.</div>
+            </div>
+
+            <div class="ov-faq-item" role="listitem">
+              <button class="ov-faq-q" onclick="ovToggleFaq(this)" aria-expanded="false">
+                Where does the weather data come from?
+                <span class="ov-faq-chevron" aria-hidden="true">▼</span>
+              </button>
+              <div class="ov-faq-a">All weather data is fetched live from the Open-Meteo API (temperature, humidity, wind, ET₀, precipitation, air quality) and the National Weather Service API (severe weather alerts). Data is refreshed on page load and every 10 minutes. All sources are labeled in the Science &amp; Sources tab.</div>
+            </div>
+
+            <div class="ov-faq-item" role="listitem">
+              <button class="ov-faq-q" onclick="ovToggleFaq(this)" aria-expanded="false">
+                Why does the app use confidence labels?
+                <span class="ov-faq-chevron" aria-hidden="true">▼</span>
+              </button>
+              <div class="ov-faq-a">Because different outputs have very different levels of certainty. Live temperature is high confidence (direct API). Drought stress is medium confidence (derived formula). Lignin risk is low confidence (literature estimate + stress proxy). Labeling makes the tool more trustworthy, not less. You always know what you're looking at.</div>
+            </div>
+
+            <div class="ov-faq-item" role="listitem">
+              <button class="ov-faq-q" onclick="ovToggleFaq(this)" aria-expanded="false">
+                Why switchgrass? Why not corn or soy?
+                <span class="ov-faq-chevron" aria-hidden="true">▼</span>
+              </button>
+              <div class="ov-faq-a">Switchgrass (<em>Panicum virgatum</em>) is the U.S. Department of Energy's designated priority bioenergy crop. It produces 540% more energy than it consumes (Schmer et al., 2008, PNAS), uses 98% less water than corn ethanol, sequesters carbon, and thrives on marginal Texas land without heavy irrigation. It's also native to North America.</div>
+            </div>
+
+            <div class="ov-faq-item" role="listitem">
+              <button class="ov-faq-q" onclick="ovToggleFaq(this)" aria-expanded="false">
+                Can farmers use this for final planting decisions?
+                <span class="ov-faq-chevron" aria-hidden="true">▼</span>
+              </button>
+              <div class="ov-faq-a">No. This is an educational and exploratory tool. Real planting decisions require soil tests, agronomic consultation, local variety trials, and economic analysis. TexasClimate can help frame the right questions, but it is not a substitute for field expertise or professional guidance.</div>
+            </div>
+
+            <div class="ov-faq-item" role="listitem">
+              <button class="ov-faq-q" onclick="ovToggleFaq(this)" aria-expanded="false">
+                What makes this different from a normal weather app?
+                <span class="ov-faq-chevron" aria-hidden="true">▼</span>
+              </button>
+              <div class="ov-faq-a">A weather app shows you temperature and rain. TexasClimate connects that data to plant biology — computing how much heat and drought stress a specific plant is under, what that means for its survival and biomass production, and how that translates to bioenergy potential. It also shows a live Texas map with pollution overlays, a gene-level plant atlas, and cited biofuel science — all in one place.</div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- BOTTOM CTA ───────────────────────────────────── -->
+        <div class="ov-cta-bottom">
+          <div class="ov-cta-bottom-title">Ready to analyze a plant?</div>
+          <p class="ov-cta-bottom-sub">Choose a plant, pick a Texas city, and get a confidence-labeled survival and bioenergy report in seconds.</p>
+          <div class="ov-cta-row">
+            <button class="ov-cta-primary" onclick="showPage('bioenergy')" aria-label="Open Plant Scanner">🔬 Run Plant Analysis</button>
+            <button class="ov-cta-secondary" onclick="showPage('analyze')" aria-label="Open Dashboard">📊 Open Dashboard</button>
+          </div>
+        </div>
+
+      </div><!-- /page-overview -->
+
+
+      <!-- ═══════════════════════════════════════════════════════════════════
            TAB 1 — ANALYZE
            Main guided workflow: Plant → Location → Environment → Stress → Bioenergy → Report
            Contains: live conditions, agriculture overview, placeholders for next steps
       ══════════════════════════════════════════════════════════════════════ -->
-      <div class="page active" id="page-analyze" role="region" aria-label="Analyze — Plant Environment Bioenergy Pipeline">
+      <div class="page" id="page-analyze" role="region" aria-label="Analyze — Plant Environment Bioenergy Pipeline">
 
         <!-- Data Status Panel -->
         <div id="dataStatusPanel" class="data-status-panel" role="status" aria-live="polite">
@@ -1281,6 +1677,13 @@
 <script src="js/chatbot.js?v=1"></script>
 <script src="js/main.js?v=2"></script>
 <script>
+/* ── Overview FAQ accordion ──────────────────────────────────────────── */
+function ovToggleFaq(btn) {
+  var item = btn.closest('.ov-faq-item');
+  var isOpen = item.classList.toggle('open');
+  btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+}
+
 /* ── Judge Mode toggle ─────────────────────────────────────────────────── */
 function toggleJudgeMode() {
   var active = document.body.classList.toggle('judge-mode');
