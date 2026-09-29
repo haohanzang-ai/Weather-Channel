@@ -61,3 +61,15 @@
   .fuelTypesGrid{grid-template-columns:1fr}
   .fuelImpactGrid{grid-template-columns:1fr}
 }
+
+/* UNKNOWN metric — hatched, not colour-only, so it reads as "no value" rather
+   than "low value". A zero-width bar would be indistinguishable from a real
+   score of zero. */
+.fuelCornFill.fuelCornUnknown{
+  background:repeating-linear-gradient(45deg,var(--line) 0 6px,transparent 6px 12px);
+  border:1px dashed var(--line);
+  opacity:.7;
+}
+.fuelCornWhy{
+  font-size:9px;text-decoration:underline dotted;cursor:help;opacity:.75;margin-left:2px;
+}

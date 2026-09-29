@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════════════════
-   TexasClimate — Demo / Judge Walkthrough Styles
+   TexasClimate — Guided Walkthrough Styles
    Scope: page-demo, demo-mode-banner, step cards, progress, nav buttons
    ══════════════════════════════════════════════════════════════════════════ */
 
@@ -388,7 +388,7 @@
 .demo-src-card-title { font-size: 13px; font-weight: 700; color: var(--text0); margin-bottom: 6px; }
 .demo-src-card-items { font-size: 11px; color: var(--text2); line-height: 1.5; }
 
-/* ── Step 12 — Judge Card ────────────────────────────────────────────────── */
+/* ── Step 12 — Summary Card ──────────────────────────────────────────────── */
 .demo-judge-card { max-width: 720px; }
 .demo-judge-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 18px; }
 @media (max-width: 600px) { .demo-judge-grid { grid-template-columns: 1fr; } }
@@ -529,7 +529,7 @@
 }
 .hero-disclaimer-chip:hover { border-color: rgba(74,144,226,0.3); color: #7DB9F2; }
 
-/* ── Judge Mode Toggle ───────────────────────────────────────────────────── */
+/* ── Focus Mode Toggle ───────────────────────────────────────────────────── */
 .judge-mode-btn {
   display: flex;
   align-items: center;
@@ -553,7 +553,7 @@
   color: #fff;
 }
 
-/* ── Judge Mode UI ────────────────────────────────────────────────────────── */
+/* ── Focus Mode UI ───────────────────────────────────────────────────────── */
 body.judge-mode .judge-hide { display: none !important; }
 body.judge-mode .judge-show { display: block !important; }
 body.judge-mode #page-science .tab-subsection[id="sc-stress"] .sci-chain-step-desc { display: none; }
@@ -624,7 +624,7 @@ body.judge-mode .judge-mode-panel { display: block; }
   margin-top: 3px;
 }
 
-/* ── For Judges Card ─────────────────────────────────────────────────────── */
+/* ── Platform Highlights Card ────────────────────────────────────────────── */
 .for-judges-card {
   background: linear-gradient(135deg, rgba(74,144,226,0.08), rgba(93,219,168,0.06));
   border: 1px solid rgba(74,144,226,0.3);

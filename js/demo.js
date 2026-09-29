@@ -1,7 +1,7 @@
 'use strict';
 
 /* ══════════════════════════════════════════════════════════════════════════
-   TexasClimate — Demo / Judge Walkthrough Engine
+   TexasClimate — Guided Walkthrough Engine
    12-step guided walkthrough. Uses live data where available;
    clearly labeled demo values otherwise.
    ══════════════════════════════════════════════════════════════════════════ */
@@ -71,7 +71,7 @@ var DEMO_STEPS = [
   {
     icon: '🌾',
     title: 'Sample Plant: Switchgrass',
-    narration: 'Switchgrass (Panicum virgatum) is a native Texas perennial — a U.S. DOE priority bioenergy crop with 540% net energy return and very high drought tolerance.',
+    narration: 'Switchgrass (Panicum virgatum) is a native Texas perennial and a long-standing DOE bioenergy research priority. In a Northern Great Plains field study it returned 540% more renewable energy than the nonrenewable energy consumed — a result for those farms, not a guarantee for Texas.',
     buildHTML: function () {
       return [
         '<div class="demo-plant-card selected">',
@@ -95,9 +95,10 @@ var DEMO_STEPS = [
         '      <span>Very High</span></div>',
         '    <div class="demo-trait"><span class="demo-trait-label">Water Use</span>',
         '      <div class="demo-bar"><div class="demo-bar-fill" style="width:25%;background:#5DDBA8"></div></div>',
-        '      <span>Low (6–14 gal/gal fuel)</span></div>',
+        '      <span>Not quantified &mdash; see note</span></div>',
         '  </div>',
-        '  <div class="demo-plant-note">Source: Schmer et al. (2008) PNAS 105(2):464–469 · DOE EERE Switchgrass Fact Sheet · Net energy return: 540% above input energy</div>',
+        '  <div class=\"demo-plant-note\">Water use is shown unquantified on purpose: published water footprints for ethanol vary by roughly three orders of magnitude between US states depending on irrigation share, so no single gallons-per-gallon figure is defensible (Chiu et al., ES&T 2009).</div>',
+        '  <div class=\"demo-plant-note\">Source: Schmer et al. (2008) PNAS 105(2):464–469 — 540% more renewable than nonrenewable energy consumed, 10 farms in Nebraska/South Dakota/North Dakota, 2000–2005</div>',
         '</div>'
       ].join('');
     }
@@ -171,7 +172,9 @@ var DEMO_STEPS = [
       var et0  = isLive ? (d.et0Avg || 0.28) : 0.28;
       var prec = isLive ? (d.precipAvg || 0) : 0.04;
       var moist = isLive ? Math.round(Math.max(0, Math.min(100, (et0 - prec) / Math.max(0.01, et0) * 100))) : 62;
-      var salin = 15; // Austin is inland — always low
+      // Salinity was previously shown here as a coastal-proximity proxy. Removed:
+      // distance from the coast is not a measurement of soil salinity.
+      var salin = null;
 
       function barColor(v) {
         return v > 70 ? '#FF4444' : v > 40 ? '#FF8C00' : '#5DDBA8';
@@ -191,14 +194,14 @@ var DEMO_STEPS = [
         '    <div class="demo-stress-bar-wrap"><div class="demo-stress-bar" style="width:' + moist + '%;background:' + barColor(moist) + '"></div></div>',
         '    <div class="demo-stress-val">' + moist + '%</div>',
         '  </div>',
-        '  <div class="demo-stress-item">',
-        '    <div class="demo-stress-label">🧂 Salinity Risk</div>',
-        '    <div class="demo-stress-bar-wrap"><div class="demo-stress-bar" style="width:' + salin + '%;background:#5DDBA8"></div></div>',
-        '    <div class="demo-stress-val">' + salin + '% (Low — inland location)</div>',
+        '  <div class="demo-stress-item demo-stress-unknown">',
+        '    <div class="demo-stress-label">🧂 Salinity</div>',
+        '    <div class="demo-stress-bar-wrap"><div class="demo-stress-bar demo-bar-unknown" style="width:100%"></div></div>',
+        '    <div class="demo-stress-val">UNKNOWN — needs a measured soil EC value</div>',
         '  </div>',
         '</div>',
         '<div class="demo-src-note" style="margin-top:10px">',
-        '  Formulas: Heat = max(0, (T°F − 68) / 36 × 100) · Moisture = ET0 deficit / ET0 · Salinity: coastal proximity proxy only.<br>',
+        '  Heat: linear ramp between the species stress-onset and critical temperatures. Water: 30-day reference ET minus precipitation — a CLIMATE water deficit proxy, not measured plant drought. Salinity: UNKNOWN — the former coastal-proximity proxy was removed, because distance from the coast is not a measurement of soil EC.<br>',
         '  Stress chain science: <a href="https://doi.org/10.1016/j.biortech.2004.06.025" target="_blank" rel="noopener">Mosier et al. (2005)</a>',
         '</div>'
       ].join('');
@@ -208,8 +211,8 @@ var DEMO_STEPS = [
   /* ── Step 6 ── */
   {
     icon: '🌿',
-    title: 'Plant Survival Score — Switchgrass in Austin',
-    narration: 'Switchgrass is well-matched to Texas heat and drought. The survival score combines its published tolerance thresholds with current live conditions.',
+    title: 'Environmental Tolerance Match — Switchgrass in Austin',
+    narration: 'Switchgrass tolerates Texas heat and drought better than most crops. The Environmental Tolerance Match combines its published tolerance thresholds with current live conditions — it says how far inside that envelope today sits, not whether the plant will survive.',
     buildHTML: function () {
       var d = _demoAustinData();
       var isLive = !!d;
@@ -226,7 +229,7 @@ var DEMO_STEPS = [
         badge,
         '<div class="demo-survival-card" style="margin-top:10px">',
         '  <div class="demo-score-ring">',
-        '    <svg viewBox="0 0 120 120" class="demo-ring-svg" role="img" aria-label="Survival score ' + score + ' percent">',
+        '    <svg viewBox=\"0 0 120 120\" class=\"demo-ring-svg\" role=\"img\" aria-label=\"Environmental Tolerance Match, ' + score + ' out of 100\">',
         '      <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="10"/>',
         '      <circle cx="60" cy="60" r="50" fill="none" stroke="' + color + '" stroke-width="10"',
         '        stroke-dasharray="' + arc + ' 314" stroke-linecap="round" transform="rotate(-90 60 60)"/>',
@@ -235,9 +238,9 @@ var DEMO_STEPS = [
         '    </svg>',
         '  </div>',
         '  <div class="demo-survival-details">',
-        '    <div class="demo-survival-title">Switchgrass Survival Score</div>',
+        '    <div class=\"demo-survival-title\">Switchgrass Environmental Tolerance Match</div>',
         '    <div class="demo-survival-loc">Austin, TX · Current conditions</div>',
-        '    <div class="demo-survival-note">Switchgrass heat tolerance: up to 104°F (40°C). Drought tolerance: High. Score = plant tolerance profile × live stress data.</div>',
+        '    <div class=\"demo-survival-note\">Switchgrass heat thresholds used by the model: stress begins near 95°F (35°C), critical near 113°F (45°C) &mdash; literature-derived species estimates, not cultivar-specific. The score starts at 100 and subtracts a weighted penalty from each stressor; open WHY? on the live analysis to see every term.</div>',
         '    <div class="demo-src-note">Source: DOE EERE Switchgrass Profile · Open-Meteo live temperature</div>',
         '  </div>',
         '</div>'
@@ -248,8 +251,8 @@ var DEMO_STEPS = [
   /* ── Step 7 ── */
   {
     icon: '⚡',
-    title: 'Bioenergy Confidence Score',
-    narration: 'The bioenergy confidence score combines the plant tolerance profile, live stress levels, and published conversion chemistry. It is a research estimate — not a fuel production forecast.',
+    title: 'Bioenergy Suitability Index',
+    narration: 'The Bioenergy Suitability Index combines the tolerance profile, live stress levels, and published conversion chemistry into one ranking number. Evidence Confidence is reported separately, because how well something scores and how much evidence stands behind it are different questions. It is an experimental, uncalibrated model — not a fuel production forecast.',
     buildHTML: function () {
       var d = _demoAustinData();
       var isLive = !!d;
@@ -277,7 +280,7 @@ var DEMO_STEPS = [
         '    </div>',
         '  </div>',
         '  <div class="demo-bio-breakdown">',
-        '    <div class="demo-bio-title">Bioenergy Confidence Score</div>',
+        '    <div class=\"demo-bio-title\">Bioenergy Suitability Index</div>',
         '    <div class="demo-bio-row"><span>Plant–environment match</span><span class="bio-good">High</span></div>',
         '    <div class="demo-bio-row"><span>Conversion pathway</span><span class="bio-good">Cellulosic ethanol</span></div>',
         '    <div class="demo-bio-row"><span>Lignin barrier risk</span><span class="bio-med">Moderate</span></div>',
@@ -319,7 +322,7 @@ var DEMO_STEPS = [
   /* ── Step 9 ── */
   {
     icon: '🔬',
-    title: 'Plant-to-Fuel Scanner',
+    title: 'Field Observation Mode',
     narration: 'Upload a plant photo to get an educational bioenergy analysis based on published biomass science. Photos cannot measure lignin or fuel yield — that requires a lab.',
     buildHTML: function () {
       return [
@@ -342,7 +345,7 @@ var DEMO_STEPS = [
         '      <div class="demo-limit-item">❌ Dry biomass (tons)</div>',
         '    </div>',
         '  </div>',
-        '  <button class="demo-goto-btn" onclick="showPage(\'bioenergy\')">Open Plant Scanner →</button>',
+        '  <button class="demo-goto-btn" onclick="showPage(\'bioenergy\')">Open Field Observation →</button>',
         '</div>'
       ].join('');
     }
@@ -422,7 +425,7 @@ var DEMO_STEPS = [
   /* ── Step 12 ── */
   {
     icon: '🏆',
-    title: 'Judge Summary — What I Built',
+    title: 'Summary — What I Built',
     narration: 'This is what TexasClimate does, what is live, what is estimated, and why it matters for Texas students and constituents.',
     buildHTML: function () {
       return [
@@ -437,8 +440,8 @@ var DEMO_STEPS = [
         '      <div class="demo-judge-text">TexasClimate connects live environmental data with plant stress science and bioenergy education — making the path from Texas weather to Texas clean fuel visible and understandable.</div>',
         '    </div>',
         '    <div class="demo-judge-section">',
-        '      <div class="demo-judge-label">💻 What I Coded</div>',
-        '      <div class="demo-judge-text">Live API fetching (Open-Meteo, NWS) · Stress formulas · Bioenergy score model · MapLibre map layers · Plant scanner workflow · 12-step demo engine · Local AI chatbot · Data transparency label system</div>',
+        '      <div class="demo-judge-label">💻 Technical Build</div>',
+        '      <div class="demo-judge-text">Live API fetching (Open-Meteo, NWS) · Stress formulas · Bioenergy score model · MapLibre map layers · Plant scanner workflow · 12-step demo engine · Rule-based science assistant (no LLM) · Provenance label system · Evidence confidence engine · Test suite</div>',
         '    </div>',
         '    <div class="demo-judge-section">',
         '      <div class="demo-judge-label">🎯 Why It Matters</div>',
@@ -462,11 +465,11 @@ var DEMO_STEPS = [
         '      <div class="demo-check-item done">✅ 10-city Texas comparison</div>',
         '      <div class="demo-check-item done">✅ Plant stress scoring</div>',
         '      <div class="demo-check-item done">✅ Bioenergy confidence model</div>',
-        '      <div class="demo-check-item done">✅ Plant-to-Fuel scanner (educational)</div>',
+        '      <div class=\"demo-check-item done\">✅ Field Observation Mode (local MobileNet suggests, you confirm)</div>',
         '      <div class="demo-check-item done">✅ Fuel pathway / lignin diagram</div>',
         '      <div class="demo-check-item done">✅ Source transparency labels</div>',
         '      <div class="demo-check-item done">✅ Safety / limitations system</div>',
-        '      <div class="demo-check-item done">✅ Local AI chatbot</div>',
+        '      <div class=\"demo-check-item done\">✅ Rule-based science assistant (no LLM)</div>',
         '      <div class="demo-check-item done">✅ 12-step demo walkthrough</div>',
         '    </div>',
         '  </div>',

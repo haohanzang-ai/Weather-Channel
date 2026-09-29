@@ -40,10 +40,10 @@ function renderForecastPage(){
   const forecast = FORECAST_DATA[city] || [];
   document.getElementById('forecastContent').innerHTML=`
     <div class="grid-4" style="margin-bottom:16px">
-      <div class="card card-blue"><div class="stat-label">Current Temp</div><div class="stat-value">${d.temp}<span class="stat-unit">°F</span></div><div class="stat-sub">${escapeHtml(d.condition)}</div></div>
+      <div class="card card-blue"><div class="stat-label">Current Temp</div><div class="stat-value">${d.temp}<span class="stat-unit">${tUnit()}</span></div><div class="stat-sub">${escapeHtml(d.condition)}</div></div>
       <div class="card"><div class="stat-label">Humidity</div><div class="stat-value">${d.humidity}<span class="stat-unit">%</span></div></div>
-      <div class="card"><div class="stat-label">Wind</div><div class="stat-value">${d.wind}<span class="stat-unit">mph</span></div></div>
-      <div class="card"><div class="stat-label">Feels Like</div><div class="stat-value">${d.feels}<span class="stat-unit">°F</span></div></div>
+      <div class="card"><div class="stat-label">Wind</div><div class="stat-value">${d.wind}<span class="stat-unit">${wUnit()}</span></div></div>
+      <div class="card"><div class="stat-label">Feels Like</div><div class="stat-value">${d.feels}<span class="stat-unit">${tUnit()}</span></div></div>
     </div>
     <div class="card" style="margin-bottom:14px">
       <h3 class="section-title">7-Day Forecast</h3>
@@ -71,10 +71,10 @@ function renderForecastPage(){
     charts.set('forecast', new Chart(ctx,{
       type:'line',
       data:{labels:forecast.map(f=>f.day),datasets:[
-        {label:'High °F',data:forecast.map(f=>f.hi),borderColor:'#F5A623',backgroundColor:'rgba(245,166,35,0.08)',tension:0.4,fill:false,pointBackgroundColor:'#F5A623',pointRadius:4},
-        {label:'Low °F', data:forecast.map(f=>f.lo),borderColor:'#4A90E2',backgroundColor:'rgba(74,144,226,0.08)',tension:0.4,fill:false,pointBackgroundColor:'#4A90E2',pointRadius:4}
+        {label:'High '+tUnit(),data:forecast.map(f=>f.hi),borderColor:'#F5A623',backgroundColor:'rgba(245,166,35,0.08)',tension:0.4,fill:false,pointBackgroundColor:'#F5A623',pointRadius:4},
+        {label:'Low '+tUnit(), data:forecast.map(f=>f.lo),borderColor:'#4A90E2',backgroundColor:'rgba(74,144,226,0.08)',tension:0.4,fill:false,pointBackgroundColor:'#4A90E2',pointRadius:4}
       ]},
-      options:chartOpts(v=>v+'°F')
+      options:chartOpts(v=>v+tUnit())
     }));
   });
 }

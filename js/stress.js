@@ -1,15 +1,36 @@
 'use strict';
 
 // ── Plant environmental threshold profiles ────────────────────────────────────
-// Values are research-based estimates from published literature, NOT lab measurements.
-// Sources: Narayanan 2017 (switchgrass heat), Prasad 2008 (sorghum), Nobel 1988 (agave),
-//          Clifton-Brown 2000 (miscanthus), USDA ARS, DOE Bioenergy, general plant physiology.
-// heatStressF / heatCriticalF: °F at which heat stress begins / becomes severe
-// droughtScore (0-100): drought tolerance — higher = more tolerant
-// waterReq30mm: minimum mm of water per 30-day period for viable growth
-// vpdStressKPa: VPD (kPa) above which stomatal closure and stress begin
-// soilStressMin: m³/m³ soil moisture below which stress is severe
-// envBenefit (0-100): environmental co-benefit score from literature
+// LITERATURE-DERIVED ESTIMATES, NOT LAB MEASUREMENTS AND NOT CULTIVAR-SPECIFIC.
+//
+// Each row summarises published tolerance information for a SPECIES. Two limits
+// on how far these can be pushed, both of which the Evidence Confidence engine
+// accounts for:
+//
+//   1. Within-species variation is large. Upland and lowland switchgrass
+//      ecotypes differ markedly in heat and water response, and cultivar is
+//      almost never known here. The species row is a midpoint, not a spec.
+//   2. These are thresholds for STRESS ONSET, not for death or for yield loss
+//      of a stated magnitude. They order conditions; they do not predict outcomes.
+//
+// Sources consulted for the ordering: Sanderson et al. (2006) Bioresource
+// Technology 99(2):479–485; Barney et al. (2009) Plant Science 177(6):724–732;
+// Clifton-Brown & Lewandowski (2000) on Miscanthus water relations; Nobel (1988)
+// on CAM succulent physiology; USDA ARS and DOE bioenergy feedstock summaries.
+//
+// heatStressF / heatCriticalF  °F at which heat stress begins / becomes severe
+// droughtScore (0-100)         drought tolerance — higher = more tolerant
+// waterReq30mm                 minimum mm of water per 30 days for viable growth
+// vpdStressKPa                 VPD (kPa) above which stomatal limitation begins
+// soilStressMin                m³/m³ soil moisture below which stress is severe
+// envBenefit (0-100)           literature-derived environmental co-benefit rating
+
+/* Shown wherever a species threshold is displayed. The previous wording was
+   "(cited literature)", which claimed a per-value citation that does not exist:
+   no individual row below is attributable to a specific paper. */
+const TC_PROFILE_SOURCE_NOTE =
+  'Species-level literature-derived estimate — not cultivar-specific and not individually cited. ' +
+  'Within-species variation can exceed the differences this analysis measures.';
 
 const PLANT_ENV_PROFILES = {
   switchgrass:      { heatStressF:95,  heatCriticalF:113, droughtScore:80, waterReq30mm:40,  vpdStressKPa:2.5, soilStressMin:0.15, photosynthesis:'C4',  envBenefit:85, chem:'grass-cellulosic',     inhibitorRisk:'low'    },
@@ -46,88 +67,97 @@ function stressCompute(envData, plant) {
   const isFahrenheit = envData.tSuffix === '°F';
   const scores = { profile, missing: [] };
 
-  // — Heat Stress Score ——
-  if (cur?.temp != null) {
-    const t = cur.temp; // already in user's unit
-    const lo = isFahrenheit ? profile.heatStressF : (profile.heatStressF - 32) * 5/9;
-    const hi = isFahrenheit ? profile.heatCriticalF : (profile.heatCriticalF - 32) * 5/9;
-    if (t <= lo)     scores.heatStress = 0;
-    else if (t >= hi) scores.heatStress = 100;
-    else              scores.heatStress = Math.round((t - lo) / (hi - lo) * 100);
-    scores.heatSource = 'Open-Meteo current temperature (Live API)';
-    scores.heatThresholdLabel = `${profile.heatStressF}°F stress onset / ${profile.heatCriticalF}°F critical (cited literature)`;
+  // This function used to reimplement every stress term with its thresholds
+  // hard-coded (VPD floor 0.5, ceiling 40, slope 25, deficit reference 60, soil
+  // multiplier 2.5, ceiling 70, composite 0.6/0.4). That meant editing
+  // science-constants.js moved the WHY panel and the Suitability Index but NOT
+  // these cards — the two panels could display contradictory numbers for the
+  // same quantity with no error anywhere. It also broke the project's own rule
+  // that no scientific number lives in a UI file.
+  //
+  // It now calls the same pure term functions the tested model layer uses, so
+  // the Stress Profile and the WHY breakdown are guaranteed to agree by
+  // construction rather than by discipline.
+
+  // Normalise temperature to °C once. The model layer works only in °C so that
+  // a display-unit change can never alter a scientific result.
+  const tempC  = cur?.temp != null ? (isFahrenheit ? fToC(cur.temp) : cur.temp) : null;
+  const vpdKPa = envData.hourlyVPD ?? computeVPD(tempC, cur?.humidity ?? null);
+
+  const heat  = heatStressTerm(tempC, profile);
+  const water = waterDeficitProxyTerm(envData.archive30?.deficit ?? null, profile);
+  const vpd   = vpdTerm(vpdKPa, profile);
+  const soil  = soilStressTerm(envData.hourlySoil ?? null, profile);
+  scores.terms = { heat, water, vpd, soil };
+
+  // — Heat ——
+  scores.heatStress = heat.score;
+  if (heat.score != null) {
+    scores.heatSource = `Open-Meteo current temperature: ${heat.value} ${heat.unit}`;
+    scores.heatStatus = TC_STATUS.DERIVED;
+    scores.heatThresholdLabel = `Stress onset ${profile.heatStressF} °F, critical ${profile.heatCriticalF} °F. ${TC_PROFILE_SOURCE_NOTE}`;
   } else {
-    scores.heatStress = null;
+    scores.heatStatus = TC_STATUS.UNKNOWN;
     scores.missing.push('current temperature (Open-Meteo current weather unavailable)');
   }
 
-  // — Drought Memory Score (30-day) ——
-  if (envData.archive30?.deficit != null) {
-    const deficit = envData.archive30.deficit; // negative = surplus
-    if (deficit <= 0) {
-      scores.droughtMemory = 0; // surplus = no drought stress
-    } else {
-      // Drought-tolerant plants show less stress per mm of deficit
-      const stressFactor = (100 - profile.droughtScore) / 100;
-      scores.droughtMemory = Math.min(100, Math.round(deficit / 60 * stressFactor * 150));
-    }
-    scores.droughtSource = `Open-Meteo archive API — ${envData.archive30.days}-day ET₀ − precip deficit: ${envData.archive30.deficit} mm (Live API)`;
-    scores.droughtThresholdLabel = `Plant drought tolerance score: ${profile.droughtScore}/100 (cited literature)`;
+  // — Climate Water Deficit Proxy (30-day) ——
+  // NOT plant drought stress: reference ET minus precipitation is atmospheric
+  // demand for a standard 0.12 m grass surface against supply from rain. Crop
+  // coefficient, soil storage, rooting depth, growth stage and irrigation all
+  // sit between this number and what a plant actually experiences.
+  scores.droughtMemory = water.score;
+  if (water.score != null) {
+    scores.droughtSource = `Open-Meteo archive: ${envData.archive30.days}-day reference ET minus precipitation = ${water.value} mm`;
+    scores.droughtStatus = TC_STATUS.DERIVED;
+    scores.droughtThresholdLabel = `Scaled by species drought tolerance ${profile.droughtScore}/100. A CLIMATE water deficit proxy — it excludes crop coefficient, soil storage, rooting depth and irrigation. ${TC_PROFILE_SOURCE_NOTE}`;
   } else {
-    scores.droughtMemory = null;
+    scores.droughtStatus = TC_STATUS.UNKNOWN;
     scores.missing.push('30-day archive data (Open-Meteo archive API unavailable)');
   }
 
-  // — VPD Pressure Score ——
-  const vpdKPa = envData.hourlyVPD ?? (() => {
-    // Fall back to Tetens approximation if real VPD unavailable
-    if (cur?.temp == null || cur?.humidity == null) return null;
-    const tC = isFahrenheit ? (cur.temp - 32) * 5/9 : cur.temp;
-    const es = 0.6108 * Math.exp(17.27 * tC / (tC + 237.3));
-    return Math.round((es * (1 - cur.humidity / 100)) * 100) / 100;
-  })();
-
-  if (vpdKPa != null) {
-    const lo = 0.5; // minimal stress threshold for all plants
-    const hi = profile.vpdStressKPa;
-    if (vpdKPa <= lo)   scores.vpdPressure = 0;
-    else if (vpdKPa < hi) scores.vpdPressure = Math.round((vpdKPa - lo) / (hi - lo) * 40);
-    else                  scores.vpdPressure = Math.min(100, Math.round(40 + (vpdKPa - hi) * 25));
-    scores.vpdSource = envData.hourlyVPD != null
-      ? `Open-Meteo hourly vapour_pressure_deficit: ${vpdKPa} kPa (Live API)`
-      : `Estimated from temperature+humidity via Tetens equation: ${vpdKPa} kPa (Live-Derived)`;
-    scores.vpdThresholdLabel = `Plant VPD stress threshold: ${profile.vpdStressKPa} kPa (cited literature)`;
+  // — VPD ——
+  scores.vpdPressure = vpd.score;
+  if (vpd.score != null) {
+    const providerVPD = envData.hourlyVPD != null;
+    scores.vpdSource = providerVPD
+      ? `Open-Meteo hourly vapour_pressure_deficit field: ${vpd.value} kPa`
+      : `Derived from temperature and humidity via the FAO-56 Tetens equation: ${vpd.value} kPa`;
+    // A scenario-modified VPD is recomputed by us, so it is DERIVED even though
+    // it arrived in the provider's field. Without this check a hand-edited
+    // value would be stamped as a live provider measurement.
+    scores.vpdStatus = (providerVPD && !envData.isScenario) ? TC_STATUS.LIVE : TC_STATUS.DERIVED;
+    scores.vpdCaveat = 'Screen-level (~2 m) VPD. Leaf-to-air VPD in full sun is higher, and hourly sampling misses the midday peak that actually closes stomata.';
+    scores.vpdThresholdLabel = `Species VPD stress threshold ${profile.vpdStressKPa} kPa. ${TC_PROFILE_SOURCE_NOTE}`;
   } else {
-    scores.vpdPressure = null;
-    scores.missing.push('VPD data (no hourly field and temperature/humidity unavailable)');
+    scores.vpdStatus = TC_STATUS.UNKNOWN;
+    scores.missing.push('VPD (no provider field, and temperature or humidity unavailable)');
   }
 
-  // — Soil Moisture Stress Score ——
-  if (envData.hourlySoil != null) {
-    const soil = envData.hourlySoil;
-    const minSoil = profile.soilStressMin;
-    const optSoil = minSoil * 2.5;
-    if (soil >= optSoil)    scores.soilStress = 0;
-    else if (soil <= minSoil) scores.soilStress = 100;
-    else                    scores.soilStress = Math.round((optSoil - soil) / (optSoil - minSoil) * 70);
-    scores.soilSource = `Open-Meteo hourly soil_moisture_0_to_1cm: ${envData.hourlySoil} m³/m³ (Live API)`;
-    scores.soilThresholdLabel = `Plant stress min: ${profile.soilStressMin} m³/m³ (cited literature)`;
+  // — Soil moisture ——
+  scores.soilStress = soil.score;
+  if (soil.score != null) {
+    scores.soilSource = `Open-Meteo hourly soil_moisture_0_to_1cm: ${soil.value} m³/m³`;
+    scores.soilStatus = envData.isScenario ? TC_STATUS.DERIVED : TC_STATUS.LIVE;
+    scores.soilThresholdLabel = `Species stress minimum ${profile.soilStressMin} m³/m³. This is the 0–1 cm surface layer, NOT the water available to the root zone. ${TC_PROFILE_SOURCE_NOTE}`;
   } else {
-    scores.soilStress = null;
+    scores.soilStatus = TC_STATUS.UNKNOWN;
     scores.missing.push('soil moisture (Open-Meteo hourly soil_moisture_0_to_1cm not available)');
   }
 
-  // — Water Stress (composite) ——
+  // — Water stress composite ——
+  const wc = TC_WEIGHTS.waterComposite;
   const droughtValid = scores.droughtMemory != null;
   const soilValid    = scores.soilStress    != null;
-  if (droughtValid && soilValid)      scores.waterStress = Math.round(scores.droughtMemory * 0.6 + scores.soilStress * 0.4);
-  else if (droughtValid)              scores.waterStress = scores.droughtMemory;
-  else if (soilValid)                 scores.waterStress = scores.soilStress;
-  else                                scores.waterStress = null;
+  if (droughtValid && soilValid)
+    scores.waterStress = Math.round(scores.droughtMemory * wc.deficit + scores.soilStress * wc.soil);
+  else if (droughtValid) scores.waterStress = scores.droughtMemory;
+  else if (soilValid)    scores.waterStress = scores.soilStress;
+  else                   scores.waterStress = null;
 
   scores.waterStressSource = [
-    droughtValid ? `30-day deficit (60%)` : null,
-    soilValid    ? `soil moisture (${droughtValid ? '40' : '100'}%)` : null,
+    droughtValid ? `30-day deficit proxy (${Math.round(wc.deficit*100)}%)` : null,
+    soilValid    ? `surface soil moisture (${droughtValid ? Math.round(wc.soil*100) : 100}%)` : null,
   ].filter(Boolean).join(' + ') || 'Needs data';
 
   return scores;
@@ -136,63 +166,79 @@ function stressCompute(envData, plant) {
 // ── Chemistry Risk ────────────────────────────────────────────────────────────
 // Returns LOW / MEDIUM / HIGH risk categories. Never claims exact compound levels.
 // These are risk estimates based on environmental history + plant type, NOT measurements.
-function chemRiskCompute(stress, plant) {
+function chemRiskCompute(stress, plant, uvIndex) {
   if (!stress || !plant) return null;
+  const W = TC_WEIGHTS.chemRisk;
   const profile = PLANT_ENV_PROFILES[plant.key] || PLANT_ENV_PROFILES._default;
+
+  // UV is now an explicit PARAMETER. It used to be read straight off
+  // appState.envData inside this function, which made the result depend on
+  // state the caller never passed — so a scenario's stress could be mixed with
+  // the baseline's UV, and the function could not be tested outside a browser.
+  const uv = uvIndex ?? null;
+
   const dr = stress.droughtMemory ?? 0;
   const hs = stress.heatStress    ?? 0;
   const vp = stress.vpdPressure   ?? 0;
   const hasArchive = stress.droughtMemory != null;
   const hasTemp    = stress.heatStress    != null;
 
-  // — Osmolyte Pressure Risk ——
-  // Compatible solute accumulation (proline, glycine betaine) under drought/VPD.
-  // CAM plants use different mechanism — lower risk for cellulosic conversion.
-  const camFactor = profile.photosynthesis === 'CAM' ? 0.35 : 1.0;
-  const osmoBase  = (dr * 0.6 + vp * 0.4) / 100 * camFactor;
+  // — Osmolyte accumulation ——
+  // Well supported: plants under drought and osmotic stress accumulate
+  // compatible solutes such as proline and glycine betaine. What this does NOT
+  // support is the claim this app used to make — that those compounds inhibit
+  // industrial fermentation. See TC_RETIRED_CLAIMS.
+  const camFactor = profile.photosynthesis === 'CAM' ? W.camFactor : 1.0;
+  const osmoBase  = (dr * W.osmolyteDrought + vp * W.osmolyteVpd) / 100 * camFactor;
   const osmoRisk  = osmoBase > 0.55 ? 'High' : osmoBase > 0.25 ? 'Medium' : 'Low';
   const osmoConf  = (hasArchive && stress.vpdPressure != null) ? 'Moderate' : 'Low (missing data)';
-  const osmoCaveats = !hasArchive ? 'Drought history unavailable — estimate based only on VPD.' : null;
+  const osmoCaveats = !hasArchive ? 'Water deficit history unavailable — this rests on VPD alone.' : null;
 
-  // — Saponin / Inhibitor Risk ——
-  // Specific to plant chemistry profile — inherent + stress-elevated.
-  const inherentInhibitor = profile.inhibitorRisk;
-  let sapBase = inherentInhibitor === 'high' ? 0.70 : inherentInhibitor === 'medium' ? 0.40 : 0.15;
-  sapBase = Math.min(1.0, sapBase + hs / 100 * 0.15 + dr / 100 * 0.10);
+  // — Inherent inhibitor load ——
+  const inherentInhibitor = profile.inhibitorRisk || 'unknown';
+  let sapBase = W.inhibitorBase[inherentInhibitor] ?? W.inhibitorBase.unknown;
+  sapBase = Math.min(1.0, sapBase + hs / 100 * W.inhibitorHeatGain + dr / 100 * W.inhibitorDroughtGain);
   const sapRisk = sapBase > 0.60 ? 'High' : sapBase > 0.35 ? 'Medium' : 'Low';
   const sapConf = hasTemp ? 'Low–Moderate' : 'Low (insufficient data)';
 
-  // — Phenolic / Extractive Risk ——
-  // UV stress + heat + drought all increase phenolic deposition.
-  const uvFactor = (typeof appState !== 'undefined' && appState.envData?.current?.uv != null)
-    ? Math.min(100, Math.max(0, (appState.envData.current.uv - 5) * 10)) : 0;
-  const phenBase = (hs * 0.40 + dr * 0.40 + uvFactor * 0.20) / 100;
+  // — Phenolics ——
+  const uvFactor = uv != null
+    ? Math.min(100, Math.max(0, (uv - W.uvThreshold) * W.uvPerUnit))
+    : 0;
+  const phenBase = (hs * W.phenolicHeat + dr * W.phenolicDrought + uvFactor * W.phenolicUv) / 100;
   const phenRisk = phenBase > 0.55 ? 'High' : phenBase > 0.28 ? 'Medium' : 'Low';
-  const phenConf = hasTemp && hasArchive ? 'Moderate' : 'Low (missing input data)';
+  const phenConf = (hasTemp && hasArchive && uv != null) ? 'Moderate' : 'Low (missing input data)';
 
-  // — Cell-wall Recalcitrance Risk ——
-  // Woody plants have inherently higher lignin. Drought/heat can increase lignification.
+  // — Cell-wall recalcitrance ——
   const woodyTypes = ['woody-lignin','woody-tannin','woody-aromatic','woody-resin'];
   const isWoody = woodyTypes.includes(profile.chem);
-  const recalBase = (isWoody ? 60 : 25) + Math.round(dr * 0.15 + hs * 0.08);
+  const recalBase = (isWoody ? W.recalcitranceWoodyBase : W.recalcitranceHerbBase)
+                  + Math.round(dr * W.recalcitranceDroughtGain + hs * W.recalcitranceHeatGain);
   const recalScore = Math.min(100, recalBase);
   const recalRisk  = recalScore > 60 ? 'High' : recalScore > 38 ? 'Medium' : 'Low';
-  const recalConf  = 'Moderate (plant type known; stress modifier estimated)';
+  const recalConf  = 'Moderate (plant type known; stress modifier is a heuristic)';
 
-  // — Fermentation Lag Risk ——
-  // Combined: osmolyte + phenolic secondary metabolites slow fermentation microbes.
-  const fermBase = (osmoBase * 0.40 + phenBase * 0.35 + recalScore / 100 * 0.25);
+  // — Combined conversion difficulty ——
+  const fermBase = (osmoBase * W.fermOsmolyte + phenBase * W.fermPhenolic + recalScore / 100 * W.fermRecalcitrance);
   const fermRisk = fermBase > 0.55 ? 'High' : fermBase > 0.28 ? 'Medium' : 'Low';
   const fermConf = (hasArchive && hasTemp) ? 'Moderate' : 'Low (limited input data)';
 
   return {
-    osmolyte:    { risk: osmoRisk,  confidence: osmoConf,  caveats: osmoCaveats,  score: Math.round(osmoBase  * 100), explanation: 'Plants under drought and high-VPD stress accumulate compatible solutes (proline, glycine betaine) that protect cell membranes but can inhibit microbial fermentation.' },
-    saponin:     { risk: sapRisk,   confidence: sapConf,   caveats: null,          score: Math.round(sapBase   * 100), explanation: `This plant type has ${inherentInhibitor} inherent inhibitor risk. Heat and drought may elevate secondary metabolite production.` },
-    phenolic:    { risk: phenRisk,  confidence: phenConf,  caveats: null,          score: Math.round(phenBase  * 100), explanation: 'UV stress, heat, and drought trigger phenolic compound synthesis as a plant defense. High phenolics slow enzymatic hydrolysis and microbial fermentation.' },
-    recalcitrance:{ risk: recalRisk, confidence: recalConf, caveats: null,         score: recalScore,                  explanation: isWoody ? 'Woody biomass has inherently higher lignin (20–35%), requiring intensive pretreatment to access cellulose.' : 'Grass lignin (15–20%) increases under drought stress, elevating pretreatment costs for cellulosic ethanol.' },
-    fermentation: { risk: fermRisk, confidence: fermConf,  caveats: null,          score: Math.round(fermBase  * 100), explanation: 'Combined risk from osmolytes, phenolics, and recalcitrance — these slow or inhibit the microbial fermentation step in cellulosic ethanol production.' },
-    caveat: 'Environmental history suggests risk level. Lab data is needed to measure actual compound concentrations.',
+    osmolyte: { risk: osmoRisk, confidence: osmoConf, caveats: osmoCaveats, score: Math.round(osmoBase * 100),
+      explanation: 'Drought and high VPD drive accumulation of compatible solutes such as proline and glycine betaine, which stabilise proteins and membranes. This is well established. Whether it affects industrial fermentation is NOT established — an earlier version of this app called these compounds fermentation inhibitors, which was an overgeneralisation and has been withdrawn.' },
+    saponin: { risk: sapRisk, confidence: sapConf, caveats: null, score: Math.round(sapBase * 100),
+      explanation: `This plant type carries a ${inherentInhibitor} inherent secondary-metabolite load, and heat and drought may raise it further. The inherent rating is a species-level literature estimate; the stress modifier is a heuristic.` },
+    phenolic: { risk: phenRisk, confidence: phenConf, caveats: uv == null ? 'UV index unavailable — this rests on heat and water deficit alone.' : null, score: Math.round(phenBase * 100),
+      explanation: 'UV, heat and drought are all documented triggers of phenolic synthesis as a plant defence, and phenolics released during pretreatment are among the well-documented inhibitors of enzymatic hydrolysis and fermentation. The direction is supported; the magnitude here is not measured.' },
+    recalcitrance: { risk: recalRisk, confidence: recalConf, caveats: null, score: recalScore,
+      explanation: isWoody
+        ? 'Woody biomass carries inherently higher lignin, requiring more intensive pretreatment to reach the cellulose.'
+        : 'Grass lignin is lower than woody biomass, and drought stress is associated with increased lignification, which raises pretreatment cost.' },
+    fermentation: { risk: fermRisk, confidence: fermConf, caveats: null, score: Math.round(fermBase * 100),
+      explanation: 'A combined difficulty estimate from the axes above. It is a HYPOTHESIS about conversion, not a measurement: no biomass from this plant has been assayed and no conversion has been performed.' },
+    caveat: 'Environmental history suggests a risk direction. Laboratory analysis is required to measure any actual compound concentration — weather cannot measure chemistry.',
     missing: stress.missing || [],
+    uvAvailable: uv != null,
   };
 }
 
@@ -245,7 +291,7 @@ function renderStressProfile() {
         <div class="stress-score-header">
           <span class="stress-score-icon">💧</span>
           <div>
-            <div class="stress-score-name">Drought Memory Score (30-day)</div>
+            <div class="stress-score-name">Climate Water Deficit Proxy (30-day)</div>
             <div class="stress-score-sub">${_scoreDisplay(stress.droughtMemory, 60, 30)} / 100</div>
           </div>
         </div>
@@ -300,13 +346,15 @@ function renderStressProfile() {
     </div>` : ''}
 
     <div class="stress-data-note">
-      Stress scores are derived from live environmental measurements vs. plant-specific thresholds from cited literature.
-      Scores are estimates — lab measurements are needed to confirm actual plant stress.
+      Stress scores compare live environmental values against species thresholds from published literature.
+      Nothing about the plant itself is measured: no tissue, no water potential, no gas exchange. These scores
+      describe the <em>environment</em> relative to what the literature says this species tolerates — they are
+      not observations of a stressed plant.
     </div>
   `;
 
   // render chemistry risk
-  const chemRisk = chemRiskCompute(stress, appState.plant);
+  const chemRisk = chemRiskCompute(stress, appState.plant, appState.envData?.current?.uv ?? null);
   appState.chemRisk = chemRisk;
   if (el2 && chemRisk) _renderChemRisk(el2, chemRisk);
 

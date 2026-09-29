@@ -1,0 +1,512 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   TexasClimate — Evidence layer
+   Provenance badges, WHY? breakdowns, the confidence ladder, unknowns panels,
+   model cards and scenario controls.
+
+   Design rule enforced throughout this file: STATUS IS NEVER ENCODED BY COLOUR
+   ALONE. Every badge carries a glyph and a word, every confidence chip carries
+   its level in text, and the confidence ladder uses distinct dot shapes as well
+   as hue. This is a WCAG 1.4.1 requirement, and it is also the honest choice —
+   the whole point of the feature is that a reader can tell measurement from
+   inference at a glance.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+:root{
+  --st-live:#2ECC8B; --st-drv:#4A90E2; --st-lit:#A78BFA;
+  --st-exp:#F5A623;  --st-usr:#5DDBA8; --st-unk:rgba(255,255,255,0.42);
+  --conf-high:#2ECC8B; --conf-med:#F5A623; --conf-low:#D64545;
+}
+
+/* ── Provenance badges ───────────────────────────────────────────────────── */
+.tc-status-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  font:600 var(--text-xs)/1 var(--mono);letter-spacing:.04em;
+  padding:3px 6px;border-radius:var(--r6);white-space:nowrap;
+  border:1px solid currentColor;background:rgba(255,255,255,0.05);
+  vertical-align:middle;cursor:help;
+}
+.tc-status-icon{font-size:11px;line-height:1}
+.st-live{color:var(--st-live)} .st-drv{color:var(--st-drv)} .st-lit{color:var(--st-lit)}
+.st-exp{color:var(--st-exp)}  .st-usr{color:var(--st-usr)} .st-unk{color:var(--st-unk)}
+/* EXPERIMENTAL gets a hatch so it reads as provisional even in greyscale */
+.st-exp{background:repeating-linear-gradient(45deg,rgba(245,166,35,0.10) 0 4px,transparent 4px 8px)}
+.st-unk{border-style:dashed}
+
+.tc-unknown{color:var(--st-unk);font-family:var(--mono);font-size:var(--text-xs);letter-spacing:.05em}
+
+/* ── The split note: score vs confidence ─────────────────────────────────── */
+.tc-split-note{
+  background:linear-gradient(90deg,rgba(74,144,226,0.10),transparent);
+  border-left:3px solid var(--blue);border-radius:0 var(--r8) var(--r8) 0;
+  padding:var(--space-3) var(--space-4);margin-bottom:var(--space-4);
+  font-size:var(--text-sm);line-height:1.6;color:var(--text2);
+}
+.tc-split-note strong{color:var(--text0)}
+
+/* ── Confidence chips ────────────────────────────────────────────────────── */
+.tc-conf-chip{
+  display:inline-flex;align-items:baseline;gap:6px;margin-top:var(--space-2);
+  padding:4px 9px;border-radius:999px;font-size:var(--text-xs);
+  border:1px solid currentColor;background:rgba(255,255,255,0.04);
+}
+.tc-conf-chip strong{font-family:var(--mono);letter-spacing:.06em;font-size:var(--text-sm)}
+.tc-conf-label{color:var(--text3);font-weight:500}
+.tc-conf-lg{padding:6px 12px;margin-top:var(--space-3)}
+.tc-conf-high{color:var(--conf-high)}
+.tc-conf-medium{color:var(--conf-med)}
+.tc-conf-low{color:var(--conf-low)}
+.tc-conf-chip:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+.tc-conf-explain{
+  margin-top:var(--space-4);padding:var(--space-3) var(--space-4);
+  background:var(--card1);border:1px solid var(--border);border-radius:var(--r8);
+}
+.tc-conf-explain-head{font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-2);color:var(--text0)}
+.tc-conf-reasons{margin:0;padding-left:1.1em;display:grid;gap:5px}
+.tc-conf-reasons li{font-size:var(--text-sm);line-height:1.55;color:var(--text2)}
+
+/* ── WHY? breakdown ──────────────────────────────────────────────────────── */
+.tc-why{margin-top:var(--space-3);border-top:1px dashed var(--border2);padding-top:var(--space-2)}
+.tc-why-summary{
+  cursor:pointer;font-size:var(--text-xs);color:var(--text2);
+  display:flex;align-items:center;gap:6px;padding:4px 0;list-style:none;
+}
+.tc-why-summary::-webkit-details-marker{display:none}
+.tc-why-summary::after{content:'▾';margin-left:auto;transition:transform .18s;color:var(--text3)}
+.tc-why[open] .tc-why-summary::after{transform:rotate(180deg)}
+.tc-why-summary:hover{color:var(--text0)}
+.tc-why-summary:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:var(--r6)}
+.tc-why-q{
+  font:700 var(--text-xs)/1 var(--mono);letter-spacing:.08em;color:var(--blue);
+  border:1px solid var(--blue-mid);border-radius:var(--r6);padding:3px 6px;
+}
+.tc-why-body{padding-top:var(--space-3);overflow-x:auto}
+.tc-why-table{width:100%;border-collapse:collapse;font-size:var(--text-xs);min-width:520px}
+.tc-why-table th,.tc-why-table td{
+  text-align:left;padding:6px 8px;border-bottom:1px solid var(--border);vertical-align:top;
+}
+.tc-why-table thead th{
+  color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.05em;
+  font-size:9px;border-bottom:1px solid var(--border2);
+}
+.tc-why-term{color:var(--text0);font-weight:600;white-space:nowrap}
+.tc-why-val{font-family:var(--mono);color:var(--text1);white-space:nowrap}
+.tc-why-ref{color:var(--text2);line-height:1.5;min-width:180px}
+.tc-why-wt{font-family:var(--mono);color:var(--text2);white-space:nowrap}
+.tc-why-renorm{color:var(--st-exp);margin-left:3px;cursor:help}
+.tc-why-contrib{font-family:var(--mono);font-weight:700;text-align:right;white-space:nowrap}
+.tc-why-contrib.neg{color:var(--red)}
+.tc-why-contrib.pos{color:var(--green)}
+.tc-why-table tfoot th{
+  color:var(--text1);font-weight:600;text-align:right;padding-top:9px;border-bottom:none;
+}
+.tc-why-total{
+  font-family:var(--mono);font-weight:700;font-size:var(--text-base);
+  color:var(--text0);text-align:right;padding-top:9px;border-bottom:none;
+}
+.tc-why-renorm-note{
+  margin-top:var(--space-3);padding:var(--space-2) var(--space-3);
+  background:rgba(245,166,35,0.07);border-left:2px solid var(--st-exp);
+  border-radius:0 var(--r6) var(--r6) 0;font-size:var(--text-xs);line-height:1.6;color:var(--text2);
+}
+.tc-why-model{margin-top:var(--space-3);font-size:var(--text-xs);color:var(--text3);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tc-why-card-link{color:var(--blue);text-decoration:none}
+.tc-why-card-link:hover{text-decoration:underline}
+.tc-why-empty{font-size:var(--text-xs);color:var(--text3);font-style:italic;padding:var(--space-2) 0}
+
+/* ── Confidence ladder ───────────────────────────────────────────────────── */
+.tc-ladder{margin-top:var(--space-5);padding:var(--space-4);background:var(--card1);
+  border:1px solid var(--border);border-radius:var(--r12)}
+.tc-ladder-title{font-size:var(--text-md);font-weight:650;margin-bottom:var(--space-1)}
+.tc-ladder-lede{font-size:var(--text-sm);color:var(--text2);line-height:1.6;margin-bottom:var(--space-4);max-width:70ch}
+.tc-ladder-steps{
+  list-style:none;display:grid;gap:var(--space-2);
+  grid-template-columns:repeat(auto-fit,minmax(155px,1fr));
+}
+.tc-ladder-step{
+  padding:var(--space-3);border-radius:var(--r8);
+  background:var(--card2);border:1px solid var(--border);position:relative;
+}
+.tc-ladder-name{font-size:var(--text-sm);font-weight:650;color:var(--text0)}
+.tc-ladder-level{
+  display:flex;align-items:center;gap:5px;margin:5px 0;
+  font:700 var(--text-xs)/1 var(--mono);letter-spacing:.07em;
+}
+/* Non-colour-only: each level gets a distinct dot SHAPE as well as a hue */
+.tc-ladder-dot{width:9px;height:9px;display:inline-block;background:currentColor}
+.tc-conf-high  .tc-ladder-dot{border-radius:50%}                                   /* circle */
+.tc-conf-medium .tc-ladder-dot{border-radius:1px}                                  /* square */
+.tc-conf-low   .tc-ladder-dot{clip-path:polygon(50% 0,100% 100%,0 100%)}           /* triangle */
+.tc-ladder-desc{font-size:var(--text-xs);color:var(--text2);line-height:1.5}
+.tc-ladder-why{margin-top:var(--space-2)}
+.tc-ladder-why summary{
+  font-size:var(--text-xs);color:var(--text3);cursor:pointer;list-style:none;
+  text-decoration:underline dotted;
+}
+.tc-ladder-why summary::-webkit-details-marker{display:none}
+.tc-ladder-why summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.tc-ladder-why ul{margin:var(--space-2) 0 0;padding-left:1em;display:grid;gap:4px}
+.tc-ladder-why li{font-size:var(--text-xs);color:var(--text2);line-height:1.5}
+.tc-ladder-foot{margin-top:var(--space-4);font-size:var(--text-xs);color:var(--text2);
+  padding-top:var(--space-3);border-top:1px solid var(--border)}
+
+/* ── Unknowns / improvements ─────────────────────────────────────────────── */
+.tc-unknown-grid{
+  display:grid;gap:var(--space-3);margin-top:var(--space-4);
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+}
+.tc-unknown-panel,.tc-improve-panel{
+  padding:var(--space-4);border-radius:var(--r12);border:1px solid var(--border);background:var(--card1);
+}
+.tc-unknown-panel{border-left:3px solid var(--st-unk)}
+.tc-improve-panel{border-left:3px solid var(--blue)}
+.tc-unknown-title{font-size:var(--text-base);font-weight:650;margin-bottom:var(--space-3)}
+.tc-unknown-list,.tc-improve-list{list-style:none;display:grid;gap:var(--space-3)}
+.tc-unknown-list li,.tc-improve-list li{display:grid;gap:3px;font-size:var(--text-xs);line-height:1.55}
+.tc-unknown-list strong,.tc-improve-list strong{color:var(--text0);font-size:var(--text-sm)}
+.tc-unknown-list span,.tc-improve-gain{color:var(--text2)}
+.tc-improve-how{color:var(--text3);font-style:italic}
+.tc-unknown-empty{font-size:var(--text-sm);color:var(--text2)}
+
+/* ── Section tags & ledes ────────────────────────────────────────────────── */
+.sub-section-tag{font-size:var(--text-xs);font-weight:400;margin-left:var(--space-2);color:var(--text3)}
+.sub-section-lede{font-size:var(--text-sm);color:var(--text2);line-height:1.6;max-width:75ch;margin-bottom:var(--space-3)}
+.pathway-process{font-size:var(--text-xs);color:var(--text2);margin:var(--space-2) 0;line-height:1.5}
+.pathway-process strong{color:var(--text1)}
+.tsh-experimental{
+  background:repeating-linear-gradient(45deg,rgba(245,166,35,0.14) 0 5px,transparent 5px 10px);
+  border:1px solid rgba(245,166,35,0.4);color:var(--st-exp);
+}
+.ag-gauge-unknown{background:repeating-linear-gradient(45deg,var(--border2) 0 5px,transparent 5px 10px);
+  border:1px dashed var(--border2)}
+.ag-gauge-denom{font-size:var(--text-xs);color:var(--text3);font-weight:400}
+.ag-gauge-word{font-size:var(--text-xs);color:var(--text2);margin-left:6px}
+.bio-score-name{font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:2px}
+.bio-score-model{margin-top:var(--space-2);font-size:var(--text-xs);color:var(--text3);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+/* ── Model cards ─────────────────────────────────────────────────────────── */
+.mc-lede{font-size:var(--text-sm);color:var(--text2);line-height:1.65;max-width:78ch;margin-bottom:var(--space-4)}
+.mc-grid{display:grid;gap:var(--space-4);grid-template-columns:repeat(auto-fit,minmax(330px,1fr))}
+.mc-card{background:var(--card1);border:1px solid var(--border);border-radius:var(--r12);padding:var(--space-4)}
+.mc-card-head{margin-bottom:var(--space-3);padding-bottom:var(--space-3);border-bottom:1px solid var(--border)}
+.mc-card-title{font-size:var(--text-base);font-weight:650;line-height:1.35}
+.mc-card-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:var(--space-2)}
+.mc-version{font-family:var(--mono);font-size:var(--text-xs);color:var(--text2)}
+.mc-id{font-family:var(--mono);font-size:9px;color:var(--text3);background:var(--surface);padding:2px 5px;border-radius:var(--r6)}
+.mc-dl{display:grid;gap:var(--space-3);margin:0}
+.mc-dl dt{font-size:9px;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);font-weight:700}
+.mc-dl dd{font-size:var(--text-xs);color:var(--text2);line-height:1.6;margin:3px 0 0}
+.mc-dl dd ul{margin:0;padding-left:1.05em;display:grid;gap:4px}
+.mc-dt-warn{color:var(--st-exp)!important}
+.mc-dd-warn{color:var(--text1)!important;background:rgba(245,166,35,0.07);
+  border-left:2px solid var(--st-exp);padding:var(--space-2) var(--space-3);border-radius:0 var(--r6) var(--r6) 0}
+
+/* ── Corrections log & claim registry ────────────────────────────────────── */
+.mc-corrections,.mc-claims{margin-top:var(--space-6)}
+.mc-corrections-title{font-size:var(--text-md);font-weight:650;margin-bottom:var(--space-2)}
+.mc-corr-list{list-style:none;display:grid;gap:var(--space-3)}
+.mc-corr-item{background:var(--card1);border:1px solid var(--border);border-left:3px solid var(--st-exp);
+  border-radius:0 var(--r8) var(--r8) 0;padding:var(--space-3) var(--space-4);display:grid;gap:6px}
+.mc-corr-item>div{font-size:var(--text-xs);line-height:1.6;color:var(--text2)}
+.mc-corr-tag{font:700 9px/1 var(--mono);letter-spacing:.07em;padding:3px 5px;border-radius:var(--r6);margin-right:6px;white-space:nowrap}
+.mc-corr-tag-was{background:rgba(214,69,69,0.16);color:#E87A7A}
+.mc-corr-tag-why{background:rgba(245,166,35,0.16);color:var(--st-exp)}
+.mc-corr-tag-now{background:rgba(46,204,139,0.16);color:var(--green)}
+.mc-corr-now{color:var(--text1)!important}
+.mc-claim-grid{display:grid;gap:var(--space-3);grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.mc-claim{background:var(--card1);border:1px solid var(--border);border-radius:var(--r8);padding:var(--space-4);display:grid;gap:var(--space-2)}
+.mc-claim-head{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.mc-tier{font:600 9px/1 var(--mono);letter-spacing:.05em;color:var(--st-lit);
+  border:1px solid rgba(167,139,250,0.4);border-radius:var(--r6);padding:3px 6px;cursor:help}
+.mc-claim-text{font-size:var(--text-sm);color:var(--text1);line-height:1.6}
+.mc-claim-scope,.mc-claim-notes{font-size:var(--text-xs);color:var(--text2);line-height:1.55}
+.mc-claim-scope strong{color:var(--text1)}
+.mc-claim-src{font-size:var(--text-xs);color:var(--blue);text-decoration:none;word-break:break-word}
+.mc-claim-src:hover{text-decoration:underline}
+
+/* Retired rows in the citation table read as struck-through history */
+.src-retired td{color:var(--text2)!important;background:rgba(245,166,35,0.05)}
+.src-retired strong{color:var(--st-exp)}
+.ov-faq-correction{margin-top:var(--space-3);padding:var(--space-3);background:rgba(245,166,35,0.07);
+  border-left:2px solid var(--st-exp);border-radius:0 var(--r6) var(--r6) 0;
+  font-size:var(--text-xs);line-height:1.65;color:var(--text2)}
+.ov-faq-correction strong{color:var(--st-exp)}
+
+/* ── Scenario ────────────────────────────────────────────────────────────── */
+.scn-card{background:var(--card1);border:1px solid var(--border);border-radius:var(--r12);padding:var(--space-4)}
+.scn-title{font-size:var(--text-md);font-weight:650}
+.scn-lede{font-size:var(--text-sm);color:var(--text2);line-height:1.6;margin:var(--space-2) 0 var(--space-4);max-width:75ch}
+.scn-controls{display:grid;gap:var(--space-4);grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.scn-field{display:grid;gap:6px}
+.scn-field label{font-size:var(--text-xs);color:var(--text2);font-weight:600}
+.scn-field input[type=range]{width:100%;accent-color:var(--blue)}
+.scn-field input[type=range]:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.scn-out{font-family:var(--mono);font-size:var(--text-sm);color:var(--text0)}
+.scn-num{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r6);
+  padding:7px 9px;color:var(--text0);font-family:var(--mono);font-size:var(--text-sm);width:100%}
+.scn-hint{font-size:var(--text-xs);color:var(--text3);line-height:1.45}
+.scn-actions{display:flex;gap:var(--space-2);margin-top:var(--space-4);flex-wrap:wrap}
+.scn-status{margin-top:var(--space-3);font-size:var(--text-xs);line-height:1.6;min-height:1.4em}
+.scn-err{color:var(--red)} .scn-warn{color:var(--st-exp)} .scn-ok{color:var(--green)}
+.scn-active{color:var(--text1);display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+/* When a scenario is live, the whole results area is visibly provisional */
+.tc-scenario-active #agScoreSection,
+.tc-scenario-active #bioScoreSection,
+.tc-scenario-active #stressProfileSection{
+  outline:1px dashed rgba(245,166,35,0.45);outline-offset:6px;border-radius:var(--r8);
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width:600px){
+  .tc-ladder-steps{grid-template-columns:1fr}
+  .tc-why-body{margin:0 calc(-1 * var(--space-3));padding-inline:var(--space-3)}
+  .mc-grid,.mc-claim-grid,.tc-unknown-grid{grid-template-columns:1fr}
+  .scn-controls{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  .tc-why-summary::after{transition:none}
+}
+/* Honour forced-colours mode: keep glyphs and borders, drop decorative fills */
+@media (forced-colors:active){
+  .tc-status-badge,.tc-conf-chip,.mc-tier{border:1px solid CanvasText;background:Canvas;color:CanvasText}
+  .st-exp,.ag-gauge-unknown,.tsh-experimental{background:Canvas}
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   Homepage pipeline — the one idea, shown before anything else.
+   Colour moves from green (measured) through blue (calculated) to amber
+   (inferred), and each band ALSO carries a distinct left border weight and a
+   text key beneath, so the progression survives greyscale and colour blindness.
+   ════════════════════════════════════════════════════════════════════════════ */
+.ov-pipeline{
+  list-style:none;display:grid;gap:var(--space-2);margin:var(--space-6) 0 var(--space-3);
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));counter-reset:pipe;
+}
+.ov-pipe-step{
+  position:relative;padding:var(--space-3) var(--space-3) var(--space-3) var(--space-4);
+  background:var(--card1);border:1px solid var(--border);border-radius:var(--r8);
+  display:grid;gap:3px;align-content:start;
+}
+.ov-pipe-step::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:var(--r8) 0 0 var(--r8);
+}
+.ov-pipe-measured::before{background:var(--st-live)}
+.ov-pipe-derived::before {background:var(--st-drv)}
+.ov-pipe-inferred::before{background:var(--st-exp)}
+.ov-pipe-evidence::before{background:var(--st-lit)}
+.ov-pipe-num{
+  font:700 9px/1 var(--mono);color:var(--text3);letter-spacing:.08em;
+}
+.ov-pipe-name{font-size:var(--text-base);font-weight:650;color:var(--text0);line-height:1.25}
+.ov-pipe-note{font-size:var(--text-xs);color:var(--text2);line-height:1.45}
+.ov-pipeline-key{
+  font-size:var(--text-xs);color:var(--text2);line-height:1.7;
+  display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:var(--space-5);
+}
+.ov-key-item{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.06em;
+  padding:3px 7px;border-radius:var(--r6);border:1px solid currentColor}
+.ov-key-measured{color:var(--st-live)}
+.ov-key-derived {color:var(--st-drv)}
+.ov-key-inferred{color:var(--st-exp)}
+.ov-key-arrow{color:var(--text3)}
+.ov-key-sep{color:var(--text3);margin:0 2px}
+@media (max-width:620px){
+  .ov-pipeline{grid-template-columns:1fr 1fr}
+}
+@media (max-width:380px){
+  .ov-pipeline{grid-template-columns:1fr}
+}
+
+/* Provider-failure state: says what is missing, shows nothing invented. */
+.dash-unavailable{grid-column:1/-1;border-left:3px solid var(--st-unk)}
+.dash-unavailable-title{font-size:var(--text-md);font-weight:650;margin:var(--space-2) 0 var(--space-1)}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   Horizontal-overflow fixes (pre-existing, found by the responsive audit)
+
+   1. .ov-hero::before is a decorative 860px radial glow, centred with
+      translateX(-50%). Below ~900px it extends past the viewport and was the
+      sole cause of the page scrolling sideways at 320/375/390px. Containing it
+      on the hero costs nothing visually — the glow is background decoration and
+      has no content to clip.
+   2. The header's action buttons overflowed by ~17px at 375px. They now wrap and
+      the search field is allowed to shrink, so the header fits at 320px.
+   ════════════════════════════════════════════════════════════════════════════ */
+.ov-hero{
+  overflow-x:hidden;   /* fallback for browsers without overflow:clip */
+  overflow-x:clip;     /* preferred: contains the glow without a scroll container */
+}
+/* Belt and braces: never let the decoration exceed the viewport itself. */
+.ov-hero::before{max-width:100vw}
+
+@media (max-width:820px){
+  .header{flex-wrap:wrap;row-gap:var(--space-2);height:auto;padding-block:var(--space-2)}
+  .header .search-wrap{min-width:0;flex:1 1 140px}
+  .header .search-box{min-width:0;width:100%}
+  /* Clock and sync timestamp are ambient, not load-bearing — the first things
+     to go when horizontal space runs out. */
+  .header-meta,.clock{display:none}
+}
+@media (max-width:420px){
+  .header{gap:var(--space-2)}
+  .header-title{font-size:var(--text-sm);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .judge-mode-btn,.header .btn-sm{font-size:10px;padding:5px 8px}
+}
+
+/* ── Grid/flex min-width containment ──────────────────────────────────────────
+   A grid or flex item defaults to min-width:auto, which means it refuses to
+   shrink below its content. The WHY table declares min-width:520px so its
+   columns stay readable, and without min-width:0 on its ancestors that 520px
+   propagated all the way out and pushed the whole page sideways at 320px —
+   the table expanded its container instead of scrolling inside it.
+
+   Setting min-width:0 lets the container shrink, which lets overflow-x:auto on
+   .tc-why-body finally do its job: the table scrolls within the card. */
+.ag-scores-grid > *,
+.ag-score-card,
+.tc-why,
+.tc-why-body,
+.bio-subscore-grid > *,
+.tc-ladder-step,
+.mc-card,
+.mc-claim{min-width:0}
+.tc-why-body{max-width:100%}
+
+/* The sub-tab bar bleeds past the content padding by design, so its own box is
+   wider than the viewport at very narrow widths. It scrolls internally; clip the
+   overflow it creates for the page. */
+.subtab-bar{max-width:100vw}
+.content{overflow-x:clip}
+
+/* ── WHY table: stacked presentation in narrow containers ─────────────────────
+   The breakdown lives inside a score card, which may be ~280px wide. A six
+   column table cannot be read there, and letting it scroll horizontally hid
+   the two most important columns (weight and points) behind an invisible
+   scrollbar. A container query switches the same markup to stacked label/value
+   pairs when the card is narrow, so nothing is ever off-screen.
+
+   Table semantics are preserved throughout — screen readers still announce
+   row headers and column associations; only the visual presentation changes. */
+.ag-score-card,.bio-subscore-row,.tc-why{container-type:inline-size}
+
+@container (max-width: 520px){
+  .tc-why-table{min-width:0;display:block}
+  .tc-why-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .tc-why-table tbody,.tc-why-table tfoot,.tc-why-table tr{display:block}
+  .tc-why-table tr{
+    padding:var(--space-2) 0;border-bottom:1px solid var(--border);
+  }
+  .tc-why-table tr:last-child{border-bottom:none}
+  .tc-why-table th,.tc-why-table td{
+    display:grid;grid-template-columns:minmax(0,9em) 1fr;gap:8px;
+    padding:2px 0;border-bottom:none;align-items:baseline;
+  }
+  .tc-why-table .tc-why-term{
+    font-size:var(--text-sm);padding-bottom:5px;display:block;white-space:normal;
+  }
+  .tc-why-table td::before{
+    content:attr(data-label);color:var(--text3);font-size:9px;
+    text-transform:uppercase;letter-spacing:.05em;font-weight:700;
+  }
+  .tc-why-table .tc-why-contrib{text-align:left}
+  .tc-why-table tfoot tr{border-top:1px solid var(--border2);padding-top:var(--space-2)}
+  .tc-why-table tfoot th{grid-template-columns:1fr auto;text-align:left}
+  .tc-why-table tfoot td:empty{display:none}
+  .tc-why-total{text-align:left}
+}
+/* Fallback for browsers without container queries: at narrow VIEWPORTS the
+   cards are necessarily narrow too, so mirror the stacked layout. */
+@supports not (container-type: inline-size){
+  @media (max-width:900px){
+    .tc-why-table{min-width:0}
+    .tc-why-body{overflow-x:auto}
+  }
+}
+
+/* Degraded-dependency states. Never a blank box — a blank box reads as
+   "no data", which is a different and misleading claim than "not loaded". */
+.chart-unavailable,.map-unavailable{
+  display:grid;gap:var(--space-2);padding:var(--space-4);
+  background:var(--card1);border:1px dashed var(--border2);border-radius:var(--r8);
+  font-size:var(--text-xs);color:var(--text2);line-height:1.6;text-align:left;
+}
+.chart-unavailable strong,.map-unavailable-title{
+  color:var(--text0);font-size:var(--text-sm);font-weight:650;
+}
+.map-unavailable{place-content:center;min-height:220px;max-width:52ch;margin:auto}
+.map-unavailable p{margin:0}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   Guided Review — a guided run through the real interface.
+   The panel is a companion, not a takeover: the app stays interactive behind it,
+   because the point is to show the product working rather than to show slides.
+   ════════════════════════════════════════════════════════════════════════════ */
+.jp-shell{
+  position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:9000;
+  width:min(680px, calc(100vw - 32px));
+  background:var(--bg1);border:1px solid var(--border2);border-radius:var(--r12);
+  box-shadow:0 18px 50px rgba(0,0,0,.55);overflow:hidden;
+}
+.jp-progress{height:3px;background:rgba(255,255,255,.07)}
+.jp-progress-fill{
+  height:100%;width:0;background:linear-gradient(90deg,var(--st-live),var(--blue));
+  transition:width .4s ease;
+}
+.jp-body{padding:var(--space-4) var(--space-4) var(--space-3)}
+.jp-step{
+  font:700 9px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:var(--space-2);
+}
+.jp-title{font-size:var(--text-md);font-weight:650;line-height:1.3;margin-bottom:var(--space-2)}
+.jp-text{font-size:var(--text-sm);color:var(--text1);line-height:1.65}
+.jp-text em{color:var(--text2)}
+.jp-aside{
+  margin-top:var(--space-2);padding-left:var(--space-3);
+  border-left:2px solid var(--blue-mid);
+  font-size:var(--text-xs);color:var(--text2);line-height:1.6;
+}
+.jp-controls{
+  display:flex;gap:var(--space-2);padding:0 var(--space-4) var(--space-4);flex-wrap:wrap;
+}
+.jp-btn{
+  font:600 var(--text-xs)/1 var(--font);padding:7px 12px;border-radius:var(--r6);
+  background:var(--surface2);border:1px solid var(--border2);color:var(--text1);cursor:pointer;
+}
+.jp-btn:hover{background:var(--card3);color:var(--text0)}
+.jp-btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.jp-btn-pause{margin-right:auto}
+.jp-btn-exit{border-color:rgba(214,69,69,.4);color:#E87A7A}
+
+/* Spotlight: ring the real element rather than dimming the page, so the
+   surrounding interface stays readable — a reviewer should see the context. */
+.jp-spot{
+  outline:2px solid var(--blue);outline-offset:6px;border-radius:var(--r8);
+  box-shadow:0 0 0 9999px rgba(3,7,15,.42);
+  transition:outline-color .25s ease;
+  position:relative;z-index:20;
+}
+body.jp-active .content{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){
+  .jp-progress-fill,.jp-spot{transition:none}
+  body.jp-active .content{scroll-behavior:auto}
+}
+@media (max-width:560px){
+  .jp-shell{bottom:8px;width:calc(100vw - 16px)}
+  .jp-body{padding:var(--space-3)}
+  .jp-controls{padding:0 var(--space-3) var(--space-3)}
+  .jp-btn{flex:1 1 auto;text-align:center}
+  .jp-btn-pause{margin-right:0}
+}
+@media (forced-colors:active){
+  .jp-spot{outline:3px solid Highlight;box-shadow:none}
+}
+
+/* The static walkthrough now points at the live guided path. */
+.demo-prefer-path{
+  margin:var(--space-3) 0 var(--space-4);padding:var(--space-3) var(--space-4);
+  background:linear-gradient(90deg,rgba(74,144,226,.10),transparent);
+  border-left:3px solid var(--blue);border-radius:0 var(--r8) var(--r8) 0;
+  font-size:var(--text-sm);color:var(--text2);line-height:1.7;
+}
+.demo-prefer-path strong{color:var(--text0)}
+.demo-prefer-path .btn-sm{margin:0 4px;vertical-align:baseline}

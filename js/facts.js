@@ -11,11 +11,11 @@ const BIOFUEL_FACTS = [
   {icon:'🐝', cat:'Switchgrass',     text:'As a native perennial grass, switchgrass supports greater insect biodiversity and wildlife habitat than annual monocultures, providing ecological co-benefits alongside fuel production.'},
 
   // Energy balance & ethanol yield
-  {icon:'⚡', cat:'Energy Balance',  text:'Under U.S. Great Plains field conditions, switchgrass cellulosic ethanol yields 540% more renewable energy than is consumed to grow and convert it. (Schmer et al., PNAS 2008)'},
-  {icon:'⛽', cat:'Ethanol Yield',   text:'One dry ton of switchgrass biomass can yield approximately 60–90 gallons of cellulosic ethanol, depending on pretreatment method and feedstock composition.'},
+  {icon:'⚡', cat:'Energy Balance',  text:'On 10 farms in Nebraska, South Dakota and North Dakota tracked from 2000 to 2005, switchgrass grown for ethanol produced 540% more renewable energy than the NONRENEWABLE energy consumed to grow and convert it. That is a ratio of renewable output to fossil input on those farms — not a universal property of the species. (Schmer et al., PNAS 2008)'},
+  {icon:'⛽', cat:'Conversion Assumption', text:'Techno-economic studies of switchgrass ethanol commonly ASSUME about 80 gallons of ethanol per dry ton of feedstock. This is a modelling assumption used to compare scenarios — not a measured property of a plant, and not an achieved commercial figure.'},
   {icon:'🌡', cat:'Emissions',       text:'Cellulosic ethanol from switchgrass reduces lifecycle greenhouse gas emissions by approximately 85–94% compared to gasoline, per the GREET model from Argonne National Laboratory.'},
-  {icon:'💧', cat:'Water Use',       text:'Cellulosic ethanol from switchgrass requires only 6–14 gallons of water per gallon of fuel — versus an estimated ~784 gallons per gallon for corn ethanol. (NREL)'},
-  {icon:'🌱', cat:'Carbon',          text:'Switchgrass root systems extend 6–10 feet underground, sequestering an estimated 1.1–2.3 tonnes of CO₂ per hectare per year in soil organic carbon. (DOE Billion-Ton Report 2016)'},
+  {icon:'💧', cat:'Water Use',       text:'There is no single water footprint for a biofuel. Water embodied in U.S. corn ethanol varies by roughly three orders of magnitude between states, driven almost entirely by how much of the crop is irrigated — which is why TexasClimate quotes no single gallons-per-gallon figure. (Chiu, Walseth & Suh, ES&T 2009)'},
+  {icon:'🌱', cat:'Carbon',          text:'Switchgrass root systems extend several feet underground, and perennial grasses are associated with soil organic carbon accumulation relative to annual row crops. TexasClimate quotes no specific sequestration rate: this app previously gave 1.1–2.3 tCO₂/ha/yr citing the DOE Billion-Ton Report, which is a feedstock supply assessment and an unlikely source for a soil-carbon rate. The figure could not be verified against it and has been withdrawn rather than re-cited to something else.'},
 
   // Cell wall composition
   {icon:'🔬', cat:'Composition',     text:'Cellulose makes up 30–40% of switchgrass dry matter and hemicellulose a further 20–30% — both are convertible to fermentable sugars, but only after the lignin barrier is broken down.'},
@@ -33,7 +33,7 @@ const BIOFUEL_FACTS = [
   {icon:'🧫', cat:'Lignin',          text:'Dilute acid pretreatment (0.5–2% H₂SO₄ at 120–200°C) disrupts the lignocellulosic matrix to expose cellulose, but also generates fermentation inhibitors like furfural and HMF as byproducts.'},
   {icon:'💨', cat:'Lignin',          text:'Ammonia Fiber Expansion (AFEX) pretreatment uses pressurized liquid ammonia to swell and disrupt lignin without producing significant sugar-degradation byproducts, preserving more fermentable material.'},
   {icon:'🍄', cat:'Lignin',          text:'White-rot fungi such as Phanerochaete chrysosporium can biologically degrade lignin using extracellular peroxidase and laccase enzymes — a low-energy pretreatment pathway still under active research.'},
-  {icon:'🧬', cat:'Lignin',          text:'Switchgrass with a downregulated COMT gene (lower lignin content) shows up to 38% improvement in ethanol yield per gram of biomass, demonstrating the power of targeted genetic modification. (Fu et al., 2011, Nature Biotechnology)'},
+  {icon:'🧬', cat:'Lignin',          text:'Transgenic switchgrass with the COMT gene down-regulated has modestly lower lignin and a reduced syringyl:guaiacyl ratio, and yielded up to 38% more ethanol under conventional fermentation — while also needing far lower cellulase dosages. That is a result for specific transgenic lines under laboratory process conditions, not a property of field switchgrass. (Fu et al., 2011, PNAS 108(9):3803–3808)'},
   {icon:'🔥', cat:'Lignin',          text:'Lignin recovered after pretreatment can be combusted to generate process heat and electricity for the biorefinery itself, significantly improving the facility\'s overall energy efficiency and economics.'},
 ];
 

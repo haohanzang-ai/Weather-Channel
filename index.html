@@ -35,16 +35,17 @@
   <!-- ── MapLibre GL ── -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4/dist/maplibre-gl.min.css">
   <!-- ── Stylesheets ── -->
-  <link rel="stylesheet" href="styles/base.css">
-  <link rel="stylesheet" href="styles/biofuel.css">
-  <link rel="stylesheet" href="styles/fuel.css">
-  <link rel="stylesheet" href="styles/mission.css">
-  <link rel="stylesheet" href="styles/scanner.css">
-  <link rel="stylesheet" href="styles/gene-atlas.css">
-  <link rel="stylesheet" href="styles/graphbuilder.css">
-  <link rel="stylesheet" href="styles/demo.css">
-  <link rel="stylesheet" href="styles/chatbot.css">
-  <link rel="stylesheet" href="styles/premium.css">
+  <link rel="stylesheet" href="styles/base.css?v=4.0.0">
+  <link rel="stylesheet" href="styles/biofuel.css?v=4.0.0">
+  <link rel="stylesheet" href="styles/fuel.css?v=4.0.0">
+  <link rel="stylesheet" href="styles/mission.css?v=4.0.0">
+  <link rel="stylesheet" href="styles/scanner.css?v=4.0.0">
+  <link rel="stylesheet" href="styles/gene-atlas.css?v=4.0.0">
+  <link rel="stylesheet" href="styles/graphbuilder.css?v=4.0.0">
+  <link rel="stylesheet" href="styles/demo.css?v=4.0.0">
+  <link rel="stylesheet" href="styles/chatbot.css?v=4.0.0">
+  <link rel="stylesheet" href="styles/premium.css?v=4.0.0">
+  <link rel="stylesheet" href="styles/evidence.css?v=4.0.0">
 </head>
 <body>
 
@@ -110,11 +111,11 @@
   <span class="ptn-live-badge"><span class="ptn-live-dot" aria-hidden="true"></span>Live Data</span>
 
   <div class="ptn-tabs" role="menubar" aria-label="Main tabs">
-    <button class="ptn-tab ptn-active" role="menuitem" data-page="overview"    onclick="showPage('overview')">Overview</button>
-    <button class="ptn-tab"            role="menuitem" data-page="analyze"     onclick="showPage('analyze')">Dashboard</button>
-    <button class="ptn-tab"            role="menuitem" data-page="bioenergy"   onclick="showPage('bioenergy')">Plant Scanner</button>
-    <button class="ptn-tab"            role="menuitem" data-page="mapcompare"  onclick="showPage('mapcompare')">Climate Map</button>
-    <button class="ptn-tab"            role="menuitem" data-page="science"     onclick="showPage('science')">Science &amp; Sources</button>
+    <button class="ptn-tab ptn-primary" role="menuitem" data-page="analyze"    onclick="showPage('analyze')">Analyze</button>
+    <button class="ptn-tab"             role="menuitem" data-page="mapcompare" onclick="showPage('mapcompare');subtabGo('mapcompare','mc-plantcmp')">Compare</button>
+    <button class="ptn-tab"             role="menuitem" data-page="mapcompare" onclick="showPage('mapcompare');subtabGo('mapcompare','mc-map')">Map</button>
+    <button class="ptn-tab"             role="menuitem" data-page="science"    onclick="showPage('science')">Science</button>
+    <button class="ptn-tab ptn-active"  role="menuitem" data-page="overview"   onclick="showPage('overview')">About</button>
   </div>
 
   <div class="ptn-right">
@@ -137,16 +138,17 @@
 
     <div class="nav-section" role="menu" aria-label="Main tabs">
       <div class="nav-label" aria-hidden="true">Main</div>
-      <button class="nav-item active" role="menuitem" data-page="overview"    aria-current="page" onclick="showPage('overview')"><span class="nav-icon" aria-hidden="true">🏠</span>Overview</button>
-      <button class="nav-item"        role="menuitem" data-page="analyze"     onclick="showPage('analyze')"><span class="nav-icon" aria-hidden="true">🔬</span>Dashboard</button>
-      <button class="nav-item"        role="menuitem" data-page="bioenergy"   onclick="showPage('bioenergy')"><span class="nav-icon" aria-hidden="true">⚡</span>Plant Scanner</button>
-      <button class="nav-item"        role="menuitem" data-page="mapcompare"  onclick="showPage('mapcompare')"><span class="nav-icon" aria-hidden="true">◉</span>Climate Map</button>
-      <button class="nav-item"        role="menuitem" data-page="science"     onclick="showPage('science')"><span class="nav-icon" aria-hidden="true">🧬</span>Science &amp; Sources</button>
+      <button class="nav-item active" role="menuitem" data-page="analyze"    aria-current="page" onclick="showPage('analyze')"><span class="nav-icon" aria-hidden="true">🔬</span>Analyze</button>
+      <button class="nav-item"        role="menuitem" data-page="mapcompare" onclick="showPage('mapcompare');subtabGo('mapcompare','mc-plantcmp')"><span class="nav-icon" aria-hidden="true">⇌</span>Compare</button>
+      <button class="nav-item"        role="menuitem" data-page="mapcompare" onclick="showPage('mapcompare');subtabGo('mapcompare','mc-map')"><span class="nav-icon" aria-hidden="true">◉</span>Map</button>
+      <button class="nav-item"        role="menuitem" data-page="science"    onclick="showPage('science')"><span class="nav-icon" aria-hidden="true">🧬</span>Science</button>
+      <button class="nav-item"        role="menuitem" data-page="overview"   onclick="showPage('overview')"><span class="nav-icon" aria-hidden="true">🏠</span>About</button>
     </div>
 
     <div class="nav-section" role="menu" aria-label="More tools">
       <div class="nav-label" aria-hidden="true">More</div>
-      <button class="nav-item" role="menuitem" data-page="demo"         onclick="showPage('demo');demoStart()" style="font-size:11px"><span class="nav-icon" aria-hidden="true">🎭</span>Demo / Judges</button>
+      <button class="nav-item" role="menuitem" data-page="bioenergy"    onclick="showPage('bioenergy')" style="font-size:11px"><span class="nav-icon" aria-hidden="true">⚡</span>Bioenergy Lab</button>
+      <button class="nav-item" role="menuitem" data-page="demo"         onclick="showPage('demo');demoStart()" style="font-size:11px"><span class="nav-icon" aria-hidden="true">🎭</span>Guided Tour</button>
       <button class="nav-item" role="menuitem" data-page="graphbuilder" onclick="showPage('graphbuilder')"     style="font-size:11px"><span class="nav-icon" aria-hidden="true">📊</span>Graph Builder</button>
       <button class="nav-item" role="menuitem" data-page="sources"      onclick="showPage('sources')"          style="font-size:11px"><span class="nav-icon" aria-hidden="true">📚</span>Sources</button>
     </div>
@@ -172,7 +174,7 @@
       </div>
       <div class="header-meta">Synced: <span id="lastSync">just now</span></div>
       <time class="clock" id="clock" aria-label="Current time">00:00:00</time>
-      <button class="judge-mode-btn" id="judgeModeBtn" onclick="toggleJudgeMode()" aria-pressed="false" title="Simplify interface for judges — hides long science sections">⚖ Judge Mode</button>
+      <button class="judge-mode-btn" id="judgeModeBtn" onclick="toggleJudgeMode()" aria-pressed="false" title="Run a guided ~2 minute path through the real pipeline on live data">⚖ Guided Review</button>
       <button class="btn-sm" id="refreshBtn" onclick="refreshData(event)" aria-label="Refresh dashboard data">↻ Refresh</button>
     </header>
 
@@ -187,26 +189,64 @@
         <section class="ov-hero" aria-label="Platform hero">
           <div class="ov-eyebrow-tag">
             <span class="ov-eyebrow-dot" aria-hidden="true"></span>
-            Congressional App Challenge 2026 · Texas
+            Texas Bioenergy Intelligence Platform
           </div>
-          <h1 class="ov-headline">
-            Analyze <em>plant survival</em>, climate stress,<br>and bioenergy potential — with sources you can check.
-          </h1>
+          <h1 class="ov-headline">From environment<br>to biology.</h1>
           <p class="ov-subline">
-            TexasClimate combines live Texas weather data, plant biology, and cited bioenergy research to explain whether a plant can survive, produce biomass, and support clean fuel — with honest confidence labels on every result.
+            A weather app tells you what the weather <em>is</em>. TexasClimate asks what it may <em>mean</em>
+            &mdash; biologically &mdash; for a bioenergy crop growing in it, and tells you how strong the
+            evidence behind that answer actually is.
           </p>
+
+          <!-- The pipeline IS the product. Show it before anything else. -->
+          <ol class="ov-pipeline" aria-label="The analysis pipeline, in order">
+            <li class="ov-pipe-step ov-pipe-measured">
+              <span class="ov-pipe-num" aria-hidden="true">1</span>
+              <span class="ov-pipe-name">Environment</span>
+              <span class="ov-pipe-note">Live data at your coordinates</span></li>
+            <li class="ov-pipe-step ov-pipe-derived">
+              <span class="ov-pipe-num" aria-hidden="true">2</span>
+              <span class="ov-pipe-name">Stress</span>
+              <span class="ov-pipe-note">Measured values against published species limits</span></li>
+            <li class="ov-pipe-step ov-pipe-derived">
+              <span class="ov-pipe-num" aria-hidden="true">3</span>
+              <span class="ov-pipe-name">Tolerance</span>
+              <span class="ov-pipe-note">Our composite index over those stressors</span></li>
+            <li class="ov-pipe-step ov-pipe-inferred">
+              <span class="ov-pipe-num" aria-hidden="true">4</span>
+              <span class="ov-pipe-name">Biology</span>
+              <span class="ov-pipe-note">Mechanisms the literature associates</span></li>
+            <li class="ov-pipe-step ov-pipe-inferred">
+              <span class="ov-pipe-num" aria-hidden="true">5</span>
+              <span class="ov-pipe-name">Bioenergy</span>
+              <span class="ov-pipe-note">What it may mean for conversion</span></li>
+            <li class="ov-pipe-step ov-pipe-evidence">
+              <span class="ov-pipe-num" aria-hidden="true">6</span>
+              <span class="ov-pipe-name">Evidence</span>
+              <span class="ov-pipe-note">How certain each step above is</span></li>
+          </ol>
+          <p class="ov-pipeline-key">
+            <span class="ov-key-item ov-key-measured">Measured</span>
+            <span class="ov-key-arrow" aria-hidden="true">&rarr;</span>
+            <span class="ov-key-item ov-key-derived">Calculated</span>
+            <span class="ov-key-arrow" aria-hidden="true">&rarr;</span>
+            <span class="ov-key-item ov-key-inferred">Inferred</span>
+            <span class="ov-key-sep">&mdash;</span>
+            the app shows you which is which at every step, and confidence falls as you move right.
+          </p>
+
           <div class="ov-cta-row">
-            <button class="ov-cta-primary" onclick="showPage('bioenergy')" aria-label="Open Plant Scanner">
-              🔬 Run Plant Analysis
+            <button class="ov-cta-primary" onclick="showPage('analyze')" aria-label="Start a plant analysis">
+              Analyze a Plant &rarr;
             </button>
-            <button class="ov-cta-secondary" onclick="showPage('mapcompare')" aria-label="Open Climate Dashboard">
-              ◉ View Climate Map
+            <button class="ov-cta-secondary" onclick="showPage('science');setTimeout(()=>document.getElementById('sc-models')?.scrollIntoView({behavior:'smooth'}),250)" aria-label="Read the model cards">
+              How it works &amp; what it can't do
             </button>
           </div>
-          <div class="ov-trust-row" role="list" aria-label="Platform trust signals">
-            <span class="ov-trust-badge" role="listitem"><span class="ov-tb-dot ov-tb-green" aria-hidden="true"></span>Live Climate Data</span>
-            <span class="ov-trust-badge" role="listitem"><span class="ov-tb-dot ov-tb-blue"  aria-hidden="true"></span>Cited Biology</span>
-            <span class="ov-trust-badge" role="listitem"><span class="ov-tb-dot ov-tb-orange" aria-hidden="true"></span>Confidence-Labeled Estimates</span>
+          <div class="ov-trust-row" role="list" aria-label="What this app does and does not claim">
+            <span class="ov-trust-badge" role="listitem"><span class="ov-tb-dot ov-tb-green" aria-hidden="true"></span>Live environmental data</span>
+            <span class="ov-trust-badge" role="listitem"><span class="ov-tb-dot ov-tb-blue"  aria-hidden="true"></span>Every claim traceable to a source</span>
+            <span class="ov-trust-badge" role="listitem"><span class="ov-tb-dot ov-tb-orange" aria-hidden="true"></span>Models labelled experimental, because they are</span>
           </div>
         </section>
 
@@ -229,7 +269,7 @@
             <div class="ov-step" role="listitem">
               <div class="ov-step-num" aria-hidden="true">3</div>
               <div class="ov-step-title">Get a confidence-labeled report</div>
-              <p class="ov-step-desc">Receive a survival score, stress profile, bioenergy confidence estimate, and a clear list of what this app can and cannot measure.</p>
+              <p class="ov-step-desc">Receive an Environmental Tolerance Match, a stress profile with its full calculation shown, a Bioenergy Suitability Index, and &mdash; separately from all of those &mdash; an Evidence Confidence rating explaining how much to read into them.</p>
             </div>
           </div>
         </section>
@@ -348,8 +388,8 @@
             <!-- Graphic 3: Gene Pathway -->
             <div class="ov-graphic-card" role="listitem">
               <div class="ov-graphic-title">Gene Expression &amp; Stress Response</div>
-              <div class="ov-graphic-sub">How plant genes translate stress into survival behavior</div>
-              <svg viewBox="0 0 480 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Flow: Environmental Signal activates Gene Expression, producing Stress-Tolerance Proteins, enabling Metabolic Response, yielding Survival Score">
+              <div class="ov-graphic-sub">A mechanism documented in published studies. TexasClimate does <em>not</em> measure gene expression &mdash; it shows which genes the literature associates with each stress.</div>
+              <svg viewBox="0 0 480 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Flow diagram: an environmental signal is associated in published studies with changes in gene expression, which produce stress-tolerance proteins, enabling a metabolic response that affects whether the plant tolerates the conditions. This diagram shows a mechanism documented in the literature; TexasClimate does not measure gene expression.">
                 <defs>
                   <marker id="gn-arr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
                     <polygon points="0,0 7,3.5 0,7" fill="rgba(167,139,250,0.35)"/>
@@ -375,7 +415,7 @@
                 <line x1="352" y1="58" x2="366" y2="58" stroke="rgba(167,139,250,0.28)" stroke-width="1.5" marker-end="url(#gn-arr)"/>
                 <!-- Node 4 -->
                 <rect x="368" y="30" width="108" height="56" rx="9" fill="rgba(46,204,139,0.10)" stroke="rgba(46,204,139,0.28)" stroke-width="1.5"/>
-                <text x="422" y="50" text-anchor="middle" font-size="9.5" font-weight="700" fill="rgba(93,219,168,0.92)" font-family="system-ui">Survival</text>
+                <text x="422" y="50" text-anchor="middle" font-size="9.5" font-weight="700" fill="rgba(93,219,168,0.92)" font-family="system-ui">Tolerance</text>
                 <text x="422" y="63" text-anchor="middle" font-size="9.5" font-weight="700" fill="rgba(93,219,168,0.92)" font-family="system-ui">Probability</text>
                 <text x="422" y="76" text-anchor="middle" font-size="8" fill="rgba(93,219,168,0.44)" font-family="system-ui">estimated score</text>
                 <!-- Bottom note -->
@@ -511,7 +551,8 @@
                 Why switchgrass? Why not corn or soy?
                 <span class="ov-faq-chevron" aria-hidden="true">▼</span>
               </button>
-              <div class="ov-faq-a">Switchgrass (<em>Panicum virgatum</em>) is the U.S. Department of Energy's designated priority bioenergy crop. It produces 540% more energy than it consumes (Schmer et al., 2008, PNAS), uses 98% less water than corn ethanol, sequesters carbon, and thrives on marginal Texas land without heavy irrigation. It's also native to North America.</div>
+              <div class="ov-faq-a">Switchgrass (<em>Panicum virgatum</em>) is a perennial grass native to North America and a long-standing U.S. Department of Energy research priority for cellulosic ethanol. In a five-year study of 10 commercial farms in Nebraska, South Dakota and North Dakota, switchgrass grown for ethanol produced <strong>540% more renewable energy than the nonrenewable energy consumed</strong> to grow and convert it, with estimated life-cycle greenhouse gas emissions 94% below gasoline (<a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al., 2008, <em>PNAS</em> 105(2):464&ndash;469</a>). That result describes those Northern Great Plains farms under their management &mdash; it is not a fixed property of the species, and it has not been reproduced for Texas.
+              <p class="ov-faq-correction"><strong>A correction we made:</strong> this answer previously claimed switchgrass "uses 98% less water than corn ethanol." We removed it. We could not identify a source, and a single cross-crop water ratio is not meaningful in the first place &mdash; published water footprints for corn ethanol vary by roughly three orders of magnitude between U.S. states depending on how much of the crop is irrigated (<a href="https://doi.org/10.1021/es8031067" target="_blank" rel="noopener">Chiu et al., 2009, <em>ES&amp;T</em> 43(8):2688&ndash;2692</a>). TexasClimate now states no single water-footprint number for any fuel.</p></div>
             </div>
 
             <div class="ov-faq-item" role="listitem">
@@ -527,7 +568,7 @@
                 What makes this different from a normal weather app?
                 <span class="ov-faq-chevron" aria-hidden="true">▼</span>
               </button>
-              <div class="ov-faq-a">A weather app shows you temperature and rain. TexasClimate connects that data to plant biology — computing how much heat and drought stress a specific plant is under, what that means for its survival and biomass production, and how that translates to bioenergy potential. It also shows a live Texas map with pollution overlays, a gene-level plant atlas, and cited biofuel science — all in one place.</div>
+              <div class="ov-faq-a">A weather app shows you temperature and rain. TexasClimate compares those measurements against a species&rsquo; published tolerance limits, identifies which stressors are binding and how hard, traces the physiological mechanisms the literature associates with them, and sets out what that <em>may</em> mean for converting the biomass to fuel. Every step carries a provenance label and an evidence-confidence rating, and confidence falls as you move from measurement toward inference. It does not predict survival or yield &mdash; nothing about the plant itself is measured.</div>
             </div>
 
           </div>
@@ -536,9 +577,9 @@
         <!-- BOTTOM CTA ───────────────────────────────────── -->
         <div class="ov-cta-bottom">
           <div class="ov-cta-bottom-title">Ready to analyze a plant?</div>
-          <p class="ov-cta-bottom-sub">Choose a plant, pick a Texas city, and get a confidence-labeled survival and bioenergy report in seconds.</p>
+          <p class="ov-cta-bottom-sub">Choose a plant, pick a Texas location, and get an Environmental Tolerance Match, a full calculation breakdown, and a separate Evidence Confidence rating &mdash; in seconds.</p>
           <div class="ov-cta-row">
-            <button class="ov-cta-primary" onclick="showPage('bioenergy')" aria-label="Open Plant Scanner">🔬 Run Plant Analysis</button>
+            <button class="ov-cta-primary" onclick="showPage('bioenergy')" aria-label="Start a plant analysis">🔬 Analyze a Plant</button>
             <button class="ov-cta-secondary" onclick="showPage('analyze')" aria-label="Open Dashboard">📊 Open Dashboard</button>
           </div>
         </div>
@@ -565,15 +606,15 @@
           <span class="ds-item">Last updated: —</span>
         </div>
 
-        <!-- Hero — redesigned for judges -->
+        <!-- Hero -->
         <section class="hero-band" id="az-overview" aria-label="Platform summary">
           <div class="hero-main">
             <h1 class="hero-title">Can this plant survive here and become useful clean bioenergy?</h1>
             <p class="hero-tagline">TexasClimate connects live Texas weather data with plant biology and bioenergy science — helping students and Texans understand how climate, agriculture, and clean energy are linked.</p>
             <div class="hero-cta-grid" role="group" aria-label="Quick actions">
-              <button class="hero-cta-btn hero-cta-demo" onclick="showPage('demo');demoStart()" aria-label="Launch 12-step judge walkthrough">
+              <button class="hero-cta-btn hero-cta-demo" onclick="showPage('demo');demoStart()" aria-label="Launch 12-step guided walkthrough">
                 <span class="hero-cta-icon" aria-hidden="true">▶</span>
-                <div><div class="hero-cta-title">Run Guided Demo</div><div class="hero-cta-sub">12-step judge walkthrough</div></div>
+                <div><div class="hero-cta-title">Run Guided Tour</div><div class="hero-cta-sub">12-step feature walkthrough</div></div>
               </button>
               <button class="hero-cta-btn hero-cta-analyze" onclick="document.getElementById('az-step1').scrollIntoView({behavior:'smooth'})" aria-label="Choose a plant and analyze it">
                 <span class="hero-cta-icon" aria-hidden="true">🔬</span>
@@ -601,7 +642,7 @@
               <span class="badge badge-orange">Live-Derived</span>
             </div>
             <div class="hero-metric-card">
-              <div class="hero-metric-label">Bioenergy Confidence</div>
+              <div class="hero-metric-label">Bioenergy Suitability Index</div>
               <div class="hero-metric-value" id="heroBioVal">—</div>
               <div class="hero-metric-sub" id="heroBioSub">Select plant in Step 1</div>
               <span class="badge badge-green">Research Estimate</span>
@@ -659,8 +700,8 @@
             <h2 class="section-title">Active Alerts</h2>
             <div id="alertsPanel"></div>
           </section>
-          <section aria-label="AI intelligence summaries">
-            <h2 class="section-title">AI Intelligence Summary</h2>
+          <section aria-label="Live data summaries">
+            <h2 class="section-title">Live Data Summary</h2>
             <div id="insightPanel"></div>
           </section>
         </div>
@@ -690,7 +731,7 @@
                 </div>
                 <div class="pcs-panel" id="pcsPanelList" role="listbox" style="display:none"></div>
               </div>
-              <button class="btn-sm" onclick="showPage('bioenergy')" style="font-size:11px;white-space:nowrap">Full Scanner →</button>
+              <button class="btn-sm" onclick="showPage('bioenergy')" style="font-size:11px;white-space:nowrap">Field Observation →</button>
             </div>
             <div id="plantProfilePreview" class="plant-profile-preview" style="display:none"></div>
             <div class="plant-select-note">Image input is available in the Bioenergy Scanner tab. Photo analysis cannot measure lignin, cellulose, moisture, biomass, or fuel yield — bioenergy scores are based on plant profile + measured environment + cited methods. Lab data is needed for exact biomass chemistry.</div>
@@ -716,13 +757,18 @@
           <div id="agScoreSection"><div class="score-needs-data">Complete Steps 1 and 2 to compute agriculture scores.</div></div>
         </div>
 
-        <!-- Step 5 — Bioenergy Confidence Score -->
+        <!-- Step 5 — Bioenergy Suitability Index -->
         <div class="tab-subsection" id="bioTabSection">
-          <div class="tab-subsection-header">⚡ Step 5 — TexasClimate Bioenergy Confidence Score <span class="tsh-badge">Research Estimate</span> <span class="wf-step-status wf-st-waiting" id="wf-status-5">○ Needs Steps 1 + 2</span></div>
+          <div class="tab-subsection-header">⚡ Step 5 — Bioenergy Suitability Index <span class="tsh-badge tsh-experimental">Experimental model &middot; uncalibrated</span> <span class="wf-step-status wf-st-waiting" id="wf-status-5">○ Needs Steps 1 + 2</span></div>
           <div id="bioScoreSection"><div class="score-needs-data">Complete Steps 1 and 2 to compute bioenergy score.</div></div>
         </div>
 
         <!-- Step 6 — Full Report -->
+        <div class="tab-subsection" id="az-scenario">
+          <div class="tab-subsection-header">🔀 Scenario — test a hypothetical <span class="tsh-badge tsh-experimental">Experimental scenario</span></div>
+          <div id="scenarioSection"></div>
+        </div>
+
         <div class="tab-subsection" id="reportTabSection">
           <div class="tab-subsection-header">📋 Step 6 — Bioenergy Suitability Report <span class="wf-step-status wf-st-waiting" id="wf-status-6">○ Needs Steps 1 + 2</span></div>
           <div id="reportSection"><div class="score-needs-data">Complete Steps 1–5 to generate the report.</div></div>
@@ -898,7 +944,7 @@
 
       <!-- ═══════════════════════════════════════════════════════════════════
            TAB 3 — BIOENERGY ENGINE
-           Biofuel Lab + Fuel Efficiency + Plant Scanner + Stress-to-Fuel placeholder
+           Biofuel Lab + Fuel Pathways + Field Observation + Stress-to-Fuel
       ══════════════════════════════════════════════════════════════════════ -->
       <div class="page" id="page-bioenergy" role="region" aria-label="Bioenergy Engine">
 
@@ -906,7 +952,7 @@
         <div class="be-tab-anchors" role="navigation" aria-label="Bioenergy Engine sections">
           <a class="be-tab-anchor" href="#be-biofuelllab" onclick="document.getElementById('be-biofuellab').scrollIntoView({behavior:'smooth'});return false;">🌿 Biofuel Lab</a>
           <a class="be-tab-anchor" href="#be-fueleff"     onclick="document.getElementById('be-fueleff').scrollIntoView({behavior:'smooth'});return false;">⛽ Fuel Pathways</a>
-          <a class="be-tab-anchor" href="#be-scanner"     onclick="document.getElementById('be-scanner').scrollIntoView({behavior:'smooth'});return false;">🔬 Plant Scanner</a>
+          <a class="be-tab-anchor" href="#be-scanner"     onclick="document.getElementById('be-scanner').scrollIntoView({behavior:'smooth'});return false;">🔬 Field Observation</a>
           <a class="be-tab-anchor" href="#be-stress"      onclick="document.getElementById('be-stress').scrollIntoView({behavior:'smooth'});return false;">⚗️ Stress-to-Fuel</a>
         </div>
 
@@ -917,7 +963,7 @@
           </div>
           <div class="sgBiofuelHero">
             <h1 class="sgBiofuelTitle">🌿 Switchgrass Biofuel Industrialization Lab</h1>
-            <p class="sgBiofuelSub">A prototype research dashboard exploring global switchgrass (<em>Panicum virgatum</em>) deployment potential for cellulosic biofuel industrialization. Scores are AI-generated prototype predictions using mock data — not commercial forecasts.</p>
+            <p class="sgBiofuelSub"><strong>An illustrative teaching model, not data.</strong> It explores how a multi-criteria comparison of global switchgrass (<em>Panicum virgatum</em>) deployment behaves when assumptions change. Every regional score is an author-chosen value: nothing here is fetched, derived from a dataset, or calibrated, and no AI is involved. The arithmetic combining the scores is real and is shown in full in the Methods table; its inputs are not. Do not cite these numbers &mdash; the rest of TexasClimate runs on live data and cited literature, and this tab does not.</p>
             <div class="sgBiofuelDisclaimer">⚠ Research prototype: All scores are illustrative mock data based on published agronomic literature. HAL2 and FIL2 refer to <em>Panicum hallii</em> model ecotypes used in laboratory research — not commercial switchgrass varieties. This tool does not constitute investment, agronomic, or policy advice.</div>
           </div>
           <h2 class="section-title">Platform Overview</h2>
@@ -974,16 +1020,17 @@
           <div class="fuelCornWrap" id="fuelCornWrap"></div>
         </div><!-- /fuel efficiency subsection -->
 
-        <!-- ── Plant-to-Fuel Scanner ── -->
+        <!-- ── Field Observation Mode ── -->
         <div class="tab-subsection" id="be-scanner">
-          <div class="tab-subsection-header">🔬 Plant Bioenergy Scanner
-            <span class="tsh-badge">Educational Estimate</span>
+          <div class="tab-subsection-header">🔬 Field Observation Mode
+            <span class="tsh-badge">User input &middot; no automated identification</span>
           </div>
 
           <!-- Scanner Hero -->
           <div class="scanHero">
-            <h1 class="scanHeroTitle">🔬 Plant-to-Fuel Scanner</h1>
-            <p class="scanHeroSub">Upload or photograph a plant to receive an educational biofuel relevance analysis grounded in published biomass science and Texas climate context. This prototype does not use automated plant identification — user confirmation is always required.</p>
+            <h1 class="scanHeroTitle">🔬 Field Observation Mode</h1>
+            <p class="scanHeroSub">Record what you can see in the field &mdash; the species you confirm and the condition you observe &mdash; and combine it with the live environment for an evidence-aware explanation.
+            <strong>There is real image classification here, and it is weaker than it looks.</strong> MobileNet&nbsp;v2 runs locally in your browser (the photo never leaves your device) and labels the image with an ImageNet category. ImageNet contains almost no bioenergy crops, so a keyword map converts its output into a suggested plant &mdash; an unvalidated heuristic. Its percentage is MobileNet&rsquo;s confidence in an <em>ImageNet class</em>, not the probability that the plant is that species. <strong>Your confirmation is what sets the species</strong>, and your observations are labelled USER INPUT throughout.</p>
             <div class="scanHeroBadges">
               <span class="credibility-badge badge-edu-est">Educational Estimate</span>
               <span class="credibility-badge badge-cited-sci">Cited Science</span>
@@ -1015,29 +1062,37 @@
           </section>
 
           <!-- How It Works Card -->
-          <section class="scanCard" id="scanHowCard" aria-label="How the Plant-to-Fuel Scanner works">
-            <div class="scanCardTitle">ℹ How the Plant-to-Fuel Scanner Works</div>
+          <section class="scanCard" id="scanHowCard" aria-label="How Field Observation Mode works">
+            <div class="scanCardTitle">ℹ How Field Observation Mode Works</div>
             <div class="scan-timeline">
-              <div class="scan-tl-step">📷 Photo uploaded or captured</div>
+              <div class="scan-tl-step">📷 You photograph the plant. The image stays in your browser and is never uploaded</div>
               <div class="scan-tl-arrow">↓</div>
-              <div class="scan-tl-step">🌿 Plant type is identified or selected</div>
+              <div class="scan-tl-step">🔍 MobileNet v2 classifies it locally into an ImageNet category, which a keyword map turns into a <em>suggested</em> plant</div>
               <div class="scan-tl-arrow">↓</div>
-              <div class="scan-tl-step">✅ User confirms or corrects the plant</div>
+              <div class="scan-tl-step">🌿 <strong>You</strong> confirm or correct that suggestion. Your choice is what sets the species</div>
               <div class="scan-tl-arrow">↓</div>
-              <div class="scan-tl-step">🔍 Scanner reviews visible traits: greenness, density, stress, and size</div>
+              <div class="scan-tl-step">📝 You record what you observe: size, canopy density, visible condition</div>
               <div class="scan-tl-arrow">↓</div>
-              <div class="scan-tl-step">📋 Traits are treated as rough indicators, not direct measurements</div>
+              <div class="scan-tl-step">✎ Those observations are tagged <strong>USER INPUT</strong>, not measurements</div>
               <div class="scan-tl-arrow">↓</div>
-              <div class="scan-tl-step">📚 Confirmed plant identity is matched with credible biomass and biofuel sources</div>
+              <div class="scan-tl-step">📚 The confirmed species is matched to its literature-derived profile</div>
               <div class="scan-tl-arrow">↓</div>
-              <div class="scan-tl-step">📍 Location climate context is applied</div>
+              <div class="scan-tl-step">📍 Live environment for your location is retrieved and combined</div>
               <div class="scan-tl-arrow">↓</div>
-              <div class="scan-tl-step">📊 Educational biomass-energy and biofuel relevance report is generated</div>
+              <div class="scan-tl-step">📊 An evidence-aware explanation is generated, every input labelled by source</div>
               <div class="scan-tl-arrow">↓</div>
-              <div class="scan-tl-step">📎 Report shows confidence levels, sources, limitations, and safety notes</div>
+              <div class="scan-tl-step">📎 Evidence Confidence, limitations and unknowns are reported alongside it</div>
             </div>
             <p class="scan-note" style="margin-top:14px">
-              This process is for learning only. A photo cannot directly measure cellulose, lignin, moisture, dry mass, fuel yield, or commercial value.
+              <strong>What the image step can and cannot do.</strong> A general-purpose classifier trained on ImageNet is
+              genuinely useful for narrowing a list, and genuinely unreliable for identifying a species: ImageNet was never built
+              for botany, and the keyword map from its labels to this app&rsquo;s plant list has never been validated against
+              labelled plant photographs. That is why the result is offered as a suggestion you confirm, never as an identification.
+              <br><br>
+              Separately, and regardless of how good the classifier is: a photograph cannot measure cellulose, lignin, moisture,
+              dry mass, fuel yield or commercial value. No image model can. Everything downstream comes from <em>your</em> confirmed
+              species, <em>your</em> observations, live environmental data and published species profiles &mdash; and the app tells
+              you how far that gets you.
             </p>
           </section>
 
@@ -1167,7 +1222,7 @@
           <section id="scanSurveyCard" style="display:none" aria-label="Site suitability analysis results" aria-live="polite"></section>
 
           <!-- Scanner Sources Card -->
-          <section class="scanCard" aria-label="Data sources for the Plant Scanner">
+          <section class="scanCard" aria-label="Data sources for Field Observation Mode">
             <div class="scanCardTitle">📚 Sources &amp; References</div>
             <div class="scan-src-list">
               <div class="scan-src-entry">DOE Bioenergy Basics — <a href="https://www.energy.gov/eere/bioenergy/bioenergy-basics" target="_blank" rel="noopener">energy.gov/eere/bioenergy/bioenergy-basics</a></div>
@@ -1201,7 +1256,7 @@
         <div class="tab-subsection" id="sc-stress">
           <div class="tab-subsection-header">🧬 Stress → Metabolism → Conversion: How Environmental Stress Affects Bioenergy</div>
           <p style="font-size:12px;color:var(--text2);margin-bottom:18px;line-height:1.7">
-            Environmental stress changes plant physiology and chemistry — affecting not just survival and growth, but also whether the biomass can be efficiently converted to fuel. This chain explains how drought, heat, and salt stress translate into bioenergy conversion risks.
+            Environmental stress changes plant physiology and chemistry &mdash; affecting not just persistence and growth, but potentially whether the biomass converts efficiently to fuel. This chain sets out the mechanisms published studies associate with water deficit and heat stress. It is a map of documented biology, not a measurement of your plant: salt stress appears here for completeness, but this app reports salinity as UNKNOWN unless you supply a measured soil EC.
           </p>
           <div class="science-chain-wrap" role="list" aria-label="Stress to conversion chain">
 
@@ -1271,6 +1326,8 @@
         <div class="tab-subsection" id="sc-atlas"></div>
 
         <!-- What live data can vs. cannot measure -->
+        <div class="tab-subsection" id="sc-models"></div>
+
         <div class="tab-subsection" id="sc-limits">
           <div class="tab-subsection-header">📊 What This App Can Estimate vs. What Requires Lab Data</div>
           <div style="overflow-x:auto">
@@ -1291,8 +1348,8 @@
                 <tr><td>Heat stress score</td><td class="cap-yes">✓ Yes — Derived</td><td>Temperature vs. plant threshold from literature</td><td>Canopy temperature sensor</td></tr>
                 <tr><td>AQI / Air Quality</td><td class="cap-yes">✓ Yes — Live API</td><td>Open-Meteo Air Quality API</td><td>Already live</td></tr>
                 <tr><td>NWS Severe Weather Alerts</td><td class="cap-yes">✓ Yes — Live API</td><td>api.weather.gov</td><td>Already live</td></tr>
-                <tr><td>Vapor pressure deficit (VPD)</td><td class="cap-part">~ Partial</td><td>Calculated from temp + humidity</td><td>Good approximation; wet-bulb sensor improves it</td></tr>
-                <tr><td>Salt / salinity stress risk</td><td class="cap-part">~ Low confidence</td><td>Coastal proximity proxy only</td><td>Soil EC measurement or irrigation water data</td></tr>
+                <tr><td>Vapour pressure deficit (VPD)</td><td class="cap-part">~ Derived</td><td>Computed from air temperature and relative humidity (FAO-56 Tetens equation)</td><td>The equation is exact; the limitation is that this is screen-level (~2&nbsp;m) VPD, not the VPD at the leaf surface. Leaf-to-air VPD in full sun is higher, and hourly averaging hides the midday peak.</td></tr>
+                <tr><td>Salt / salinity stress</td><td class="cap-no">&times; Not estimated</td><td><strong>UNKNOWN unless you supply a measurement.</strong> We removed the coastal-proximity proxy: distance to the coast is not a measurement of soil salinity.</td><td>A measured soil electrical conductivity (EC, dS/m) value, or irrigation water quality data</td></tr>
                 <tr><td>Soil moisture</td><td class="cap-no">✗ Not integrated</td><td>Not yet — no API connected</td><td>USDA SMAP satellite data or field sensor</td></tr>
                 <tr><td>Reservoir / streamflow levels</td><td class="cap-no">✗ Not integrated</td><td>TWDB / USGS links provided only</td><td>Direct USGS / TWDB API integration</td></tr>
                 <tr><td>Osmolyte concentrations</td><td class="cap-no">✗ Cannot estimate</td><td>No remote sensing method exists</td><td>Biochemical lab assay required</td></tr>
@@ -1392,7 +1449,7 @@
             <div class="calc-context-cards">
               <div class="calc-context-card"><h4>🛢 Why Fuel Diversification Matters</h4><p>Cellulosic biofuels — made from non-food plant material like switchgrass — are a long-term research area. The U.S. DOE actively funds research into cellulosic biofuel production pathways.</p><a href="https://www.energy.gov/eere/bioenergy/bioenergy-basics" target="_blank" rel="noopener" class="calc-link">DOE Bioenergy Basics →</a></div>
               <div class="calc-context-card"><h4>🌾 Texas's Role</h4><p>Switchgrass grows natively across much of Texas. Texas A&amp;M AgriLife Extension has studied it as a potential bioenergy crop suited to Texas conditions — particularly on marginal or low-input land.</p><a href="https://agrilifeextension.tamu.edu/" target="_blank" rel="noopener" class="calc-link">Texas A&amp;M AgriLife Extension →</a></div>
-              <div class="calc-context-card"><h4>📊 A Real Energy Balance Study</h4><p>Schmer et al. (2008) in <em>PNAS</em> found switchgrass produced 540% more renewable energy than required to grow and convert it to ethanol under U.S. Great Plains conditions. These results are region-specific.</p><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener" class="calc-link">Schmer et al. (2008), PNAS →</a></div>
+              <div class="calc-context-card"><h4>📊 A Real Energy Balance Study</h4><p>Schmer et al. (2008) in <em>PNAS</em> tracked switchgrass on 10 farms in Nebraska, South Dakota and North Dakota from 2000 to 2005. Grown for ethanol, it produced 540% more renewable energy than the <em>nonrenewable</em> energy consumed to grow and convert it. That is a ratio of renewable output to fossil input under those farms&rsquo; management &mdash; not raw energy out versus energy in, and not a fixed property of the species. It has not been reproduced for Texas.</p><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener" class="calc-link">Schmer et al. (2008), PNAS →</a></div>
             </div>
           </section>
         </div>
@@ -1416,7 +1473,7 @@
           </div>
         </div>
 
-        <!-- Live Data Summaries (AI Reports, moved here) -->
+        <!-- Live Data Summaries — template-filled from live values, no AI -->
         <div class="tab-subsection" id="sr-live">
           <div class="tab-subsection-header">📋 Live Data Summaries
             <span class="tsh-badge">Live-Derived</span>
@@ -1429,12 +1486,12 @@
           <div class="tab-subsection-header">🔍 Data &amp; Evidence Transparency</div>
           <section class="transparency-section" id="transparency" aria-label="Data and evidence transparency statement">
             <div class="transparency-card">
-              <p><strong>This platform is an educational prototype.</strong> Data shown — including weather statistics, energy figures, agriculture indicators, and AI-assisted summaries — is either live from a real API, derived from live data, or illustrative/educational. Labels on each section indicate the data type.</p>
+              <p><strong>This platform is an educational prototype.</strong> Data shown — including weather statistics, energy figures, agriculture indicators, and template-filled summaries &mdash; is either live from a real API, derived from live data, or illustrative/educational. Labels on each section indicate the data type.</p>
               <ul class="transparency-list">
                 <li>📡 <strong>Live API data</strong> is fetched in real time from Open-Meteo (weather, AQI, ET0) and the National Weather Service (alerts).</li>
                 <li>📐 <strong>Live-Derived data</strong> (agriculture stress scores, CDI, water stress) is computed from live API values using documented formulas.</li>
-                <li>🤖 <strong>AI-assisted summaries</strong> are generated from displayed live data — they do not invent facts or numbers.</li>
-                <li>🌿 <strong>Biofuel lab scores</strong> are AI-generated prototype estimates based on published agronomic literature — not commercial forecasts.</li>
+                <li>📋 <strong>Template-filled summaries</strong> insert displayed live values into pre-written sentences. No language model is involved, and no facts or numbers are generated.</li>
+                <li>🌿 <strong>Biofuel Lab scores</strong> are author-chosen illustrative values for teaching. They are not measurements, not derived from any dataset, and not calibrated against any source.</li>
                 <li>⛽ <strong>Fuel efficiency figures</strong> are drawn from published life-cycle assessment studies.</li>
                 <li>📋 This platform does <strong>not</strong> constitute investment, agronomic, engineering, or policy advice.</li>
               </ul>
@@ -1491,25 +1548,25 @@
           <div class="src-category">
             <p class="src-cat-note">✓ All switchgrass biofuel science claims are grounded in peer-reviewed research or credible government and university sources.</p>
             <div class="src-table-wrap"><table class="src-table"><thead><tr><th>Data</th><th>Value</th><th>Citation</th></tr></thead><tbody>
-              <tr><td>Net energy return (cellulosic ethanol)</td><td><strong>540%</strong> more than input energy</td><td><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008), <em>PNAS</em> 105(2):464–469</a></td></tr>
-              <tr><td>Switchgrass biofuel yield</td><td>200–280 GJ/ha/yr</td><td><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008), <em>PNAS</em></a></td></tr>
-              <tr><td>Corn ethanol yield (comparison)</td><td>120–160 GJ/ha/yr</td><td><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008), <em>PNAS</em></a></td></tr>
-              <tr><td>Carbon sequestration potential</td><td>1.1–2.3 tCO₂/ha/yr</td><td><a href="https://www.energy.gov/eere/bioenergy/2016-billion-ton-report" target="_blank" rel="noopener">DOE Billion-Ton Report (2016)</a></td></tr>
-              <tr><td>Water footprint — cellulosic ethanol</td><td>6–14 gal/gal fuel</td><td><a href="https://www.nrel.gov/bioenergy/" target="_blank" rel="noopener">NREL Bioenergy Research</a></td></tr>
-              <tr><td>Water footprint — corn ethanol</td><td>784 gal/gal fuel</td><td><a href="https://www.nrel.gov/bioenergy/" target="_blank" rel="noopener">NREL Bioenergy Research</a></td></tr>
+              <tr><td>Net energy balance, switchgrass cellulosic ethanol</td><td><strong>540%</strong> more renewable energy than <em>nonrenewable</em> energy consumed &mdash; 10 farms, Nebraska / South Dakota / North Dakota, 2000&ndash;2005</td><td><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008), <em>PNAS</em> 105(2):464&ndash;469</a></td></tr>
+              <tr><td>Life-cycle greenhouse gas emissions</td><td>94% lower than gasoline (modelled, same study conditions)</td><td><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008), <em>PNAS</em></a></td></tr>
+              <tr><td>Established-stand biomass yield</td><td>5.2&ndash;11.1 Mg/ha/yr, rain-fed Northern Great Plains</td><td><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008), <em>PNAS</em></a></td></tr>
+              <tr class="src-retired"><td>Energy yield comparison (GJ/ha/yr)</td><td><strong>Withdrawn.</strong> This table previously showed 200&ndash;280 GJ/ha/yr for switchgrass against 120&ndash;160 for corn, both attributed to Schmer et&nbsp;al. Neither figure is in that paper, which reports an average net energy yield near 60&nbsp;GJ/ha/yr and makes no corn comparison. We removed the row rather than substitute two numbers computed on different system boundaries.</td><td>&mdash;</td></tr>
+              <tr class="src-retired"><td>Carbon sequestration potential</td><td><strong>Withdrawn.</strong> This row gave 1.1&ndash;2.3 tCO&#8322;/ha/yr citing the DOE Billion-Ton Report, which is a feedstock supply assessment and an unlikely source for a soil-carbon rate. The figure could not be verified against it. No sequestration rate is quoted in its place, because a rate is only meaningful with a stated soil, depth and time horizon.</td><td>&mdash;</td></tr>
+              <tr class="src-retired"><td>Water footprint of ethanol</td><td><strong>Withdrawn as single numbers.</strong> This table previously gave 6&ndash;14 gal/gal for cellulosic ethanol and 784 gal/gal for corn ethanol. Water embodied in bioethanol varies by roughly three orders of magnitude across U.S. states, driven by irrigation share, so a single figure &mdash; and any comparison between two such figures without a shared system boundary &mdash; is not defensible.</td><td><a href="https://doi.org/10.1021/es8031067" target="_blank" rel="noopener">Chiu, Walseth &amp; Suh (2009), <em>Environmental Science &amp; Technology</em> 43(8):2688&ndash;2692</a></td></tr>
               <tr><td>Lignin as production barrier</td><td>Cell wall blocks enzymatic access to cellulose</td><td><a href="https://doi.org/10.1016/j.biortech.2004.06.025" target="_blank" rel="noopener">Mosier et al. (2005), <em>Bioresource Technology</em> 96(6):673–686</a></td></tr>
               <tr><td>Pretreatment methods</td><td>Heat, acid, ammonia (AFEX), steam explosion</td><td><a href="https://doi.org/10.1016/j.biortech.2004.06.025" target="_blank" rel="noopener">Mosier et al. (2005)</a></td></tr>
               <tr><td>Biofuel conversion pathways</td><td>Cellulose → sugars → ethanol / advanced fuels</td><td><a href="https://doi.org/10.1126/science.1114736" target="_blank" rel="noopener">Ragauskas et al. (2006), <em>Science</em> 311(5760):484–489</a></td></tr>
               <tr><td>Switchgrass as U.S. priority feedstock</td><td>Federal bioenergy crop designation</td><td><a href="https://www.energy.gov/eere/bioenergy/switchgrass" target="_blank" rel="noopener">DOE EERE — Switchgrass</a></td></tr>
               <tr><td>Osmolyte stress response</td><td>Proline, glycine betaine, sorbitol accumulation under stress</td><td>Szabados &amp; Savouré (2010), <em>Trends Plant Sci</em> 15(2):89–97</td></tr>
               <tr><td>Fermentation inhibitors from stressed biomass</td><td>Phenolics, furfurals, acetic acid reduce yeast yield</td><td><a href="https://doi.org/10.1016/S0960-8524(99)00145-7" target="_blank" rel="noopener">Palmqvist &amp; Hahn-Hägerdal (2000), <em>Bioresource Technology</em> 74(1):17–24</a></td></tr>
-              <tr><td>HAL2 / FIL2 ecotype research</td><td>Drought-tolerant vs. biomass-optimized <em>Panicum hallii</em> ecotypes</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019), <em>Current Biology</em></a></td></tr>
+              <tr><td>HAL2 / FIL2 ecotype research</td><td>Qualitative contrast between the xeric upland and mesic coastal <em>Panicum hallii</em> ecotypes. Cited for that contrast only &mdash; the 0&ndash;100 trait scores shown in the Biofuel Lab are author-chosen illustrative values and appear in no paper. Note also that <em>P. hallii</em> is a model organism for switchgrass research, not switchgrass itself.</td><td><a href="https://doi.org/10.1016/j.cub.2019.06.029" target="_blank" rel="noopener">Lowry et al. (2019), <em>Current Biology</em></a></td></tr>
               <tr><td>Farm-scale production costs</td><td>Economic field-scale estimates</td><td><a href="https://doi.org/10.2134/agronj2007.0271" target="_blank" rel="noopener">Perrin et al. (2008), <em>Agron. J.</em> 100(6):1657–1665</a></td></tr>
             </tbody></table></div>
           </div>
           <div class="sources-grid" style="margin-top:18px">
             <div class="source-card"><div class="source-tag">Switchgrass as bioenergy crop</div><h4 class="source-title"><a href="https://www.energy.gov/eere/bioenergy/switchgrass" target="_blank" rel="noopener">DOE Bioenergy Technologies Office — Switchgrass</a></h4><p class="source-org">U.S. Department of Energy, EERE</p><p class="source-why">Primary government source establishing switchgrass as a priority cellulosic ethanol feedstock in the U.S.</p></div>
-            <div class="source-card"><div class="source-tag">Energy balance study</div><h4 class="source-title"><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008) — Net energy of cellulosic ethanol from switchgrass</a></h4><p class="source-org"><em>PNAS</em>, 105(2): 464–469</p><p class="source-why">Peer-reviewed field study showing 540% net energy return under U.S. Great Plains field conditions.</p></div>
+            <div class="source-card"><div class="source-tag">Energy balance study</div><h4 class="source-title"><a href="https://doi.org/10.1073/pnas.0704767105" target="_blank" rel="noopener">Schmer et al. (2008) — Net energy of cellulosic ethanol from switchgrass</a></h4><p class="source-org"><em>PNAS</em>, 105(2): 464–469</p><p class="source-why">Peer-reviewed field study across 10 Northern Great Plains farms (2000&ndash;2005) reporting 540% more renewable energy produced than <em>nonrenewable</em> energy consumed, and modelled life-cycle greenhouse gas emissions 94% below gasoline. This is the single most-cited number on this site, and it is the one most often quoted without its scope.</p></div>
             <div class="source-card"><div class="source-tag">Lignin / pretreatment barrier</div><h4 class="source-title"><a href="https://doi.org/10.1016/j.biortech.2004.06.025" target="_blank" rel="noopener">Mosier et al. (2005) — Pretreatment of lignocellulosic biomass</a></h4><p class="source-org"><em>Bioresource Technology</em>, 96(6): 673–686</p><p class="source-why">Explains why lignin is the key technical barrier to affordable cellulosic biofuel production.</p></div>
             <div class="source-card"><div class="source-tag">Cellulosic biofuel research</div><h4 class="source-title"><a href="https://www.nrel.gov/bioenergy/" target="_blank" rel="noopener">NREL Bioenergy Research</a></h4><p class="source-org">National Renewable Energy Laboratory</p><p class="source-why">Leading federal lab for pretreatment, enzyme development, and biomass-to-fuel conversion pathways.</p></div>
             <div class="source-card"><div class="source-tag">Biofuel science overview</div><h4 class="source-title"><a href="https://doi.org/10.1126/science.1114736" target="_blank" rel="noopener">Ragauskas et al. (2006) — The Path Forward for Biofuels</a></h4><p class="source-org"><em>Science</em>, 311(5760): 484–489</p><p class="source-why">Seminal overview of scientific challenges in converting lignocellulosic biomass to fuel.</p></div>
@@ -1519,7 +1576,7 @@
 
         <div class="src-disclaimer-block">
           <h3 class="src-disclaimer-title">About This Platform's Data</h3>
-          <p class="src-disclaimer-text">This is an <strong>educational prototype dashboard</strong>. Weather data is fetched live from Open-Meteo. Agriculture stress, CDI, and other derived values are computed from live data using documented formulas. Biofuel lab scores and HAL2/FIL2 trait values are AI-generated prototype estimates based on published agronomic literature. No fake, hardcoded, or invented values are presented as real data. This platform does not constitute investment, agronomic, engineering, or policy advice.</p>
+          <p class="src-disclaimer-text">This is an <strong>educational prototype dashboard</strong>. Weather data is fetched live from Open-Meteo. Agriculture stress, CDI, and other derived values are computed from live data using documented formulas. Biofuel Lab regional scores and HAL2/FIL2 trait values are author-chosen illustrative values for teaching &mdash; not measurements and not calibrated against any dataset; the tab labels them as such. What machine learning this app does and does not use: Field Observation Mode runs a real convolutional network &mdash; MobileNet&nbsp;v2 via TensorFlow.js, locally in your browser &mdash; to <em>suggest</em> a species from a photograph, and its limits are stated at the point of use. Everything else is arithmetic: the composite models are weighted sums, the summaries are template-filled, and the assistant is rule-based intent matching. No language model or generative model is used anywhere. No fake, hardcoded, or invented values are presented as real data. This platform does not constitute investment, agronomic, engineering, or policy advice.</p>
         </div>
 
       </div><!-- /page-sources -->
@@ -1547,26 +1604,33 @@
 
 
       <!-- ═══════════════════════════════════════════════════════════════════
-           DEMO / JUDGE WALKTHROUGH PAGE
-           12-step guided walkthrough for judges and first-time users.
+           GUIDED WALKTHROUGH PAGE
+           12-step guided walkthrough for first-time users.
            Uses live data where available; clearly labeled demo values otherwise.
       ══════════════════════════════════════════════════════════════════════ -->
-      <div class="page" id="page-demo" role="region" aria-label="Demo Walkthrough — Judge Mode">
+      <div class="page" id="page-demo" role="region" aria-label="Guided Feature Walkthrough">
 
         <!-- Demo Mode Banner -->
         <div class="demo-mode-banner" role="note">
           <span class="demo-mode-icon" aria-hidden="true">🎭</span>
-          <span class="demo-mode-text">DEMO / JUDGE WALKTHROUGH</span>
-          <span class="demo-mode-note">Sample: Switchgrass · Austin, TX · Live data where available, clearly labeled otherwise</span>
+          <span class="demo-mode-text">ILLUSTRATIVE WALKTHROUGH</span>
+          <span class="demo-mode-note">Worked example: switchgrass in Austin. Several panels below are <strong>static illustrations</strong> of what the real analysis produces, not live output.</span>
         </div>
 
-        <!-- For Judges Card -->
+        <div class="demo-prefer-path" role="note">
+          <strong>Looking for the demo?</strong> Use <button class="btn-sm" onclick="showPage('analyze');setTimeout(judgePathStart,400)">⚖ Guided Review</button>
+          instead. It runs the same story in about two minutes through the <em>real</em> interface on <em>live</em> data,
+          rather than showing static examples of it. This page is kept as an offline-friendly reference for the
+          individual concepts.
+        </div>
+
+        <!-- Platform Highlights Card -->
         <div class="for-judges-card" id="forJudgesCard">
-          <div class="for-judges-title">⚖ For Congressional App Challenge Judges</div>
+          <div class="for-judges-title">Platform Highlights</div>
           <div class="for-judges-grid">
             <div class="fj-item"><div class="fj-label">🔴 Problem</div><div class="fj-text">Texas faces rising heat, drought, agricultural stress, and energy costs. Students and Texans lack easy tools to understand how climate, crops, and clean energy connect.</div></div>
             <div class="fj-item"><div class="fj-label">🟢 Solution</div><div class="fj-text">TexasClimate connects live environmental data with plant stress science and bioenergy education — making the path from Texas weather to clean fuel visible.</div></div>
-            <div class="fj-item"><div class="fj-label">💻 What I Coded</div><div class="fj-text">Live API fetching · Stress formulas · Score model · MapLibre map layers · Plant scanner · 12-step demo engine · Local AI chatbot · Data transparency system</div></div>
+            <div class="fj-item"><div class="fj-label">💻 What I Coded</div><div class="fj-text">Live API fetching · Pure model layer with a zero-dependency test suite · Evidence confidence engine · Central constant &amp; claim registries · MapLibre map layers · Field observation workflow · Rule-based science assistant (no LLM) · Provenance label system</div></div>
             <div class="fj-item"><div class="fj-label">⚠ Honest Limits</div><div class="fj-text">Educational prototype — not farming, investment, or emergency advice. No PlantNet API yet. Lab biomass data needed for exact chemistry values.</div></div>
           </div>
         </div>
@@ -1596,7 +1660,7 @@
         <!-- Demo Navigation -->
         <div class="demo-nav" role="navigation" aria-label="Demo walkthrough navigation">
           <button class="demo-nav-btn prev" id="demoPrevBtn" onclick="demoPrev()" disabled aria-label="Previous step">← Back</button>
-          <button class="demo-nav-btn skip" id="demoSkipBtn" onclick="demoGoStep(12)" aria-label="Skip to final judge summary">Skip to Summary →</button>
+          <button class="demo-nav-btn skip" id="demoSkipBtn" onclick="demoGoStep(12)" aria-label="Skip to final summary">Skip to Summary →</button>
           <button class="demo-nav-btn reset" onclick="demoReset()" aria-label="Restart demo from step 1">↩ Reset</button>
           <button class="demo-nav-btn next" id="demoNextBtn" onclick="demoNext()" aria-label="Next step">Next →</button>
         </div>
@@ -1610,8 +1674,8 @@
             <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">NWS Severe Weather Alerts<span class="fc-type badge-live">Live</span></div></div>
             <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Texas City Comparison<span class="fc-type badge-derived">Derived</span></div></div>
             <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Plant Stress Scoring<span class="fc-type badge-derived">Derived</span></div></div>
-            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Bioenergy Confidence Model<span class="fc-type badge-research">Research</span></div></div>
-            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Plant-to-Fuel Scanner<span class="fc-type badge-research">Educational</span></div></div>
+            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Bioenergy Suitability Index<span class="fc-type badge-research">Experimental</span></div></div>
+            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Field Observation Mode<span class="fc-type badge-research">User input</span></div></div>
             <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Fuel Pathway / Lignin Diagram<span class="fc-type badge-research">Research</span></div></div>
             <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Interactive Texas Map (MapLibre)<span class="fc-type badge-live">Live</span></div></div>
             <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Pollution Overlays (3 layers)<span class="fc-type badge-static">Static</span></div></div>
@@ -1619,7 +1683,7 @@
             <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Graph Builder (live data)<span class="fc-type badge-live">Live</span></div></div>
             <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Source Transparency Labels<span class="fc-type badge-research">All tabs</span></div></div>
             <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Safety / Limitations System<span class="fc-type badge-research">All tabs</span></div></div>
-            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Local AI Chatbot Guide<span class="fc-type badge-derived">No API key</span></div></div>
+            <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">Science Assistant (rule-based)<span class="fc-type badge-derived">No LLM</span></div></div>
             <div class="fc-item"><span class="fc-status">✅</span><div class="fc-label">12-Step Demo Walkthrough<span class="fc-type badge-demo">This page</span></div></div>
             <div class="fc-item"><span class="fc-status">⬜</span><div class="fc-label">PlantNet Plant ID API<span class="fc-type" style="background:rgba(255,255,255,0.06);color:var(--text3);border-radius:10px;padding:1px 6px;font-size:8px;letter-spacing:.06em;font-weight:700">Future</span></div></div>
             <div class="fc-item"><span class="fc-status">⬜</span><div class="fc-label">USDA Soil / Crop APIs<span class="fc-type" style="background:rgba(255,255,255,0.06);color:var(--text3);border-radius:10px;padding:1px 6px;font-size:8px;letter-spacing:.06em;font-weight:700">Future</span></div></div>
@@ -1645,37 +1709,46 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <!-- ── App Scripts (load order matters) ── -->
-<script src="js/data.js?v=3"></script>
-<script src="js/utils.js?v=2"></script>
-<script src="js/nav.js?v=4"></script>
-<script src="js/dashboard.js"></script>
-<script src="js/map.js?v=11"></script>
-<script src="js/forecasts.js?v=3"></script>
-<script src="js/agriculture.js"></script>
-<script src="js/trends.js"></script>
-<script src="js/airquality.js"></script>
-<script src="js/water.js"></script>
-<script src="js/energy.js"></script>
-<script src="js/severe.js"></script>
-<script src="js/compare.js"></script>
-<script src="js/reports.js"></script>
-<script src="js/facts.js"></script>
-<script src="js/biofuel.js"></script>
-<script src="js/fuel.js"></script>
-<script src="js/scanner.js?v=7"></script>
-<script src="js/settings.js"></script>
-<script src="js/mission.js"></script>
-<script src="js/location.js?v=3"></script>
-<script src="js/subtabs.js?v=2"></script>
-<script src="js/stress.js?v=2"></script>
-<script src="js/bioenergy-engine.js?v=2"></script>
-<script src="js/report.js?v=2"></script>
-<script src="js/gene-atlas.js?v=2"></script>
-<script src="js/workflow.js?v=1"></script>
-<script src="js/graphbuilder.js?v=1"></script>
-<script src="js/demo.js?v=1"></script>
-<script src="js/chatbot.js?v=1"></script>
-<script src="js/main.js?v=2"></script>
+<!-- Foundation layer: constants → claims → models → confidence. Loaded first
+     because every downstream module depends on them. -->
+<script src="js/science-constants.js?v=4.0.0"></script>
+<script src="js/claims-registry.js?v=4.0.0"></script>
+<script src="js/tolerance-model.js?v=4.0.0"></script>
+<script src="js/evidence-confidence.js?v=4.0.0"></script>
+<script src="js/data.js?v=4.0.0"></script>
+<script src="js/utils.js?v=4.0.0"></script>
+<script src="js/nav.js?v=4.0.0"></script>
+<script src="js/dashboard.js?v=4.0.0"></script>
+<script src="js/map.js?v=4.0.0"></script>
+<script src="js/forecasts.js?v=4.0.0"></script>
+<script src="js/agriculture.js?v=4.0.0"></script>
+<script src="js/trends.js?v=4.0.0"></script>
+<script src="js/airquality.js?v=4.0.0"></script>
+<script src="js/water.js?v=4.0.0"></script>
+<script src="js/energy.js?v=4.0.0"></script>
+<script src="js/severe.js?v=4.0.0"></script>
+<script src="js/compare.js?v=4.0.0"></script>
+<script src="js/reports.js?v=4.0.0"></script>
+<script src="js/facts.js?v=4.0.0"></script>
+<script src="js/biofuel.js?v=4.0.0"></script>
+<script src="js/fuel.js?v=4.0.0"></script>
+<script src="js/scanner.js?v=4.0.0"></script>
+<script src="js/settings.js?v=4.0.0"></script>
+<script src="js/mission.js?v=4.0.0"></script>
+<script src="js/location.js?v=4.0.0"></script>
+<script src="js/subtabs.js?v=4.0.0"></script>
+<script src="js/stress.js?v=4.0.0"></script>
+<script src="js/bioenergy-engine.js?v=4.0.0"></script>
+<script src="js/report.js?v=4.0.0"></script>
+<script src="js/gene-atlas.js?v=4.0.0"></script>
+<script src="js/workflow.js?v=4.0.0"></script>
+<script src="js/graphbuilder.js?v=4.0.0"></script>
+<script src="js/demo.js?v=4.0.0"></script>
+<script src="js/chatbot.js?v=4.0.0"></script>
+<script src="js/model-cards.js?v=4.0.0"></script>
+<script src="js/judge-path.js?v=4.0.0"></script>
+<script src="js/scenario.js?v=4.0.0"></script>
+<script src="js/main.js?v=4.0.0"></script>
 <script>
 /* ── Overview FAQ accordion ──────────────────────────────────────────── */
 function ovToggleFaq(btn) {
@@ -1684,16 +1757,11 @@ function ovToggleFaq(btn) {
   btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 }
 
-/* ── Judge Mode toggle ─────────────────────────────────────────────────── */
-function toggleJudgeMode() {
-  var active = document.body.classList.toggle('judge-mode');
-  var btn = document.getElementById('judgeModeBtn');
-  if (btn) {
-    btn.classList.toggle('active', active);
-    btn.setAttribute('aria-pressed', active ? 'true' : 'false');
-    btn.textContent = active ? '✓ Judge Mode ON' : '⚖ Judge Mode';
-  }
-}
+/* ── Review Mode toggle ─────────────────────────────────────────────────── */
+/* toggleJudgeMode now lives in js/judge-path.js. It used to toggle a body class
+   that hid a handful of science-tab paragraphs — the `judge-hide` hook it was
+   built around was never applied to a single element. It has been replaced by a
+   guided path through the real pipeline. */
 
 /* ── Hero metrics update (called after weather data loads) ──────────────── */
 function updateHeroMetrics() {
@@ -1704,14 +1772,21 @@ function updateHeroMetrics() {
   var cities = Object.values(cd);
   if (!cities.length) return;
 
-  var temps = cities.map(function(c){ return c.temp || 0; });
+  var temps = cities.map(function(c){ return c.temp; }).filter(function(t){ return t != null; });
+  if (!temps.length) return;
   var avgTemp = Math.round(temps.reduce(function(s,t){ return s+t; }, 0) / temps.length);
-  var heatScores = temps.map(function(t){ return Math.max(0, (t - 68) / 36 * 100); });
+  // The 68/36 heat ramp is in °F, so normalise before comparing — otherwise the
+  // headline heat figure sat near zero whenever the user selected metric units.
+  var heatScores = temps.map(function(t){
+    var f = (typeof wxTempF === 'function') ? wxTempF(t) : t;
+    return Math.max(0, Math.min(100, (f - 68) / 36 * 100));
+  });
   var avgHeat = Math.round(heatScores.reduce(function(s,v){ return s+v; }, 0) / heatScores.length);
 
   var weatherVal = document.getElementById('heroWeatherVal');
   var weatherSub = document.getElementById('heroWeatherSub');
-  if (weatherVal) weatherVal.textContent = avgTemp + '°F avg';
+  var unit = (typeof tUnit === 'function') ? tUnit() : '°F';
+  if (weatherVal) weatherVal.textContent = avgTemp + unit + ' avg';
   if (weatherSub) weatherSub.textContent = cities.length + ' cities live now';
 
   var stressVal = document.getElementById('heroStressVal');

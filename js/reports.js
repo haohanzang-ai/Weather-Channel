@@ -1,6 +1,6 @@
 'use strict';
 
-// ── AI Intelligence Reports — Generated entirely from live data ────────────────
+// ── Live Data Summaries — template-filled from live data, no AI ───────────────
 function renderReports(){
   if(!dataLoaded || !Object.keys(WEATHER_DATA).length){
     document.getElementById('reportsContent').innerHTML='<div class="card loading-shimmer" style="height:200px"></div>';
@@ -28,7 +28,7 @@ function renderReports(){
 
   // Forecast summary for hottest city
   const hForecast = FORECAST_DATA[hottest[0]] || [];
-  const hiRange   = hForecast.length ? `${Math.min(...hForecast.map(f=>f.hi))}–${Math.max(...hForecast.map(f=>f.hi))}°F` : '—';
+  const hiRange   = hForecast.length ? `${Math.min(...hForecast.map(f=>f.hi))}–${Math.max(...hForecast.map(f=>f.hi))}${tUnit()}` : '—';
   const maxRainPct= hForecast.length ? Math.max(...hForecast.map(f=>f.rain)) : 0;
   const rainWord  = maxRainPct>=60?'Significant rain possible':maxRainPct>=30?'Some rain chances':maxRainPct>=10?'Slight rain chances':'Mostly dry';
 
@@ -61,8 +61,8 @@ function renderReports(){
         <div class="insight-tag">📊 Live Data Briefing — ${escapeHtml(nowStr)}</div>
         ${dataBadge('live-drv')}
       </div>
-      <p class="insight-text" style="margin-bottom:8px">Across <strong>${sorted.length} monitored Texas cities</strong>, the statewide average is <strong>${avgTemp}°F</strong> with ${heatAssess}. The hottest city right now is <strong>${escapeHtml(hottest[0])} at ${hottest[1].temp}°F</strong> (${escapeHtml(hottest[1].condition)}); the coolest is <strong>${escapeHtml(coolest[0])} at ${coolest[1].temp}°F</strong>. Dominant conditions: <strong>${escapeHtml(dominant)}</strong>.</p>
-      <p class="insight-text">Statewide averages — Humidity: <strong>${avgHumid}%</strong> · Wind: <strong>${avgWind} mph</strong> · UV Index: <strong>${avgUV}</strong>. 7-day ${escapeHtml(hottest[0])} high range: <strong>${hiRange}</strong>. ${escapeHtml(rainWord)} this week.</p>
+      <p class="insight-text" style="margin-bottom:8px">Across <strong>${sorted.length} monitored Texas cities</strong>, the statewide average is <strong>${avgTemp}${tUnit()}</strong> with ${heatAssess}. The hottest city right now is <strong>${escapeHtml(hottest[0])} at ${hottest[1].temp}${tUnit()}</strong> (${escapeHtml(hottest[1].condition)}); the coolest is <strong>${escapeHtml(coolest[0])} at ${coolest[1].temp}${tUnit()}</strong>. Dominant conditions: <strong>${escapeHtml(dominant)}</strong>.</p>
+      <p class="insight-text">Statewide averages — Humidity: <strong>${avgHumid}%</strong> · Wind: <strong>${avgWind} ${wUnit()}</strong> · UV Index: <strong>${avgUV}</strong>. 7-day ${escapeHtml(hottest[0])} high range: <strong>${hiRange}</strong>. ${escapeHtml(rainWord)} this week.</p>
     </div>
     <div class="insight-card" style="margin-bottom:12px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div class="insight-tag">💨 Air Quality Summary</div>${dataBadge('live-api')}</div>

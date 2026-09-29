@@ -2,6 +2,17 @@
 
 // ── TexasClimate Bioenergy Suitability Report ─────────────────────────────────
 
+/* Format coordinates without hard-coding a hemisphere, and without turning a
+   missing longitude into "0.0000°W". Precision is deliberately 3 decimals
+   (~110 m): the underlying weather is interpolated from a grid of several
+   kilometres, so four decimals implied a precision the data does not have. */
+function fmtCoord(lat, lon) {
+  if (lat == null || lon == null || !isFinite(lat) || !isFinite(lon)) return 'UNKNOWN';
+  const ns = lat >= 0 ? 'N' : 'S';
+  const ew = lon >= 0 ? 'E' : 'W';
+  return `${Math.abs(lat).toFixed(3)}°${ns}, ${Math.abs(lon).toFixed(3)}°${ew}`;
+}
+
 function renderReport() {
   const el = document.getElementById('reportSection');
   if (!el) return;
@@ -13,6 +24,7 @@ function renderReport() {
   const bio     = appState.bioenergyScore;
   const chem    = appState.chemRisk;
   const pathways = appState.pathways;
+  const ec      = appState.evidenceConfidence;
 
   if (!plant || !env || !ag || !bio) {
     el.innerHTML = `<div class="score-needs-data">
@@ -42,7 +54,7 @@ function renderReport() {
     `Generated: ${reportTime}`,
     '',
     `Plant / Crop: ${plant.name} (${plant.scientificName || ''})`,
-    `Location: ${appState.locationLabel || 'Not specified'} (${env.lat?.toFixed(4)}°N, ${Math.abs(env.lon || 0).toFixed(4)}°W)`,
+    `Location: ${appState.locationLabel || 'Not specified'} (${fmtCoord(env.lat, env.lon)})`,
     '',
     '── Live Environment Summary ──',
     `Temperature: ${fmtVal(cur?.temp, ts)}`,
@@ -53,24 +65,32 @@ function renderReport() {
     `VPD:         ${env.hourlyVPD != null ? env.hourlyVPD+' kPa (Live API)' : 'Estimated from temp+RH'}`,
     `Soil Moisture (0-1cm): ${fmtVal(env.hourlySoil, ' m³/m³')}`,
     '',
-    '── 30-Day Drought History ──',
+    ...(env.isScenario ? [
+      '*** EXPERIMENTAL SCENARIO — NOT MEASURED CONDITIONS ***',
+      'One or more inputs below were modified by hand: ' + (env.scenarioDesc || []).join(', ') + '.',
+      'Every figure in this report describes that hypothetical, not the observed environment.',
+      '',
+    ] : []),
+    '── 30-Day Climate Water Balance ──',
     `Precipitation Total: ${arch?.precipSum != null ? arch.precipSum+' mm' : 'Unavailable'}`,
     `ET₀ Total:           ${arch?.et0Sum    != null ? arch.et0Sum+' mm' : 'Unavailable'}`,
-    `ET₀ − Precip Deficit: ${arch?.deficit  != null ? arch.deficit+' mm' : 'Unavailable'}`,
+    `Water Deficit Proxy: ${arch?.deficit  != null ? arch.deficit+' mm' : 'UNKNOWN'}`,
+    '  (reference ET minus precipitation — NOT measured plant drought stress;',
+    '   excludes crop coefficient, soil storage, rooting depth and irrigation)',
     '',
     '── Stress Profile ──',
     `Heat Stress Score:    ${fmtScore(stress?.heatStress)}`,
-    `Drought Memory Score: ${fmtScore(stress?.droughtMemory)}`,
+    `Water Deficit Proxy:  ${fmtScore(stress?.droughtMemory)}`,
     `VPD Pressure:         ${fmtScore(stress?.vpdPressure)}`,
     `Soil Moisture Stress: ${fmtScore(stress?.soilStress)}`,
     `Water Stress (comp.): ${fmtScore(stress?.waterStress)}`,
     '',
-    '── Agriculture Scores ──',
-    `Survival Score:          ${fmtScore(ag.survival)} (${ag.survivalConf})`,
-    `Productivity Score:      ${fmtScore(ag.productivity)} (${ag.productivityConf})`,
-    `Water Sustainability:    ${fmtScore(ag.waterSustain)}`,
-    `TX Climate Tolerance:    ${fmtScore(ag.toleranceMatch)}`,
-    `Growth Suitability:      ${fmtScore(ag.growthSuit)}`,
+    '── Environmental Scores ──',
+    `Environmental Tolerance Match: ${fmtScore(ag.toleranceScore)}`,
+    `Productivity Stress Proxy:     ${fmtScore(ag.productivityScore)}`,
+    `Water Supply vs. Requirement:  ${fmtScore(ag.waterSupply)}`,
+    `Species Heat & Drought Envelope: ${fmtScore(ag.envelopeMatch)} (a species property, not a site measurement)`,
+    `Input Completeness:            ${fmtScore(ag.inputCompleteness)}`,
     '',
     '── Stress-to-Fuel Chemistry Risk ──',
     chem ? `Osmolyte Pressure:       ${chem.osmolyte.risk} (${chem.osmolyte.confidence})` : 'Unavailable',
@@ -82,16 +102,35 @@ function renderReport() {
     '── Best Conversion Pathway ──',
     bestPathway ? `${bestPathway.name} — Score: ${bestPathway.score}/100 (${bestPathway.tier})` : 'Unavailable',
     '',
-    '── TexasClimate Bioenergy Confidence Score ──',
-    `FINAL SCORE: ${bio.total ?? 'Incomplete'}/100`,
-    `Confidence: ${bio.confidence}`,
-    `  Survival (20%):            ${bio.sub.survival?.value ?? 'N/A'}/100`,
-    `  Productivity (20%):        ${bio.sub.productivity?.value ?? 'N/A'}/100`,
-    `  Water Sustainability (15%):${bio.sub.water?.value ?? 'N/A'}/100`,
-    `  Chem Safety (15%):         ${bio.sub.chemSafety?.value ?? 'N/A'}/100`,
-    `  Conversion Compat. (15%):  ${bio.sub.conversion?.value ?? 'N/A'}/100`,
-    `  Env Benefit (10%):         ${bio.sub.envBenefit?.value ?? 'N/A'}/100`,
-    `  Data Quality (5%):         ${bio.sub.dataQuality?.value ?? 'N/A'}/100`,
+    '── Bioenergy Suitability Index ──',
+    `INDEX: ${bio.total ?? 'Incomplete'}/100`,
+    ...bio.index.contributors.map(c =>
+      `  ${(c.label+' ('+Math.round(c.nominalWeight*100)+'%)').padEnd(38)}${String(c.value).padStart(3)}/100  → +${c.contribution}`),
+    ...(bio.index.missing.length ? ['  UNKNOWN sub-scores: ' + bio.index.missing.map(m=>m.label).join(', ')] : []),
+    bio.index.renormalised ? `  NOTE: ${bio.index.note}` : '',
+    '',
+    '── Evidence Confidence (separate from the index above) ──',
+    ...(ec ? [
+      `Environment: ${ec.layers.environment.level}`,
+      `Stress:      ${ec.layers.stress.level}`,
+      `Tolerance:   ${ec.layers.tolerance.level}`,
+      `Biology:     ${ec.layers.biology.level}`,
+      `Bioenergy:   ${ec.layers.bioenergy.level}`,
+      `End-to-end:  ${ec.overall} (weakest link: ${ec.limitingLabel})`,
+      '',
+      'Why:',
+      ...ec.layers[ec.limiting].why.map(w => '  · ' + w),
+      '',
+      'What we do not know:',
+      ...ec.unknowns.map(u => `  · ${u.what} — ${u.why}`),
+      '',
+      'What would improve this analysis:',
+      ...ec.improvements.map(i => `  · ${i.input}: ${i.gain}`),
+    ] : ['Not computed.']),
+    '',
+    '── Models used ──',
+    ...(typeof TC_MODELS !== 'undefined' ? Object.values(TC_MODELS).map(m => `  ${m.name} v${m.version} [${m.status}]`) : []),
+    'All models are EXPERIMENTAL: none has been validated against field outcomes.',
     '',
     '── Data Sources ──',
     'Weather/VPD/Soil/Archive: Open-Meteo API (open-meteo.com)',
@@ -100,22 +139,39 @@ function renderReport() {
     'Plant profiles: Published peer-reviewed and government literature (DOE, USDA, NREL, PNAS)',
     '',
     '── Limitations & Missing Data ──',
-    ...(bio.missing.length ? bio.missing.map(m => `- ${m}`) : ['None — all data sources available']),
+    ...((bio.index?.missing?.length)
+        ? bio.index.missing.map(m => `- ${m.label} — UNKNOWN (${Math.round(m.weight * 100)}% of the index)`)
+        : ['- All sub-scores were available.']),
+    ...((ag.missing?.length)
+        ? ag.missing.map(m => `- ${m.label} — left UNKNOWN rather than assumed`)
+        : []),
     '',
-    '⚠ This report is an educational estimate. No lab measurements (lignin, cellulose, moisture, biomass yield) were made.',
-    'Do not use for production, investment, or policy decisions.',
-    `AI-assisted interpretation based on displayed data and cited methods. Generated by TexasClimate Bioenergy Intelligence Platform.`,
+    '⚠ WHAT THIS REPORT IS NOT',
+    'No laboratory measurement was made. Lignin, cellulose, S:G ratio, biomass, moisture, ash and',
+    'fermentation performance are NOT measured, and weather cannot measure them. Every chemistry and',
+    'conversion statement above is a literature-supported hypothesis, not an observation of this plant.',
+    'The composite models are EXPERIMENTAL and uncalibrated: their weights were chosen, not fitted.',
+    'Not for production, investment, siting or policy decisions.',
+    '',
+    'Generated by TexasClimate — Evidence-Aware Bioenergy Crop Resilience Explorer.',
   ];
   const reportText = textLines.join('\n');
 
   el.innerHTML = `
+    ${env.isScenario ? `<div class="rpt-scenario-banner" role="status">
+      ${typeof tcStatusBadge === 'function' ? tcStatusBadge('EXPERIMENTAL') : ''}
+      <strong>Experimental scenario — not measured conditions.</strong>
+      Modified: ${escapeHtml((env.scenarioDesc || []).join(', '))}.
+      Every figure below describes that hypothetical, not the observed environment.
+    </div>` : ''}
     <div class="rpt-header">
       <div class="rpt-header-left">
         <div class="rpt-title">TexasClimate Bioenergy Suitability Report</div>
         <div class="rpt-meta">${escapeHtml(plant.name)} · ${escapeHtml(appState.locationLabel||'Location not set')} · ${reportTime}</div>
-        <div class="rpt-ai-label">AI-assisted interpretation based on displayed data and cited methods</div>
+        <div class="rpt-ai-label">Computed from live data and literature-derived species profiles by documented, uncalibrated arithmetic models. No language model or generative model was involved in producing any figure in this report.</div>
       </div>
       <button class="btn-sm rpt-copy-btn" onclick="copyReport()" style="font-size:11px">📋 Copy Report</button>
+      <button class="btn-sm rpt-download-btn" onclick="downloadReport()" style="font-size:11px">⤓ Download Report</button>
     </div>
 
     <div class="rpt-body">
@@ -130,7 +186,7 @@ function renderReport() {
 
       <div class="rpt-section">
         <div class="rpt-section-title">Location & Live Environment</div>
-        <div class="rpt-row"><span class="rpt-lbl">Location</span><span class="rpt-val">${escapeHtml(appState.locationLabel||'—')} (${env.lat?.toFixed(4)}°N, ${Math.abs(env.lon||0).toFixed(4)}°W)</span></div>
+        <div class="rpt-row"><span class="rpt-lbl">Location</span><span class="rpt-val">${escapeHtml(appState.locationLabel||'—')} (${fmtCoord(env.lat, env.lon)})</span></div>
         <div class="rpt-row"><span class="rpt-lbl">Temperature</span><span class="rpt-val">${fmtVal(cur?.temp, ts)} ${dataBadge('live-api')}</span></div>
         <div class="rpt-row"><span class="rpt-lbl">Humidity</span><span class="rpt-val">${fmtVal(cur?.humidity, '%')} ${dataBadge('live-api')}</span></div>
         <div class="rpt-row"><span class="rpt-lbl">Wind</span><span class="rpt-val">${fmtVal(cur?.wind, ' '+env.wSuffix)} ${dataBadge('live-api')}</span></div>
@@ -140,29 +196,30 @@ function renderReport() {
       </div>
 
       <div class="rpt-section">
-        <div class="rpt-section-title">30-Day Drought History</div>
+        <div class="rpt-section-title">30-Day Climate Water Balance</div>
         <div class="rpt-row"><span class="rpt-lbl">Precipitation Total</span><span class="rpt-val">${arch?.precipSum != null ? arch.precipSum+' mm '+dataBadge('live-api') : na}</span></div>
         <div class="rpt-row"><span class="rpt-lbl">ET₀ Total</span><span class="rpt-val">${arch?.et0Sum != null ? arch.et0Sum+' mm '+dataBadge('live-api') : na}</span></div>
-        <div class="rpt-row"><span class="rpt-lbl">Drought Deficit (ET₀ − Precip)</span><span class="rpt-val">${arch?.deficit != null ? arch.deficit+' mm '+dataBadge('live-api') : na}</span></div>
+        <div class="rpt-row"><span class="rpt-lbl">Water Deficit Proxy (ET₀ − precipitation)</span><span class="rpt-val">${arch?.deficit != null
+          ? arch.deficit+' mm over '+arch.days+' complete day(s) '+tcStatusBadge('DERIVED', 'Reference ET minus precipitation for a standard grass surface. Not measured plant drought stress.')
+          : '<span class="rpt-na">UNKNOWN</span>'}</span></div>
       </div>
 
       <div class="rpt-section">
         <div class="rpt-section-title">Stress Profile</div>
         <div class="rpt-row"><span class="rpt-lbl">Heat Stress Score</span><span class="rpt-val">${fmtScore(stress?.heatStress)}</span></div>
-        <div class="rpt-row"><span class="rpt-lbl">Drought Memory Score</span><span class="rpt-val">${fmtScore(stress?.droughtMemory)}</span></div>
+        <div class="rpt-row"><span class="rpt-lbl">Climate Water Deficit Proxy</span><span class="rpt-val">${fmtScore(stress?.droughtMemory)}</span></div>
         <div class="rpt-row"><span class="rpt-lbl">VPD Pressure</span><span class="rpt-val">${fmtScore(stress?.vpdPressure)}</span></div>
         <div class="rpt-row"><span class="rpt-lbl">Soil Moisture Stress</span><span class="rpt-val">${fmtScore(stress?.soilStress)}</span></div>
         <div class="rpt-row"><span class="rpt-lbl">Water Stress (composite)</span><span class="rpt-val">${fmtScore(stress?.waterStress)}</span></div>
       </div>
 
       <div class="rpt-section">
-        <div class="rpt-section-title">Agriculture Scores</div>
-        <div class="rpt-row"><span class="rpt-lbl">Survival Score</span><span class="rpt-val">${fmtScore(ag.survival)} — <em>${escapeHtml(ag.survivalConf)}</em></span></div>
-        <div class="rpt-row"><span class="rpt-lbl">Productivity Score</span><span class="rpt-val">${fmtScore(ag.productivity)} — <em>${escapeHtml(ag.productivityConf)}</em></span></div>
-        <div class="rpt-row"><span class="rpt-lbl">Water Sustainability</span><span class="rpt-val">${fmtScore(ag.waterSustain)}</span></div>
-        <div class="rpt-row"><span class="rpt-lbl">TX Climate Tolerance Match</span><span class="rpt-val">${fmtScore(ag.toleranceMatch)}</span></div>
-        <div class="rpt-row"><span class="rpt-lbl">Growth Suitability</span><span class="rpt-val">${fmtScore(ag.growthSuit)}</span></div>
-        <div class="rpt-row"><span class="rpt-lbl">Data Quality</span><span class="rpt-val">${fmtScore(ag.dataQuality)}</span></div>
+        <div class="rpt-section-title">Environmental Scores</div>
+        <div class="rpt-row"><span class="rpt-lbl">Environmental Tolerance Match</span><span class="rpt-val">${fmtScore(ag.toleranceScore)}</span></div>
+        <div class="rpt-row"><span class="rpt-lbl">Productivity Stress Proxy</span><span class="rpt-val">${fmtScore(ag.productivityScore)}</span></div>
+        <div class="rpt-row"><span class="rpt-lbl">Water Supply vs. Requirement</span><span class="rpt-val">${fmtScore(ag.waterSupply)}</span></div>
+        <div class="rpt-row"><span class="rpt-lbl">Species Heat &amp; Drought Envelope</span><span class="rpt-val">${fmtScore(ag.envelopeMatch)}</span></div>
+        <div class="rpt-row"><span class="rpt-lbl">Input Completeness</span><span class="rpt-val">${fmtScore(ag.inputCompleteness)}</span></div>
       </div>
 
       <div class="rpt-section">
@@ -188,13 +245,15 @@ function renderReport() {
       </div>
 
       <div class="rpt-section rpt-final-score">
-        <div class="rpt-section-title">TexasClimate Bioenergy Confidence Score</div>
-        <div class="rpt-final-number" style="color:${bio.total>=70?'#5DDBA8':bio.total>=45?'#F5A623':'#D64545'}">${bio.total ?? '—'} / 100</div>
-        <div class="rpt-final-conf">Confidence: ${escapeHtml(bio.confidence)}</div>
-        ${Object.entries(bio.sub).map(([k, s]) => {
-          const labels = {survival:'Survival',productivity:'Productivity',water:'Water Sustainability',chemSafety:'Chem Safety',conversion:'Conversion Compat.',envBenefit:'Env Benefit',dataQuality:'Data Quality'};
-          return `<div class="rpt-row"><span class="rpt-lbl">${labels[k]||k} (${s.weight}%)</span><span class="rpt-val">${s.value != null ? s.value+'/100' : '<span class="rpt-na">Needs data</span>'}</span></div>`;
-        }).join('')}
+        <div class="rpt-section-title">Bioenergy Suitability Index</div>
+        <div class="rpt-final-number" style="color:${tcBand(bio.total).color}">${bio.total ?? '—'} / 100</div>
+        ${ec ? `<div class="rpt-final-conf rpt-conf-${ec.layers.bioenergy.level.toLowerCase()}">Evidence Confidence: <strong>${ec.layers.bioenergy.level}</strong> — a separate measure from the index above</div>` : ''}
+        ${bio.index.contributors.map(c =>
+          `<div class="rpt-row"><span class="rpt-lbl">${escapeHtml(c.label)} (${Math.round(c.nominalWeight*100)}%)</span><span class="rpt-val">${c.value}/100 → +${c.contribution}</span></div>`).join('')}
+        ${bio.index.missing.map(m =>
+          `<div class="rpt-row"><span class="rpt-lbl">${escapeHtml(m.label)} (${Math.round(m.weight*100)}%)</span><span class="rpt-val"><span class="rpt-na">UNKNOWN</span></span></div>`).join('')}
+        <div class="rpt-note">${escapeHtml(bio.note)}</div>
+        <div class="rpt-note">${escapeHtml(typeof tcModelStamp === 'function' ? tcModelStamp(TC_MODELS.suitability) : '')}</div>
       </div>
 
       <div class="rpt-section">
@@ -208,11 +267,14 @@ function renderReport() {
 
       <div class="rpt-section rpt-limitations">
         <div class="rpt-section-title">Limitations & Missing Data</div>
-        ${bio.missing.length
-          ? bio.missing.map(m => `<div class="rpt-row"><span class="rpt-lbl">⚠ Missing</span><span class="rpt-val">${escapeHtml(m)}</span></div>`).join('')
-          : '<div class="rpt-row"><span class="rpt-val" style="color:#5DDBA8">All available data sources loaded for this measurement.</span></div>'}
-        <div class="rpt-row" style="margin-top:12px"><span class="rpt-lbl">Lab data needed</span><span class="rpt-val">Lignin %, cellulose %, hemicellulose %, moisture content, biomass yield (t/ha), fuel yield (L/t) — none of these were measured. Upload lab data for a higher-confidence report.</span></div>
-        <div class="rpt-disclamer">⚠ This is an educational estimate for research and learning purposes only. Do not use for production, investment, land-use, or policy decisions. All scores are derived from weather data and cited plant profiles — not from field or lab measurements of this plant.</div>
+        ${(bio.index?.missing?.length || ag.missing?.length)
+          ? [...(bio.index?.missing || []).map(m => `<div class="rpt-row"><span class="rpt-lbl">${tcStatusBadge('UNKNOWN')}</span><span class="rpt-val">${escapeHtml(m.label)} — ${Math.round(m.weight*100)}% of the index could not be computed</span></div>`),
+             ...(ag.missing || []).map(m => `<div class="rpt-row"><span class="rpt-lbl">${tcStatusBadge('UNKNOWN')}</span><span class="rpt-val">${escapeHtml(m.label)}</span></div>`)].join('')
+          : '<div class="rpt-row"><span class="rpt-val" style="color:#5DDBA8">Every input this model uses was available.</span></div>'}
+        ${ec ? `<div class="rpt-row" style="margin-top:12px"><span class="rpt-lbl">Structurally unknown</span><span class="rpt-val">${ec.unknowns.map(u=>escapeHtml(u.what)).join(' · ')}</span></div>` : ''}
+        <div class="rpt-row"><span class="rpt-lbl">Never measured here</span><span class="rpt-val">Lignin, cellulose, hemicellulose, S:G ratio, phenolics, moisture, ash, biomass yield and fermentation performance. Weather data cannot measure any of these, and no amount of better weather data would change that. Every chemistry and conversion statement in this report is a literature-supported hypothesis about what <em>might</em> be occurring, not an observation of this plant.</span></div>
+        <div class="rpt-row"><span class="rpt-lbl">Model status</span><span class="rpt-val">${tcStatusBadge('EXPERIMENTAL')} All composite models are uncalibrated: their weights were chosen by the author, not fitted to observed outcomes. No validation set exists.</span></div>
+        <div class="rpt-disclamer">⚠ Educational and exploratory use only. Not for production, investment, siting, land-use or policy decisions.</div>
       </div>
 
     </div>
@@ -220,6 +282,36 @@ function renderReport() {
 
   // Store text for clipboard
   el.dataset.reportText = reportText;
+}
+
+/* Download the evidence report as a file.
+   Clipboard alone is not "shareable": it fails silently in some browser
+   contexts, carries nothing to another machine, and leaves no artefact a
+   reviewer can attach to anything. A file does. */
+function downloadReport() {
+  const el = document.getElementById('reportSection');
+  const text = el?.dataset.reportText;
+  const btn = document.querySelector('.rpt-download-btn');
+  if (!text) { if (btn) btn.textContent = 'Nothing to export yet'; return; }
+  try {
+    const plant = (appState.plant?.name || 'analysis').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const loc   = (appState.locationLabel || 'location').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const stamp = new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-');
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `texasclimate-${plant}-${loc}-${stamp}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    // Revoke on the next tick so the download has started.
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    if (btn) { btn.textContent = '✅ Downloaded'; setTimeout(() => { btn.textContent = '⤓ Download Report'; }, 2500); }
+  } catch (e) {
+    console.warn('[Report] download failed:', e);
+    if (btn) btn.textContent = 'Download unavailable — use Copy';
+  }
 }
 
 function copyReport() {

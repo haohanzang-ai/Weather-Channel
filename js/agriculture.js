@@ -50,15 +50,15 @@ function getCropOutlook(m){
   // Cotton: heat-tolerant, moderately drought-tolerant
   const cotton = m.heatPct>80&&m.moisturePct>80?'Concerning':m.heatPct>70?'Moderate':'Good';
   // Corn: stressed above 95°F and under moisture deficit
-  const corn = m.avgTemp>95?'Concerning':m.moisturePct>70?'Moderate':'Good';
+  const corn = wxTempF(m.avgTemp)>95?'Concerning':m.moisturePct>70?'Moderate':'Good';
   // Sorghum: most drought-tolerant Texas crop
   const sorghum = m.moisturePct>85?'Moderate':'Good';
   // Peanuts: need consistent moisture, dislike extreme heat
-  const peanuts = m.moisturePct>65?'Concerning':m.avgTemp>100?'Moderate':'Good';
+  const peanuts = m.moisturePct>65?'Concerning':wxTempF(m.avgTemp)>100?'Moderate':'Good';
   // Sunflower: drought-tolerant
   const sunflower = m.moisturePct>80?'Moderate':'Good';
   // Vegetables: need moisture and moderate temps
-  const veggies = m.avgTemp>100?'Concerning':m.moisturePct>75?'Moderate':'Good';
+  const veggies = wxTempF(m.avgTemp)>100?'Concerning':m.moisturePct>75?'Moderate':'Good';
   // Pasture: most sensitive to dry spells
   const pasture = m.moisturePct>75?'Severe':m.moisturePct>55?'Concerning':'Moderate';
   // Rangelands: drought-sensitive
@@ -104,7 +104,7 @@ function renderAg(){
   const cityScores = Object.entries(WEATHER_DATA).map(([name,d])=>{
     const days = FORECAST_DATA[name] || [];
     const rainProb = days.length ? days.reduce((s,f)=>s+f.rain,0)/days.length : 0;
-    return {name, score:(100-d.temp)*0.5 + rainProb*0.3 + d.humidity*0.2};
+    return {name, score:(100-wxTempF(d.temp))*0.5 + rainProb*0.3 + d.humidity*0.2};
   }).sort((a,b)=>b.score-a.score);
   const bestCity = cityScores[0]?.name || '—';
 
@@ -126,7 +126,7 @@ function renderAg(){
     <div class="grid-2" style="margin-bottom:16px">
       <div class="card">
         <h3 class="section-title">Agronomic Conditions ${dataBadge('live-drv')}</h3>
-        <div style="font-size:10px;color:var(--text3);margin-bottom:10px">${et0Line} · Avg temp: <strong>${Math.round(m.avgTemp)}°F</strong></div>
+        <div style="font-size:10px;color:var(--text3);margin-bottom:10px">${et0Line} · Avg temp: <strong>${Math.round(m.avgTemp)}${tUnit()}</strong></div>
         ${agItems.map(a=>`
           <div class="ag-status">
             <div class="ag-label">${escapeHtml(a.label)}</div>

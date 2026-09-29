@@ -261,11 +261,29 @@ async function locFetchEnvironment(lat, lon) {
       icon:       cond.icon,
     };
 
-    // VPD: first available hourly value for the current hour
-    const vpdArr  = hourly.vapour_pressure_deficit  || [];
-    const soilArr = hourly.soil_moisture_0_to_1cm   || [];
-    result.hourlyVPD  = vpdArr[0]  != null ? Math.round(vpdArr[0]  * 100) / 100 : null;
-    result.hourlySoil = soilArr[0] != null ? Math.round(soilArr[0] * 10000) / 10000 : null;
+    // Hourly series: pick the CURRENT hour, not index 0.
+    //
+    // Open-Meteo's hourly arrays start at 00:00 local on the first forecast day,
+    // so index 0 is MIDNIGHT. This code previously took [0] and presented it
+    // beside the current temperature as if both described the same moment. The
+    // effect was systematic, not random: overnight VPD is near its daily
+    // minimum, so every analysis understated atmospheric drying demand, and
+    // overnight soil moisture is near its daily maximum. Both biased the stress
+    // scores optimistically, in a term carrying 15% of the tolerance weight.
+    const hourTimes = hourly.time || [];
+    const hourIdx   = pickHourlyIndex(hourTimes, new Date());
+    result.hourlyIndex     = hourIdx;
+    result.hourlyTimestamp = hourIdx >= 0 ? (hourTimes[hourIdx] ?? null) : null;
+
+    const pick = (arr) => {
+      if (!Array.isArray(arr) || arr.length === 0 || hourIdx < 0) return null;
+      const v = arr[hourIdx];
+      return v == null ? null : v;   // a gap stays UNKNOWN, never borrows another hour
+    };
+    const vpdRaw  = pick(hourly.vapour_pressure_deficit);
+    const soilRaw = pick(hourly.soil_moisture_0_to_1cm);
+    result.hourlyVPD  = vpdRaw  != null ? Math.round(vpdRaw  * 100) / 100 : null;
+    result.hourlySoil = soilRaw != null ? Math.round(soilRaw * 1000) / 1000 : null;
 
     result.forecast = (daily.time || []).map((d, i) => ({
       date:     d,
@@ -296,17 +314,23 @@ async function locFetchEnvironment(lat, lon) {
     const arch      = archRes.value;
     const et0Arr    = arch.daily?.et0_fao_evapotranspiration || [];
     const precipArr = arch.daily?.precipitation_sum || [];
-    const et0Sum    = et0Arr.reduce((a, b)  => a + (b  || 0), 0);
-    const precipSum = precipArr.reduce((a, b) => a + (b || 0), 0);
-    result.archive30 = {
-      et0Sum:    et0Arr.length    ? Math.round(et0Sum    * 10) / 10 : null,
-      precipSum: precipArr.length ? Math.round(precipSum * 10) / 10 : null,
-      deficit:   (et0Arr.length && precipArr.length)
-        ? Math.round((et0Sum - precipSum) * 10) / 10 : null,
-      days: et0Arr.length,
-    };
+
+    // Only count days where BOTH values are present — see sumCompleteDays()
+    // in tolerance-model.js, which is where the reasoning and the tests live.
+    const summed = sumCompleteDays(et0Arr, precipArr);
+    result.archive30 = summed;
+    const usedDays    = summed ? summed.days : 0;
+    const missingDays = summed ? summed.daysMissing : Math.max(et0Arr.length, precipArr.length);
+    const n           = summed ? summed.daysRequested : Math.max(et0Arr.length, precipArr.length);
+
+    if (usedDays === 0) {
+      result.errors.push('Archive returned no complete days — the water deficit proxy is UNKNOWN.');
+    } else if (missingDays > 0) {
+      // Not an error, but it must be visible: the window is shorter than asked for.
+      result.archiveNote = `${usedDays} of ${n} days had complete data; ${missingDays} day(s) not yet published by the reanalysis archive and were excluded rather than counted as zero.`;
+    }
   } else {
-    result.errors.push('Open-Meteo archive API unavailable — 30-day drought memory not available.');
+    result.errors.push('Open-Meteo archive API unavailable — the 30-day water deficit proxy is UNKNOWN.');
   }
 
   // — NWS alerts (two-step: /points → forecast zone → active alerts) ——
@@ -336,6 +360,10 @@ async function locFetchEnvironment(lat, lon) {
     result.errors.push('NWS alerts unavailable for this location.');
   }
 
+  // A fresh measurement invalidates any active scenario — otherwise "restore
+  // measured conditions" would restore the PREVIOUS location's weather.
+  if (typeof scenarioInvalidateBaseline === 'function') scenarioInvalidateBaseline();
+
   appState.envData      = result;
   appState.envFetchTime = result.fetchTime;
 
@@ -362,11 +390,10 @@ function locRenderProfile(d) {
   if (d.hourlyVPD != null) {
     vpdDisplay = `${d.hourlyVPD} kPa ${dataBadge('live-api')}`;
   } else if (cur?.temp != null && cur?.humidity != null) {
-    const tempC = ts === '°F' ? (cur.temp - 32) * 5 / 9 : cur.temp;
-    const es    = 0.6108 * Math.exp(17.27 * tempC / (tempC + 237.3));
-    const ea    = es * cur.humidity / 100;
-    const vpd   = Math.round((es - ea) * 100) / 100;
-    vpdDisplay  = `${vpd} kPa <span class="loc-derived">(approx. from temp+RH)</span> ${dataBadge('live-derived')}`;
+    // Single shared FAO-56 implementation — see js/tolerance-model.js.
+    const vpd = computeVPD(ts === '°F' ? fToC(cur.temp) : cur.temp, cur.humidity);
+    vpdDisplay = vpd == null ? na
+      : `${vpd} kPa <span class="loc-derived">(derived from temperature + humidity)</span> ${tcStatusBadge('DERIVED')}`;
   }
 
   // Soil moisture
@@ -382,9 +409,11 @@ function locRenderProfile(d) {
   let droughtTag = '';
   if (d.archive30?.deficit != null) {
     const def   = d.archive30.deficit;
-    const label = def > 60 ? 'Severe deficit' : def > 30 ? 'Moderate deficit' : def > 0 ? 'Mild deficit' : 'Surplus / adequate';
+    const label = def > 60 ? 'Large deficit' : def > 30 ? 'Moderate deficit' : def > 0 ? 'Small deficit' : 'Supply met demand';
     const color = def > 60 ? '#D64545' : def > 30 ? '#F5A623' : '#2ECC8B';
-    droughtDisplay = `${def} mm over ${d.archive30.days} days ${dataBadge('live-api')}`;
+    droughtDisplay = `${def} mm over ${d.archive30.days} complete day(s)` +
+      (d.archive30.daysMissing ? ` <span class="loc-derived">(${d.archive30.daysMissing} of ${d.archive30.daysRequested} days not yet published and excluded, not counted as zero)</span>` : '') +
+      ` ${tcStatusBadge('DERIVED', 'Reference ET minus precipitation — a climate water deficit proxy for a standard grass reference surface, not measured plant water stress.')}`;
     droughtTag = `<span class="loc-tag" style="background:${color}22;color:${color};border-color:${color}55">${label}</span>`;
   }
 

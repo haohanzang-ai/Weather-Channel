@@ -17,7 +17,7 @@ function renderEnergy(){
   // CDI = max(0, temp − 65°F) × 0.8  — higher = more AC pressure on the grid
   const cdiEntries = sorted.map(([city,d])=>({
     city,
-    cdi: Math.max(0, Math.round((d.temp-65)*0.8)),
+    cdi: Math.max(0, Math.round((wxTempF(d.temp)-65)*0.8)),   // 65 °F base — normalise first
     temp: d.temp
   }));
   const maxCDI  = Math.max(...cdiEntries.map(e=>e.cdi));
@@ -34,12 +34,12 @@ function renderEnergy(){
     <div class="grid-4" style="margin-bottom:16px">
       <div class="card card-orange">
         <div class="stat-label">Avg Texas Temp (Live API)</div>
-        <div class="stat-value">${avgTemp}<span class="stat-unit">°F</span></div>
+        <div class="stat-value">${avgTemp}<span class="stat-unit">${tUnit()}</span></div>
         <div class="stat-sub">Across all 10 monitored cities</div>
       </div>
       <div class="card">
         <div class="stat-label">Peak City Temp</div>
-        <div class="stat-value">${maxTemp}<span class="stat-unit">°F</span></div>
+        <div class="stat-value">${maxTemp}<span class="stat-unit">${tUnit()}</span></div>
         <div class="stat-sub">${escapeHtml(hottest)}</div>
       </div>
       <div class="card">
@@ -65,7 +65,7 @@ function renderEnergy(){
               <div class="progress-fill" style="width:${Math.min(100,cdi*2.5)}%;background:${col}"></div>
             </div>
           </div>
-          <div style="font-size:10px;color:var(--text3);width:48px;text-align:right">${temp}°F</div>
+          <div style="font-size:10px;color:var(--text3);width:48px;text-align:right">${temp}${tUnit()}</div>
           <span style="font-size:11px;color:${col};font-weight:700;width:60px;text-align:right;font-family:var(--mono)">CDI: ${cdi}</span>
         </div>`;
       }).join('')}

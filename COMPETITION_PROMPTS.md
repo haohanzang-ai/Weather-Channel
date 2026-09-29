@@ -1,3 +1,15 @@
+> **HISTORICAL DOCUMENT — retained for provenance, not current.**
+>
+> This file records the build prompts used during earlier development. It contains
+> wording that a later scientific audit retired, including "Survival Calculator",
+> "survival probability", and framings of the plant scanner that overstated what it
+> does. Those terms are **no longer used in the app**, and the corrections are logged
+> in `js/claims-registry.js` (`TC_RETIRED_CLAIMS`) and displayed in the app under
+> Science → Model Cards. Nothing in this file should be read as describing current
+> behaviour; see `README.md` and `docs/ARCHITECTURE.md` for that.
+
+---
+
 # TexasClimate — Competition Build Prompts
 # Step-by-step prompts to insert into Claude/AI coding sessions.
 # Each prompt is self-contained. Complete them in order for best results.

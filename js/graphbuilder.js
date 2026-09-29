@@ -358,6 +358,10 @@ function _gbGenerate() {
   empty.setAttribute('aria-hidden', 'true');
   wrap.style.display  = 'block';
 
+  if (typeof Chart === 'undefined') {
+    if (typeof chartUnavailable === 'function') chartUnavailable(canvas);
+    return;
+  }
   _gbChart = new Chart(canvas, config);
 }
 

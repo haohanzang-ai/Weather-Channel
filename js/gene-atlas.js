@@ -50,6 +50,80 @@ const ATLAS_REGIONS = [
   { key: 'chloroplast',    label: 'Chloroplast',      icon: '☀️' },
 ];
 
+/* ── Evidence ladder ──────────────────────────────────────────────────────────
+   The Gene Atlas is a MECHANISM AND EVIDENCE EXPLORER, not an expression
+   detector. Nothing here observes gene activity in anyone's plant. What each
+   record says is: "the published literature associates this gene or pathway
+   with this stress response" — and the tier says how far that evidence sits
+   from the species being analysed.
+
+   Tier 1 is the strongest and the rarest. Most switchgrass gene records in any
+   public resource are tier 4 or 5, because switchgrass is far less studied than
+   Arabidopsis. Showing the tier is the honest alternative to letting a
+   projected ortholog look like a measured result. */
+const EVIDENCE_LADDER = [
+  { tier: 1, key: 'direct-species', label: 'Direct experiment in switchgrass',
+    short: 'T1', dot: '#2ECC8B', glyph: '●',
+    meaning: 'The gene was studied experimentally in Panicum virgatum itself.' },
+  { tier: 2, key: 'related-genus',  label: 'Experiment in a related Panicum species',
+    short: 'T2', dot: '#5DDBA8', glyph: '◕',
+    meaning: 'Studied in a close relative. Transfer is plausible but not demonstrated.' },
+  { tier: 3, key: 'other-grass',    label: 'Experiment in another grass',
+    short: 'T3', dot: '#4A90E2', glyph: '◑',
+    meaning: 'Studied in rice, maize, sorghum or similar. Grasses share much of this machinery, but not all of it.' },
+  { tier: 4, key: 'model-dicot',    label: 'Arabidopsis or other model species',
+    short: 'T4', dot: '#F5A623', glyph: '◔',
+    meaning: 'Studied in a model plant, often a dicot. The switchgrass counterpart is inferred, not observed.' },
+  { tier: 5, key: 'computational',  label: 'Computational projection only',
+    short: 'T5', dot: '#E57373', glyph: '○',
+    meaning: 'Identified by sequence similarity. No experiment in any grass supports this specific gene\'s role here.' },
+];
+
+/* Map the evidence labels used in the data files onto the ladder. */
+const EVIDENCE_TIER_OF = {
+  'Peer-Reviewed Literature':       3,
+  'Curated Database Reference':     4,
+  'Homology-Based Projection':      5,
+  'Environment-Relevance Estimate': 5,
+};
+
+/* How many curated gene records exist for a species, and how strong the best of
+   them is. Used by the Evidence Confidence engine so the Biology layer reflects
+   the evidence actually available for the selected plant, rather than assuming
+   switchgrass-level coverage for every species. */
+function atlasGeneCountFor(plantKey) {
+  const g = _atlasState?.genes;
+  if (!Array.isArray(g)) return null;
+  return g.length;
+}
+function atlasTopTierFor(plantKey) {
+  const g = _atlasState?.genes;
+  if (!Array.isArray(g) || !g.length) return null;
+  return Math.min(...g.map(x => atlasTier(x).tier));
+}
+
+function atlasTier(gene) {
+  // A record that names Panicum virgatum as its own study species outranks the
+  // generic label, so direct switchgrass work is not buried under "literature".
+  if (gene && gene.evidenceLevel === 'Peer-Reviewed Literature' &&
+      /Panicum virgatum/i.test(gene.orthologSource || '') &&
+      !/Arabidopsis|Oryza|Zea|rice|maize/i.test(gene.orthologSource || '')) return EVIDENCE_LADDER[0];
+  const t = EVIDENCE_TIER_OF[gene?.evidenceLevel] || 5;
+  return EVIDENCE_LADDER[t - 1];
+}
+
+/* Name a projected gene honestly. A tier-4/5 record is a PUTATIVE ORTHOLOG,
+   and its display name should say so rather than presenting the projected
+   switchgrass symbol as though the gene had been characterised. */
+function atlasDisplayName(gene) {
+  const tier = atlasTier(gene).tier;
+  if (tier <= 3) return gene.symbol;
+  const src = gene.orthologSource || '';
+  const m = src.match(/^([A-Za-z][A-Za-z\s.]*?)\s+(At[A-Z0-9]+|[A-Z][A-Za-z0-9]+)\s*\(/);
+  const from = m ? `${m[1].trim()} ${m[2]}` : (src.split(';')[0] || 'a model species');
+  return `Putative switchgrass ortholog of ${from}`;
+}
+
 const EVIDENCE_CONFIG = {
   'Peer-Reviewed Literature':   { cls: 'peer',     label: 'Peer-Reviewed Literature',   dot: '#5DDBA8' },
   'Curated Database Reference': { cls: 'curated',  label: 'Curated Database',           dot: '#4A90E2' },
@@ -164,7 +238,7 @@ function _atlasRenderMain(pd, genes, plantKey) {
       <div class="atlas-species-badge">${escapeHtml(specLabel.badge)}</div>
       <div class="atlas-intro-title">🧬 Plant Gene &amp; Pathway Atlas</div>
       <div class="atlas-intro-desc">
-        Explore how environmental stress connects to plant pathways, genes, survival, productivity,
+        Explore how environmental stress connects to plant pathways, genes, stress tolerance and growth,
         and bioenergy conversion — for ${specLabel.intro}
         Click a pathway group to expand it, then click any gene chip to see its function, evidence level, and source.
       </div>
@@ -191,9 +265,12 @@ function _atlasRenderMain(pd, genes, plantKey) {
     <!-- Evidence legend -->
     <div class="atlas-legend">
       <span class="atlas-legend-label">Evidence:</span>
-      ${Object.entries(EVIDENCE_CONFIG).map(([k, v]) => `
-        <span class="atlas-legend-item">
-          <span class="atlas-legend-dot" style="background:${v.dot}"></span>
+      <span class="atlas-legend-title">Evidence ladder — strongest first:</span>
+      ${EVIDENCE_LADDER.map(v => `
+        <span class="atlas-legend-item" title="${escapeHtml(v.meaning)}">
+          <span class="atlas-legend-dot" style="background:${v.dot}" aria-hidden="true"></span>
+          <span class="atlas-legend-glyph" aria-hidden="true">${v.glyph}</span>
+          <span class="atlas-legend-tier">${v.short}</span>
           ${escapeHtml(v.label)}
         </span>`).join('')}
     </div>
@@ -245,11 +322,14 @@ function _atlasRenderMain(pd, genes, plantKey) {
 
     <!-- Important disclaimer -->
     <div style="padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r8);font-size:10.5px;color:var(--text3);line-height:1.7">
-      <strong style="color:var(--text2)">Important:</strong>
-      This atlas does <em>not</em> claim to detect gene expression from weather data or scanned images.
-      "Relevant pathway" means the pathway is biologically important under this type of stress, based on published plant physiology —
-      not that any gene has been measured as active right now.
-      Expression or lab data is needed to confirm actual pathway activity in a specific plant under field conditions.
+      <strong style="color:var(--text2)">What this atlas is, and is not:</strong>
+      It is a <em>mechanism and evidence explorer</em>. It shows which genes and pathways the published literature
+      <em>associates</em> with a given stress response, and how far that evidence sits from switchgrass on the evidence
+      ladder above. It is <strong>not</strong> an expression detector. No gene activity is measured from weather data,
+      from a photograph, or from anything else in this app &mdash; and nothing here indicates that a gene is currently
+      active in any real plant. Records at tier 4 and 5 are <em>putative orthologs</em>: a switchgrass counterpart
+      inferred from sequence similarity to a gene characterised in another species. Confirming any of this in a
+      specific plant requires RNA-seq or qPCR on real tissue.
       Sources: Plant Reactome · Phytozome · Gramene · TAIR · KEGG · NCBI Gene · peer-reviewed literature.
     </div>`;
 }
@@ -290,13 +370,17 @@ function _atlasRenderPathwayGroup(group, allGenes) {
           ${genesInGroup.length === 0
             ? `<span style="font-size:10px;color:var(--text3);font-style:italic">No genes match the current region filter.</span>`
             : genesInGroup.map(g => {
-                const ev = EVIDENCE_CONFIG[g.evidenceLevel];
-                const isPeer = g.evidenceLevel === 'Peer-Reviewed Literature';
-                return `<button class="atlas-gene-chip${isPeer ? ' peer-lit' : ''}"
+                const t = atlasTier(g);
+                // The tier travels with the chip, as a glyph AND a code, so the
+                // strength of the evidence is visible before anyone clicks in
+                // — and legible without relying on colour.
+                return `<button class="atlas-gene-chip atlas-tier-${t.tier}"
                                 data-gene-id="${escapeHtml(g.geneId)}"
-                                title="${escapeHtml(g.name)} — ${escapeHtml(g.evidenceLevel)}"
+                                title="${escapeHtml(g.name)} — ${escapeHtml(t.label)}. ${escapeHtml(t.meaning)}"
                                 onclick="atlasSelectGene('${escapeHtml(g.geneId)}')">
+                  <span class="atlas-chip-tier" style="color:${t.dot}" aria-hidden="true">${t.glyph}</span>
                   ${escapeHtml(g.symbol)}
+                  <span class="sr-only"> — evidence ${escapeHtml(t.label)}</span>
                 </button>`;
               }).join('')}
         </div>
@@ -332,23 +416,38 @@ function _atlasUpdateStressBar() {
   const active = [];
   const chips  = [];
 
+  // These previously read `stress.saltRisk` and `stress.vpdStress`. Neither has
+  // ever been set by stressCompute: salinity was deliberately removed (coastal
+  // proximity is not a salinity measurement) and the VPD field is called
+  // `vpdPressure`. Both silently evaluated to 0, so the VPD half of the drought
+  // condition could never fire and the salt branch was unreachable dead code.
   const heat    = stress.heatStress    ?? 0;
   const drought = stress.droughtMemory ?? 0;
-  const salt    = stress.saltRisk      ?? 0;  // may be null if no salt data
-  const vpd     = stress.vpdStress     ?? 0;
+  const vpd     = stress.vpdPressure   ?? 0;
+  // Salinity enters ONLY from a measured soil EC the user supplied. It is never
+  // inferred, so with no measurement this stays null and the branch stays off.
+  const soilEC  = (typeof appState !== 'undefined' && appState.envData?.userSoilEC != null)
+    ? appState.envData.userSoilEC : null;
 
   if (drought > 30 || vpd > 30) {
     active.push('drought_aba', 'cellulose_biomass', 'growth_productivity');
-    chips.push({ label: `Drought / ABA (score: ${drought})`, cls: 'active' });
-    chips.push({ label: 'Osmolyte inhibitor risk elevated', cls: 'active' });
+    if (drought > 30) chips.push({ label: `Water deficit / ABA pathways (deficit proxy ${drought})`, cls: 'active' });
+    if (vpd > 30)     chips.push({ label: `Stomatal / VPD response (VPD stress ${vpd})`, cls: 'active' });
+    // Previously "Osmolyte inhibitor risk elevated" — the osmolyte-to-inhibitor
+    // link is a retired claim. Osmolyte accumulation is well supported; calling
+    // those compounds fermentation inhibitors was not.
+    chips.push({ label: 'Osmolyte accumulation pathways — literature-associated', cls: 'active' });
   }
   if (heat > 35) {
     active.push('heat_ros', 'photosynthesis_c4', 'growth_productivity');
-    chips.push({ label: `Heat / ROS (score: ${heat})`, cls: 'active' });
+    chips.push({ label: `Heat / ROS pathways (heat stress ${heat})`, cls: 'active' });
   }
-  if (salt > 25) {
+  if (soilEC != null && soilEC > 4) {
+    // 4 dS/m is the conventional threshold above which a soil is called saline.
     active.push('salt_ion', 'drought_aba');
-    chips.push({ label: `Salt stress (estimate: ${salt})`, cls: 'active' });
+    chips.push({ label: `Ion transport / salt tolerance (measured soil EC ${soilEC} dS/m)`, cls: 'active' });
+  } else {
+    chips.push({ label: 'Salt / ion pathways — UNKNOWN, needs a measured soil EC', cls: 'inactive' });
   }
   // Always relevant for bioenergy
   active.push('lignin_cellwall', 'secondary_metabolites');
@@ -521,7 +620,15 @@ function _atlasShowGeneDetail(gene) {
       </div>
 
       <div class="atlas-dp-body">
-        <span class="atlas-evidence-badge ${escapeHtml(ev.cls)}">● ${escapeHtml(ev.label)}</span>
+        <span class="atlas-evidence-badge ${escapeHtml(ev.cls)}"
+              title="${escapeHtml(atlasTier(gene).meaning)}">
+          <span aria-hidden="true">${atlasTier(gene).glyph}</span>
+          Evidence ${escapeHtml(atlasTier(gene).short)} — ${escapeHtml(atlasTier(gene).label)}
+        </span>
+        ${atlasTier(gene).tier >= 4 ? `<div class="atlas-putative">
+          <strong>Displayed as:</strong> ${escapeHtml(atlasDisplayName(gene))}.
+          This is an inferred counterpart, not a characterised switchgrass gene. Nothing about its
+          activity in a real plant has been observed here.</div>` : ''}
 
         <div class="atlas-dp-section">
           <div class="atlas-dp-label">Function</div>

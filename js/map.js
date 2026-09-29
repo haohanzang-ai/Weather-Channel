@@ -71,7 +71,7 @@ const POLLUTION_DATA = {
   ],
 };
 
-// Runoff + Pesticide on by default so judges see pollution data immediately
+// Runoff + Pesticide on by default so pollution data is visible immediately
 const _pollutionLayers = { runoff: true, pesticide: true, ghg: false };
 
 // ── Layer toggle (called from HTML onclick) ───────────────────────────────────
@@ -86,6 +86,25 @@ function mapToggleLayer(layer) {
 function _mlInit() {
   const container = document.getElementById('texasSVG');
   if (!container || _mlMap) return;
+
+  // The map library is loaded from a CDN. If that request fails — an offline
+  // demo, a school or conference network that blocks CDNs, a CDN outage — the
+  // global is simply absent, and calling into it threw a ReferenceError that
+  // took the entire Map & Compare tab down with it. Degrade instead: say what
+  // is missing and leave every other panel on the tab working.
+  if (typeof maplibregl === 'undefined') {
+    container.innerHTML = `
+      <div class="map-unavailable" role="status">
+        <div class="map-unavailable-title">Map library unavailable</div>
+        <p>The map renderer is loaded from a CDN and that request did not complete.
+           This usually means the network is blocking it. Everything else on this
+           tab &mdash; city comparison, forecasts, air quality, water, energy &mdash;
+           works normally, and single-location analysis is unaffected.</p>
+        <button class="btn-sm" onclick="location.reload()">Reload the page</button>
+      </div>`;
+    console.warn('[TexasClimate] maplibregl not loaded; map degraded to a message.');
+    return;
+  }
 
   _mlMap = new maplibregl.Map({
     container: 'texasSVG',
@@ -330,14 +349,14 @@ function _mlRenderMarkers() {
     const el = document.createElement('div');
     el.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer';
     el.setAttribute('aria-label', d
-      ? `${city.name}: ${d.temp}°F, ${d.condition}`
+      ? `${city.name}: ${d.temp}${tUnit()}, ${d.condition}`
       : `${city.name}: click to load weather`);
     el.setAttribute('role', 'button');
     el.setAttribute('tabindex', '0');
 
     // Label — city name + temperature in a pill, stacked above the dot in normal flow
     const labelEl = document.createElement('div');
-    const tempSuffix = d ? ` · ${d.temp}°F` : '';
+    const tempSuffix = d ? ` · ${d.temp}${tUnit()}` : '';
     labelEl.textContent = city.name + (isPrimary ? tempSuffix : '');
     labelEl.style.cssText = [
       'white-space:nowrap',
@@ -391,7 +410,7 @@ function _mlRenderMarkers() {
              <span style="font-size:11px;color:#5F6368">${escapeHtml(d.condition)}</span>
            </div>
            <div style="font-size:11px;color:#5F6368;display:flex;gap:10px">
-             <span>&#128167; ${d.humidity}%</span><span>&#128168; ${d.wind} mph</span><span>UV ${d.uv}</span>
+             <span>&#128167; ${d.humidity}%</span><span>&#128168; ${d.wind} ${wUnit()}</span><span>UV ${d.uv}</span>
            </div>
            <div style="margin-top:5px;font-size:10px;color:#9AA0A6;font-style:italic">Click for 7-day forecast</div>
          </div>`
@@ -477,7 +496,7 @@ function showCityDetail(cityName) {
       <div class="card card-orange"><div class="stat-label">Temperature</div><div class="stat-value">${d.temp}<span class="stat-unit">&#176;F</span></div></div>
       <div class="card"><div class="stat-label">Feels Like</div><div class="stat-value">${d.feels}<span class="stat-unit">&#176;F</span></div></div>
       <div class="card"><div class="stat-label">Humidity</div><div class="stat-value">${d.humidity}<span class="stat-unit">%</span></div></div>
-      <div class="card"><div class="stat-label">Wind Speed</div><div class="stat-value">${d.wind}<span class="stat-unit">mph</span></div></div>
+      <div class="card"><div class="stat-label">Wind Speed</div><div class="stat-value">${d.wind}<span class="stat-unit">${wUnit()}</span></div></div>
     </div>
     <div class="grid-4">
       <div class="card"><div class="stat-label">Pressure</div><div class="stat-value" style="font-size:18px">${d.pressure}<span class="stat-unit">hPa</span></div></div>

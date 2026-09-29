@@ -1,0 +1,10 @@
+{
+  "name": "texasclimate",
+  "version": "4.0.0",
+  "private": true,
+  "description": "TexasClimate — Evidence-Aware Bioenergy Crop Resilience Explorer",
+  "scripts": {
+    "test": "node tests/run.js",
+    "serve": "npx --yes serve ."
+  }
+}

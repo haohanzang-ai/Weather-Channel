@@ -840,7 +840,7 @@ const SCAN_PLANTS = {
     waterUse:'Unknown', droughtTolerance:'Unknown', texasFit:'Not applicable',
     conversionMethods:['Not applicable — ornamental plants are not bioenergy feedstocks'],
     processingBarrier:'Ornamental plants are not evaluated as bioenergy feedstocks. They are often bred for appearance, not biomass yield, and may contain pesticide residues from landscape maintenance.',
-    climateContext:'This appears to be a cultivated ornamental or landscape plant. Ornamental plants are not biomass energy feedstocks. This scanner is designed for purpose-grown energy crops and agricultural residues.',
+    climateContext:'This appears to be a cultivated ornamental or landscape plant. Ornamental plants are not biomass energy feedstocks. This tool is designed for purpose-grown energy crops and agricultural residues.',
     texasSuitability:'Not applicable as a bioenergy feedstock.',
     reasoning:'Ornamental plants are not bioenergy feedstocks. If you intended to scan a different plant, please re-upload and select the correct plant type from the dropdown.',
     sources:[{ label:'DOE Bioenergy Basics', url:'https://www.energy.gov/eere/bioenergy/bioenergy-basics' }],
@@ -1316,7 +1316,7 @@ function _scanHandleFile(file) {
   scanGA('plant_image_selected', { file_type: file.type });
 }
 
-// ── Show preview & trigger AI ─────────────────────────────────────────────────
+// ── Show preview & prompt the user to confirm the species ────────────────────
 async function _scanShowPreview(url) {
   const img     = document.getElementById('scanPreviewImg');
   const preview = document.getElementById('scanPreviewCard');
@@ -1523,7 +1523,7 @@ function _scanRenderReport() {
 
   el.innerHTML = `
     <div class="scan-report-disclaimer">
-      ⚠ <strong>Educational estimate only.</strong> Based on visual AI analysis, user-confirmed plant category, published biomass research, and regional climate context. This is <strong>not a lab test, fuel forecast, agronomic recommendation, or commercial viability assessment.</strong> Do not use for farming, investment, land-use, policy, or fuel-production decisions.
+      ⚠ <strong>Educational estimate only.</strong> Based on your confirmed plant category, your recorded observations, published biomass research, and regional climate context. An image classifier may suggest a starting species, but <strong>your confirmation is what sets it</strong>, and nothing about biofuel output is read from the photograph. This is <strong>not a lab test, fuel forecast, agronomic recommendation, or commercial viability assessment.</strong> Do not use for farming, investment, land-use, policy, or fuel-production decisions.
     </div>
 
     <div class="scan-report-header">
@@ -1639,7 +1639,7 @@ async function _scanPreloadModel() {
   }
 }
 
-// ── 3-stage AI identification pipeline ───────────────────────────────────────
+// ── 3-stage guided species SELECTION (user-driven; no identification is performed)
 async function _scanIdentifyImage(imgEl) {
   if (!imgEl.complete || !imgEl.naturalWidth) {
     await new Promise(r => { imgEl.onload = r; imgEl.onerror = r; });
@@ -1767,7 +1767,7 @@ function _scanColorAnalyze(imgEl) {
   }
 }
 
-// ── AI suggestion UI — 3 stages ───────────────────────────────────────────────
+// ── Guided selection UI — 3 stages of narrowing, all chosen by the user ──────
 function _scanShowAISuggestLoading() {
   const el = document.getElementById('scanAISuggest');
   if (!el) return;
@@ -1803,10 +1803,18 @@ function _scanUpdateAISuggest(result) {
   }
 
   const pct = Math.round(result.confidence * 100);
-  const methodLabel = result.method === 'mobilenet' ? '🤖 MobileNet AI' : '🎨 Color Analysis';
+  // What the percentage actually is, stated precisely because it is the single
+  // most misreadable number in this app: MobileNet's softmax probability for an
+  // ImageNet CLASS. It is NOT the probability that the plant is this species.
+  // ImageNet's 1000 classes contain almost no bioenergy crops, so a keyword map
+  // translates its output into our plant keys — an unvalidated heuristic.
+  const methodLabel = result.method === 'mobilenet' ? '🔍 MobileNet (ImageNet)' : '🎨 Colour analysis';
   const methodNote  = result.method === 'mobilenet'
-    ? `TF.js MobileNet (general-purpose vision, not a specialist plant identifier). Visual confidence: ${pct}%. Please verify or correct the selection below.`
-    : `Based on pixel color and texture distribution. Accuracy is limited — please verify or correct below.`;
+    ? `MobileNet v2 ran locally in your browser and classified this image as an ImageNet category with ${pct}% probability. `
+      + `That number is MobileNet's confidence in an ImageNet CLASS — it is NOT the probability that this plant is the species shown. `
+      + `ImageNet contains almost no bioenergy crops, so a keyword map converts its label into our plant list, and that map has never been validated. `
+      + `Treat this as a starting suggestion only and confirm or correct it below.`
+    : `MobileNet found nothing it recognised, so this fell back to pixel colour and texture distribution — a much weaker signal that cannot distinguish species. Please select the plant yourself below.`;
 
   if (result.matched && result.key) {
     const plant = SCAN_PLANTS[result.key];
@@ -1815,7 +1823,7 @@ function _scanUpdateAISuggest(result) {
     el.innerHTML = `<div class="scanAIBox scanAIBox-match">
       <div class="scanAIBoxRow">
         <span class="scanAIBadge">${escapeHtml(methodLabel)}</span>
-        <span class="scanAIConf">${pct}% visual confidence</span>
+        <span class="scanAIConf" title="MobileNet's probability for an ImageNet class, not the probability that this is the species named.">${pct}% ImageNet class probability</span>
       </div>
       <div class="scanAILabel">Detected: <em>${escapeHtml(result.rawLabel)}</em> → pre-selected <strong>${plant ? escapeHtml(plant.icon+' '+plant.commonName) : result.key}</strong></div>
       <div class="scanAINote">${escapeHtml(methodNote)}</div>
@@ -1824,7 +1832,7 @@ function _scanUpdateAISuggest(result) {
     el.innerHTML = `<div class="scanAIBox scanAIBox-nomatch">
       <div class="scanAIBoxRow">
         <span class="scanAIBadge scanAIBadge-warn">🔍 No plant match found</span>
-        <span class="scanAIConf">${pct}% visual confidence</span>
+        <span class="scanAIConf" title="MobileNet's probability for an ImageNet class, not the probability that this is the species named.">${pct}% ImageNet class probability</span>
       </div>
       <div class="scanAILabel"><em>${escapeHtml(result.rawLabel)}</em></div>
       <div class="scanAINote">Could not match to a plant category from visual features alone. Please select the plant manually from the dropdown below. A closer photo of leaves, stems, or distinctive features may help on retry.</div>
@@ -2145,14 +2153,17 @@ function renderScannerReport() {
         ⚠ This tool cannot calculate energy value, lignin %, cellulose %, biomass yield, moisture, ash, or fuel gallons from a photograph. Visual appearance does not predict biofuel output.
       </p>
       <p style="margin-top:8px;font-size:10px;color:var(--text3)">
-        Future mode: PlantNet-assisted identification and AI-generated explanation through secure backend.
+        Species identification here is a suggestion from a general-purpose image classifier, never a determination. A specialist identifier such as PlantNet would suggest better candidates, but it would still be a suggestion: your confirmation is what sets the species, and it always will be.
       </p>
     </div>
 
     <div class="scan-report-section" style="margin-top:4px">
       <div class="scan-section-title">📍 11. Site Suitability Analysis</div>
       <p style="font-size:11px;color:var(--text2);margin:0 0 12px;line-height:1.6">
-        Survey your GPS location against this plant's known climate tolerances. Fetches 10-year daily weather records (2015–2024) from the Open-Meteo Archive API and calculates a survival probability score.
+        Compare your location against this species' documented climate range. Fetches ten years of daily records
+        (2015&ndash;2024) from the Open-Meteo Archive and reports a <strong>Site Suitability Score out of 100</strong>
+        &mdash; an index, not a probability. It says how much of the last decade fell inside the species' documented
+        temperature and rainfall range at your coordinates; it does not predict whether a plant would survive.
       </p>
       <button class="scan-survey-trigger-btn" id="scanSurveyTriggerBtn"
               onclick="_scanTriggerSurvey()" type="button">
@@ -2163,10 +2174,23 @@ function renderScannerReport() {
   scanGA('productivity_estimate_generated', { plant_key: scanPlantKey, demo: scanDemoMode });
 }
 
-// ── Site Suitability: Plant Tolerance Data ────────────────────────────────────
-// Real-world values drawn from published agronomy / ecology literature.
-// minTempC / maxTempC  = annual-average survival temperature range (°C).
-// minPrecipMm / maxPrecipMm = annual precipitation tolerance range (mm).
+// ── Site Suitability: species climate ranges ─────────────────────────────────
+// SPECIES-LEVEL LITERATURE-DERIVED ESTIMATES, NOT INDIVIDUALLY CITED.
+//
+// This header previously read "Real-world values drawn from published agronomy /
+// ecology literature", which claimed a per-value citation that does not exist —
+// the same overclaim corrected in PLANT_ENV_PROFILES (js/stress.js). No row here
+// is attributable to a specific paper.
+//
+// KNOWN DUPLICATION: this is a SECOND species table, on different axes from
+// PLANT_ENV_PROFILES (annual climate envelope here; stress-onset thresholds
+// there) and covering a different, smaller set of species. The two describe
+// different things and neither is derived from the other, so they can drift.
+// Consolidating them behind one schema is the right fix and has not been done;
+// it is recorded in the README roadmap rather than left for a reader to find.
+//
+// minTempC / maxTempC       = annual survival temperature range (°C)
+// minPrecipMm / maxPrecipMm = annual precipitation tolerance range (mm)
 const PLANT_TOLERANCES = {
   switchgrass:            { minTempC:-40, maxTempC:42, minPrecipMm:300,  maxPrecipMm:1500, droughtTolerant:true  },
   mesquite:               { minTempC:-15, maxTempC:48, minPrecipMm:150,  maxPrecipMm:900,  droughtTolerant:true  },

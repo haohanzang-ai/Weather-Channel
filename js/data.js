@@ -134,11 +134,11 @@ const AG_DATA = [
 
 const PAGE_TITLES = {
   // ── Main tabs ─────────────────────────────────────────────────────────────
-  overview:   'TexasClimate — Plant · Climate · Bioenergy Intelligence',
-  analyze:    'Dashboard — Plant · Location · Bioenergy',
-  mapcompare: 'Map & Compare — Texas Locations',
-  bioenergy:  'Bioenergy Engine',
-  science:      'Science & Stress Methods',
+  overview:   'About — TexasClimate: Evidence-Aware Bioenergy Crop Resilience Explorer',
+  analyze:    'Analyze — From environment to biology',
+  mapcompare: 'Compare & Map — Texas locations side by side',
+  bioenergy:  'Bioenergy Lab — Conversion pathways and field observation',
+  science:      'Science — Mechanisms, model cards and evidence',
   graphbuilder: 'Graph Builder — Interactive Data Visualization',
   sources:      'Sources & Data Status',
   settings:   'Settings',
@@ -179,7 +179,12 @@ function getConditionFromCode(code){
 let _lsDone = 0;
 const _lsTotal = CITIES.length;
 const _lsStartTime = Date.now();
-const _lsMinMs = 6000; // show loading screen for at least 6 seconds so users can read a fact
+// Minimum splash duration. Was 6000 ms, which meant every visitor — including a
+// reviewer with three minutes — waited six seconds looking at a fact before seeing
+// the product. 1200 ms is enough to avoid a jarring flash on a fast connection
+// while keeping time-to-first-content well under the threshold where a page
+// feels slow. The fact still shows; it just no longer gates the app.
+const _lsMinMs = 1200;
 
 function lsInit(){
   _lsDone = 0;
@@ -309,7 +314,13 @@ async function fetchWeatherForCity(city){
 }
 
 // ── Fetch all 10 cities in parallel ──────────────────────────────────────────
+// The unit WEATHER_DATA was actually fetched in. Consumers must read this
+// rather than the live setting: the data is fetched once, and a settings change
+// does not retroactively convert it.
+let WEATHER_UNITS_FETCHED = null;
+
 async function fetchAllWeatherData(){
+  WEATHER_UNITS_FETCHED = (typeof getSetting === 'function' ? getSetting('units') : 'imperial') || 'imperial';
   lsInit();
   showLoadingState();
   try {

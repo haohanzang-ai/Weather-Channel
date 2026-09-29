@@ -977,3 +977,23 @@
   .atlas-cmp-modal { max-height: 90vh; }
   .atlas-cmp-th-label, .atlas-cmp-label { width: 80px; min-width: 70px; }
 }
+
+/* ── Evidence ladder display ──────────────────────────────────────────────────
+   Tier is shown as glyph + code + colour together, never colour alone. */
+.atlas-legend-title{font-size:9.5px;color:var(--text2);font-weight:600;margin-right:6px}
+.atlas-legend-glyph{font-size:11px;line-height:1;margin-right:2px}
+.atlas-legend-tier{font-family:var(--mono);font-size:9px;font-weight:700;
+  background:rgba(255,255,255,0.07);padding:1px 4px;border-radius:3px;margin-right:4px}
+.atlas-chip-tier{font-size:10px;line-height:1;margin-right:4px}
+.atlas-gene-chip{display:inline-flex;align-items:center}
+/* Lower tiers read as more provisional: dashed border for projections */
+.atlas-tier-4,.atlas-tier-5{border-style:dashed!important}
+.atlas-tier-1{border-color:rgba(46,204,139,0.55)!important}
+.atlas-putative{
+  margin-top:8px;padding:8px 10px;font-size:10px;line-height:1.6;color:var(--text2);
+  background:rgba(245,166,35,0.07);border-left:2px solid #F5A623;border-radius:0 6px 6px 0;
+}
+.atlas-putative strong{color:#F5A623}
+@media (forced-colors:active){
+  .atlas-tier-4,.atlas-tier-5{border:1px dashed CanvasText!important}
+}

@@ -21,6 +21,7 @@ const TAB_RENDERERS = {
     if (typeof renderAgScore            === 'function') renderAgScore();
     if (typeof renderReport             === 'function') renderReport();
     if (typeof renderPlantCityComparison=== 'function') renderPlantCityComparison();
+    if (typeof scenarioInit             === 'function') scenarioInit('scenarioSection');
   },
   mapcompare: () => {
     renderMap();
@@ -34,7 +35,7 @@ const TAB_RENDERERS = {
     if (typeof renderPlantCityComparison === 'function') renderPlantCityComparison();
   },
   bioenergy:  () => { sgBiofuelInit(); fuelEffInit(); scannerInit(); },
-  science:      () => {},
+  science:      () => { if (typeof renderModelCards === 'function') renderModelCards(); },
   graphbuilder: () => { if (typeof graphBuilderInit === 'function') graphBuilderInit('sc-graphbuilder'); },
   sources:      () => { renderReports(); },
   settings:   () => { renderSettings(); },

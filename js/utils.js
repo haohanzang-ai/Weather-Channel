@@ -13,20 +13,79 @@ const API_STATUS = {
 };
 
 // ── Data badge helper ─────────────────────────────────────────────────────────
+/* Legacy provenance badge, kept for the older panels that still call it.
+   New code should use tcStatusBadge() from science-constants.js, which is tied
+   to the six-value TC_STATUS vocabulary.
+
+   Two corrections were made here during the science audit:
+     · 'ai-est' rendered as "AI Estimate". Nothing labelled with this badge is
+       produced by a model: the composites are weighted arithmetic and the
+       assistant is rule-based intent matching. (The app DOES run one real
+       neural network — MobileNet v2, locally, to suggest a species from a
+       photo — but no value carrying this badge comes from it.) It now renders
+       as EXPERIMENTAL, which is what these values always were.
+     · 'live-derived' was used at one call site but was never a key in this map,
+       so it silently fell through to "Unknown". Both spellings now resolve. */
 function dataBadge(type) {
   const map = {
-    'live-api': ['Live API',        'badge-live-api'],
-    'live-drv': ['Live-Derived',    'badge-live-drv'],
-    'official': ['Official Link',   'badge-official'],
-    'peer-rev': ['Peer-Reviewed',   'badge-peer-rev'],
-    'ai-est':   ['AI Estimate',     'badge-ai-est'],
-    'demo':     ['Demo / Fallback', 'badge-demo-fb'],
-    'edu':      ['Educational',     'badge-edu-only'],
-    'na':       ['Unavailable',     'badge-na'],
+    'live-api':     ['Live API',     'badge-live-api',
+                     'Fetched live this session. Gridded model output interpolated to the coordinates, not a sensor at the site.'],
+    'live-drv':     ['Live-Derived', 'badge-live-drv',
+                     'Calculated from live inputs using a documented equation.'],
+    'live-derived': ['Live-Derived', 'badge-live-drv',
+                     'Calculated from live inputs using a documented equation.'],
+    'official':     ['Official Link','badge-official', 'Links to an official government or agency source.'],
+    'peer-rev':     ['Peer-Reviewed','badge-peer-rev', 'Published in the peer-reviewed literature and cited.'],
+    'ai-est':       ['Experimental', 'badge-ai-est',
+                     'A TexasClimate heuristic: a weighted sum of author-chosen values. Not calibrated and not validated. No model produced it.'],
+    'experimental': ['Experimental', 'badge-ai-est',
+                     'A TexasClimate heuristic. Not calibrated and not validated.'],
+    'demo':         ['Demo / Fallback','badge-demo-fb', 'Illustrative content, not live data.'],
+    'edu':          ['Educational',  'badge-edu-only', 'Explanatory content, not a measurement.'],
+    'na':           ['Unavailable',  'badge-na',       'Not available. Left blank rather than filled with a default.'],
   };
-  const [label, cls] = map[type] || ['Unknown', 'badge-na'];
-  return `<span class="data-badge ${cls}" title="Data type: ${label}">${label}</span>`;
+  const entry = map[type];
+  if (!entry) {
+    // Fail loudly in the console rather than quietly rendering "Unknown" — a
+    // mislabelled provenance badge is worse than a missing one.
+    console.warn('[TexasClimate] dataBadge: unknown type "' + type + '"');
+    return `<span class="data-badge badge-na" title="Provenance label missing for this value.">Unlabelled</span>`;
+  }
+  const [label, cls, desc] = entry;
+  return `<span class="data-badge ${cls}" title="${String(desc).replace(/"/g,'&quot;')}">${label}</span>`;
 }
+/* ── Display units ────────────────────────────────────────────────────────────
+   These read the unit WEATHER_DATA was actually FETCHED in, not the unit
+   currently selected in settings. The data is fetched once at load and a
+   settings change does not retroactively convert it, so labelling by the live
+   setting produced Celsius values labelled "°F" (and an aria-label reading
+   "degrees Fahrenheit") until the next refresh. Every consumer of WEATHER_DATA
+   should label through these rather than hard-coding a unit. */
+function wxIsMetric(){
+  const u = (typeof WEATHER_UNITS_FETCHED !== 'undefined' && WEATHER_UNITS_FETCHED)
+    ? WEATHER_UNITS_FETCHED
+    : (typeof getSetting === 'function' ? getSetting('units') : 'imperial');
+  return u === 'metric';
+}
+function tUnit(){ return wxIsMetric() ? '°C' : '°F'; }
+function wUnit(){ return wxIsMetric() ? 'km/h' : 'mph'; }
+function tUnitWord(){ return wxIsMetric() ? 'degrees Celsius' : 'degrees Fahrenheit'; }
+
+/* Convert a WEATHER_DATA temperature to °F for THRESHOLD COMPARISONS.
+   Every threshold in this app is written in Fahrenheit (a 65 °F cooling-degree
+   base, 95/100/105 °F heat bands, crop limits). WEATHER_DATA, however, is
+   fetched in whatever unit the user selected — so in metric mode those
+   comparisons were being made against Celsius values. Nothing errored: the
+   cooling-degree index simply sat at 0 forever because no Celsius reading
+   exceeds 65, and a 38 °C afternoon reported "moderate conditions".
+
+   Labels alone could not fix this; the numbers had to be normalised. Compare
+   through this helper, and display through tUnit(). */
+function wxTempF(t){
+  if (t == null || !isFinite(t)) return null;
+  return wxIsMetric() ? (t * 9 / 5 + 32) : t;
+}
+
 const charts = new Map();
 let mapRendered = false;
 let searchTimer = null;
@@ -121,9 +180,12 @@ function _csSelect(id, value, text) {
 }
 
 function getTempColor(t){
-  if(t < 50) return '#4A90E2';
-  if(t < 75) return '#2ECC8B';
-  if(t < 90) return '#F5A623';
+  // Breakpoints are °F; normalise so colours are correct in metric too.
+  const f = wxTempF(t);
+  if(f == null) return 'var(--text3)';
+  if(f < 50) return '#4A90E2';
+  if(f < 75) return '#2ECC8B';
+  if(f < 90) return '#F5A623';
   return '#D64545';
 }
 
@@ -152,11 +214,33 @@ function chartOpts(yCallback){
 
 function destroyChart(key){ charts.get(key)?.destroy(); charts.delete(key); }
 
+/* Mount a chart once its canvas has real width.
+   Chart.js is a CDN dependency; if it did not load, every caller of this helper
+   would otherwise throw "Chart is not defined" and take its whole tab down. One
+   guard here covers every chart in the app: the canvas is replaced with a plain
+   statement of what is missing, and the rest of the page keeps working. */
 function whenReady(canvasId, buildFn){
   const attempt = ()=>{
     const el = document.getElementById(canvasId);
+    if (el && typeof Chart === 'undefined') { chartUnavailable(el); return; }
     if(el && el.offsetWidth > 0){ buildFn(el); }
     else { requestAnimationFrame(attempt); }
   };
   requestAnimationFrame(attempt);
+}
+
+/* Replace a chart canvas with an honest explanation. Never a blank box: a blank
+   box reads as "no data", which is a different and misleading claim. */
+function chartUnavailable(canvasEl){
+  if (!canvasEl || !canvasEl.parentElement) return;
+  if (canvasEl.parentElement.querySelector('.chart-unavailable')) return;
+  const box = document.createElement('div');
+  box.className = 'chart-unavailable';
+  box.setAttribute('role', 'status');
+  box.innerHTML = '<strong>Chart library unavailable</strong>' +
+    '<span>Chart.js is loaded from a CDN and that request did not complete, ' +
+    'usually because the network is blocking it. The underlying numbers are ' +
+    'unaffected and are shown elsewhere on this page.</span>';
+  canvasEl.style.display = 'none';
+  canvasEl.parentElement.appendChild(box);
 }

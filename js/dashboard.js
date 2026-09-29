@@ -4,15 +4,35 @@
 function renderDashboard(){
   renderDataStatus();
   const vals = Object.values(WEATHER_DATA);
+
+  // No cities loaded — every weather request failed, or none has returned yet.
+  // Say so and stop, rather than throwing on an empty array. A crash here used
+  // to take the whole Analyze tab down when the provider was unreachable, which
+  // is exactly when a user most needs the page to keep working.
+  if (!vals.length) {
+    const stats = document.getElementById('stateStats');
+    const grid  = document.getElementById('weatherGrid');
+    const msg = `<div class="card dash-unavailable" role="status">
+        <div class="stat-label">${typeof tcStatusBadge === 'function' ? tcStatusBadge('UNKNOWN') : 'UNKNOWN'}</div>
+        <div class="dash-unavailable-title">City weather unavailable</div>
+        <div class="stat-sub">No city returned data from Open-Meteo. Nothing is shown here rather than
+          placeholder values. Single-location analysis in Step 2 fetches separately and may still work
+          &mdash; and if it does not, it will say so too.</div>
+      </div>`;
+    if (stats) stats.innerHTML = msg;
+    if (grid)  grid.innerHTML = '';
+    return;
+  }
+
   const avgTemp = Math.round(vals.reduce((a,c)=>a+c.temp,0)/vals.length);
   const hottest = Object.entries(WEATHER_DATA).sort((a,b)=>b[1].temp-a[1].temp)[0];
   const coolest = Object.entries(WEATHER_DATA).sort((a,b)=>a[1].temp-b[1].temp)[0];
   const highHumid = Object.entries(WEATHER_DATA).sort((a,b)=>b[1].humidity-a[1].humidity)[0];
 
   document.getElementById('stateStats').innerHTML=`
-    <div class="card card-blue" role="listitem"><div class="stat-label">Avg State Temp</div><div class="stat-value">${avgTemp}<span class="stat-unit">°F</span></div><div class="stat-sub">Statewide average</div></div>
-    <div class="card card-orange" role="listitem"><div class="stat-label">Hottest City</div><div class="stat-value" style="font-size:18px;color:#E87A7A">${escapeHtml(hottest[0])}</div><div class="stat-sub">${hottest[1].temp}°F · ${escapeHtml(hottest[1].condition)}</div></div>
-    <div class="card" role="listitem"><div class="stat-label">Coolest City</div><div class="stat-value" style="font-size:18px;color:#7DB9F2">${escapeHtml(coolest[0])}</div><div class="stat-sub">${coolest[1].temp}°F · ${escapeHtml(coolest[1].condition)}</div></div>
+    <div class="card card-blue" role="listitem"><div class="stat-label">Avg State Temp</div><div class="stat-value">${avgTemp}<span class="stat-unit">${tUnit()}</span></div><div class="stat-sub">Statewide average</div></div>
+    <div class="card card-orange" role="listitem"><div class="stat-label">Hottest City</div><div class="stat-value" style="font-size:18px;color:#E87A7A">${escapeHtml(hottest[0])}</div><div class="stat-sub">${hottest[1].temp}${tUnit()} · ${escapeHtml(hottest[1].condition)}</div></div>
+    <div class="card" role="listitem"><div class="stat-label">Coolest City</div><div class="stat-value" style="font-size:18px;color:#7DB9F2">${escapeHtml(coolest[0])}</div><div class="stat-sub">${coolest[1].temp}${tUnit()} · ${escapeHtml(coolest[1].condition)}</div></div>
     <div class="card" role="listitem"><div class="stat-label">Highest Humidity</div><div class="stat-value">${highHumid[1].humidity}<span class="stat-unit">%</span></div><div class="stat-sub">${escapeHtml(highHumid[0])}</div></div>
   `;
 
@@ -22,17 +42,17 @@ function renderDashboard(){
     const btn = document.createElement('button');
     btn.className = 'weather-card' + (selectedCity===city?' selected':'');
     btn.setAttribute('role','listitem');
-    btn.setAttribute('aria-label', `${city}: ${d.temp}°F, feels like ${d.feels}°F, ${d.condition}, humidity ${d.humidity}%`);
+    btn.setAttribute('aria-label', `${city}: ${d.temp}${tUnit()}, feels like ${d.feels}${tUnit()}, ${d.condition}, humidity ${d.humidity}%`);
     btn.setAttribute('aria-pressed', String(selectedCity===city));
     btn.addEventListener('click', ()=> selectCity(city));
     btn.innerHTML = `
       <div class="city-name">${escapeHtml(city)}</div>
       <div class="weather-icon" aria-hidden="true">${d.icon}</div>
       <div class="temp-big" aria-hidden="true">${d.temp}°</div>
-      <div class="temp-feels">Feels ${d.feels}°F</div>
+      <div class="temp-feels">Feels ${d.feels}${tUnit()}</div>
       <div class="weather-detail" aria-hidden="true">
         <span>💧 ${d.humidity}%</span>
-        <span>💨 ${d.wind} mph</span>
+        <span>💨 ${d.wind} ${wUnit()}</span>
       </div>
       <div style="margin-top:10px">
         <span class="badge" style="background:${getTempColor(d.temp)}22;color:${getTempColor(d.temp)}">${escapeHtml(d.condition)}</span>
@@ -53,12 +73,14 @@ function renderDashboard(){
   const sorted = Object.entries(WEATHER_DATA).sort((a,b)=>b[1].temp-a[1].temp);
   const dvAvgTemp = Math.round(sorted.reduce((s,[,d])=>s+d.temp,0)/sorted.length);
   const dvAvgHumid = Math.round(sorted.reduce((s,[,d])=>s+d.humidity,0)/sorted.length);
-  const dvHeatLevel = dvAvgTemp>=105?'dangerous heat':dvAvgTemp>=100?'extreme heat':dvAvgTemp>=95?'significant heat stress':dvAvgTemp>=85?'elevated heat':'moderate conditions';
-  const dvHeatColor = dvAvgTemp>=100?'#D64545':dvAvgTemp>=90?'#F5A623':'#5DDBA8';
+  // Thresholds are in °F, so compare in °F regardless of the display unit.
+  const dvF = wxTempF(dvAvgTemp);
+  const dvHeatLevel = dvF>=105?'dangerous heat':dvF>=100?'extreme heat':dvF>=95?'significant heat stress':dvF>=85?'elevated heat':'moderate conditions';
+  const dvHeatColor = dvF>=100?'#D64545':dvF>=90?'#F5A623':'#5DDBA8';
   const _aqiVals = Object.values(WEATHER_DATA).map(d=>d.aqi).filter(v=>v!=null);
   const dvAvgAQI = _aqiVals.length ? Math.round(_aqiVals.reduce((s,v)=>s+v,0)/_aqiVals.length) : null;
   const dvAQIInfo = dvAvgAQI!=null && typeof getAQILabel==='function' ? getAQILabel(dvAvgAQI) : {label:'Unavailable'};
-  const dvAvgCDI = Math.round(Object.values(WEATHER_DATA).reduce((s,d)=>s+Math.max(0,d.temp-65)*0.8,0)/Object.values(WEATHER_DATA).length);
+  const dvAvgCDI = Math.round(Object.values(WEATHER_DATA).reduce((s,d)=>s+Math.max(0,wxTempF(d.temp)-65)*0.8,0)/Object.values(WEATHER_DATA).length);
   const dvGridPres = dvAvgCDI>30?'High':dvAvgCDI>18?'Moderate':'Low';
   const dvGridColor = dvAvgCDI>30?'#D64545':dvAvgCDI>18?'#F5A623':'#5DDBA8';
   const dvNow = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
@@ -69,9 +91,9 @@ function renderDashboard(){
         <div class="insight-tag">📊 Texas Weather Summary — ${dvNow}</div>
         ${dataBadge('live-drv')}
       </div>
-      <div class="insight-text">Statewide avg: <strong>${dvAvgTemp}°F</strong> · <span style="color:${dvHeatColor}">${dvHeatLevel}</span> · avg humidity <strong>${dvAvgHumid}%</strong>.
-      Hottest: <strong>${escapeHtml(sorted[0][0])}</strong> at <strong>${sorted[0][1].temp}°F</strong> (${escapeHtml(sorted[0][1].condition)}).
-      Coolest: <strong>${escapeHtml(sorted[sorted.length-1][0])}</strong> at <strong>${sorted[sorted.length-1][1].temp}°F</strong>.
+      <div class="insight-text">Statewide avg: <strong>${dvAvgTemp}${tUnit()}</strong> · <span style="color:${dvHeatColor}">${dvHeatLevel}</span> · avg humidity <strong>${dvAvgHumid}%</strong>.
+      Hottest: <strong>${escapeHtml(sorted[0][0])}</strong> at <strong>${sorted[0][1].temp}${tUnit()}</strong> (${escapeHtml(sorted[0][1].condition)}).
+      Coolest: <strong>${escapeHtml(sorted[sorted.length-1][0])}</strong> at <strong>${sorted[sorted.length-1][1].temp}${tUnit()}</strong>.
       <button class="btn-sm" style="font-size:9px;padding:3px 8px;margin-left:4px" onclick="showPage('reports')">Full report →</button></div>
     </div>
     <div class="insight-card">

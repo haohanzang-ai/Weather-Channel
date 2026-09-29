@@ -12,6 +12,7 @@ const SUBTAB_CONFIG = {
     { label: '3 · Stress',     id: 'az-step3' },
     { label: '4 · Ag Score',   id: 'az-step4' },
     { label: '5 · Bioenergy',  id: 'az-step5' },
+    { label: 'Scenario',      id: 'az-scenario' },
     { label: '6 · Report',     id: 'az-step6' },
   ],
   mapcompare: [
@@ -28,12 +29,13 @@ const SUBTAB_CONFIG = {
   bioenergy: [
     { label: 'Biofuel Lab',   id: 'be-biofuellab' },
     { label: 'Fuel Pathways', id: 'be-fueleff' },
-    { label: 'Plant Scanner', id: 'be-scanner' },
+    { label: 'Field Observation', id: 'be-scanner' },
     { label: 'Stress-to-Fuel',id: 'be-stress' },
   ],
   science: [
     { label: 'Stress Chain',  id: 'sc-stress' },
     { label: 'Gene Atlas',    id: 'sc-atlas' },
+    { label: 'Model Cards',   id: 'sc-models' },
     { label: 'Data Limits',   id: 'sc-limits' },
     { label: 'Mission',       id: 'sc-mission' },
     { label: 'Why Not Yet',   id: 'sc-why' },
@@ -121,6 +123,20 @@ function subtabsInit() {
     });
 
     _subtabObservers[pageId] = observer;
+  });
+}
+
+/* Deep-link into a specific sub-section of a page. Used by the primary nav so
+   that COMPARE and MAP can both point at the mapcompare page while landing the
+   reader in the right place. Waits a frame so the page is visible before
+   scrolling, and respects a reduced-motion preference. */
+function subtabGo(pageId, targetId) {
+  const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  requestAnimationFrame(() => {
+    const el = document.getElementById(_ID_ALIASES[targetId] || targetId);
+    if (!el) return;
+    el.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+    _subtabSetActive(pageId, targetId);
   });
 }
 

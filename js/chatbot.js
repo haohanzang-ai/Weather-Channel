@@ -1,8 +1,20 @@
 'use strict';
 
 /* ══════════════════════════════════════════════════════════════════════════
-   TexasClimate — Local Chatbot
-   No API key required. Keyword/intent matching against built-in knowledge.
+   TexasClimate — Science Assistant
+   ──────────────────────────────────────────────────────────────────────────
+   THIS IS NOT AN LLM AND MAKES NO CLAIM TO BE ONE.
+
+   It is deterministic local intent matching: the user's text is lowercased and
+   tested against the trigger lists below; the first matching intent returns its
+   pre-written response verbatim. There is no model, no API call, no generation,
+   no inference of any kind. Every answer it can give is literally written in
+   this file and can be read here.
+
+   It was previously presented as an "AI Assistant". Anyone can read the source code,
+   and a rule-based responder branded as AI is exactly the sort of thing that
+   costs more credibility than the branding ever gains. Naming it accurately is
+   the stronger position.
    ══════════════════════════════════════════════════════════════════════════ */
 
 (function () {
@@ -12,33 +24,33 @@
     {
       id: 'demo',
       triggers: ['demo', 'walkthrough', 'guide', 'tour', 'show me', 'start demo', 'judge'],
-      response: 'Launching the 12-step Demo Walkthrough! It guides judges (and anyone curious) through every feature — switchgrass, Austin TX, live weather, stress scores, bioenergy, map, scanner, and sources.',
+      response: 'Launching the 12-step Demo Walkthrough! It guides you through every feature — switchgrass, Austin TX, live weather, stress scores, bioenergy, map, scanner, and sources.',
       action: 'startDemo'
     },
     {
       id: 'liveData',
       triggers: ['live', 'real', 'api', 'actual', 'fetch', 'live data', 'what is live', 'real-time'],
-      response: '🟢 Live from real APIs:\n• Temperature, humidity, wind, weather code → Open-Meteo Current Weather API\n• 7-day forecast + ET0 → Open-Meteo Forecast API\n• Air Quality Index → Open-Meteo Air Quality API\n• NWS Severe Weather Alerts → api.weather.gov\n\n🟡 Live-Derived (calculated from above):\n• Heat stress, moisture stress, Cooling Demand Index\n\n🔵 Research estimates (not live sensors):\n• Bioenergy confidence score, lignin risk\n\n❌ Not yet integrated:\n• Soil moisture, TWDB reservoir levels, ERCOT grid'
+response: 'Every value in this app carries one of six provenance labels:\n\n◉ LIVE — fetched this session from a provider:\n• Temperature, humidity, wind → Open-Meteo\n• 7-day forecast + reference ET → Open-Meteo\n• Soil moisture, hourly VPD → Open-Meteo\n• Air Quality Index → Open-Meteo AQI\n• Severe weather alerts → api.weather.gov\n(Note: these are gridded model output interpolated to your coordinates, not an instrument at your site.)\n\n∑ DERIVED — computed from LIVE inputs by a documented equation:\n• VPD, all stress scores, all composite indices\n\n❝ LITERATURE — published, cited, not measured here:\n• Species tolerance thresholds, gene records, bioenergy claims\n\n⚗ EXPERIMENTAL — our own heuristics, uncalibrated:\n• Every composite model and pathway score\n\n✎ USER INPUT — what you entered or confirmed\n\n? UNKNOWN — not available, and deliberately left blank rather than filled with a default. Soil salinity, cultivar and growth stage are always UNKNOWN unless you supply them.'
     },
     {
       id: 'bioenergyScore',
-      triggers: ['bioenergy score', 'bioenergy confidence', 'energy score', 'how is bioenergy', 'how is the score', 'confidence score'],
-      response: '⚡ The Bioenergy Confidence Score combines:\n1. Heat stress (from live Open-Meteo temperature)\n2. Drought/moisture stress (ET0 vs. precipitation)\n3. Plant profile match (species drought/heat tolerance from literature)\n4. Conversion chemistry risk (estimated from stress level)\n\nOutput: 0–100% confidence that this plant-location combination is suitable for bioenergy development.\n\n⚠ Research estimate — lab biomass data is needed for exact fuel yield.'
+      triggers: ['bioenergy score', 'suitability index', 'bioenergy suitability', 'energy score', 'how is bioenergy', 'how is the score', 'evidence confidence'],
+response: '⚡ Two separate outputs, and it matters that they are separate.\n\nBIOENERGY SUITABILITY INDEX (0–100) — how well this plant/location pair ranks under our assumptions:\n• Environmental Tolerance Match (20%)\n• Productivity Stress Proxy (20%)\n• Water supply vs. requirement (15%)\n• Stress-chemistry safety (15%)\n• Conversion compatibility (15%)\n• Environmental co-benefit (10%)\n• Input completeness (5%)\n\nEVIDENCE CONFIDENCE (HIGH/MEDIUM/LOW) — how much should be read into that index. It is computed separately and reported per pipeline layer, because confidence falls as you move from measurement toward inference.\n\nA location can score 85 with LOW confidence. That means it ranks well under our assumptions AND our assumptions are weakly supported. Both halves are the answer.\n\n⚠ The index is EXPERIMENTAL and uncalibrated. It is a ranking aid, not a probability or a yield forecast.'
     },
     {
       id: 'stressScore',
       triggers: ['stress score', 'plant stress', 'heat stress', 'drought stress', 'moisture stress', 'how is stress', 'stress calc'],
-      response: '⚠ Stress Scores use live Open-Meteo data:\n• Heat stress = max(0, (T°F − 68) / 36 × 100)\n• Moisture/drought stress = max(0, ET0 − precip) / ET0 × 100\n• Salinity: low confidence — coastal proximity proxy only (no soil EC sensor)\n\nAll are derived estimates, not physical sensor readings.'
+response: '⚠ Stress scores compare live values against published species thresholds:\n• Heat stress — linear ramp between the species stress-onset and critical temperatures\n• Climate Water Deficit Proxy — 30-day reference ET minus precipitation, scaled by species drought tolerance. This is ATMOSPHERIC DEMAND VS SUPPLY, not measured plant drought: it excludes crop coefficient, soil storage, rooting depth and irrigation\n• VPD — from temperature and humidity via the FAO-56 Tetens equation. Screen-level, not leaf-level\n• Soil moisture — 0–1 cm surface layer only, which is not the water the roots reach\n• Salinity — UNKNOWN. We removed the coastal-proximity proxy, because distance to the coast is not a measurement of soil EC\n\nNothing about the plant itself is measured. These describe the environment relative to what the literature says the species tolerates.'
     },
     {
       id: 'switchgrass',
       triggers: ['switchgrass', 'panicum', 'panicum virgatum', 'why switchgrass', 'what is switchgrass'],
-      response: '🌾 Switchgrass (Panicum virgatum) is:\n• A native North American perennial grass\n• U.S. DOE priority cellulosic ethanol feedstock\n• Produces biomass for 15+ years per planting\n• 540% net energy return (Schmer et al., PNAS 2008)\n• Very drought + heat tolerant — suits much of Texas\n• Needs 6–14 gal water per gallon of fuel (vs. 784 for corn)\n• Grows on marginal land, competing less with food crops\n\nThe barrier: lignin in the cell wall requires expensive pretreatment. Researchers are working on low-lignin varieties.'
+      response: '🌾 Switchgrass (Panicum virgatum) is:\n• A native North American perennial grass\n• U.S. DOE priority cellulosic ethanol feedstock\n• Produces biomass for 15+ years per planting\n• On 10 Northern Great Plains farms (2000–2005), produced 540% more renewable energy than the NONRENEWABLE energy used to grow and convert it (Schmer et al., PNAS 2008) — a result for those farms, not a property of the species\n• Drought and heat tolerant relative to most row crops — suits much of Texas\n• Grows on marginal land, competing less with food crops\n\nThe barrier: lignin in the cell wall requires expensive pretreatment. Researchers are working on low-lignin varieties.'
     },
     {
       id: 'corn',
       triggers: ['corn', 'corn ethanol', 'corn vs', 'why not corn'],
-      response: '🌽 Switchgrass vs. Corn for bioenergy:\n• Water: Switchgrass 6–14 gal/gal vs. Corn 784 gal/gal\n• Land: Switchgrass grows on marginal land corn cannot use\n• Inputs: Far fewer pesticides and fertilizers needed\n• Net energy: Switchgrass ~540% vs. Corn ~125%\n• Food competition: Corn is food; switchgrass is not\n• Commercial readiness: Corn ethanol is commercial now. Switchgrass cellulosic is still scaling up — the lignin pretreatment cost remains the barrier.'
+      response: '🌽 Switchgrass vs. Corn for bioenergy:\n• Water: no honest single comparison exists. Corn ethanol water footprints span roughly three orders of magnitude across U.S. states depending on irrigation, so a one-number comparison is not defensible (Chiu et al., ES&T 2009)\n• Land: switchgrass can grow on marginal land corn cannot use\n• Inputs: generally fewer pesticide and fertiliser inputs\n• Net energy: the switchgrass 540% figure (renewable vs. NONRENEWABLE energy, 10 Northern Great Plains farms, Schmer et al. 2008) and typical corn-ethanol net-energy figures come from different studies with different system boundaries, so they should not be placed side by side\n• Food competition: Corn is food; switchgrass is not\n• Commercial readiness: Corn ethanol is commercial now. Switchgrass cellulosic is still scaling up — the lignin pretreatment cost remains the barrier.'
     },
     {
       id: 'lignin',
@@ -48,7 +60,7 @@
     {
       id: 'scanner',
       triggers: ['scanner', 'plant scanner', 'photo', 'upload', 'camera', 'identify', 'plantnet', 'image'],
-      response: '🔬 Plant-to-Fuel Scanner (Bioenergy Engine tab):\n• Upload or capture a plant photo\n• Confirm plant type (user confirmation always required)\n• Describe size, condition, canopy density\n• Get an educational bioenergy relevance analysis\n\n⚠ Photos CANNOT measure:\n❌ Lignin content  ❌ Cellulose %\n❌ Biomass (dry tons)  ❌ Fuel yield\n\nThis is educational — not a lab test, not a fuel forecast. No PlantNet API yet (planned for future version).'
+      response: '🔬 Field Observation Mode (Bioenergy Lab tab)\n\nThere IS real image classification, and it is weaker than it looks.\n\nWhat actually happens:\n• You photograph the plant. The image stays in your browser and is never uploaded\n• MobileNet v2 runs locally (TensorFlow.js) and labels it with an ImageNet category\n• ImageNet contains almost no bioenergy crops, so a keyword map turns that label into a SUGGESTED plant. That map has never been validated\n• The percentage shown is MobileNet confidence in an IMAGENET CLASS — not the probability that the plant is that species\n• YOU confirm or correct the suggestion. Your choice sets the species\n• You record size, canopy density and visible condition\n• Your observations are tagged USER INPUT, not measurements\n• They are combined with live environment data and the species literature profile\n\n⚠ A photograph cannot measure:\n❌ Lignin  ❌ Cellulose  ❌ Biomass  ❌ Moisture  ❌ Fuel yield\n\nIt was previously called the Plant-to-Fuel Scanner. That name implied image analysis that does not exist, so it was renamed.'
     },
     {
       id: 'map',
@@ -58,7 +70,7 @@
     {
       id: 'sources',
       triggers: ['source', 'citation', 'reference', 'peer reviewed', 'where does', 'bibliography', 'who says'],
-      response: '📚 Key sources:\n• Schmer et al. (2008), PNAS — switchgrass 540% net energy\n• Mosier et al. (2005), Bioresource Technology — lignin barrier\n• Ragauskas et al. (2006), Science — biofuel pathway science\n• DOE EERE — switchgrass as priority feedstock\n• NREL — cellulosic bioenergy conversion research\n• Szabados & Savouré (2010), Trends Plant Sci — osmolyte stress\n• Open-Meteo API (free, open-source)\n• api.weather.gov — NWS alerts\n\nSee the Sources & Data Status tab for the full citation table.'
+      response: '📚 Key sources:\n• Schmer et al. (2008), PNAS — 540% more renewable than nonrenewable energy, 10 Northern Great Plains farms\n• Mosier et al. (2005), Bioresource Technology — lignin barrier\n• Ragauskas et al. (2006), Science — biofuel pathway science\n• DOE EERE — switchgrass as priority feedstock\n• NREL — cellulosic bioenergy conversion research\n• Szabados & Savouré (2010), Trends Plant Sci — osmolyte stress\n• Open-Meteo API (free, open-source)\n• api.weather.gov — NWS alerts\n\nSee the Sources & Data Status tab for the full citation table.'
     },
     {
       id: 'safety',
@@ -73,7 +85,7 @@
     {
       id: 'appOverview',
       triggers: ['what does', 'what is', 'about', 'explain', 'overview', 'overview of', 'tell me', 'hello', 'hi', 'help'],
-      response: '🌿 Welcome to TexasClimate!\n\nCore question: "Can this plant survive here and become useful clean bioenergy?"\n\nFeatures:\n1. Live weather — 10 Texas cities (Open-Meteo)\n2. Plant stress scores — heat, drought, moisture\n3. Bioenergy confidence score\n4. Interactive Texas map + pollution overlays\n5. Plant-to-Fuel Scanner (educational)\n6. 12-step Demo Walkthrough\n7. Gene & Pathway Atlas\n8. Graph Builder (live data charts)\n\nBuilt for the Congressional App Challenge. All data is labeled: Live API / Live-Derived / Research Estimate / Demo.\n\nSay "demo" to launch the guided walkthrough, or "sources" to see all citations.'
+      response: '🌿 Welcome to TexasClimate!\n\nCore question: "What might this environment mean, biologically, for this bioenergy crop — and how strong is the evidence?"\n\nThe pipeline:\nLOCATION → ENVIRONMENT → PLANT TOLERANCE → STRESS → BIOLOGICAL MECHANISM → BIOENERGY IMPLICATION → EVIDENCE\n\nFeatures:\n1. Live weather at any Texas point (Open-Meteo, NWS)\n2. Stress scores against published species thresholds\n3. Bioenergy Suitability Index, with Evidence Confidence reported separately\n4. Interactive Texas map + pollution overlays\n5. Gene & Pathway Atlas with an evidence ladder\n6. Field Observation Mode (local MobileNet suggests a species, you confirm it)\n7. Scenario mode (what-if, clearly marked experimental)\n8. Model cards for every model, with its validation status\n\nEvery value is labelled LIVE / DERIVED / LITERATURE / EXPERIMENTAL / USER INPUT / UNKNOWN.\n\nSay "demo" for the guided walkthrough, or "sources" for citations.'
     }
   ];
 
@@ -94,7 +106,7 @@
     const btn = document.createElement('button');
     btn.id = 'chatbotToggle';
     btn.className = 'chatbot-toggle';
-    btn.setAttribute('aria-label', 'Ask TexasClimate AI Assistant');
+    btn.setAttribute('aria-label', 'Open the TexasClimate Science Assistant');
     btn.setAttribute('aria-haspopup', 'dialog');
     btn.innerHTML = '💬 Ask TexasClimate';
     btn.onclick = toggle;
@@ -110,15 +122,15 @@
     panel.innerHTML = [
       '<div class="chatbot-header">',
       '  <div>',
-      '    <div class="chatbot-title">🌿 TexasClimate Assistant</div>',
-      '    <div class="chatbot-subtitle">Local knowledge · No API key required · Offline capable</div>',
+      '    <div class=\"chatbot-title\">🌿 Science Assistant</div>',
+      '    <div class=\"chatbot-subtitle\">Rule-based &middot; not an LLM &middot; matches your words against a written knowledge base</div>',
       '  </div>',
       '  <button class="chatbot-close" id="chatbotCloseBtn" aria-label="Close assistant">✕</button>',
       '</div>',
       '<div class="chatbot-messages" id="chatbotMessages">',
       '  <div class="chatbot-msg bot">',
       '    <span class="chatbot-msg-icon">🌿</span>',
-      '    <div class="chatbot-msg-text">Hi! I\'m the TexasClimate guide.<br><br>I can explain scores, data sources, and features — or launch the Demo Walkthrough for judges. What would you like to know?</div>',
+      '    <div class="chatbot-msg-text">Hi! I\'m the TexasClimate guide.<br><br>I can explain scores, data sources, and features — or launch the Guided Walkthrough. What would you like to know?</div>',
       '  </div>',
       '</div>',
       '<div class="chatbot-chips" id="chatbotChips"></div>',
