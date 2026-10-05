@@ -294,3 +294,49 @@ suite('Heating values parse from prose and are never scaled by photo observation
   ok(!/Modifier formula:/.test(scannerSrc),
      'no "Modifier formula:" is rendered for a relationship that does not exist');
 }
+
+/* ── Renamed things stay renamed ──────────────────────────────────────────────
+   Two renames shipped half-done: a find-and-replace was written against markup
+   that did not exist ("<strong>Bioenergy Scanner</strong> tab" vs the actual
+   plain-text "Bioenergy Scanner tab"), so it silently matched nothing and the
+   stale name went live. These assertions fail on the OLD name directly, so a
+   replace that misses can no longer pass unnoticed. */
+suite('Retired feature names do not survive anywhere on a shipping surface');
+{
+  const RETIRED_NAMES = [
+    ['Bioenergy Scanner',        'Field Observation Mode'],
+    ['Survival Score',           'Environmental Tolerance Match'],
+    ['Bioenergy Confidence Score','Bioenergy Suitability Index'],
+    ['Plant-to-Fuel Scanner',    'Field Observation Mode'],
+  ];
+  /* claims-registry.js and bioenergy-engine.js quote the old names on purpose:
+     that is the correction being published, not the name being used. */
+  const SURFACES = UI_SOURCES.filter(s => !/bioenergy-engine/.test(s.name));
+  for (const [oldName, newName] of RETIRED_NAMES) {
+    /* A rename NOTE is not a USE. "formerly X" and "previously called X" are
+       the correction being published to the reader; only a bare occurrence
+       means the old name is still in service. */
+    const MARKERS = ['formerly ', 'previously called the ', 'previously called ',
+                     'RENAMED from "', 'renamed from '];
+    const stripNotes = txt => MARKERS.reduce((s, m) => s.split(m + oldName).join(''), txt);
+    const hits = SURFACES.filter(s => stripNotes(s.text).includes(oldName)).map(s => s.name);
+    eq(hits, [], `"${oldName}" is gone (renamed to "${newName}")`);
+  }
+}
+
+/* The MobileNet capability claim must be stated the same way everywhere. It was
+   previously unconditional in index.html and chatbot.js while a CSP rule stopped
+   the model from ever loading, which made the claim false at runtime. */
+suite('The image-classification claim is conditional, not absolute');
+{
+  const absolute = SOURCES.filter(s => /There (?:IS|is) real image classification/.test(s.text))
+                          .map(s => s.name);
+  eq(absolute, [], 'no file asserts image classification unconditionally');
+  const csp = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8')
+                .match(/Content-Security-Policy[\s\S]*?content="([^"]+)"/);
+  ok(!!csp, 'a CSP is present');
+  ok(/worker-src[^;]*blob:/.test(csp[1]),
+     'CSP allows blob: workers, without which TensorFlow.js cannot start');
+  ok(/script-src[^;]*'unsafe-eval'/.test(csp[1]),
+     "CSP allows 'unsafe-eval', without which TensorFlow.js throws on load");
+}

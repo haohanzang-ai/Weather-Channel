@@ -1,6 +1,6 @@
 'use strict';
 
-// ── Plant-to-Fuel Scanner v3 ──────────────────────────────────────────────────
+// ── Field Observation Mode (formerly Plant-to-Fuel Scanner) v4 ──────────────────────────────────────────────────
 // Static GitHub Pages — 36-plant dynamic evidence engine with source library.
 // No API keys exposed. Plant identification is NOT automated or claimed.
 //
