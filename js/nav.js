@@ -66,10 +66,7 @@ function showPage(id){
     n.setAttribute('aria-current', isActive ? 'page' : 'false');
   });
 
-  // Top nav tabs — ptn-active mirrors the resolved page
-  document.querySelectorAll('.ptn-tab[data-page]').forEach(n => {
-    n.classList.toggle('ptn-active', n.dataset.page === resolved);
-  });
+  syncTopNavActive(resolved);
 
   const page = document.getElementById('page-' + resolved);
   if(page) page.classList.add('active');
@@ -132,5 +129,29 @@ function refreshData(e){
     btn.textContent = '↻ Refresh';
     btn.disabled = false;
     announce('Dashboard data refreshed');
+  });
+}
+
+
+/* Compare and Map are two top-nav tabs that resolve to the SAME page
+   ('mapcompare') and differ only by subtab. Keying the active class on
+   data-page alone lit both at once, and clicking Map never deselected Compare.
+   Tabs that share a page are disambiguated by data-subtab; a tab that is the
+   only one for its page matches on page alone. */
+function syncTopNavActive(resolved) {
+  const tabs = [...document.querySelectorAll('.ptn-tab[data-page]')];
+  const onPage = tabs.filter(n => n.dataset.page === resolved);
+  const shared = onPage.length > 1 && onPage.every(n => n.dataset.subtab);
+  const activeSub = shared && typeof subtabCurrent === 'function'
+    ? subtabCurrent(resolved) : null;
+
+  tabs.forEach(n => {
+    let on = false;
+    if (n.dataset.page === resolved) {
+      on = shared ? (activeSub ? n.dataset.subtab === activeSub : n === onPage[0])
+                  : true;
+    }
+    n.classList.toggle('ptn-active', on);
+    n.setAttribute('aria-current', on ? 'page' : 'false');
   });
 }

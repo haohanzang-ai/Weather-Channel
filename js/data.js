@@ -142,6 +142,7 @@ const PAGE_TITLES = {
   graphbuilder: 'Graph Builder — Interactive Data Visualization',
   sources:      'Sources & Data Status',
   settings:   'Settings',
+  demo:       'Guided Tour — 12-step feature walkthrough',
   // ── legacy keys kept so any direct showPage() calls still title correctly ─
   dashboard:   'Analyze — Plant · Location · Bioenergy',
   map:         'Map & Compare — Texas Locations',
@@ -264,7 +265,7 @@ async function fetchWeatherForCity(city){
   const aq = aqRes ? await aqRes.json().catch(() => ({})) : {};
 
   // Track per-API status (first city sets it; already-set statuses are preserved)
-  if (API_STATUS.weather !== 'ok') API_STATUS.weather = 'ok';
+  if (API_STATUS.weather === 'idle' || API_STATUS.weather === 'loading') API_STATUS.weather = 'ok';
   if (aqRes && aqRes.ok) { if (API_STATUS.aqi !== 'ok') API_STATUS.aqi = 'ok'; }
   else                   { if (API_STATUS.aqi !== 'ok') API_STATUS.aqi = 'fail'; }
 
@@ -324,7 +325,17 @@ async function fetchAllWeatherData(){
   lsInit();
   showLoadingState();
   try {
-    await Promise.all(CITIES.map(c => fetchWeatherForCity(c)));
+    /* allSettled, not all: one rate-limited city used to reject the whole batch
+       and discard nine successful fetches, showing "API Unavailable" over data
+       the app already had. location.js already did this correctly. */
+    const results = await Promise.allSettled(CITIES.map(c => fetchWeatherForCity(c)));
+    const failed = results.filter(r => r.status === 'rejected').length;
+    if (failed === CITIES.length) throw new Error('all ' + failed + ' city fetches failed');
+    if (failed > 0) {
+      API_STATUS.weather = 'partial';
+      API_STATUS.partialCount = failed;
+      console.warn('[Data] ' + failed + ' of ' + CITIES.length + ' city fetches failed; showing the rest.');
+    }
     dataLoaded = true;
     API_STATUS.lastUpdate = Date.now();
     const lastSync = document.getElementById('lastSync');
@@ -342,7 +353,11 @@ async function fetchAllWeatherData(){
   } catch(err){
     console.error('Weather fetch error:', err);
     API_STATUS.weather = 'fail';
-    API_STATUS.hasDemoData = true;
+    /* Previously set hasDemoData = true here, which printed "Some demo data
+       active" — but no demo data is ever substituted. WEATHER_DATA stays empty
+       and the grid shows the unavailable notice. The badge accused the app of
+       fabricating numbers it had not fabricated. */
+    API_STATUS.hasDemoData = false;
     if (typeof renderDataStatus === 'function') renderDataStatus();
     const wg = document.getElementById('weatherGrid');
     if (wg) wg.innerHTML = `<div class="card card-danger" style="grid-column:1/-1;padding:16px">

@@ -140,6 +140,15 @@ function subtabGo(pageId, targetId) {
   });
 }
 
+/* The active subtab lives in the DOM; this reads it back so the top nav can
+   tell Compare from Map, which resolve to the same page. */
+function subtabCurrent(pageId) {
+  const bar = document.getElementById('subtab-bar-' + pageId);
+  if (!bar) return null;
+  const active = bar.querySelector('.subtab-btn.active');
+  return active ? active.dataset.targetId : null;
+}
+
 function _subtabSetActive(pageId, targetId) {
   const bar = document.getElementById('subtab-bar-' + pageId);
   if (!bar) return;
@@ -153,6 +162,9 @@ function _subtabSetActive(pageId, targetId) {
       if (el && el.style.display !== 'none') btn.classList.remove('locked');
     }
   });
+  /* showPage runs BEFORE subtabGo in every onclick, so the top nav's first pass
+     reads a stale subtab. Re-sync it here, once the subtab is actually set. */
+  if (typeof syncTopNavActive === 'function') syncTopNavActive(pageId);
 }
 
 // Call after pipeline reveals a locked section (from _locShowScoringSteps)

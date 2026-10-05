@@ -1676,7 +1676,12 @@ async function _scanIdentifyImage(imgEl) {
     }
   }
 
-  return _scanColorAnalyze(imgEl);
+  /* Distinguish "the model ran and recognised nothing" from "the model never
+     ran at all". The previous copy told the user MobileNet had found nothing
+     even when MobileNet had failed to load, which asserts a classification
+     that never happened. */
+  const fell = _scanColorAnalyze(imgEl);
+  return { ...fell, modelAvailable: _scanModelState === 'ready' };
 }
 
 // ── Enhanced color analysis with texture scoring ──────────────────────────────
@@ -1814,7 +1819,9 @@ function _scanUpdateAISuggest(result) {
       + `That number is MobileNet's confidence in an ImageNet CLASS — it is NOT the probability that this plant is the species shown. `
       + `ImageNet contains almost no bioenergy crops, so a keyword map converts its label into our plant list, and that map has never been validated. `
       + `Treat this as a starting suggestion only and confirm or correct it below.`
-    : `MobileNet found nothing it recognised, so this fell back to pixel colour and texture distribution — a much weaker signal that cannot distinguish species. Please select the plant yourself below.`;
+    : (result.modelAvailable === false
+      ? `The MobileNet model did not load in this browser, so no image classification ran at all. This result came from pixel colour and texture distribution only \u2014 a much weaker signal that cannot distinguish species. Please select the species yourself below; nothing here identified it for you.`
+      : `MobileNet ran and recognised nothing it could map to a plant, so this fell back to pixel colour and texture distribution \u2014 a much weaker signal that cannot distinguish species. Please select the species yourself below.`);
 
   if (result.matched && result.key) {
     const plant = SCAN_PLANTS[result.key];
@@ -1881,30 +1888,59 @@ function estimatePhotoReliability() {
   return           { label:'Very Low',            note:'Plant unconfirmed and minimal inputs given. Results are illustrative only.' };
 }
 
+/* Parses a literature heating-value string such as '17–19 MJ/kg dry' or
+   '14–17 MJ/kg dry (bagasse)' into numbers. The source data is prose, not a
+   tuple: destructuring the string directly (the previous bug) yielded its first
+   two CHARACTERS, so switchgrass printed "1–7 GJ/t" against a real 17–19.
+   1 MJ/kg === 1 GJ/tonne, so the numbers carry over to GJ/t unchanged. */
+function parseHeatingValueRange(raw) {
+  if (typeof raw !== 'string') return { low: null, high: null };
+  const nums = (raw.match(/\d+(?:\.\d+)?/g) || []).map(Number).filter(n => isFinite(n));
+  if (!nums.length) return { low: null, high: null };
+  if (nums.length === 1) return { low: nums[0], high: nums[0] };
+  return { low: Math.min(nums[0], nums[1]), high: Math.max(nums[0], nums[1]) };
+}
+
 function estimateBiomassEnergyRange(plant, loc) {
   const na = { qualLabel:'Cannot Estimate', heatingNote:'Insufficient data to form a range.', energyNote:'', condNote:'' };
   if (!plant || !plant.heatingValueRange) return na;
-  const [hvLow, hvHigh] = plant.heatingValueRange;
-  if (!hvLow && !hvHigh) return na;
-  const condMod    = { fresh:1.0, dry:0.85, stressed:0.90 }[scanCondition]         || 1.0;
-  const densityMod = { sparse:0.75, moderate:1.0, dense:1.1 }[scanCanopyDensity]   || 1.0;
-  const sizeMod    = { small:0.7, medium:1.0, large:1.2, patch:1.3 }[scanSizeCategory] || 1.0;
-  const combinedMod = condMod * densityMod * sizeMod;
-  const adjLow  = (hvLow  * combinedMod).toFixed(1);
-  const adjHigh = (hvHigh * combinedMod).toFixed(1);
+  const { low: hvLow, high: hvHigh } = parseHeatingValueRange(plant.heatingValueRange);
+  if (hvLow == null || hvHigh == null) return na;
+
+  /* Heating value is an INTENSIVE property of dry biomass composition: energy
+     per unit dry mass. Canopy density and patch size change how much biomass is
+     standing, not how much energy a tonne of it holds, and the range is already
+     quoted on a dry basis so moisture does not move it either. The previous
+     version multiplied GJ/t by condition x density x size and printed the
+     product to two decimals as a "Modifier formula", which asserted a
+     relationship that does not exist. Those observations are reported as what
+     they are -- a qualitative note about standing stock -- and the heating
+     value is reported unmodified. */
+  const standingHints = [];
+  if (scanCanopyDensity === 'sparse')  standingHints.push('sparse canopy');
+  if (scanCanopyDensity === 'dense')   standingHints.push('dense canopy');
+  if (scanSizeCategory  === 'small')   standingHints.push('small individual');
+  if (scanSizeCategory  === 'patch')   standingHints.push('patch-scale stand');
+  if (scanCondition     === 'stressed') standingHints.push('visible stress');
+  if (scanCondition     === 'dry')      standingHints.push('dry/senescent appearance');
+
+  const standingNote = standingHints.length
+    ? 'Photo observations (' + standingHints.join(', ') + ') describe how much biomass may be standing at this spot. '
+      + 'They do not change energy content per dry tonne, so the range above is reported unmodified. '
+      + 'Standing biomass per hectare cannot be measured from a photograph.'
+    : 'No photo observations were recorded that would speak to standing biomass. '
+      + 'Energy content per dry tonne is a species-level literature property and is reported unmodified.';
+
   const hvLabel = plant.biomassPotential === 'Not enough evidence'
-    ? 'Limited evidence — no reliable heating-value range in literature for this category'
-    : `Literature heating-value range: ${hvLow}–${hvHigh} GJ/dry tonne`;
-  const modDesc = combinedMod >= 1.1
-    ? 'conditions suggest higher end of range'
-    : combinedMod <= 0.85 ? 'stress/dryness indicators push toward lower bound'
-    : 'conditions near average for this species';
+    ? 'Limited evidence \u2014 no reliable heating-value range in literature for this category'
+    : 'Literature heating-value range: ' + hvLow + '\u2013' + hvHigh + ' GJ/dry tonne (' + escapeHtml(plant.heatingValueRange) + ')';
+
   return {
     qualLabel: plant.biomassPotential || 'Unknown',
-    hvLow, hvHigh, adjLow, adjHigh,
+    hvLow, hvHigh,
     heatingNote: hvLabel,
-    energyNote:  `Photo-inferred adjustment (qualitative only): ${modDesc}.`,
-    condNote:    `Condition ${condMod.toFixed(2)} × density ${densityMod.toFixed(2)} × size ${sizeMod.toFixed(2)} = ${combinedMod.toFixed(2)}`
+    energyNote:  standingNote,
+    condNote:    ''
   };
 }
 
@@ -2073,13 +2109,12 @@ function renderScannerReport() {
           <div class="scan-metric-val" style="font-size:12px">${energy.hvLow && energy.hvHigh ? escapeHtml(energy.hvLow+'–'+energy.hvHigh+' GJ/t') : 'Insufficient data'}</div>
         </div>
         <div class="scan-metric-card">
-          <div class="scan-metric-label">Photo-adjusted (qualitative)</div>
-          <div class="scan-metric-val" style="font-size:12px">${energy.adjLow && energy.adjHigh ? escapeHtml(energy.adjLow+'–'+energy.adjHigh+' GJ/t') : '—'}</div>
+          <div class="scan-metric-label">Photo can adjust this?</div>
+          <div class="scan-metric-val" style="font-size:12px">No — species property</div>
         </div>
       </div>
       <p style="margin-top:8px;font-size:11px;color:var(--text1)">${escapeHtml(energy.heatingNote)}</p>
       <p style="margin-top:4px;font-size:11px;color:var(--text3)">${escapeHtml(energy.energyNote)}</p>
-      <p style="margin-top:4px;font-size:10px;color:var(--text3)">Modifier formula: ${escapeHtml(energy.condNote)}</p>
       <p style="margin-top:8px;font-size:11px;color:var(--text3)">⚠ These are literature-range values for the species category — not a measurement of this plant. Lab assay required for actual heating value, moisture, ash, or fuel yield.</p>
     </div>
 

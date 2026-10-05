@@ -6,7 +6,7 @@
   <title>TexasClimate — Plant · Environment · Bioenergy Intelligence</title>
   <meta name="description" content="Live plant-environment bioenergy intelligence for Texas. Real weather from Open-Meteo, agriculture stress, bioenergy pathway analysis, and location-based suitability. Educational platform.">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://texasclimate.example.com/">
+  <link rel="canonical" href="https://haohanzang-ai.github.io/Weather-Channel/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="TexasClimate — Plant · Environment · Bioenergy Intelligence">
   <meta property="og:description" content="Live weather, agriculture stress, bioenergy pathway analysis, and location-based plant suitability for Texas.">
@@ -14,7 +14,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="TexasClimate — Bioenergy Intelligence Platform">
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com https://basemaps.cartocdn.com https://*.cartocdn.com https://tiles.basemaps.cartocdn.com https://*.basemaps.cartocdn.com; media-src 'self' blob:; connect-src 'self' https://api.open-meteo.com https://air-quality-api.open-meteo.com https://archive-api.open-meteo.com https://api.weather.gov https://cdn.jsdelivr.net https://storage.googleapis.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://basemaps.cartocdn.com https://*.cartocdn.com https://tiles.basemaps.cartocdn.com https://*.basemaps.cartocdn.com https://fonts.openmaptiles.org; frame-ancestors 'none';">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://cdn.jsdelivr.net; worker-src 'self' blob:; child-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com https://basemaps.cartocdn.com https://*.cartocdn.com https://tiles.basemaps.cartocdn.com https://*.basemaps.cartocdn.com; media-src 'self' blob:; connect-src 'self' https://api.open-meteo.com https://air-quality-api.open-meteo.com https://archive-api.open-meteo.com https://api.weather.gov https://cdn.jsdelivr.net https://storage.googleapis.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://basemaps.cartocdn.com https://*.cartocdn.com https://tiles.basemaps.cartocdn.com https://*.basemaps.cartocdn.com https://fonts.openmaptiles.org;">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"TexasClimate Bioenergy Intelligence Platform","description":"Live plant-environment bioenergy intelligence for Texas — weather, agriculture stress, conversion pathway analysis.","applicationCategory":"WeatherApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-EPP05BJFJ3"></script>
@@ -112,13 +112,18 @@
 
   <div class="ptn-tabs" role="menubar" aria-label="Main tabs">
     <button class="ptn-tab ptn-primary" role="menuitem" data-page="analyze"    onclick="showPage('analyze')">Analyze</button>
-    <button class="ptn-tab"             role="menuitem" data-page="mapcompare" onclick="showPage('mapcompare');subtabGo('mapcompare','mc-plantcmp')">Compare</button>
-    <button class="ptn-tab"             role="menuitem" data-page="mapcompare" onclick="showPage('mapcompare');subtabGo('mapcompare','mc-map')">Map</button>
+    <button class="ptn-tab"             role="menuitem" data-page="mapcompare" data-subtab="mc-plantcmp" onclick="showPage('mapcompare');subtabGo('mapcompare','mc-plantcmp')">Compare</button>
+    <button class="ptn-tab"             role="menuitem" data-page="mapcompare" data-subtab="mc-map" onclick="showPage('mapcompare');subtabGo('mapcompare','mc-map')">Map</button>
     <button class="ptn-tab"             role="menuitem" data-page="science"    onclick="showPage('science')">Science</button>
     <button class="ptn-tab ptn-active"  role="menuitem" data-page="overview"   onclick="showPage('overview')">About</button>
   </div>
 
   <div class="ptn-right">
+    <!-- Graph Builder and Settings previously existed ONLY in the sidebar, which
+         premium.css hides at min-width:641px. On any desktop they were listed in
+         the feature checklist but could not be opened at all. -->
+    <button class="btn-sm" data-page="graphbuilder" onclick="showPage('graphbuilder')" aria-label="Graph Builder" title="Graph Builder">📊</button>
+    <button class="btn-sm" data-page="settings" onclick="showPage('settings')" aria-label="Settings" title="Settings">⚙</button>
     <button class="btn-sm" onclick="refreshData(event)" aria-label="Refresh live data" title="Refresh data">↻</button>
   </div>
 </nav>
@@ -155,7 +160,7 @@
 
     <div class="sidebar-footer">
       <button class="nav-item" role="menuitem" data-page="settings" onclick="showPage('settings')" style="font-size:11px;opacity:0.7"><span class="nav-icon" aria-hidden="true">⚙</span>Settings</button>
-      <div class="sidebar-footer-text">v3.0 · TexasClimate Bioenergy Intelligence</div>
+      <div class="sidebar-footer-text">v4.0.0 · TexasClimate Bioenergy Intelligence</div>
     </div>
   </nav>
 
@@ -483,7 +488,7 @@
                 <li class="ov-rel-item"><span class="ov-rel-icon ov-rel-icon-can" aria-hidden="true">✓</span>Humidity / vapor pressure (VPD)</li>
                 <li class="ov-rel-item"><span class="ov-rel-icon ov-rel-icon-can" aria-hidden="true">✓</span>Air quality index (live API)</li>
                 <li class="ov-rel-item"><span class="ov-rel-icon ov-rel-icon-can" aria-hidden="true">✓</span>Regional climate suitability score</li>
-                <li class="ov-rel-item"><span class="ov-rel-icon ov-rel-icon-can" aria-hidden="true">✓</span>Bioenergy confidence estimate (literature-based)</li>
+                <li class="ov-rel-item"><span class="ov-rel-icon ov-rel-icon-can" aria-hidden="true">✓</span>Bioenergy Suitability Index (literature-based)</li>
                 <li class="ov-rel-item"><span class="ov-rel-icon ov-rel-icon-can" aria-hidden="true">✓</span>NWS severe weather alerts (live API)</li>
               </ul>
               <div class="ov-rel-foot">Sources: Open-Meteo, api.weather.gov, plant stress literature (DOE, USDA, peer-reviewed)</div>
@@ -1030,7 +1035,7 @@
           <div class="scanHero">
             <h1 class="scanHeroTitle">🔬 Field Observation Mode</h1>
             <p class="scanHeroSub">Record what you can see in the field &mdash; the species you confirm and the condition you observe &mdash; and combine it with the live environment for an evidence-aware explanation.
-            <strong>There is real image classification here, and it is weaker than it looks.</strong> MobileNet&nbsp;v2 runs locally in your browser (the photo never leaves your device) and labels the image with an ImageNet category. ImageNet contains almost no bioenergy crops, so a keyword map converts its output into a suggested plant &mdash; an unvalidated heuristic. Its percentage is MobileNet&rsquo;s confidence in an <em>ImageNet class</em>, not the probability that the plant is that species. <strong>Your confirmation is what sets the species</strong>, and your observations are labelled USER INPUT throughout.</p>
+            <strong>Image classification is attempted here, and it is weaker than it looks.</strong> MobileNet&nbsp;v2 is loaded and run locally in your browser (the photo never leaves your device). If the model fails to load, the app says so on the result and falls back to pixel-colour analysis rather than pretending a classification happened and labels the image with an ImageNet category. ImageNet contains almost no bioenergy crops, so a keyword map converts its output into a suggested plant &mdash; an unvalidated heuristic. Its percentage is MobileNet&rsquo;s confidence in an <em>ImageNet class</em>, not the probability that the plant is that species. <strong>Your confirmation is what sets the species</strong>, and your observations are labelled USER INPUT throughout.</p>
             <div class="scanHeroBadges">
               <span class="credibility-badge badge-edu-est">Educational Estimate</span>
               <span class="credibility-badge badge-cited-sci">Cited Science</span>
@@ -1067,7 +1072,7 @@
             <div class="scan-timeline">
               <div class="scan-tl-step">📷 You photograph the plant. The image stays in your browser and is never uploaded</div>
               <div class="scan-tl-arrow">↓</div>
-              <div class="scan-tl-step">🔍 MobileNet v2 classifies it locally into an ImageNet category, which a keyword map turns into a <em>suggested</em> plant</div>
+              <div class="scan-tl-step">🔍 MobileNet v2, if it loads, classifies it locally into an ImageNet category, which a keyword map turns into a <em>suggested</em> plant. Every result states which path actually ran</div>
               <div class="scan-tl-arrow">↓</div>
               <div class="scan-tl-step">🌿 <strong>You</strong> confirm or correct that suggestion. Your choice is what sets the species</div>
               <div class="scan-tl-arrow">↓</div>
@@ -1436,13 +1441,13 @@
                 <div class="calc-field"><label for="calcGallons">Weekly gallons of gasoline used</label><input type="number" id="calcGallons" value="10" min="1" max="999" step="1" aria-label="Weekly gallons of gasoline used" oninput="calcFuel()"></div>
                 <div class="calc-field"><label for="calcPrice">Current gas price per gallon ($)</label><input type="number" id="calcPrice" value="3.20" min="0.50" max="10.00" step="0.01" aria-label="Current gas price per gallon in dollars" oninput="calcFuel()"></div>
                 <div class="calc-field"><label for="calcReplace">Hypothetical biofuel replacement (%)</label><div style="display:flex;align-items:center;gap:10px"><input type="range" id="calcReplace" value="10" min="0" max="100" step="1" aria-label="Hypothetical biofuel replacement percentage" style="flex:1;accent-color:var(--orange)" oninput="document.getElementById('calcReplaceVal').textContent=this.value+'%';calcFuel()"><span class="calc-range-val" id="calcReplaceVal" aria-live="polite">10%</span></div></div>
-                <button class="calc-btn" onclick="calcFuel()" aria-label="Calculate biofuel scenario">Calculate Scenario</button>
+                <button class="calc-btn" onclick="calcFuel()" aria-label="Recalculate biofuel scenario">Recalculate</button>
               </div>
               <div class="calc-results" id="calcResults" aria-live="polite" aria-label="Scenario calculation results">
                 <h3 class="calc-subtitle">Educational Scenario Results</h3>
-                <div class="calc-result-row"><span class="calc-result-label">Estimated weekly fuel cost:</span><span class="calc-result-val" id="resultCost">$32.00</span></div>
-                <div class="calc-result-row"><span class="calc-result-label">Hypothetical gallons replaced by biofuel:</span><span class="calc-result-val" id="resultGallons">1.0 gal</span></div>
-                <div class="calc-result-row"><span class="calc-result-label">Remaining gasoline gallons in scenario:</span><span class="calc-result-val" id="resultRemaining">9.0 gal</span></div>
+                <div class="calc-result-row"><span class="calc-result-label">Estimated weekly fuel cost:</span><span class="calc-result-val" id="resultCost">—</span></div>
+                <div class="calc-result-row"><span class="calc-result-label">Hypothetical gallons replaced by biofuel:</span><span class="calc-result-val" id="resultGallons">—</span></div>
+                <div class="calc-result-row"><span class="calc-result-label">Remaining gasoline gallons in scenario:</span><span class="calc-result-val" id="resultRemaining">—</span></div>
                 <div class="calc-disclaimer" role="note">⚠ <strong>Educational estimate only.</strong> This is a fuel diversification scenario tool. It does not predict actual savings, market prices, or commercial switchgrass availability.</div>
               </div>
             </div>

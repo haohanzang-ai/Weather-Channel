@@ -253,3 +253,44 @@ suite('Judge path fits the demo window and drives the real UI');
   eq(defs, ['js/judge-path.js'], 'toggleJudgeMode is defined once, in judge-path.js');
   ok(!/function toggleJudgeMode/.test(html), 'and not redefined inline in index.html');
 }
+
+/* ── Heating value: the string-destructure regression ─────────────────────────
+   `heatingValueRange` in SCAN_PLANTS is PROSE ('17–19 MJ/kg dry'), not a tuple.
+   A previous build destructured it as `const [lo, hi] = plant.heatingValueRange`,
+   which takes the first two CHARACTERS: switchgrass displayed "1.0–7.0 GJ/t"
+   against a real 17–19, attributed to literature. These assertions pin both the
+   parse and the physics. */
+suite('Heating values parse from prose and are never scaled by photo observations');
+{
+  const scannerSrc = fs.readFileSync(path.join(ROOT, 'js', 'scanner.js'), 'utf8');
+
+  ok(!/const\s*\[\s*hvLow\s*,\s*hvHigh\s*\]\s*=\s*plant\.heatingValueRange/.test(scannerSrc),
+     'heatingValueRange is never array-destructured directly off the profile string');
+
+  const m = scannerSrc.match(/function parseHeatingValueRange[\s\S]*?\n}/);
+  ok(!!m, 'parseHeatingValueRange exists');
+  const parseHeatingValueRange = new Function(m[0] + '; return parseHeatingValueRange;')();
+
+  eq(parseHeatingValueRange('17–19 MJ/kg dry'), { low: 17, high: 19 },
+     'switchgrass parses to 17-19, not 1-7');
+  eq(parseHeatingValueRange('14–17 MJ/kg dry (bagasse)'), { low: 14, high: 17 },
+     'a parenthetical qualifier does not leak into the numbers');
+  eq(parseHeatingValueRange('Not applicable'), { low: null, high: null },
+     'non-numeric entries yield null rather than a fabricated range');
+
+  const ranges = [...scannerSrc.matchAll(/heatingValueRange:'([^']+)'/g)].map(x => x[1]);
+  ok(ranges.length >= 30, `all ${ranges.length} plant profiles are covered`);
+  const numeric = ranges.map(parseHeatingValueRange).filter(r => r.low != null);
+  ok(numeric.length > 0, 'at least some profiles carry a numeric range');
+  ok(numeric.every(r => r.low >= 5 && r.high <= 45),
+     'every parsed heating value is physically plausible for dry biomass (5-45 GJ/t)');
+  ok(numeric.every(r => r.low <= r.high), 'every parsed range is ordered low <= high');
+
+  /* Heating value is energy per unit DRY mass. Canopy density and patch size
+     change standing stock, not energy density, so they must not multiply it. */
+  const fnBody = scannerSrc.match(/function estimateBiomassEnergyRange[\s\S]*?\n}/)[0];
+  ok(!/hvLow\s*\*/.test(fnBody) && !/hvHigh\s*\*/.test(fnBody),
+     'the heating value is never multiplied by a photo-derived modifier');
+  ok(!/Modifier formula:/.test(scannerSrc),
+     'no "Modifier formula:" is rendered for a relationship that does not exist');
+}
